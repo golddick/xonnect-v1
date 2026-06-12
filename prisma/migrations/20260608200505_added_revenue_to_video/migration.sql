@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "creator_videos" ADD COLUMN     "comments_count" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "likes_count" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "revenue" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "views_count" INTEGER NOT NULL DEFAULT 0;

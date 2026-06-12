@@ -1,0 +1,263 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER @map("user")
+  ADMIN @map("admin")
+  SUPERADMIN @map("superadmin")
+  CREATOR @map("creator")
+  MEMBER @map("member")
+  STAFF @map("staff")
+}
+
+enum SuperAdminSettingSection {
+  REVENUE @map("revenue")
+  COMPANY_INFO @map("company_info")
+}
+
+model Profile {
+  id            String   @id
+  email         String   @unique
+  role          Role     @default(USER)
+  fullName      String?  @map("full_name")
+  avatarUrl     String?  @map("avatar_url")
+  bio           String?
+
+  creator       Creator?
+
+  addressFull   String? @map("address_full")
+  addressLat    Float?  @map("address_lat")
+  addressLon    Float?  @map("address_lon")
+  addressType   String? @map("address_type")
+  addressCountry String? @map("address_country")
+  addressState  String? @map("address_state")
+  addressName   String? @map("address_name")
+
+  age           Int?
+  sex           String?
+  emailVerified Boolean  @default(false) @map("email_verified")
+  hasPassword   Boolean  @default(false) @map("has_password")
+  lastLogin     DateTime? @map("last_login")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  credential    AuthCredential?
+  session       Session[]
+
+  @@map("profiles")
+}
+
+model SuperAdminSetting {
+  id                     String                   @id
+  section                SuperAdminSettingSection @unique
+
+  platformFeePercentage  Int?    @map("platform_fee_percentage")
+  enterpriseFeePercentage Int?    @map("enterprise_fee_percentage")
+  minimumPayoutAmount    Int?    @map("minimum_payout_amount")
+  payoutProcessingDays   Int?    @map("payout_processing_days")
+
+  companyName            String? @map("company_name")
+  companyEmail           String? @map("company_email")
+  supportEmail           String? @map("support_email")
+  companyPhone           String? @map("company_phone")
+  companyAddress         String? @map("company_address")
+  companyWebsite         String? @map("company_website")
+
+  createdBy              String?                  @map("created_by")
+  updatedBy              String?                  @map("updated_by")
+  createdAt              DateTime                 @default(now()) @map("created_at")
+  updatedAt              DateTime                 @updatedAt @map("updated_at")
+
+  @@map("superadmin_settings")
+}
+
+model AuthCredential {
+  email        String   @id
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  profile      Profile  @relation(fields: [email], references: [email], onDelete: Cascade)
+
+  @@map("auth_credentials")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?  
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("categories")
+}
+
+// Creator profile created when agreement is accepted
+model Creator {
+  id        String   @id
+  profile   Profile  @relation(fields: [profileId], references: [email], onDelete: Cascade)
+  profileId String   @unique @map("profile_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  videos    CreatorVideo[]
+  folders   CreatorVideoFolder[]
+
+  @@map("creators")
+}
+
+
+model CreatorVideoFolder {
+  id            String   @id
+  creatorId     String   @map("creator_id")
+  creator       Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  title         String
+  folderType    String   @map("folder_type")
+  status        String   @default("active")
+
+  thumbnailUrl    String? @map("thumbnail_url")
+  thumbnailFileId String? @map("thumbnail_file_id")
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  videos        CreatorVideo[]
+
+  @@index([creatorId])
+  @@map("creator_video_folders")
+}
+
+model CreatorVideo {
+  id              String   @id
+  creatorId       String   @map("creator_id")
+  creator         Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  folderId        String   @map("folder_id")
+  folder          CreatorVideoFolder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  title           String
+  description     String?
+  category        String?
+
+  videoUrl        String?  @map("video_url")
+  videoFileId     String?  @map("video_file_id")
+  thumbnailUrl    String?  @map("thumbnail_url")
+  thumbnailFileId String?  @map("thumbnail_file_id")
+
+  isPrivate       Boolean  @default(false) @map("is_private")
+  isPremium       Boolean  @default(false) @map("is_premium")
+  monetizationType String   @default("free") @map("monetization_type")
+
+  status          String   @default("processing")
+  publishNow      Boolean  @default(true) @map("publish_now")
+  scheduledAt     DateTime? @map("scheduled_at")
+
+  // monetization pricing
+  // (UI supports: rent24Price, rent48Price, purchasePrice)
+  rent24Price     Int?    @map("rent24_price")
+  rent48Price     Int?    @map("rent48_price")
+  purchasePrice   Int?    @map("purchase_price")
+
+  // used by current UI for series support
+  tags            String[] @default([])
+  packageName     String? @map("package_name")
+  episodeIndex    Int?    @map("episode_index")
+
+  // duration from upload provider (e.g. "12:34")
+  duration        String? @map("duration")
+
+  // content settings
+
+  allowComments   Boolean  @default(true) @map("allow_comments")
+  ageRestriction  Boolean  @default(false) @map("age_restriction")
+
+  // counters relationships
+  views           CreatorVideoView[]
+  likes           CreatorVideoLike[]
+  comments        CreatorVideoComment[]
+
+  // analytics & revenue tracking
+  viewsCount      Int      @default(0) @map("views_count")
+  likesCount      Int      @default(0) @map("likes_count")
+  commentsCount   Int      @default(0) @map("comments_count")
+  revenue         Int      @default(0) // revenue in cents
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([creatorId])
+  @@index([folderId])
+  @@map("creator_videos")
+}
+
+model CreatorVideoView {
+  id              String   @id
+  creatorVideoId String   @map("creator_video_id")
+  creatorVideo   CreatorVideo @relation(fields: [creatorVideoId], references: [id], onDelete: Cascade)
+
+  viewerProfileId String? @map("viewer_profile_id")
+
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([creatorVideoId])
+  @@map("creator_video_views")
+}
+
+model CreatorVideoLike {
+  id              String   @id
+  creatorVideoId String   @map("creator_video_id")
+  creatorVideo   CreatorVideo @relation(fields: [creatorVideoId], references: [id], onDelete: Cascade)
+
+  likerProfileId  String? @map("liker_profile_id")
+
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([creatorVideoId])
+  @@map("creator_video_likes")
+}
+
+model CreatorVideoComment {
+  id              String   @id
+  creatorVideoId String   @map("creator_video_id")
+  creatorVideo   CreatorVideo @relation(fields: [creatorVideoId], references: [id], onDelete: Cascade)
+
+  commenterProfileId String? @map("commenter_profile_id")
+  content            String
+
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([creatorVideoId])
+  @@map("creator_video_comments")
+}
+
+
+
+
+model Session {
+  id           String   @id
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+ profile      Profile     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
