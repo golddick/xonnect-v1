@@ -64,7 +64,7 @@ const Navigation = () => {
             
             <Link
               href="/tv"
-              className="bg-black hover:bg-red-700 border border-red-600 text-primary-foreground px-6 py-2 rounded-lg transition-colors"
+              className="bg-black hover:bg-red-700 border border-red-600 text-red-500 px-6 py-2 rounded-lg transition-colors"
             >
               Tv
             </Link>

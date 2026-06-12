@@ -1,6 +1,6 @@
-import { getEventDetails } from "@/actions/admin"
-import AdminEventDetail from "../../../../admin-event-detail"
 import { notFound } from "next/navigation"
+import AdminEventDetail from "../../dashboard/_component/admin-event-detail"
+import { getEventDetails } from "@/actions/admin"
 
 interface EventPageProps {
   params: {

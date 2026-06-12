@@ -1,6 +1,6 @@
 'use client'
 
-import AdminDashboard from '@/admin-dashboard'
+import AdminDashboard from '@/app/admin/dashboard/_component/admin-dashboard'
 import React from 'react'
 
 const page = () => {
