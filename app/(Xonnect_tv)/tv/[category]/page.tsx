@@ -13,7 +13,7 @@ const CategoryPage = ({ params }: { params: { category: string } }) => {
   const [showFilters, setShowFilters] = useState(false)
 
   const categoryMap: Record<string, string> = {
-    movies: "🎬 Movies",
+    video: "🎬 Video",
     music: "🎵 Music",
     sports: "⚽ Sports",
     gaming: "🎮 Gaming",

@@ -1,31 +1,30 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import {
   ArrowLeft,
-  Play,
   Clock,
   Eye,
   Calendar,
   Library,
   Film,
   Clapperboard,
-  Video,
+  Play,
   Settings,
-  Download,
   Share2,
+  Video,
 } from "lucide-react"
+
+import VideoViewPanel from "@/components/common_component/video-view-panel"
 
 export default function VideoViewPage() {
   const params = useParams()
   const router = useRouter()
-  const videoRef = useRef<HTMLVideoElement | null>(null)
 
   const [activePart, setActivePart] = useState(0)
   const [folderData, setFolderData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [isPlaying, setIsPlaying] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -59,11 +58,6 @@ export default function VideoViewPage() {
   const currentVideoUrl = currentPart?.videoUrl ?? null
   const currentThumbnail = currentPart?.thumbnail || folderData?.thumbnail || null
 
-  useEffect(() => {
-    videoRef.current?.pause()
-    setIsPlaying(false)
-  }, [currentPart?.id])
-
   const getIcon = (type: string) => {
     switch (type) {
       case "series":
@@ -74,16 +68,6 @@ export default function VideoViewPage() {
         return <Clapperboard className="w-5 h-5 text-red-500" />
       default:
         return <Video className="w-5 h-5 text-red-500" />
-    }
-  }
-
-  const handlePlay = async () => {
-    try {
-      if (!videoRef.current) return
-      await videoRef.current.play()
-      setIsPlaying(true)
-    } catch (error) {
-      console.error("Failed to start playback:", error)
     }
   }
 
@@ -151,51 +135,13 @@ export default function VideoViewPage() {
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <div className="aspect-video bg-black rounded-3xl overflow-hidden relative group border border-border">
-              {currentVideoUrl ? (
-                <div className="relative w-full h-full">
-                  <video
-                    key={currentPart?.id ?? "player"}
-                    ref={videoRef}
-                    src={currentVideoUrl}
-                    poster={currentThumbnail || undefined}
-                    className="w-full h-full object-cover bg-black"
-                    controls
-                    playsInline
-                    preload="metadata"
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                    onEnded={() => setIsPlaying(false)}
-                  />
-
-                  {!isPlaying && (
-                    <div className="absolute inset-0">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/15" />
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <button
-                          type="button"
-                          onClick={handlePlay}
-                          className="pointer-events-auto w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform"
-                        >
-                          <Play className="w-10 h-10 text-white fill-white ml-1" />
-                        </button>
-                      </div>
-                      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
-                        <p className="text-white text-sm font-medium mb-1">Click to Play</p>
-                        <h2 className="text-white text-2xl font-bold">
-                          {currentPart?.title}
-                        </h2>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-black">
-                  <Video className="w-16 h-16 text-gray-600 mb-4" />
-                  <p className="text-gray-400 text-center">Video not available</p>
-                </div>
-              )}
-            </div>
+            <VideoViewPanel
+              key={currentPart?.id ?? "player"}
+              videoUrl={currentVideoUrl}
+              poster={currentThumbnail}
+              title={currentPart?.title ?? folderData.title}
+              subtitle={currentPart?.description ?? folderData.description}
+            />
 
             <div className="space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -253,8 +199,6 @@ export default function VideoViewPage() {
                   key={part.id}
                   onClick={() => {
                     setActivePart(index)
-                    setIsPlaying(false)
-                    videoRef.current?.pause()
                   }}
                   className={`w-full flex items-center gap-3 p-3 rounded-2xl transition-all text-left border ${
                     activePart === index

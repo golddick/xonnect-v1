@@ -30,7 +30,7 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
   const categories = [
     { id: "/", name: "Home", icon: Home, color: "text-red-500" },
     { id: "live-event", name: "Live Event", icon: Video, color: "text-red-400" },
-    { id: "movie", name: "Movie", icon: Film, color: "text-purple-500" },
+    { id: "video", name: "Video", icon: Film, color: "text-purple-500" },
     { id: "sport", name: "Sport", icon: Trophy, color: "text-blue-500" },
     { id: "podcast", name: "Podcast", icon: MicVocal, color: "text-gold-500" },
     { id: "tv-show", name: "TV Show", icon: Tv, color: "text-green-500" },

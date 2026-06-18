@@ -1,9 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import type { FormEvent } from "react"
 import { useRouter } from "next/navigation"
-import { Zap, Lock, User, AlertCircle } from "lucide-react"
+import { AlertCircle, Lock, LogIn, User, Zap } from "lucide-react"
+
 import { ThemeToggle } from "@/components/theme-toggle"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 export default function CheckInLogin() {
   const router = useRouter()
@@ -11,92 +15,135 @@ export default function CheckInLogin() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [booting, setBooting] = useState(true)
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
+  useEffect(() => {
+    let active = true
+
+    async function loadSession() {
+      try {
+        const response = await fetch("/api/checkin/session", { cache: "no-store" })
+        if (response.ok && active) {
+          router.replace("/checkin/dashboard")
+        }
+      } catch {
+        // No active session.
+      } finally {
+        if (active) setBooting(false)
+      }
+    }
+
+    void loadSession()
+
+    return () => {
+      active = false
+    }
+  }, [router])
+
+  const handleLogin = async (event: FormEvent) => {
+    event.preventDefault()
     setLoading(true)
     setError("")
 
-    // Demo Logic
-    setTimeout(() => {
-      if (username === "deactivated") {
-        setError("This account has been deactivated.")
-      } else if (username === "staff" && password === "password") {
-        router.push("/checkin/dashboard")
-      } else {
-        setError("Invalid credentials.")
+    try {
+      const response = await fetch("/api/checkin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      })
+
+      const data = (await response.json()) as { message?: string }
+
+      if (!response.ok) {
+        throw new Error(data.message ?? "Invalid credentials")
       }
+
+      router.replace("/checkin/dashboard")
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to sign in")
+    } finally {
       setLoading(false)
-    }, 1000)
+    }
+  }
+
+  if (booting) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
-      <div className="absolute top-8 right-8">
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="absolute right-6 top-6">
         <ThemeToggle />
       </div>
 
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-red-600/20">
-            <Zap className="w-10 h-10 text-white" />
+      <div className="mx-auto flex min-h-screen w-full max-w-md items-center px-4 py-10">
+        <div className="w-full rounded-lg border border-border bg-card p-6 shadow-sm">
+          <div className="mb-8 text-center">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <Zap className="h-7 w-7" />
+            </div>
+            <h1 className="text-2xl font-semibold">Check-in access</h1>
+            <p className="mt-2 text-sm text-muted-foreground">Sign in with the credentials issued to your gate.</p>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Xonnect Staff</h1>
-          <p className="text-muted-foreground mt-2">Event Check-In System</p>
-        </div>
 
-        <div className="bg-card border border-border rounded-3xl p-8 shadow-xl">
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground ml-1">Username</label>
+              <label className="text-sm font-medium">Username or email</label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type="text"
-                  required
+                <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-muted/50 border border-border p-3 pl-10 rounded-xl focus:ring-2 focus:ring-red-600 outline-none transition-all"
-                  placeholder="Enter username"
+                  onChange={(event) => setUsername(event.target.value)}
+                  placeholder="username"
+                  className="pl-9"
+                  autoComplete="username"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground ml-1">Password</label>
+              <label className="text-sm font-medium">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type="password"
-                  required
+                <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-muted/50 border border-border p-3 pl-10 rounded-xl focus:ring-2 focus:ring-red-600 outline-none transition-all"
-                  placeholder="Enter password"
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="password"
+                  type="password"
+                  className="pl-9"
+                  autoComplete="current-password"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="bg-red-600/10 border border-red-600/20 text-red-500 p-3 rounded-xl flex items-center gap-2 text-sm">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                {error}
+              <div className="flex items-start gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-500">
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>{error}</span>
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-600/20"
-            >
-              {loading ? "Signing in..." : "Sign In"}
-            </button>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                "Signing in..."
+              ) : (
+                <>
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Sign in
+                </>
+              )}
+            </Button>
           </form>
         </div>
-
-        <p className="text-center text-xs text-muted-foreground">
-          Authorized personnel only. All access is logged.
-        </p>
       </div>
     </div>
   )

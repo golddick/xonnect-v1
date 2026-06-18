@@ -165,3 +165,54 @@ export async function uploadFile(
     return { ok: false, message: 'File upload service unavailable.' }
   }
 }
+
+
+export async function uploadFileRaw(
+  rawBody: ArrayBuffer,
+  contentType: string
+): Promise<UploadResult> {
+  const dropaphiApiKey = process.env.DROPAPHI_API_KEY
+  
+  if (!dropaphiApiKey || typeof dropaphiApiKey !== 'string' || dropaphiApiKey.trim() === '') {
+    console.error('[DropAphi] Missing API key. Check your environment variables.')
+    return { 
+      ok: false, 
+      message: 'API key is missing. Please configure DROPAPHI_API_KEY in your environment variables.' 
+    }
+  }
+  
+  try {
+    const res = await fetch(`${BASE}/v1/files/upload`, {
+      method: 'POST',
+      headers: {
+        'drop-api-key': dropaphiApiKey,
+        'Content-Type': contentType,
+      } as HeadersInit,
+      body: rawBody,
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      console.error('[DropAphi File Upload Error]', data)
+      return {
+        ok: false,
+        message: data?.error || data?.message || 'Failed to upload file.',
+        billing: data?.billing
+      }
+    }
+
+    return { 
+      ok: true, 
+      fileId: data?.data?.id, 
+      url: data?.data?.url,
+      directUrl: data?.data?.directUrl,
+      size: data?.data?.size,
+      mimeType: data?.data?.mimeType,
+      billing: data?.data?.billing
+    }
+  } catch (error) {
+    console.error('[DropAphi File Upload Exception]', error)
+    return { ok: false, message: 'File upload service unavailable.' }
+  }
+}

@@ -1,180 +1,180 @@
 "use client"
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import {
-  Ticket, Calendar, MapPin, Users, Search, ArrowRight, Star,
-  Music, Gamepad2, Laptop, Utensils, Dumbbell, Mic2, Filter, Play, BookAIcon
-} from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
-import HeroSection2 from "@/app/(landing-page)/_component/heroSection";
+import {
+  CalendarDays,
+  Search,
+  Ticket,
+  MapPin,
+  Users,
+  ArrowRight,
+  Video,
+  Building2,
+  BookAIcon,
+} from "lucide-react"
 
-// ─── Demo Data ────────────────────────────────────────────────────────────────
-const tickets = [
-  {
-    id: "AVL001",
-    title: "Afrobeats Night — Live Concert",
-    creator: "Afro King",
-    category: "Music",
-    date: "Feb 15, 2025",
-    time: "8:00 PM",
-    location: "Lagos Convention Center",
-    isPhysical: true,
-    price: 1500,
-    rating: 4.8,
-    reviews: 234,
-    sold: 450,
-    capacity: 500,
-    thumbnail: "/afrobeats-concert-stage.jpg",
-    tags: ["Concert", "Live", "Afrobeats"],
-    badge: "Selling Fast",
-  },
-  {
-    id: "AVL002",
-    title: "FIFA 24 Tournament Finals",
-    creator: "ProGamer Mike",
-    category: "Gaming",
-    date: "Feb 10, 2025",
-    time: "6:00 PM",
-    location: "Online",
-    isPhysical: false,
-    price: 500,
-    rating: 4.5,
-    reviews: 156,
-    sold: 2340,
-    capacity: 5000,
-    thumbnail: "/gaming-esports-tournament.jpg",
-    tags: ["Esports", "FIFA", "Tournament"],
-    badge: "Live Stream",
-  },
-  {
-    id: "AVL003",
-    title: "AI in Creative Industries — Tech Talk",
-    creator: "Tech Innovator",
-    category: "Technology",
-    date: "Jan 25, 2025",
-    time: "3:00 PM",
-    location: "Online",
-    isPhysical: false,
-    price: 0,
-    rating: 4.9,
-    reviews: 412,
-    sold: 1205,
-    capacity: 2000,
-    thumbnail: "/tech-conference-ai-presentation.jpg",
-    tags: ["AI", "Webinar", "Free"],
-    badge: "Free",
-  },
-  {
-    id: "AVL004",
-    title: "Nigerian Cuisine Masterclass",
-    creator: "Chef Amara",
-    category: "Lifestyle",
-    date: "Mar 5, 2025",
-    time: "2:00 PM",
-    location: "Abuja Culinary Studio",
-    isPhysical: true,
-    price: 1200,
-    rating: 4.7,
-    reviews: 89,
-    sold: 22,
-    capacity: 30,
-    thumbnail: "/cooking-show.jpg",
-    tags: ["Cooking", "Masterclass", "Food"],
-    badge: "Almost Full",
-  },
-  {
-    id: "AVL005",
-    title: "HIIT & Strength — Live Fitness Session",
-    creator: "FitCoach Temi",
-    category: "Fitness",
-    date: "Feb 20, 2025",
-    time: "7:00 AM",
-    location: "Online",
-    isPhysical: false,
-    price: 300,
-    rating: 4.6,
-    reviews: 67,
-    sold: 340,
-    capacity: 1000,
-    thumbnail: "/vibrant-concert.png",
-    tags: ["Fitness", "HIIT", "Live"],
-    badge: null,
-  },
-  {
-    id: "AVL006",
-    title: "Stand-Up Comedy Night",
-    creator: "Laugh Factory NG",
-    category: "Comedy",
-    date: "Mar 1, 2025",
-    time: "9:00 PM",
-    location: "Eko Hotel, Lagos",
-    isPhysical: true,
-    price: 2000,
-    rating: 4.9,
-    reviews: 178,
-    sold: 180,
-    capacity: 200,
-    thumbnail: "/gaming-tournament.png",
-    tags: ["Comedy", "Live", "Night Out"],
-    badge: "Hot 🔥",
-  },
-]
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { PublicTicketEvent } from "@/lib/tickets"
+import HeroSection2 from "../_component/heroSection"
 
-const categories = ["All", "Music", "Gaming", "Technology", "Lifestyle", "Fitness", "Comedy"]
+type TicketsResponse = {
+  events: PublicTicketEvent[]
+  total: number
+}
 
-const categoryIcons: Record<string, React.ElementType> = {
-  Music: Music,
-  Gaming: Gamepad2,
-  Technology: Laptop,
-  Lifestyle: Utensils,
-  Fitness: Dumbbell,
-  Comedy: Mic2,
+function formatCurrency(amount: number) {
+  if (amount === 0) return "Free"
+  return `NGN ${amount.toLocaleString()}`
+}
+
+function formatDate(dateString: string | null) {
+  if (!dateString) return "Date not set"
+
+  const date = new Date(dateString)
+  if (Number.isNaN(date.getTime())) return "Date not set"
+
+  return new Intl.DateTimeFormat("en-NG", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date)
+}
+
+function formatLocation(event: PublicTicketEvent) {
+  return (
+    event.locationName ||
+    event.locationFullAddress ||
+    event.address ||
+    event.locationCountry ||
+    "Online"
+  )
+}
+
+function formatEventType(eventType: PublicTicketEvent["eventType"]) {
+  if (eventType === "hybrid") return "Hybrid"
+  if (eventType === "venue") return "Venue"
+  return "Streaming"
 }
 
 export default function TicketsPage() {
+  const [events, setEvents] = useState<PublicTicketEvent[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const [search, setSearch] = useState("")
-  const [activeCategory, setActiveCategory] = useState("All")
+  const [activeCategory, setActiveCategory] = useState("all")
 
-  const filtered = tickets.filter((t) => {
-    const matchCat = activeCategory === "All" || t.category === activeCategory
-    const matchSearch = t.title.toLowerCase().includes(search.toLowerCase()) ||
-      t.creator.toLowerCase().includes(search.toLowerCase())
-    return matchCat && matchSearch
-  })
+  useEffect(() => {
+    let active = true
+
+    async function loadTickets() {
+      try {
+        setLoading(true)
+        setError("")
+
+        const response = await fetch("/api/tickets", {
+          cache: "no-store",
+        })
+        const data = (await response.json()) as TicketsResponse & { message?: string }
+
+        if (!response.ok) {
+          throw new Error(data.message ?? "Failed to load tickets")
+        }
+
+        if (active) {
+          setEvents(data.events ?? [])
+        }
+      } catch (err) {
+        if (active) {
+          setError(err instanceof Error ? err.message : "Failed to load tickets")
+        }
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    void loadTickets()
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const categories = useMemo(() => {
+    const unique = new Set(events.map((event) => event.category).filter(Boolean))
+    return ["all", ...Array.from(unique).sort((left, right) => left.localeCompare(right))]
+  }, [events])
+
+  const filteredEvents = useMemo(() => {
+    const searchTerm = search.trim().toLowerCase()
+
+    return events.filter((event) => {
+      const matchesCategory = activeCategory === "all" || event.category.toLowerCase() === activeCategory
+      const matchesSearch =
+        searchTerm.length === 0 ||
+        event.title.toLowerCase().includes(searchTerm) ||
+        event.creator.fullName.toLowerCase().includes(searchTerm) ||
+        event.description?.toLowerCase().includes(searchTerm) ||
+        event.tickets.some((ticket) => ticket.ticketType.toLowerCase().includes(searchTerm))
+
+      return matchesCategory && matchesSearch
+    })
+  }, [activeCategory, events, search])
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground">
 
-      {/* ── Hero ── */}
-
-      <HeroSection2
+     <HeroSection2
           title=" Your Front Row Seat Anywhere on Earth."
           ICON={<BookAIcon className="w-5 h-5 text-red-400" />}
           iconTitle="Our Tickets "
       />
 
-      {/* ── Category Filter ── */}
-      <section className="px-4 sm:px-6 md:px-8 pb-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex gap-2 flex-wrap">
-            {categories.map((cat) => {
-              const Icon = categoryIcons[cat]
+      <section className="border-b px-4 lg:px-6 border-border bg-card/40">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-6 sm:px-6 lg:px-8">
+          {/* <div className="flex flex-col gap-2">
+            <p className="text-sm text-muted-foreground">Tickets</p>
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Browse public events and ticket types</h1>
+          </div> */}
+
+          <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-center">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search events, creators, or ticket types"
+                className="h-11 pl-10"
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="secondary" className="h-11 rounded-full px-4 text-sm">
+                {events.length} events
+              </Badge>
+              <Badge variant="secondary" className="h-11 rounded-full px-4 text-sm">
+                {events.reduce((sum, event) => sum + event.ticketCount, 0)} ticket types
+              </Badge>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {categories.map((category) => {
+              const active = activeCategory === category
+
               return (
                 <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
-                    activeCategory === cat
-                      ? "bg-red-600 border-red-600 text-white"
-                      : "bg-card border-border text-muted-foreground hover:border-red-500/50 hover:text-foreground"
+                  key={category}
+                  type="button"
+                  onClick={() => setActiveCategory(category)}
+                  className={`inline-flex h-9 items-center rounded-full border px-3 text-sm transition-colors ${
+                    active
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border bg-background text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {Icon && <Icon className="w-3.5 h-3.5" />}
-                  {cat}
+                  {category === "all" ? "All" : category}
                 </button>
               )
             })}
@@ -182,121 +182,107 @@ export default function TicketsPage() {
         </div>
       </section>
 
-      {/* ── Ticket Grid ── */}
-      <section className="px-4 sm:px-6 md:px-8 pb-24">
-        <div className="max-w-7xl mx-auto">
-          {filtered.length === 0 ? (
-            <div className="text-center py-20 text-muted-foreground">
-              <Ticket className="w-12 h-12 mx-auto mb-4 opacity-30" />
-              <p className="text-lg font-semibold">No events found</p>
-              <p className="text-sm mt-1">Try a different search or category</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.map((ticket, i) => (
-                <motion.div
-                  key={ticket.id}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: i * 0.06 }}
-                >
-                  <Link href={`/tickets/${ticket.id}`}>
-                    <div className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-red-500/40 transition-all hover:shadow-xl hover:shadow-red-600/5 cursor-pointer">
-                      {/* Thumbnail */}
-                      <div className="relative h-48 overflow-hidden bg-muted">
-                        <img
-                          src={ticket.thumbnail}
-                          alt={ticket.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = "/placeholder-event.jpg"
-                          }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        {/* Badges */}
-                        <div className="absolute top-3 left-3 flex gap-2">
-                          {ticket.badge && (
-                            <span className={`text-xs font-bold px-2 py-1 rounded-full ${
-                              ticket.badge === "Free" ? "bg-green-600 text-white" :
-                              ticket.badge === "Live Stream" ? "bg-blue-600 text-white" :
-                              "bg-red-600 text-white"
-                            }`}>
-                              {ticket.badge}
-                            </span>
-                          )}
-                          <span className={`text-xs font-bold px-2 py-1 rounded-full ${
-                            ticket.isPhysical ? "bg-black/60 text-white" : "bg-black/60 text-white"
-                          }`}>
-                            {ticket.isPhysical ? "📍 In-Person" : "🌐 Online"}
-                          </span>
-                        </div>
-                        {/* Play overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <div className="w-12 h-12 rounded-full bg-red-600/90 flex items-center justify-center">
-                            <Play className="w-5 h-5 text-white ml-0.5" />
-                          </div>
-                        </div>
-                        {/* Price */}
-                        <div className="absolute bottom-3 right-3">
-                          <span className="bg-black/70 text-white text-sm font-black px-3 py-1 rounded-full">
-                            {ticket.price === 0 ? "FREE" : `₦${ticket.price.toLocaleString()}`}
-                          </span>
-                        </div>
+      <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        {loading ? (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="h-[360px] animate-pulse rounded-lg border border-border bg-card" />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-500">
+            {error}
+          </div>
+        ) : filteredEvents.length === 0 ? (
+          <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-card/40 px-6 text-center">
+            <Ticket className="h-10 w-10 text-muted-foreground" />
+            <p className="text-lg font-medium">No events found</p>
+            <p className="max-w-md text-sm text-muted-foreground">
+              Try a different search term or category.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {filteredEvents.map((event) => (
+              <Link key={event.id} href={`/tickets/${event.id}`} className="group">
+                <article className="flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card transition-colors group-hover:border-primary/50">
+                  <div className="relative aspect-[16/9] border-b border-border bg-muted">
+                    {event.thumbnailUrl ? (
+                      <img
+                        src={event.thumbnailUrl}
+                        alt={event.title}
+                        className="h-full w-full object-cover"
+                        onError={(eventImage) => {
+                          ;(eventImage.target as HTMLImageElement).style.display = "none"
+                        }}
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <Video className="h-12 w-12 text-muted-foreground" />
                       </div>
+                    )}
 
-                      {/* Content */}
-                      <div className="p-5 space-y-3">
-                        <div className="flex items-start justify-between gap-2">
-                          <h3 className="font-bold text-foreground text-sm leading-snug line-clamp-2 flex-1">
-                            {ticket.title}
-                          </h3>
-                          <div className="flex items-center gap-1 flex-shrink-0">
-                            <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-                            <span className="text-xs text-muted-foreground">{ticket.rating}</span>
-                          </div>
-                        </div>
+                    <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+                      <Badge variant="secondary" className="rounded-full bg-background/90 text-foreground">
+                        {formatEventType(event.eventType)}
+                      </Badge>
+                      {event.isHybrid && (
+                        <Badge className="rounded-full bg-primary text-primary-foreground">Hybrid</Badge>
+                      )}
+                    </div>
 
-                        <p className="text-xs text-red-500 font-semibold">by {ticket.creator}</p>
+                    <div className="absolute bottom-3 right-3">
+                      <Badge variant="secondary" className="rounded-full bg-background/90 text-foreground">
+                        {formatCurrency(event.minPrice)}{event.maxPrice !== event.minPrice ? ` - ${formatCurrency(event.maxPrice)}` : ""}
+                      </Badge>
+                    </div>
+                  </div>
 
-                        <div className="flex flex-col gap-1.5 text-xs text-muted-foreground">
-                          <div className="flex items-center gap-1.5">
-                            <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
-                            <span>{ticket.date} · {ticket.time}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-                            <span className="truncate">{ticket.location}</span>
-                          </div>
-                        </div>
+                  <div className="flex flex-1 flex-col gap-4 p-4">
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between gap-3">
+                        <h2 className="line-clamp-2 text-base font-semibold">{event.title}</h2>
+                        <Badge variant="outline" className="shrink-0 rounded-full">
+                          {event.category}
+                        </Badge>
+                      </div>
+                      <p className="line-clamp-2 text-sm text-muted-foreground">
+                        {event.description ?? "Event details and ticket options."}
+                      </p>
+                    </div>
 
-                        {/* Capacity bar */}
-                        <div>
-                          <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                            <span>{ticket.sold} sold</span>
-                            <span>{ticket.capacity} capacity</span>
-                          </div>
-                          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-red-500 rounded-full"
-                              style={{ width: `${Math.min((ticket.sold / ticket.capacity) * 100, 100)}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-sm h-9 gap-2">
-                          Get Tickets <ArrowRight className="w-3.5 h-3.5" />
-                        </Button>
+                    <div className="grid gap-2 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <CalendarDays className="h-4 w-4" />
+                        <span>{formatDate(event.scheduledAt)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4" />
+                        <span className="line-clamp-1">{formatLocation(event)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Users className="h-4 w-4" />
+                        <span>{event.ticketCount} ticket types</span>
                       </div>
                     </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
 
+                    <div className="mt-auto flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Building2 className="h-4 w-4" />
+                        <span className="line-clamp-1">{event.creator.fullName}</span>
+                      </div>
+                      <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-2 text-sm font-medium text-foreground">
+                        Open
+                        <ArrowRight className="h-4 w-4" />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </Link>
+            ))}
+          </div>
+        )}
+      </main>
     </div>
   )
 }

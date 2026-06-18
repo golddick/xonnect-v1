@@ -30,10 +30,9 @@ import LocationSearchModal from "./LocationSearchModal"
 
 interface ScheduleEventProps {
   onClose?: () => void
-  onSchedule?: (eventData: any) => void
 }
 
-export default function ScheduleEventComponent({ onClose, onSchedule }: ScheduleEventProps) {
+export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1) // 1: Details, 2: Schedule, 3: Settings
   const [eventData, setEventData] = useState({
@@ -270,10 +269,6 @@ export default function ScheduleEventComponent({ onClose, onSchedule }: Schedule
         type: null,
         locations: [],
       }
-    }
-
-    if (onSchedule) {
-      onSchedule(streamWithDateTime)
     }
     
     if (onClose) {

@@ -1,271 +1,640 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter, useParams } from "next/navigation"
-import { motion } from "framer-motion"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { useEffect, useMemo, useState } from "react"
+import { useParams, useSearchParams } from "next/navigation"
 import {
-  Calendar, MapPin, ArrowLeft, Star, Users, Clock, CheckCircle, Play, Heart, Share2
+  ArrowLeft,
+  CalendarDays,
+  CheckCircle2,
+  CircleDollarSign,
+  Loader2,
+  MapPin,
+  Play,
+  Ticket,
+  Users,
+  Video,
 } from "lucide-react"
 import Link from "next/link"
 
-// ─── Demo Data ────────────────────────────────────────────────────────────────
-const ticketData: Record<string, {
-  title: string; creator: string; category: string; date: string; time: string
-  location: string; isPhysical: boolean; thumbnail: string; rating: number
-  reviews: number; sold: number; capacity: number; description: string
-  ticketTypes: { id: string; label: string; price: number; perks: string[] }[]
-}> = {
-  AVL001: {
-    title: "Afrobeats Night — Live Concert",
-    creator: "Afro King",
-    category: "Music",
-    date: "Feb 15, 2025",
-    time: "8:00 PM",
-    location: "Lagos Convention Center, Nigeria",
-    isPhysical: true,
-    thumbnail: "/afrobeats-concert-stage.jpg",
-    rating: 4.8,
-    reviews: 234,
-    sold: 450,
-    capacity: 500,
-    description: "An unforgettable night of authentic Afrobeats featuring top artists from across Africa and the diaspora. Live performances, interactive sessions, and exclusive merchandise.",
-    ticketTypes: [
-      { id: "STD", label: "Standard", price: 1500, perks: ["General seating", "Merch discount"] },
-      { id: "VIP", label: "VIP", price: 2500, perks: ["Front row", "Meet & greet", "Exclusive merch"] },
-      { id: "PREM", label: "Premium", price: 4000, perks: ["VIP seating", "Backstage pass", "Private dinner"] },
-    ],
-  },
-  AVL002: {
-    title: "FIFA 24 Tournament Finals",
-    creator: "ProGamer Mike",
-    category: "Gaming",
-    date: "Feb 10, 2025",
-    time: "6:00 PM",
-    location: "Online",
-    isPhysical: false,
-    thumbnail: "/gaming-esports-tournament.jpg",
-    rating: 4.5,
-    reviews: 156,
-    sold: 2340,
-    capacity: 5000,
-    description: "Watch the best FIFA 24 players battle it out in the ultimate tournament finals. HD stream, live commentary, and exclusive player interviews.",
-    ticketTypes: [
-      { id: "STREAM", label: "Stream Pass", price: 500, perks: ["HD stream", "Live chat", "Replay access"] },
-      { id: "VIP", label: "VIP Stream", price: 1200, perks: ["HD+ stream", "Exclusive commentary", "Player interviews"] },
-    ],
-  },
-  AVL003: {
-    title: "AI in Creative Industries — Tech Talk",
-    creator: "Tech Innovator",
-    category: "Technology",
-    date: "Jan 25, 2025",
-    time: "3:00 PM",
-    location: "Online",
-    isPhysical: false,
-    thumbnail: "/tech-conference-ai-presentation.jpg",
-    rating: 4.9,
-    reviews: 412,
-    sold: 1205,
-    capacity: 2000,
-    description: "A deep-dive webinar on how AI is reshaping creative industries. Q&A session, slides download, and optional 1-on-1 consultation for premium attendees.",
-    ticketTypes: [
-      { id: "FREE", label: "Free Access", price: 0, perks: ["Webinar access", "Q&A session", "Slides download"] },
-      { id: "PREM", label: "Premium Pass", price: 800, perks: ["All free perks", "1-on-1 consultation", "Certificate"] },
-    ],
-  },
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { PublicTicketEvent, PublicTicketItem } from "@/lib/tickets"
+
+type EventResponse = {
+  event: PublicTicketEvent
 }
 
-const fallback = {
-  title: "Live Event",
-  creator: "Xonnect Creator",
-  category: "Event",
-  date: "TBA",
-  time: "TBA",
-  location: "TBA",
-  isPhysical: false,
-  thumbnail: "/vibrant-concert.png",
-  rating: 4.5,
-  reviews: 0,
-  sold: 0,
-  capacity: 100,
-  description: "Details coming soon.",
-  ticketTypes: [
-    { id: "STD", label: "Standard", price: 1000, perks: ["Event access"] },
-  ],
+type SessionResponse = {
+  user?: {
+    email?: string | null
+    name?: string | null
+  } | null
 }
 
-export default function TicketDetailPage() {
-  const router = useRouter()
-  const params = useParams()
-  const id = params.id as string
+function formatCurrency(amount: number) {
+  if (amount === 0) return "Free"
+  return `NGN ${amount.toLocaleString()}`
+}
 
-  const event = ticketData[id] ?? fallback
-  const [selected, setSelected] = useState(event.ticketTypes[0].id)
-  const [wishlisted, setWishlisted] = useState(false)
+function formatDate(dateString: string | null) {
+  if (!dateString) return "Date not set"
 
-  const selectedType = event.ticketTypes.find((t) => t.id === selected)!
+  const date = new Date(dateString)
+  if (Number.isNaN(date.getTime())) return "Date not set"
+
+  return new Intl.DateTimeFormat("en-NG", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date)
+}
+
+function formatLocation(event: PublicTicketEvent) {
+  return (
+    event.locationName ||
+    event.locationFullAddress ||
+    event.address ||
+    event.locationCountry ||
+    "Online"
+  )
+}
+
+function formatEventType(eventType: PublicTicketEvent["eventType"]) {
+  if (eventType === "hybrid") return "Hybrid"
+  if (eventType === "venue") return "Venue"
+  return "Streaming"
+}
+
+function getYouTubeVideoId(videoUrl: string) {
+  try {
+    const url = new URL(videoUrl)
+    const hostname = url.hostname.replace(/^www\./, "")
+    const isYouTubeHost =
+      hostname === "youtube.com" ||
+      hostname.endsWith(".youtube.com") ||
+      hostname === "youtube-nocookie.com" ||
+      hostname.endsWith(".youtube-nocookie.com")
+
+    if (hostname === "youtu.be") {
+      return url.pathname.split("/").filter(Boolean)[0] ?? null
+    }
+
+    if (isYouTubeHost) {
+      if (url.pathname.startsWith("/watch")) {
+        return url.searchParams.get("v")
+      }
+
+      const pathParts = url.pathname.split("/").filter(Boolean)
+      const shortFormId = pathParts[1] ?? pathParts[0] ?? null
+
+      if (pathParts[0] === "embed" || pathParts[0] === "shorts" || pathParts[0] === "live") {
+        return shortFormId
+      }
+    }
+  } catch {
+    return null
+  }
+
+  return null
+}
+
+function getYouTubeEmbedUrl(videoUrl: string) {
+  const videoId = getYouTubeVideoId(videoUrl)
+  if (!videoId) return null
+
+  return `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1`
+}
+
+function TicketHeroMedia({
+  title,
+  thumbnailUrl,
+  videoUrl,
+}: {
+  title: string
+  thumbnailUrl: string | null
+  videoUrl: string | null
+}) {
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    setIsOpen(false)
+  }, [thumbnailUrl, videoUrl])
+
+  const youtubeEmbedUrl = videoUrl ? getYouTubeEmbedUrl(videoUrl) : null
+  const poster = thumbnailUrl || null
+  const hasVideo = Boolean(videoUrl)
+
+  if (!hasVideo) {
+    return poster ? (
+      <img
+        src={poster}
+        alt={title}
+        className="h-full w-full object-cover"
+        onError={(eventImage) => {
+          ;(eventImage.target as HTMLImageElement).style.display = "none"
+        }}
+      />
+    ) : (
+      <div className="flex h-full w-full items-center justify-center">
+        <Video className="h-14 w-14 text-muted-foreground" />
+      </div>
+    )
+  }
+
+  if (youtubeEmbedUrl) {
+    if (!isOpen) {
+      return (
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="relative h-full w-full overflow-hidden text-left"
+        >
+          {poster ? (
+            <img src={poster} alt={title} className="h-full w-full object-cover" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-muted">
+              <Video className="h-14 w-14 text-muted-foreground" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-background/90 text-foreground shadow-lg">
+              <Play className="h-7 w-7 fill-current" />
+            </div>
+          </div>
+        </button>
+      )
+    }
+
+    return (
+      <iframe
+        src={youtubeEmbedUrl}
+        title={title}
+        className="h-full w-full border-0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+      />
+    )
+  }
+
+  if (!isOpen) {
+    return (
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="relative h-full w-full overflow-hidden text-left"
+      >
+        {poster ? (
+          <img src={poster} alt={title} className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-muted">
+            <Video className="h-14 w-14 text-muted-foreground" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-background/90 text-foreground shadow-lg">
+            <Play className="h-7 w-7 fill-current" />
+          </div>
+        </div>
+      </button>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <video
+      src={videoUrl ?? ""}
+      poster={poster ?? undefined}
+      controls
+      autoPlay
+      playsInline
+      className="h-full w-full object-cover"
+    />
+  )
+}
 
-      {/* ── Back ── */}
-      <div className="pt-24 pb-4 px-4 sm:px-6 md:px-8 max-w-6xl mx-auto">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
-        >
-          <ArrowLeft className="w-4 h-4" /> Back to Tickets
-        </button>
-      </div>
+export default function TicketDetailsPage() {
+  const params = useParams<{ id: string }>()
+  const searchParams = useSearchParams()
+  const eventId = params.id
 
-      {/* ── Main ── */}
-      <div className="px-4 sm:px-6 md:px-8 pb-24 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+  const [event, setEvent] = useState<PublicTicketEvent | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
+  const [selectedTicketId, setSelectedTicketId] = useState("")
+  const [buyerName, setBuyerName] = useState("")
+  const [buyerEmail, setBuyerEmail] = useState("")
+  const [buyerPhone, setBuyerPhone] = useState("")
+  const [quantity, setQuantity] = useState(1)
+  const [submitting, setSubmitting] = useState(false)
 
-          {/* ── Left: Event Info ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="lg:col-span-3 space-y-6"
-          >
-            {/* Thumbnail */}
-            <div className="relative rounded-2xl overflow-hidden h-64 sm:h-80 bg-muted">
-              <img
-                src={event.thumbnail}
-                alt={event.title}
-                className="w-full h-full object-cover"
-                onError={(e) => { (e.target as HTMLImageElement).src = "/vibrant-concert.png" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 flex gap-2">
-                <Badge variant="destructive">{event.category}</Badge>
-                <span className="text-xs font-bold px-2 py-1 rounded-full bg-black/60 text-white">
-                  {event.isPhysical ? "📍 In-Person" : "🌐 Online"}
-                </span>
-              </div>
-              <div className="absolute top-4 right-4 flex gap-2">
-                <button
-                  onClick={() => setWishlisted(!wishlisted)}
-                  className="w-9 h-9 rounded-full bg-black/50 flex items-center justify-center hover:bg-black/70 transition-colors"
-                >
-                  <Heart className={`w-4 h-4 ${wishlisted ? "fill-red-500 text-red-500" : "text-white"}`} />
-                </button>
-                <button className="w-9 h-9 rounded-full bg-black/50 flex items-center justify-center hover:bg-black/70 transition-colors">
-                  <Share2 className="w-4 h-4 text-white" />
-                </button>
-              </div>
-            </div>
+  const reference = searchParams.get("reference")
 
-            {/* Title & Meta */}
-            <div className="space-y-3">
-              <h1 className="text-2xl sm:text-3xl font-black text-foreground leading-tight">{event.title}</h1>
-              <p className="text-red-500 font-semibold text-sm">by {event.creator}</p>
-              <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" />{event.date} · {event.time}</span>
-                <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" />{event.location}</span>
-                <span className="flex items-center gap-1.5">
-                  <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                  {event.rating} ({event.reviews} reviews)
-                </span>
-                <span className="flex items-center gap-1.5"><Users className="w-4 h-4" />{event.sold} attending</span>
-              </div>
-            </div>
+  useEffect(() => {
+    let active = true
 
-            {/* Description */}
-            <div className="bg-card border border-border rounded-2xl p-5">
-              <h2 className="font-bold text-foreground mb-2">About this Event</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">{event.description}</p>
-            </div>
+    async function loadEvent() {
+      try {
+        setLoading(true)
+        setError("")
 
-            {/* Capacity */}
-            <div className="bg-card border border-border rounded-2xl p-5">
-              <div className="flex justify-between text-sm mb-2">
-                <span className="font-semibold text-foreground">Availability</span>
-                <span className="text-muted-foreground">{event.sold} / {event.capacity} sold</span>
-              </div>
-              <div className="h-2 bg-muted rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-red-500 rounded-full transition-all"
-                  style={{ width: `${Math.min((event.sold / event.capacity) * 100, 100)}%` }}
-                />
-              </div>
-              {event.sold / event.capacity > 0.8 && (
-                <p className="text-xs text-red-500 font-semibold mt-2">⚡ Selling fast — limited spots left!</p>
-              )}
-            </div>
-          </motion.div>
+        const response = await fetch(`/api/tickets/${eventId}`, {
+          cache: "no-store",
+        })
+        const data = (await response.json()) as EventResponse & { message?: string }
 
-          {/* ── Right: Ticket Selector ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="lg:col-span-2 space-y-4"
-          >
-            <div className="bg-card border border-border rounded-2xl p-6 space-y-5 sticky top-24">
-              <h2 className="font-black text-foreground text-lg">Choose Your Ticket</h2>
+        if (!response.ok) {
+          throw new Error(data.message ?? "Failed to load event")
+        }
 
-              {/* Ticket type selector */}
-              <div className="space-y-3">
-                {event.ticketTypes.map((type) => (
-                  <button
-                    key={type.id}
-                    onClick={() => setSelected(type.id)}
-                    className={`w-full text-left rounded-xl border p-4 transition-all ${
-                      selected === type.id
-                        ? "border-red-500 bg-red-600/10"
-                        : "border-border bg-background hover:border-red-500/40"
-                    }`}
-                  >
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="font-bold text-foreground text-sm">{type.label}</span>
-                      <span className="font-black text-foreground text-sm">
-                        {type.price === 0 ? "FREE" : `₦${type.price.toLocaleString()}`}
-                      </span>
+        if (active) {
+          setEvent(data.event)
+          setSelectedTicketId(data.event.tickets[0]?.id || "")
+        }
+      } catch (err) {
+        if (active) {
+          setError(err instanceof Error ? err.message : "Failed to load event")
+        }
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    void loadEvent()
+
+    return () => {
+      active = false
+    }
+  }, [eventId])
+
+  useEffect(() => {
+    let active = true
+
+    async function loadSession() {
+      try {
+        const response = await fetch("/api/auth/session", { cache: "no-store" })
+        const data = (await response.json()) as SessionResponse
+
+        if (!active) return
+
+        const email = data.user?.email?.trim()
+        const name = data.user?.name?.trim()
+
+        if (email) {
+          setBuyerEmail((current) => current || email)
+        }
+
+        if (name) {
+          setBuyerName((current) => current || name)
+        }
+      } catch {
+        // Session lookup is best-effort.
+      }
+    }
+
+    void loadSession()
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (reference) {
+      setSuccess(`Payment reference: ${reference}`)
+    }
+  }, [reference])
+
+  const selectedTicket = useMemo<PublicTicketItem | null>(() => {
+    if (!event) return null
+    return event.tickets.find((ticket) => ticket.id === selectedTicketId) ?? event.tickets[0] ?? null
+  }, [event, selectedTicketId])
+
+  const totalAmount = useMemo(() => {
+    if (!selectedTicket) return 0
+    return selectedTicket.price * quantity
+  }, [quantity, selectedTicket])
+
+  useEffect(() => {
+    if (!selectedTicket) return
+    setQuantity((current) => {
+      const nextQuantity = Math.max(1, Math.min(current, selectedTicket.remaining))
+      return nextQuantity
+    })
+  }, [selectedTicket])
+
+  async function handlePurchase() {
+    if (!event || !selectedTicket) return
+
+    if (!buyerName.trim()) {
+      setError("Buyer name is required")
+      return
+    }
+
+    if (!buyerEmail.trim()) {
+      setError("Buyer email is required")
+      return
+    }
+
+    setSubmitting(true)
+    setError("")
+    setSuccess("")
+
+    try {
+      const response = await fetch(`/api/tickets/${event.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ticketId: selectedTicket.id,
+          buyerName: buyerName.trim(),
+          buyerEmail: buyerEmail.trim(),
+          buyerPhone: buyerPhone.trim() || null,
+          quantity,
+        }),
+      })
+
+      const data = (await response.json()) as {
+        message?: string
+        payment?: {
+          type?: string
+          authorization_url?: string
+        }
+      }
+
+      if (!response.ok) {
+        throw new Error(data.message ?? "Failed to start checkout")
+      }
+
+      if (data.payment?.type === "free") {
+        setSuccess("Ticket reserved successfully.")
+        const refreshed = await fetch(`/api/tickets/${event.id}`, { cache: "no-store" })
+        const refreshedData = (await refreshed.json()) as EventResponse
+        if (refreshed.ok) {
+          setEvent(refreshedData.event)
+        }
+        return
+      }
+
+      if (data.payment?.authorization_url) {
+        window.location.href = data.payment.authorization_url
+        return
+      }
+
+      throw new Error("Paystack did not return a checkout URL")
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to start checkout")
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-background px-6 text-foreground">
+      <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <Link href="/tickets" className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="h-4 w-4" />
+          Back to tickets
+        </Link>
+
+        {loading ? (
+          <div className="flex min-h-[60vh] items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : error ? (
+          <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-500">
+            {error}
+          </div>
+        ) : event ? (
+          <div className="grid gap-6 lg:grid-cols-[1.3fr_0.9fr]">
+            <section className="space-y-6">
+              <div className="overflow-hidden rounded-lg border border-border bg-card">
+                <div className="relative aspect-[16/7] border-b border-border bg-muted">
+                  <TicketHeroMedia
+                    title={event.title}
+                    thumbnailUrl={event.thumbnailUrl}
+                    videoUrl={event.thumbnailVideoUrl}
+                  />
+
+                  <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="rounded-full bg-background/90 text-foreground">
+                      {formatEventType(event.eventType)}
+                    </Badge>
+                    {event.isHybrid && <Badge className="rounded-full bg-primary text-primary-foreground">Hybrid</Badge>}
+                  </div>
+                </div>
+
+                <div className="space-y-4 p-4 sm:p-6">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="space-y-2">
+                      <p className="text-sm text-muted-foreground">{event.creator.fullName}</p>
+                      <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{event.title}</h1>
                     </div>
-                    <ul className="space-y-1">
-                      {type.perks.map((perk) => (
-                        <li key={perk} className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <CheckCircle className="w-3 h-3 text-red-500 flex-shrink-0" />
-                          {perk}
+                    <Badge variant="outline" className="w-fit rounded-full">
+                      {event.category}
+                    </Badge>
+                  </div>
+
+                  <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+                    {event.description ?? "Event details and ticket options."}
+                  </p>
+
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    <div className="rounded-lg border border-border bg-background p-3">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <CalendarDays className="h-4 w-4" />
+                        <span>Date</span>
+                      </div>
+                      <p className="mt-2 text-sm font-medium">{formatDate(event.scheduledAt)}</p>
+                    </div>
+                    <div className="rounded-lg border border-border bg-background p-3">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <MapPin className="h-4 w-4" />
+                        <span>Location</span>
+                      </div>
+                      <p className="mt-2 text-sm font-medium">{formatLocation(event)}</p>
+                    </div>
+                    <div className="rounded-lg border border-border bg-background p-3">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Users className="h-4 w-4" />
+                        <span>Ticket types</span>
+                      </div>
+                      <p className="mt-2 text-sm font-medium">{event.ticketCount}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Ticket className="h-4 w-4 text-muted-foreground" />
+                  <h2 className="text-lg font-semibold">Ticket types</h2>
+                </div>
+
+                <div className="grid gap-3 md:grid-cols-2">
+                  {event.tickets.map((ticket) => {
+                    const selected = ticket.id === selectedTicketId
+
+                    return (
+                      <button
+                        key={ticket.id}
+                        type="button"
+                        onClick={() => setSelectedTicketId(ticket.id)}
+                        className={`rounded-lg border p-4 text-left transition-colors ${
+                          selected
+                            ? "border-primary bg-primary/10"
+                            : "border-border bg-card hover:border-primary/40"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <h3 className="text-base font-medium">{ticket.ticketType}</h3>
+                              <Badge variant="outline" className="rounded-full">
+                                {ticket.access === "VENUE" ? "Venue" : "Streaming"}
+                              </Badge>
+                            </div>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                              {ticket.description ?? "Ticket details not provided."}
+                            </p>
+                          </div>
+                          {selected && <CheckCircle2 className="h-5 w-5 text-primary" />}
+                        </div>
+
+                        <div className="mt-4 flex flex-wrap gap-2 text-sm text-muted-foreground">
+                          <span className="inline-flex items-center gap-1">
+                            <CircleDollarSign className="h-4 w-4" />
+                            {formatCurrency(ticket.price)}
+                          </span>
+                          <span>{ticket.remaining} left</span>
+                          {ticket.isSoldOut && <span className="text-red-500">Sold out</span>}
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            </section>
+
+            <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start">
+              <div className="rounded-lg border border-border bg-card p-4">
+                <h2 className="text-lg font-semibold">Checkout</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {selectedTicket ? selectedTicket.ticketType : "Select a ticket type"}
+                </p>
+
+                <div className="mt-4 space-y-3">
+                  <div className="rounded-lg border border-border bg-background p-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Price</span>
+                      <span className="font-medium">{selectedTicket ? formatCurrency(selectedTicket.price) : "-"}</span>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Availability</span>
+                      <span className="font-medium">{selectedTicket ? selectedTicket.remaining : 0}</span>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Total</span>
+                      <span className="font-medium">{selectedTicket ? formatCurrency(totalAmount) : "-"}</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Quantity</label>
+                    <Input
+                      type="number"
+                      min={1}
+                      max={selectedTicket?.remaining ?? 1}
+                      value={quantity}
+                      onChange={(event) => {
+                        const nextValue = Number.parseInt(event.target.value, 10)
+                        if (Number.isNaN(nextValue)) {
+                          setQuantity(1)
+                          return
+                        }
+
+                        const max = selectedTicket?.remaining ?? 1
+                        setQuantity(Math.max(1, Math.min(nextValue, max)))
+                      }}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Name</label>
+                    <Input value={buyerName} onChange={(event) => setBuyerName(event.target.value)} placeholder="Buyer name" />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Email</label>
+                    <Input
+                      value={buyerEmail}
+                      onChange={(event) => setBuyerEmail(event.target.value)}
+                      placeholder="Buyer email"
+                      type="email"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Phone</label>
+                    <Input
+                      value={buyerPhone}
+                      onChange={(event) => setBuyerPhone(event.target.value)}
+                      placeholder="Phone number"
+                      type="tel"
+                    />
+                  </div>
+
+                  {success && (
+                    <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-500">
+                      {success}
+                    </div>
+                  )}
+
+                  <Button
+                    type="button"
+                    className="w-full"
+                    onClick={() => void handlePurchase()}
+                    disabled={submitting || !selectedTicket || selectedTicket.isSoldOut}
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing
+                      </>
+                    ) : selectedTicket?.price === 0 ? (
+                      "Claim free ticket"
+                    ) : (
+                      "Proceed to Paystack"
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              {selectedTicket && (
+                <div className="rounded-lg border border-border bg-card p-4">
+                  <h3 className="text-sm font-medium">Included</h3>
+                  {selectedTicket.benefits.length > 0 ? (
+                    <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                      {selectedTicket.benefits.map((benefit) => (
+                        <li key={benefit} className="flex items-start gap-2">
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" />
+                          <span>{benefit}</span>
                         </li>
                       ))}
                     </ul>
-                  </button>
-                ))}
-              </div>
-
-              {/* Summary */}
-              <div className="border-t border-border pt-4 space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Selected</span>
-                  <span className="font-semibold text-foreground">{selectedType.label}</span>
+                  ) : (
+                    <p className="mt-3 text-sm text-muted-foreground">No extra benefits listed.</p>
+                  )}
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Total</span>
-                  <span className="font-black text-foreground text-lg">
-                    {selectedType.price === 0 ? "FREE" : `₦${selectedType.price.toLocaleString()}`}
-                  </span>
-                </div>
-              </div>
-
-              <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold h-12 text-base gap-2">
-                <Play className="w-4 h-4" />
-                {selectedType.price === 0 ? "Register Free" : "Buy Ticket"}
-              </Button>
-
-              <p className="text-xs text-muted-foreground text-center">
-                Secure checkout · Instant confirmation · Free cancellation within 24h
-              </p>
-            </div>
-          </motion.div>
-
-        </div>
-      </div>
-
+              )}
+            </aside>
+          </div>
+        ) : null}
+      </main>
     </div>
   )
 }
