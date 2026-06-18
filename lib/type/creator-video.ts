@@ -17,13 +17,12 @@ export interface Video {
   views: number
   likes: number
   comments: number
-  revenue: number
   thumbnailUrl?: string | null
   videoUrl?: string | null
   createdAt: Date
   updatedAt: Date
   revenue: number // in cents
-  
+   
   // Pricing
   rent24Price?: number | null
   rent48Price?: number | null

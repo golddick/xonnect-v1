@@ -6,10 +6,7 @@ import ScheduleStreamComponent from "../_component/schedule-stream-component"
 export default function NewEventPage() {
   const [showScheduler, setShowScheduler] = useState(true)
 
-  const handleSchedule = (eventData: any) => {
-    console.log("Event scheduled:", eventData)
-    // Handle the scheduled event data
-  }
+ 
 
   const handleClose = () => {
     setShowScheduler(false)
@@ -19,7 +16,7 @@ export default function NewEventPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {showScheduler && <ScheduleStreamComponent onClose={handleClose} onSchedule={handleSchedule} />}
+      {showScheduler && <ScheduleStreamComponent onClose={handleClose} />}
     </div>
   )
 }

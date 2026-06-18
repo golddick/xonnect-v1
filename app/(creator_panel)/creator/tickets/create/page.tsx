@@ -2,30 +2,62 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { X, Save, Plus, Trash2, AlertCircle, DollarSign, Crown, Ticket } from "lucide-react"
+import { AlertCircle, Crown, DollarSign, Plus, Ticket, Trash2, X } from "lucide-react"
+
+type EventOption = {
+  id: string
+  title: string
+  status: string
+}
 
 export default function CreateTicketPage() {
   const router = useRouter()
   const [ticketData, setTicketData] = useState({
-    streamId: "",
+    eventId: "",
     ticketType: "",
-    access: "",
+    access: "STREAM",
     price: 0,
     benefits: [] as string[],
     quantity: 100,
     description: "",
   })
   const [currentBenefit, setCurrentBenefit] = useState("")
-  const [streams, setStreams] = useState([
-    { id: 1, title: "Music Production Masterclass", status: "scheduled" },
-    { id: 2, title: "Q&A Session with Fans", status: "scheduled" },
-  ])
-  const [access, setAccess] = useState([
-    { id: 'STREAM', title: "Stream Access", status: "scheduled" },
-    { id: 'VENUE', title: "Venue Access", status: "scheduled" },
-  ])
+  const [events, setEvents] = useState<EventOption[]>([])
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState("")
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch("/api/creator/events", { cache: "no-store" })
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.message ?? "Failed to load events")
+        }
+
+        setEvents((data.events ?? []).map((event: { id: string; title: string; status: string }) => ({
+          id: event.id,
+          title: event.title,
+          status: event.status,
+        })))
+
+        if (data.events?.length) {
+          setTicketData((prev) => ({ ...prev, eventId: data.events[0].id }))
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load events")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadEvents()
+  }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
@@ -52,23 +84,50 @@ export default function CreateTicketPage() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Submit ticket data
-    console.log("Ticket created:", ticketData)
-    router.push("/creator/tickets")
+    try {
+      setSubmitting(true)
+      setError("")
+
+      const response = await fetch(`/api/creator/events/${ticketData.eventId}/tickets`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(ticketData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message ?? "Failed to create ticket")
+      }
+
+      router.push("/creator/tickets")
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create ticket")
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-t-2 border-red-600 border-solid rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading events...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="min-h-screen bg-background text-foreground p-6">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">
-              Create New Ticket
-            </h1>
-            <p className="text-gray-400 text-sm mt-1">Set up a new ticket type for your stream</p>
+            <h1 className="text-3xl font-bold text-foreground">Create New Ticket</h1>
+            <p className="text-muted-foreground text-sm mt-1">Set up a new ticket type for a creator event</p>
           </div>
           <button
             onClick={() => router.back()}
@@ -78,80 +137,70 @@ export default function CreateTicketPage() {
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className=" border border-border hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 rounded-2xl p-8 space-y-6">
-          {/* Select Stream */}
+        {error && <div className="mb-4 text-sm text-red-400">{error}</div>}
+
+        <form onSubmit={handleSubmit} className="border border-border rounded-2xl p-8 space-y-6">
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
               <Ticket className="w-4 h-4 inline mr-2" />
-              Select Stream *
+              Select Event *
             </label>
             <select
-              name="streamId"
-              value={ticketData.streamId}
+              name="eventId"
+              value={ticketData.eventId}
               onChange={handleInputChange}
               required
               className="w-full bg-transparent border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
             >
-              <option value="">Choose a stream</option>
-              {streams.map((stream) => (
-                <option key={stream.id} value={stream.id}>
-                  {stream.title}
+              <option value="">Choose an event</option>
+              {events.map((event) => (
+                <option key={event.id} value={event.id}>
+                  {event.title} ({event.status})
                 </option>
               ))}
             </select>
           </div>
 
-            <div className=" grid grid-cols-1 md:grid-cols-2 w-full justify-between gap-8">
-              
-            {/* Ticket Access */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              <Ticket className="w-4 h-4 inline mr-2" />
-              Ticket Access *
-            </label>
-            <select
-              name="access"
-              value={ticketData.access}
-              onChange={handleInputChange}
-              required
-              className=" w-full bg-transparent border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
-            >
-              <option value="">Choose a ticket access level</option>
-              {access.map((access) => (
-                <option key={access.id} value={access.id}>
-                  {access.title}
-                </option>
-              ))}
-            </select>
-          </div>
-
-            
-           {/* Ticket Type */}
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              <Crown className="w-4 h-4 inline mr-2" />
-              Ticket Type *
-            </label>
-            <input
-              type="text"
-              name="ticketType"
-              value={ticketData.ticketType}
-              onChange={handleInputChange}
-              placeholder="e.g., VIP Pass, Standard, Premium"
-              required
-              className="w-full bg-transparent border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
-            />
-          </div>
-
+              <label className="block text-sm font-medium text-foreground mb-2">
+                <Ticket className="w-4 h-4 inline mr-2" />
+                Ticket Access *
+              </label>
+              <select
+                name="access"
+                value={ticketData.access}
+                onChange={handleInputChange}
+                required
+                className="w-full bg-transparent border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
+              >
+                <option value="STREAM">Stream Access</option>
+                <option value="VENUE">Venue Access</option>
+              </select>
             </div>
 
-          {/* Price */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                <Crown className="w-4 h-4 inline mr-2" />
+                Ticket Type *
+              </label>
+              <input
+                type="text"
+                name="ticketType"
+                value={ticketData.ticketType}
+                onChange={handleInputChange}
+                placeholder="e.g., VIP Pass, Standard, Premium"
+                required
+                className="w-full bg-transparent border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
+              />
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
                 <DollarSign className="w-4 h-4 inline mr-2" />
-                Price (₦) *
+                Price (NGN) *
               </label>
               <input
                 type="number"
@@ -161,7 +210,7 @@ export default function CreateTicketPage() {
                 min="0"
                 required
                 placeholder="0"
-                className="ww-full bg-transparent border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
+                className="w-full bg-transparent border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
               />
             </div>
 
@@ -179,7 +228,6 @@ export default function CreateTicketPage() {
             </div>
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">Description</label>
             <textarea
@@ -192,7 +240,6 @@ export default function CreateTicketPage() {
             />
           </div>
 
-          {/* Benefits */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">Ticket Benefits</label>
             <div className="flex gap-2 mb-4">
@@ -200,7 +247,7 @@ export default function CreateTicketPage() {
                 type="text"
                 value={currentBenefit}
                 onChange={(e) => setCurrentBenefit(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addBenefit())}
+                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addBenefit())}
                 placeholder="e.g., Front row seat, Exclusive merchandise"
                 className="flex-1 w-full bg-transparent border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
               />
@@ -221,7 +268,7 @@ export default function CreateTicketPage() {
                     key={index}
                     className="bg-muted border border-border rounded-lg px-4 py-2 flex items-center justify-between"
                   >
-                    <span className="text-gray-400">✓ {benefit}</span>
+                    <span className="text-muted-foreground">+ {benefit}</span>
                     <button
                       type="button"
                       onClick={() => removeBenefit(index)}
@@ -235,20 +282,18 @@ export default function CreateTicketPage() {
             )}
           </div>
 
-          {/* Info Box */}
           <div className="bg-yellow-600/20 border border-yellow-600/30 rounded-lg p-4 flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
             <div className="text-yellow-300 text-sm space-y-1">
               <p className="font-medium">Ticket Information</p>
               <ul className="list-disc list-inside space-y-0.5">
-                <li>Ensure your stream is scheduled before creating tickets</li>
+                <li>Ensure the event exists before creating tickets</li>
                 <li>Set competitive prices to attract more buyers</li>
                 <li>Clearly describe all ticket benefits</li>
               </ul>
             </div>
           </div>
 
-          {/* Submit Buttons */}
           <div className="flex gap-3 pt-4">
             <button
               type="button"
@@ -259,10 +304,10 @@ export default function CreateTicketPage() {
             </button>
             <button
               type="submit"
-              className="flex-1 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+              disabled={submitting}
+              className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-6 py-3 rounded-lg transition-colors"
             >
-              <Save className="w-4 h-4" />
-              Create Ticket
+              {submitting ? "Creating..." : "Create Ticket"}
             </button>
           </div>
         </form>

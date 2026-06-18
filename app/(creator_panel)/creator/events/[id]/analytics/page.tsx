@@ -1,351 +1,452 @@
 "use client"
-import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts"
-import {Eye, Heart, DollarSign, TrendingUp, Radio, RadioIcon, EyeOff, ArrowLeft} from "lucide-react"
+
+import { useEffect, useMemo, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
+import { ArrowLeft, Copy, Loader2, Radio, RefreshCw, Ticket, Users, Eye, DollarSign } from "lucide-react"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useState } from "react"
-import { useRouter, useParams } from "next/navigation"
-import {router} from "next/client";
 
-const EventAnalyticsPage = () => {
+type AnalyticsTicketSale = {
+  id: string
+  ticketType: string
+  access: string
+  status: string
+  price: number
+  quantity: number
+  soldCount: number
+  revenue: number
+  completedSales: number
+  refundedSales: number
+  availableSlots: number
+}
 
-  const [showStreamKey, setShowStreamKey] = useState(false)
+type AnalyticsCheckInUser = {
+  id: string
+  fullName: string
+  email: string
+  gateName: string
+  status: string
+  scansToday: number
+  totalScans: number
+  lastLoginAt: string | null
+}
 
-  // Added: Flag to indicate if event is free
-  const isFreeEvent = true // Set this based on your actual event data
+type AnalyticsResponse = {
+  analytics: {
+    event: {
+      id: string
+      title: string
+      status: string
+      category: string
+      scheduledAt: string | null
+      timezone: string
+      durationMinutes: number
+      livekitRoomName: string | null
+      ingressId: string | null
+      streamKey: string | null
+      rtmpUrl: string | null
+      recordingEnabled: boolean
+      recordingStatus: string
+      recordingUrl: string | null
+      recordingStartedAt: string | null
+      recordingEndedAt: string | null
+      revenue: number
+      viewsCount: number
+      likesCount: number
+      commentsCount: number
+      peakViewersCount: number
+      currentViewersCount: number
+      venueParticipantCount: number
+    }
+    summary: {
+      totalTicketRevenue: number
+      totalSales: number
+      totalRefunds: number
+      checkInUsers: number
+      successfulScans: number
+      duplicateScans: number
+      invalidScans: number
+    }
+    ticketSales: AnalyticsTicketSale[]
+    checkInUsers: AnalyticsCheckInUser[]
+    recentScans: Array<{
+      id: string
+      attendeeName: string | null
+      attendeeEmail: string | null
+      gateName: string | null
+      status: string
+      scannedAt: string
+    }>
+    totals: {
+      users: number
+      activeUsers: number
+      inactiveUsers: number
+      scans: number
+      successfulScans: number
+      duplicateScans: number
+      invalidScans: number
+    }
+  }
+}
 
-  // Added: Sample user reservation data for free events
-  const userReservations = [
-    { id: 1, name: "John Doe", email: "john@example.com", reservationDate: "2024-03-15", status: "Confirmed" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", reservationDate: "2024-03-16", status: "Confirmed" },
-    { id: 3, name: "Mike Johnson", email: "mike@example.com", reservationDate: "2024-03-16", status: "Pending" },
-    { id: 4, name: "Sarah Williams", email: "sarah@example.com", reservationDate: "2024-03-17", status: "Confirmed" },
-    { id: 5, name: "David Brown", email: "david@example.com", reservationDate: "2024-03-17", status: "Confirmed" },
-  ]
+export default function EventAnalyticsPage() {
+  const router = useRouter()
+  const params = useParams<{ id: string }>()
+  const eventId = params.id
 
-  const streamData = {
-    title: "Gaming Tournament Championship 2024",
-    totalViews: 125420,
-    avgViewers: 8234,
-    peakViewers: 15680,
-    duration: "3h 45m",
-    likes: 3450,
-    comments: 892,
-    revenue: 8540.5,
-    streamKey: "",
-    rtmpUrl: "",
+  const [analytics, setAnalytics] = useState<AnalyticsResponse["analytics"] | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [generating, setGenerating] = useState(false)
+  const [error, setError] = useState("")
+
+  const loadAnalytics = async () => {
+    try {
+      setLoading(true)
+      setError("")
+      const response = await fetch(`/api/creator/events/${eventId}/analytics`, { cache: "no-store" })
+      const data = (await response.json()) as AnalyticsResponse & { message?: string }
+
+      if (!response.ok) {
+        throw new Error(data.message ?? "Failed to load analytics")
+      }
+
+      setAnalytics(data.analytics)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load analytics")
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const generateStreamKey = () => {
-    const router = useRouter()
-    const key = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-    const rtmp = `rtmp://live.xonnect.com/live/${key}`
+  useEffect(() => {
+    if (eventId) {
+      loadAnalytics()
+    }
+  }, [eventId])
+
+  const generateStreamKey = async () => {
+    try {
+      setGenerating(true)
+      const response = await fetch(`/api/creator/events/${eventId}/livekit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      })
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message ?? "Failed to generate LiveKit ingress")
+      }
+
+      await loadAnalytics()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to generate LiveKit ingress")
+    } finally {
+      setGenerating(false)
+    }
   }
 
-  const viewsOverTime = [
-    { time: "00:00", viewers: 1200 },
-    { time: "00:30", viewers: 3500 },
-    { time: "01:00", viewers: 7200 },
-    { time: "01:30", viewers: 9800 },
-    { time: "02:00", viewers: 12300 },
-    { time: "02:30", viewers: 15680 },
-    { time: "03:00", viewers: 14200 },
-    { time: "03:30", viewers: 8500 },
-    { time: "04:00", viewers: 3200 },
-  ]
+  const copyToClipboard = async (value: string | null | undefined) => {
+    if (!value) return
+    await navigator.clipboard.writeText(value)
+  }
 
-  const ticketBreakdown = [
-    { name: "Venue Access", value: 45, revenue: 3825 },
-    { name: "Stream Access", value: 78, revenue: 2340 },
-    { name: "Premium Access", value: 32, revenue: 2375 },
-  ]
+  const webSocketUrl = process.env.NEXT_PUBLIC_LIVEKIT_WS_URL ?? ""
 
+  const ticketSummary = useMemo(() => {
+    if (!analytics) return { sold: 0, revenue: 0 }
 
-  const viewerDemographics = [
-    { country: "USA", percentage: 35 },
-    { country: "UK", percentage: 18 },
-    { country: "Canada", percentage: 15 },
-    { country: "Australia", percentage: 12 },
-    { country: "Nigeria", percentage: 18 },
-    { country: "Ghana", percentage: 15 },
-    { country: "South Africa", percentage: 12 },
-    { country: "Others", percentage: 20 },
-  ]
+    return analytics.ticketSales.reduce(
+      (acc, ticket) => {
+        acc.sold += ticket.completedSales
+        acc.revenue += ticket.revenue
+        return acc
+      },
+      { sold: 0, revenue: 0 }
+    )
+  }, [analytics])
 
-  const COLORS = ["#ef4444", "#ec4899", "#06b6d4", "#8b5cf6", "#6366f1"]
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground p-6 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-10 h-10 animate-spin mx-auto mb-4 text-red-500" />
+          <p className="text-muted-foreground">Loading event analytics...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error && !analytics) {
+    return (
+      <div className="min-h-screen bg-background text-foreground p-6 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <p className="text-red-400 mb-4">{error}</p>
+          <button
+            onClick={() => loadAnalytics()}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (!analytics) return null
 
   return (
-      <div className="min-h-screen bg-background text-foreground p-8">
-        <div className="max-w-7xl mx-auto">
-          <button
-              onClick={() => router.back()}
-              className="flex items-center mb-2 gap-2 text-gray-400 hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Events
-          </button>
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">{streamData.title}</h1>
-            <p className="text-gray-400">Event Analytics, Performance Metrics & Stream Key</p>
+    <div className="min-h-screen bg-background text-foreground p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Events
+        </button>
+
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold">{analytics.event.title}</h1>
+            <p className="text-muted-foreground mt-2">
+              {analytics.event.category} - {analytics.event.status}
+            </p>
           </div>
 
-          <div className="space-y-4  gap-6 mb-8">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-              <RadioIcon className="w-5 h-5 text-red-400" />
-              Stream Configuration
-            </h3>
+          <button
+            type="button"
+            onClick={generateStreamKey}
+            disabled={generating}
+            className="bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+          >
+            {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+            Generate Stream Key
+          </button>
+        </div>
 
-            <div className=" hover:bg-muted/70 transition-all duration-300 rounded-xl">
-              <div className="flex w-full justify-between gap-6 flex-col md:flex-row">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <Card className="bg-card border border-border rounded-2xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">RTMP URL</label>
-                  <div className="flex gap-2">
-                    <input
-                        type="text"
-                        value={streamData.rtmpUrl || "rtmp://live.xonnect.com/live/"}
-                        readOnly
-                        className="flex-1 border bg-transparent border-gray-600 rounded-lg px-3 py-2 text-foreground text-sm w-full lg:w-96"
-                    />
-                  </div>
+                  <p className="text-muted-foreground text-sm">Views</p>
+                  <p className="text-2xl font-bold">{analytics.event.viewsCount.toLocaleString()}</p>
                 </div>
+                <Eye className="w-8 h-8 text-red-400" />
+              </div>
+            </CardContent>
+          </Card>
 
+          <Card className="bg-card border border-border rounded-2xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Stream Key</label>
-                  <div className="flex gap-2">
-                    <input
-                        type={showStreamKey ? "text" : "password"}
-                        value={streamData.streamKey || "Click generate to create"}
-                        readOnly
-                        className="flex-1  border bg-transparent border-gray-600 rounded-lg px-3 py-2 text-foreground text-sm"
-                    />
-                    <button
-                        type="button"
-                        onClick={() => setShowStreamKey(!showStreamKey)}
-                        className="bg-background hover:bg-gray-600 rounded-lg p-2 transition-colors"
-                    >
-                      {showStreamKey ? (
-                          <EyeOff className="w-4 h-4 text-foreground" />
-                      ) : (
-                          <Eye className="w-4 h-4 text-foreground" />
-                      )}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={generateStreamKey}
-                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-colors"
-                    >
-                      Generate
-                    </button>
-                  </div>
+                  <p className="text-muted-foreground text-sm">Venue Participants</p>
+                  <p className="text-2xl font-bold">{analytics.event.venueParticipantCount.toLocaleString()}</p>
+                </div>
+                <Users className="w-8 h-8 text-red-400" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border border-border rounded-2xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-muted-foreground text-sm">Ticket Sales</p>
+                  <p className="text-2xl font-bold">{ticketSummary.sold.toLocaleString()}</p>
+                </div>
+                <Ticket className="w-8 h-8 text-red-400" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border border-border rounded-2xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-muted-foreground text-sm">Revenue</p>
+                  <p className="text-2xl font-bold text-yellow-500">
+                    NGN {(analytics.summary.totalTicketRevenue + analytics.event.revenue).toLocaleString()}
+                  </p>
+                </div>
+                <DollarSign className="w-8 h-8 text-yellow-500" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="bg-card border border-border rounded-2xl">
+          <CardHeader>
+            <CardTitle className="text-foreground">LiveKit Configuration</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-muted-foreground mb-2">RTMP URL</label>
+                <div className="flex gap-2">
+                  <input
+                    readOnly
+                    value={analytics.event.rtmpUrl ?? "Generate stream key to create RTMP URL"}
+                    className="w-full bg-transparent border border-border rounded-lg px-3 py-2 text-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(analytics.event.rtmpUrl)}
+                    className="border border-border rounded-lg px-3 py-2 hover:bg-muted"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
 
+              <div>
+                <label className="block text-sm text-muted-foreground mb-2">Stream Key</label>
+                <div className="flex gap-2">
+                  <input
+                    readOnly
+                    value={analytics.event.streamKey ?? "Click generate to create"}
+                    className="w-full bg-transparent border border-border rounded-lg px-3 py-2 text-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(analytics.event.streamKey)}
+                    className="border border-border rounded-lg px-3 py-2 hover:bg-muted"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm text-muted-foreground mb-2">Ingress ID</label>
+                <input
+                  readOnly
+                  value={analytics.event.ingressId ?? "Not generated"}
+                  className="w-full bg-transparent border border-border rounded-lg px-3 py-2 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-muted-foreground mb-2">Room Name</label>
+                <input
+                  readOnly
+                  value={analytics.event.livekitRoomName ?? "Not generated"}
+                  className="w-full bg-transparent border border-border rounded-lg px-3 py-2 text-sm"
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <Card className="bg-card border border-border rounded-2xl  hover:bg-muted/50 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-400 text-sm">Total Views</p>
-                    <p className="text-3xl font-bold text-foreground">{streamData.totalViews.toLocaleString()}</p>
-                  </div>
-                  <Eye className="w-8 h-8 text-yellow-500" />
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-muted-foreground mb-2">WebSocket URL</label>
+                <input
+                  readOnly
+                  value={webSocketUrl || "NEXT_PUBLIC_LIVEKIT_WS_URL not set"}
+                  className="w-full bg-transparent border border-border rounded-lg px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-muted-foreground mb-2">Recording Status</label>
+                <input
+                  readOnly
+                  value={analytics.event.recordingStatus}
+                  className="w-full bg-transparent border border-border rounded-lg px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-            <Card className="bg-card border border-border rounded-2xl  hover:bg-muted/50 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-400 text-sm">Venu participant</p>
-                    <p className="text-3xl font-bold text-foreground">{streamData.peakViewers.toLocaleString()}</p>
-                  </div>
-                  <TrendingUp className="w-8 h-8 text-red-500" />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border border-border rounded-2xl  hover:bg-muted/50 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-400 text-sm">Engagement</p>
-                    <p className="text-3xl font-bold">{(streamData.likes + streamData.comments).toLocaleString()}</p>
-                  </div>
-                  <Heart className="w-8 h-8 text-pink-500" />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border border-border rounded-2xl  hover:bg-muted/50 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-400 text-sm">Revenue</p>
-                    <p className="text-3xl font-bold text-foreground">₦{streamData.revenue.toLocaleString()}</p>
-                  </div>
-                  <DollarSign className="w-8 h-8 text-green-500" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <Card className="bg-card border border-border rounded-2xl  hover:bg-muted/50 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
-              <CardHeader>
-                <CardTitle className={"text-foreground"}>Viewers Over Time</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={viewsOverTime}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                    <XAxis dataKey="time" stroke="#666" />
-                    <YAxis stroke="#666" />
-                    <Tooltip contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151" }} />
-                    <Line type="monotone" dataKey="viewers" stroke="#ef4444" strokeWidth={2} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border border-border rounded-2xl  hover:bg-muted/50 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
-              <CardHeader>
-                <CardTitle className={"text-foreground"}>Ticket Breakdown</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                        data={ticketBreakdown}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ name, value }) => `${name}: ${value}`}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                    >
-                      {ticketBreakdown.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
-
-            <Card className=" bg-card border border-border rounded-2xl  hover:bg-muted/50 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
-              <CardHeader>
-                <CardTitle className={"text-foreground"}>Ticket Sales Details</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="border-b border-gray-800">
-                    <tr>
-                      <th className="text-left p-4 font-semibold">Ticket Type</th>
-                      <th className="text-left p-4 font-semibold">Quantity Sold</th>
-                      <th className="text-left p-4 font-semibold">Revenue</th>
-                      <th className="text-left p-4 font-semibold">Percentage</th>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <Card className="bg-card border border-border rounded-2xl">
+            <CardHeader>
+              <CardTitle className="text-foreground">Ticket Sales</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="border-b border-border text-muted-foreground">
+                      <th className="py-2 pr-4">Type</th>
+                      <th className="py-2 pr-4">Sold</th>
+                      <th className="py-2 pr-4">Revenue</th>
+                      <th className="py-2 pr-4">Access</th>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {ticketBreakdown.map((ticket, idx) => (
-                        <tr key={idx} className="border-b border-gray-800 hover:bg-red-800/50">
-                          <td className="p-4">{ticket.name}</td>
-                          <td className="p-4 font-semibold">{ticket.value}</td>
-                          <td className="p-4 text-green-400">₦{ticket.revenue.toLocaleString()}</td>
-                          <td className="p-4">{Math.round((ticket.revenue / streamData.revenue) * 100)}%</td>
-                        </tr>
+                  </thead>
+                  <tbody>
+                    {analytics.ticketSales.map((ticket) => (
+                      <tr key={ticket.id} className="border-b border-border/50">
+                        <td className="py-3 pr-4 font-medium">{ticket.ticketType}</td>
+                        <td className="py-3 pr-4">{ticket.completedSales}</td>
+                        <td className="py-3 pr-4">NGN {ticket.revenue.toLocaleString()}</td>
+                        <td className="py-3 pr-4">{ticket.access}</td>
+                      </tr>
                     ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
 
-            {/* Added: User Reservations Table for Free Events */}
-            {isFreeEvent && (
-                <div className="mb-8">
-                  <Card className="bg-card border border-border rounded-2xl hover:bg-muted/50 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
-                    <CardHeader>
-                      <CardTitle className={"text-foreground"}>User Reservations</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="overflow-x-auto">
-                        <table className="w-full">
-                          <thead className="border-b border-gray-800">
-                          <tr>
-                            <th className="text-left p-4 font-semibold">User Name</th>
-                            <th className="text-left p-4 font-semibold">Email</th>
-                            <th className="text-left p-4 font-semibold">Reservation Date</th>
-                            <th className="text-left p-4 font-semibold">Status</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          {userReservations.map((user) => (
-                              <tr key={user.id} className="border-b border-gray-800 hover:bg-red-800/50">
-                                <td className="p-4">{user.name}</td>
-                                <td className="p-4">{user.email}</td>
-                                <td className="p-4">{user.reservationDate}</td>
-                                <td className="p-4">
-                            <span className={`px-2 py-1 rounded-full text-xs ${
-                                user.status === "Confirmed" ? "bg-green-500/20 text-green-400" : "bg-yellow-500/20 text-yellow-400"
-                            }`}>
-                              {user.status}
-                            </span>
-                                </td>
-                              </tr>
-                          ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-            )}
-
-            <Card className="bg-card border border-border rounded-2xl  hover:bg-muted/50 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
-              <CardHeader>
-                <CardTitle className={"text-foreground"}>Viewer Demographics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={viewerDemographics}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                    <XAxis dataKey="country" stroke="#666" />
-                    <YAxis stroke="#666" />
-                    <Tooltip contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151" }} />
-                    <Bar dataKey="percentage" fill="#ef4444" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-          </div>
-
+          <Card className="bg-card border border-border rounded-2xl">
+            <CardHeader>
+              <CardTitle className="text-foreground">Check-In Crew</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {analytics.checkInUsers.map((user) => (
+                  <div key={user.id} className="border border-border rounded-xl p-4 flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold">{user.fullName}</p>
+                      <p className="text-sm text-muted-foreground">{user.email}</p>
+                      <p className="text-sm text-muted-foreground">{user.gateName}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium">{user.status}</p>
+                      <p className="text-xs text-muted-foreground">{user.totalScans} scans</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
+
+        <Card className="bg-card border border-border rounded-2xl">
+          <CardHeader>
+            <CardTitle className="text-foreground">Recent Scans</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-border text-muted-foreground">
+                    <th className="py-2 pr-4">Attendee</th>
+                    <th className="py-2 pr-4">Email</th>
+                    <th className="py-2 pr-4">Gate</th>
+                    <th className="py-2 pr-4">Status</th>
+                    <th className="py-2 pr-4">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {analytics.recentScans.map((scan) => (
+                    <tr key={scan.id} className="border-b border-border/50">
+                      <td className="py-3 pr-4">{scan.attendeeName ?? "Unknown"}</td>
+                      <td className="py-3 pr-4">{scan.attendeeEmail ?? "-"}</td>
+                      <td className="py-3 pr-4">{scan.gateName ?? "-"}</td>
+                      <td className="py-3 pr-4">{scan.status}</td>
+                      <td className="py-3 pr-4">{new Date(scan.scannedAt).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+
+        {error && <p className="text-red-400">{error}</p>}
       </div>
+    </div>
   )
 }
-
-export default EventAnalyticsPage

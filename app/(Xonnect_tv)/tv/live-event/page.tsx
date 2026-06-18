@@ -1,135 +1,195 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Search, Grid3x3, List, Clock } from "lucide-react"
 import { motion } from "framer-motion"
-import TvSidebar from "@/app/(Xonnect_tv)/tv/_component/tv-sidebar"
+import { useRouter } from "next/navigation"
+
 import StreamCard from "@/app/(Xonnect_tv)/tv/_component/stream-card"
 import { AvatarDropdownMenu } from "@/components/common_component/AvatarDropdown"
-import {ThemeToggle} from "@/components/theme-toggle";
+import { ThemeToggle } from "@/components/theme-toggle"
 
-const LiveEventPage = () => {
+type TvCard = {
+  id: string
+  title: string
+  thumbnail: string
+  channelName: string
+  channelAvatar: string
+  viewers: number
+  isLive: boolean
+  category: string
+  type: string
+  duration?: string | null
+  scheduledAt?: string | null
+  watchId?: string
+}
+
+export default function LiveEventPage() {
+  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showScheduled, setShowScheduled] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [payload, setPayload] = useState<any>(null)
 
-  // Scheduled events (upcoming)
-  const scheduledEvents = Array.from({ length: 8 }).map((_, i) => ({
-    id: `scheduled-${i}`,
-    thumbnail: `/placeholder.svg?height=225&width=400&query=event-${i}`,
-    title: `Upcoming Event ${i + 1}`,
-    channelName: `Event Organizer ${i + 1}`,
-    channelAvatar: "🎤",
-    viewers: 0,
-    isLive: false,
-    category: "Live Event",
-    duration: `In ${Math.floor(Math.random() * 7) + 1} days`,
-    isScheduled: true,
-    startTime: new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000),
-  }))
+  useEffect(() => {
+    let cancelled = false
 
-  // Live events
-  const liveEvents = Array.from({ length: 12 }).map((_, i) => ({
-    id: String(i + 1),
-    thumbnail: `/placeholder.svg?height=225&width=400&query=live-event-${i}`,
-    title: `Live Event ${i + 1}`,
-    channelName: `Event Channel ${i + 1}`,
-    channelAvatar: "🎤",
-    viewers: Math.floor(Math.random() * 1000000) + 10000,
-    isLive: true,
-    category: "Live Event",
-  }))
+    async function loadLiveEvents() {
+      try {
+        setLoading(true)
+        const res = await fetch("/api/tv/live-event")
+        if (!res.ok) return
+        const data = await res.json()
+        if (!cancelled) setPayload(data)
+      } catch (error) {
+        console.error("Failed to load live-event payload:", error)
+        if (!cancelled) setPayload(null)
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    loadLiveEvents()
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const liveEvents: TvCard[] = payload?.live ?? []
+  const scheduledEvents: TvCard[] = payload?.scheduled ?? []
+
+  const filteredEvents = useMemo(() => {
+    const source = showScheduled ? scheduledEvents : liveEvents
+    const query = searchQuery.trim().toLowerCase()
+    if (!query) return source
+    return source.filter((event) =>
+      [event.title, event.channelName, event.category].some((value) => value.toLowerCase().includes(query))
+    )
+  }, [liveEvents, scheduledEvents, searchQuery, showScheduled])
+
+  const headerLabel = showScheduled ? "Scheduled" : "Live Now"
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
-
-      <div className="flex-1 overflow-y-auto  hidden-scrollbar flex flex-col">
-        <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-none ">
+      <div className="flex-1 overflow-y-auto hidden-scrollbar flex flex-col">
+        <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border">
           <div className="flex flex-col gap-4">
-            <div className="hidden lg:flex items-center p-4 justify-between w-full ">
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">🎤Events</h1>
-               <div className="flex items-center gap-2">
-                 <ThemeToggle />
-                 <AvatarDropdownMenu/>
-               </div>
+            <div className="hidden lg:flex items-center p-4 justify-between w-full">
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">Events</h1>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <AvatarDropdownMenu />
+              </div>
             </div>
 
-         <div className=" flex flex-col md:flex-row justify-between gap-4 p-4">
-             {/* Toggle between Live and Scheduled */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowScheduled(false)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                  !showScheduled ? "bg-red-600 text-foreground" : "bg-white/10 text-muted-foreground hover:bg-white/20"
-                }`}
-              >
-                <span className="w-2 h-2 bg-current rounded-full animate-pulse" />
-                <span className="text-sm font-semibold">Live Now</span>
-              </button>
-              <button
-                onClick={() => setShowScheduled(true)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                  showScheduled ? "bg-red-600 text-foreground" : "bg-white/10 text-muted-foreground hover:bg-white/20"
-                }`}
-              >
-                <Clock className="w-4 h-4" />
-                <span className="text-sm font-semibold">Scheduled</span>
-              </button>
-            </div>
-
-            <div className="flex items-center gap-2 md:gap-4 flex-wrap">
-              <div className="relative flex-1 md:flex-none">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search events..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-white/10 border border-white/20 rounded-lg pl-10 pr-4 py-2 text-foreground placeholder-gray-500 focus:outline-none focus:border-red-500 w-full text-sm"
-                />
-              </div>
-
-                  <div className=" hidden md:flex gap-2">
+            <div className="flex flex-col md:flex-row justify-between gap-4 p-4">
+              <div className="flex gap-2">
                 <button
-                  onClick={() => setViewMode("grid")}
-                  className={`p-2 rounded-lg transition-colors ${viewMode === "grid" ? "bg-red-600" : "bg-white/10 hover:bg-white/20"}`}
+                  onClick={() => setShowScheduled(false)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    !showScheduled ? "bg-red-600 text-foreground" : "bg-white/10 text-muted-foreground hover:bg-white/20"
+                  }`}
                 >
-                  <Grid3x3 className="w-4 h-4 text-foreground" />
+                  <span className="w-2 h-2 bg-current rounded-full animate-pulse" />
+                  <span className="text-sm font-semibold">Live Now</span>
                 </button>
                 <button
-                  onClick={() => setViewMode("list")}
-                  className={`p-2 rounded-lg transition-colors hidden md:block ${viewMode === "list" ? "bg-red-600" : "bg-white/10 hover:bg-white/20"}`}
+                  onClick={() => setShowScheduled(true)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    showScheduled ? "bg-red-600 text-foreground" : "bg-white/10 text-muted-foreground hover:bg-white/20"
+                  }`}
                 >
-                  <List className="w-4 h-4 text-foreground" />
+                  <Clock className="w-4 h-4" />
+                  <span className="text-sm font-semibold">Scheduled</span>
                 </button>
               </div>
-         </div>
 
-          
+              <div className="flex items-center gap-2 md:gap-4 flex-wrap">
+                <div className="relative flex-1 md:flex-none">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="Search events..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="bg-transparent border border-border rounded-lg pl-10 pr-4 py-2 text-foreground placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600 w-full text-sm"
+                  />
+                </div>
+
+                <div className="hidden md:flex gap-2">
+                  <button
+                    onClick={() => setViewMode("grid")}
+                    className={`p-2 rounded-lg transition-colors border ${
+                      viewMode === "grid"
+                        ? "bg-red-600 border-red-600"
+                        : "bg-transparent border-border hover:border-red-600/60"
+                    }`}
+                  >
+                    <Grid3x3 className="w-4 h-4 text-foreground" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`p-2 rounded-lg transition-colors border ${
+                      viewMode === "list"
+                        ? "bg-red-600 border-red-600"
+                        : "bg-transparent border-border hover:border-red-600/60"
+                    }`}
+                  >
+                    <List className="w-4 h-4 text-foreground" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="flex-1 p-4 md:p-6 hidden-scrollbar overflow-y-auto">
-          <motion.div
-            key={showScheduled ? "scheduled" : "live"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div
-              className={`grid gap-4 ${viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"}`}
-            >
-              {(showScheduled ? scheduledEvents : liveEvents).map((event) => (
-                <StreamCard key={event.id} {...event} />
-              ))}
+          {loading ? (
+            <div className="min-h-[50vh] flex items-center justify-center text-muted-foreground">
+              Loading events...
             </div>
-          </motion.div>
+          ) : (
+            <>
+              <motion.div
+                key={headerLabel}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-xl font-bold text-foreground">{headerLabel}</h2>
+                  <span className="text-sm text-muted-foreground">
+                    {filteredEvents.length.toLocaleString()} results
+                  </span>
+                </div>
+                <div
+                  className={`grid gap-4 ${
+                    viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
+                  }`}
+                >
+                  {filteredEvents.map((event) => (
+                    <StreamCard
+                      key={event.id}
+                      id={event.id}
+                      thumbnail={event.thumbnail}
+                      title={event.title}
+                      channelName={event.channelName}
+                      channelAvatar={event.channelAvatar}
+                      viewers={event.viewers}
+                      isLive={event.isLive}
+                      category={event.category}
+                      duration={event.duration ?? undefined}
+                      onWatch={() => router.push(`/tv/watch/${event.watchId ?? event.id}`)}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            </>
+          )}
         </div>
       </div>
     </div>
   )
 }
-
-export default LiveEventPage
-

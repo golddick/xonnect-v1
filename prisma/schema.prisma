@@ -21,6 +21,67 @@ enum SuperAdminSettingSection {
   COMPANY_INFO @map("company_info")
 }
 
+enum CreatorEventStatus {
+  DRAFT @map("draft")
+  SCHEDULED @map("scheduled")
+  LIVE @map("live")
+  ENDED @map("ended")
+  CANCELLED @map("cancelled")
+}
+
+enum CreatorEventLocationType {
+  COUNTRY @map("country")
+  STATE @map("state")
+  CITY @map("city")
+  ADDRESS @map("address")
+}
+
+enum CreatorEventLocationRestrictionMode {
+  BLOCK @map("block")
+  ALLOW @map("allow")
+}
+
+enum CreatorEventTicketAccessType {
+  STREAM @map("stream")
+  VENUE @map("venue")
+}
+
+enum CreatorEventTicketStatus {
+  ACTIVE @map("active")
+  PAUSED @map("paused")
+  SOLD_OUT @map("sold_out")
+  ARCHIVED @map("archived")
+}
+
+enum CreatorEventTicketPurchaseStatus {
+  PENDING @map("pending")
+  COMPLETED @map("completed")
+  CANCELLED @map("cancelled")
+  REFUNDED @map("refunded")
+  FAILED @map("failed")
+}
+
+enum CreatorEventCheckInUserStatus {
+  ACTIVE @map("active")
+  INACTIVE @map("inactive")
+}
+
+enum CreatorEventCheckInScanStatus {
+  SUCCESS @map("success")
+  DUPLICATE @map("duplicate")
+  INVALID @map("invalid")
+  REJECTED @map("rejected")
+}
+
+enum CreatorEventRecordingStatus {
+  DISABLED @map("disabled")
+  PENDING @map("pending")
+  RECORDING @map("recording")
+  PROCESSING @map("processing")
+  READY @map("ready")
+  FAILED @map("failed")
+}
+
 model Profile {
   id            String   @id
   email         String   @unique
@@ -49,6 +110,7 @@ model Profile {
 
   credential    AuthCredential?
   session       Session[]
+  videoPurchases CreatorVideoPurchase[]
 
   @@map("profiles")
 }
@@ -109,8 +171,11 @@ model Creator {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  videos    CreatorVideo[]
-  folders   CreatorVideoFolder[]
+  videos         CreatorVideo[]
+  videoPurchases CreatorVideoPurchase[]
+  folders        CreatorVideoFolder[]
+  events         CreatorEvent[]
+  checkInUsers   CreatorEventCheckInUser[]
 
   @@map("creators")
 }
@@ -185,6 +250,7 @@ model CreatorVideo {
   views           CreatorVideoView[]
   likes           CreatorVideoLike[]
   comments        CreatorVideoComment[]
+  purchases       CreatorVideoPurchase[]
 
   // analytics & revenue tracking
   viewsCount      Int      @default(0) @map("views_count")
@@ -198,6 +264,39 @@ model CreatorVideo {
   @@index([creatorId])
   @@index([folderId])
   @@map("creator_videos")
+}
+
+model CreatorVideoPurchase {
+  id              String   @id
+  creatorId       String   @map("creator_id")
+  creator         Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  creatorVideoId  String   @map("creator_video_id")
+  creatorVideo    CreatorVideo @relation(fields: [creatorVideoId], references: [id], onDelete: Cascade)
+
+  buyerProfileId  String?  @map("buyer_profile_id")
+  buyerProfile    Profile? @relation(fields: [buyerProfileId], references: [id], onDelete: SetNull)
+
+  buyerName       String?  @map("buyer_name")
+  buyerEmail      String?  @map("buyer_email")
+  buyerPhone      String?  @map("buyer_phone")
+  purchaseType    String   @map("purchase_type")
+  accessCode      String   @unique @map("access_code")
+
+  amount          Int
+  currency        String   @default("NGN")
+  status          String   @default("PENDING")
+  transactionId   String   @unique @map("transaction_id")
+  accessExpiresAt DateTime? @map("access_expires_at")
+  purchasedAt     DateTime @default(now()) @map("purchased_at")
+  completedAt     DateTime? @map("completed_at")
+
+  @@index([creatorId])
+  @@index([creatorVideoId])
+  @@index([buyerProfileId])
+  @@index([buyerEmail])
+  @@index([status])
+  @@map("creator_video_purchases")
 }
 
 model CreatorVideoView {
@@ -242,6 +341,289 @@ model CreatorVideoComment {
 
 
 
+
+model CreatorEvent {
+  id           String   @id
+  creatorId String   @map("creator_id")
+  creator   Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String?
+  category    String   @default("music")
+  status      CreatorEventStatus @default(SCHEDULED)
+
+  isPrivate                 Boolean @default(false) @map("is_private")
+  isPaid                    Boolean @default(false) @map("is_paid")
+  requireTicket             Boolean @default(false) @map("require_ticket")
+  enableDonations           Boolean @default(false) @map("enable_donations")
+  enableLocationRestriction Boolean @default(false) @map("enable_location_restriction")
+  locationRestrictionType    CreatorEventLocationRestrictionMode @default(BLOCK) @map("location_restriction_type")
+
+  address             String? @map("address")
+  locationName        String? @map("location_name")
+  locationCountry     String? @map("location_country")
+  locationState       String? @map("location_state")
+  locationType        CreatorEventLocationType? @map("location_type")
+  locationLat         Float?  @map("location_lat")
+  locationLon         Float?  @map("location_lon")
+  locationFullAddress String? @map("location_full_address")
+
+  thumbnailUrl         String? @map("thumbnail_url")
+  thumbnailFileId      String? @map("thumbnail_file_id")
+  thumbnailVideoUrl    String? @map("thumbnail_video_url")
+  thumbnailVideoFileId String? @map("thumbnail_video_file_id")
+  recordedVideoUrl     String? @map("recorded_video_url")
+  recordedVideoFileId  String? @map("recorded_video_file_id")
+
+  streamKey String? @unique @map("stream_key")
+  rtmpUrl   String? @map("rtmp_url")
+  ingressId String? @unique @map("ingress_id")
+
+  livekitRoomName String? @unique @map("livekit_room_name")
+
+  recordingEnabled Boolean @default(false) @map("recording_enabled")
+  recordingStatus  CreatorEventRecordingStatus @default(DISABLED) @map("recording_status")
+  recordingAssetId  String? @unique @map("recording_asset_id")
+  recordingUrl      String? @map("recording_url")
+  recordingFileId   String? @map("recording_file_id")
+  recordingStartedAt DateTime? @map("recording_started_at")
+  recordingEndedAt   DateTime? @map("recording_ended_at")
+
+  hasRecordedVideo Boolean @default(false) @map("has_recorded_video")
+  timezone         String  @default("Africa/Lagos")
+  scheduledAt      DateTime? @map("scheduled_at")
+  startedAt        DateTime? @map("started_at")
+  endedAt          DateTime? @map("ended_at")
+  durationMinutes  Int     @default(60) @map("duration_minutes")
+  maxViewers       Int?    @map("max_viewers")
+  estimatedUsers   Int?    @map("estimated_users")
+
+  tags String[] @default([])
+
+  viewsCount           Int @default(0) @map("views_count")
+  likesCount           Int @default(0) @map("likes_count")
+  commentsCount        Int @default(0) @map("comments_count")
+  peakViewersCount     Int @default(0) @map("peak_viewers_count")
+  currentViewersCount  Int @default(0) @map("current_viewers_count")
+  venueParticipantCount Int @default(0) @map("venue_participant_count")
+  revenue              Int @default(0)
+
+  restrictedLocations CreatorEventLocationRestriction[]
+  tickets             CreatorEventTicket[]
+  checkInUsers        CreatorEventCheckInUser[]
+  checkInScans        CreatorEventCheckInScan[]
+  CheckInCameraSessions CreatorEventCheckInCameraSession[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([creatorId])
+  @@index([status])
+  @@index([scheduledAt])
+  @@map("creator_events")
+}
+
+model CreatorEventLocationRestriction {
+  id           String   @id
+  eventId String       @map("event_id")
+  event   CreatorEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  name         String
+  country      String
+  state        String?
+  lat          Float?
+  lon          Float?
+  locationType CreatorEventLocationType @map("location_type")
+  fullAddress  String? @map("full_address")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([eventId])
+  @@map("creator_event_location_restrictions")
+}
+
+model CreatorEventTicket {
+  id           String   @id
+  eventId String       @map("event_id")
+  event   CreatorEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  ticketType  String @map("ticket_type")
+  access      CreatorEventTicketAccessType @default(STREAM)
+  price       Int    @default(0)
+  quantity    Int    @default(0)
+  soldCount   Int    @default(0) @map("sold_count")
+  revenue     Int    @default(0)
+  description String?
+  benefits    String[] @default([])
+  status      CreatorEventTicketStatus @default(ACTIVE)
+
+  purchases CreatorEventTicketPurchase[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([eventId, ticketType])
+  @@index([eventId])
+  @@index([status])
+  @@map("creator_event_tickets")
+}
+
+model CreatorEventTicketPurchase {
+  id           String   @id
+  ticketId String   @map("ticket_id")
+  ticket   CreatorEventTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  buyerName  String @map("buyer_name")
+  buyerEmail String @map("buyer_email")
+  buyerPhone String? @map("buyer_phone")
+  quantity   Int    @default(1)
+
+  amount        Int
+  currency      String @default("NGN")
+  status        CreatorEventTicketPurchaseStatus @default(COMPLETED)
+  transactionId String @unique @map("transaction_id")
+  ticketCode    String @unique @map("ticket_code")
+
+  purchasedAt DateTime @default(now()) @map("purchased_at")
+  refundedAt  DateTime? @map("refunded_at")
+  checkedInAt DateTime? @map("checked_in_at")
+  checkedInByUserId String? @map("checked_in_by_user_id")
+  checkedInByUser CreatorEventCheckInUser? @relation(fields: [checkedInByUserId], references: [id], onDelete: SetNull)
+
+  scans CreatorEventCheckInScan[]
+
+  @@index([ticketId])
+  @@index([buyerEmail])
+  @@index([status])
+  @@map("creator_event_ticket_purchases")
+}
+
+model CreatorEventCheckInUser {
+  id        String   @id
+  creatorId String   @map("creator_id")
+  creator   Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  eventId   String   @map("event_id")
+  event     CreatorEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  fullName  String @map("full_name")
+  email     String @unique
+  username  String @unique
+  passwordHash String @map("password_hash")
+  tempPasswordHash String? @map("temp_password_hash")
+  gateName  String @map("gate_name")
+  status    CreatorEventCheckInUserStatus @default(ACTIVE)
+  mustChangePassword Boolean @default(true) @map("must_change_password")
+
+  scansToday Int @default(0) @map("scans_today")
+  totalScans Int @default(0) @map("total_scans")
+  lastLoginAt DateTime? @map("last_login_at")
+  lastScanAt  DateTime? @map("last_scan_at")
+
+  checkedInPurchases CreatorEventTicketPurchase[]
+  scans CreatorEventCheckInScan[]
+  cameraSessions CreatorEventCheckInCameraSession[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([creatorId])
+  @@index([eventId])
+  @@index([status])
+  @@map("creator_event_check_in_users")
+}
+
+model CreatorEventCheckInCameraSession {
+  id            String   @id
+  tokenHash     String   @unique @map("token_hash")
+  tokenPrefix   String   @map("token_prefix")
+  eventId       String   @map("event_id")
+  event         CreatorEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  operatorUserId String @map("operator_user_id")
+  operatorUser   CreatorEventCheckInUser @relation(fields: [operatorUserId], references: [id], onDelete: Cascade)
+
+  status        String   @default("ACTIVE")
+  expiresAt     DateTime @map("expires_at")
+  openedAt      DateTime? @map("opened_at")
+  connectedAt   DateTime? @map("connected_at")
+  completedAt   DateTime? @map("completed_at")
+  revokedAt     DateTime? @map("revoked_at")
+  lastSeenAt    DateTime? @map("last_seen_at")
+  clientLabel   String?  @map("client_label")
+
+  signals       CreatorEventCheckInCameraSignal[]
+  audits        CreatorEventCheckInCameraAudit[]
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([eventId])
+  @@index([operatorUserId])
+  @@index([status])
+  @@index([expiresAt])
+  @@map("creator_event_check_in_camera_sessions")
+}
+
+model CreatorEventCheckInCameraSignal {
+  id         String   @id
+  sessionId  String   @map("session_id")
+  session    CreatorEventCheckInCameraSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  sender     String
+  type       String
+  payload    String
+
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([sessionId])
+  @@index([createdAt])
+  @@map("creator_event_check_in_camera_signals")
+}
+
+model CreatorEventCheckInCameraAudit {
+  id        String   @id
+  sessionId String?  @map("session_id")
+  session   CreatorEventCheckInCameraSession? @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  actor     String
+  action    String
+  message   String?
+  metadata  String?  @map("metadata")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([sessionId])
+  @@index([actor])
+  @@index([action])
+  @@map("creator_event_check_in_camera_audits")
+}
+
+model CreatorEventCheckInScan {
+  id      String   @id
+  eventId String   @map("event_id")
+  event   CreatorEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  checkInUserId String? @map("check_in_user_id")
+  checkInUser   CreatorEventCheckInUser? @relation(fields: [checkInUserId], references: [id], onDelete: SetNull)
+
+  ticketPurchaseId String? @map("ticket_purchase_id")
+  ticketPurchase   CreatorEventTicketPurchase? @relation(fields: [ticketPurchaseId], references: [id], onDelete: SetNull)
+
+  attendeeName  String? @map("attendee_name")
+  attendeeEmail String? @map("attendee_email")
+  gateName      String? @map("gate_name")
+  scannedCode   String? @unique @map("scanned_code")
+  status        CreatorEventCheckInScanStatus @default(SUCCESS)
+  notes         String?
+  scannedAt     DateTime @default(now()) @map("scanned_at")
+
+  @@index([eventId])
+  @@index([checkInUserId])
+  @@index([ticketPurchaseId])
+  @@index([status])
+  @@map("creator_event_check_in_scans")
+}
 
 model Session {
   id           String   @id

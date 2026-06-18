@@ -14,6 +14,8 @@ interface StreamCardProps {
   isLive: boolean
   category: string
   duration?: string
+  pricing?: string
+  onWatch?: () => void
 }
 
 const StreamCard = ({
@@ -26,6 +28,8 @@ const StreamCard = ({
   isLive,
   category,
   duration,
+  pricing,
+  onWatch,
 }: StreamCardProps) => {
   const [isHovered, setIsHovered] = useState(false)
   const [notified, setNotified] = useState(false)
@@ -36,6 +40,15 @@ const StreamCard = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group cursor-pointer"
+      role="button"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if ((event.key === "Enter" || event.key === " ") && onWatch) {
+          event.preventDefault()
+          onWatch()
+        }
+      }}
+      onClick={() => onWatch?.()}
     >
       <div className="relative rounded-xl hidden-scrollbar overflow-hidden bg-background/20">
         {/* Thumbnail */}
@@ -60,6 +73,12 @@ const StreamCard = ({
             </div>
           )}
 
+          {!isLive && pricing && (
+            <div className="absolute top-12 left-3 bg-red-600/85 text-foreground px-2 py-1 rounded text-xs font-semibold uppercase">
+              {pricing}
+            </div>
+          )}
+
           <div className="absolute top-3 right-3 bg-background/70 text-foreground px-2 py-1 rounded-lg text-xs font-semibold flex items-center space-x-1">
             <Eye className="w-3 h-3" />
             <span>{viewers > 1000 ? `${(viewers / 1000).toFixed(1)}K` : viewers}</span>
@@ -72,16 +91,28 @@ const StreamCard = ({
               animate={{ opacity: 1 }}
               className="absolute inset-0 bg-background/60 backdrop-blur-sm flex items-center justify-center space-x-3"
             >
-              <button className="bg-red-600 hover:bg-red-700 text-foreground px-6 py-2 rounded-lg font-semibold transition-colors">
+              <button
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onWatch?.()
+                }}
+                className="bg-red-600 hover:bg-red-700 text-foreground px-6 py-2 rounded-lg font-semibold transition-colors"
+              >
                 Watch
               </button>
               <button
-                onClick={() => setNotified(!notified)}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setNotified(!notified)
+                }}
                 className={`p-2 rounded-lg transition-colors ${notified ? "bg-yellow-500" : "bg-white/20 hover:bg-white/30"}`}
               >
                 <Bell className={`w-5 h-5 ${notified ? "text-foreground fill-white" : "text-foreground"}`} />
               </button>
-              <button className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors">
+              <button
+                onClick={(event) => event.stopPropagation()}
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
+              >
                 <Share2 className="w-5 h-5 text-foreground" />
               </button>
             </motion.div>
