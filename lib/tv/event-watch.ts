@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
-import { Role } from "@/lib/generated/prisma"
+import { CreatorEventTicket, Role } from "@/lib/generated/prisma"
 
 const db = prisma as any
 
@@ -156,17 +156,17 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
   }
 
   const streamTickets = event.tickets
-    .map((ticket) => ({
+    .map((ticket: CreatorEventTicket) => ({
       ...ticket,
       access: normalizeTicketAccess(ticket.access),
       remaining: Math.max((ticket.quantity ?? 0) - (ticket.soldCount ?? 0), 0),
     }))
-    .filter((ticket) => ticket.access === "STREAM")
+    .filter((ticket: CreatorEventTicket) => ticket.access === "STREAM")
 
   const premium =
     Boolean(event.isPaid) ||
     Boolean(event.requireTicket) ||
-    streamTickets.some((ticket) => ticket.price > 0)
+    streamTickets.some((ticket: CreatorEventTicket) => ticket.price > 0)
 
   const accessCode = options?.accessCode?.trim() ?? null
   const loggedIn = Boolean(email)

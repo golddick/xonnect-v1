@@ -9,7 +9,7 @@ const db = prisma as any
 export type VideoPurchaseType = "rent24" | "rent48" | "purchase"
 
 export type VideoPurchaseBuyer = {
-  buyerName?: string | null
+  buyerName?: string | null 
   buyerEmail: string
   buyerPhone?: string | null
   buyerProfileId?: string | null
@@ -29,16 +29,12 @@ export function calculateVideoRevenueSplit(amount: number, platformFeePercentage
 }
 
 export function getPlatformVideoPercentageFromEnv() {
-  const raw =
-    process.env.PLATFORMVIDOPERCENT ??
-    process.env.PLATFORM_VIDEO_PERCENT ??
-    process.env.PLATFORM_VIDEO_PERCENTAGE ??
-    process.env.PLATFORM_VIDO_PERCENT
+  const raw = process.env.PLATFORM_VIDEO_PERCENT
 
   if (!raw) return null
 
   const parsed = Number(raw)
-  return Number.isFinite(parsed) ? parsed : null
+  return Number.isFinite(parsed) ? parsed : 10
 }
 
 export async function getPlatformVideoFeePercentage() {
