@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import StreamCard from "@/app/(Xonnect_tv)/tv/_component/stream-card"
 import { AvatarDropdownMenu } from "@/components/common_component/AvatarDropdown"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { buildWatchHref } from "@/lib/tv/watch-href"
 
 type TvCard = {
   id: string
@@ -213,7 +214,7 @@ export default function SportPage() {
                   isLive={item.isLive}
                   category={item.category}
                   duration={item.duration ?? undefined}
-                  onWatch={() => router.push(`/tv/watch/${item.watchId ?? item.id}`)}
+                  onWatch={() => router.push(buildWatchHref(item))}
                 />
               ))}
             </div>
