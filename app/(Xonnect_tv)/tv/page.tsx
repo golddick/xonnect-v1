@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"
 import StreamCard from "@/app/(Xonnect_tv)/tv/_component/stream-card"
 import { AvatarDropdownMenu } from "@/components/common_component/AvatarDropdown"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { buildWatchHref } from "@/lib/tv/watch-href"
 
 type TvCard = {
   id: string
@@ -166,7 +167,7 @@ export default function TvPage() {
                 <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-2">{currentFeature.title}</h3>
                 <p className="text-muted-foreground mb-4">{currentFeature.channelName}</p>
                 <button
-                  onClick={() => router.push(`/tv/watch/${currentFeature.watchId ?? currentFeature.id}`)}
+                  onClick={() => router.push(buildWatchHref(currentFeature))}
                   className="w-fit bg-red-600 hover:bg-red-700 text-foreground px-8 py-3 rounded-lg font-bold transition-colors"
                 >
                   Watch Now
@@ -210,7 +211,7 @@ export default function TvPage() {
                   isLive={stream.isLive}
                   category={stream.category}
                   duration={stream.duration ?? undefined}
-                  onWatch={() => router.push(`/tv/watch/${stream.watchId ?? stream.id}`)}
+                  onWatch={() => router.push(buildWatchHref(stream))}
                 />
               ))}
             </div>
@@ -236,7 +237,7 @@ export default function TvPage() {
                   category={video.category}
                   duration={video.duration ?? undefined}
                   pricing={video.pricing}
-                  onWatch={() => router.push(`/tv/watch/${video.watchId ?? video.id}`)}
+                  onWatch={() => router.push(buildWatchHref(video))}
                 />
               ))}
             </div>

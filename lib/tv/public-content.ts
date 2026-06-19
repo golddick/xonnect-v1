@@ -11,6 +11,7 @@ export type PublicTvCategory = {
 
 export type PublicTvCard = {
   id: string
+  watchId?: string | null
   title: string
   thumbnail: string
   channelName: string
@@ -122,6 +123,7 @@ function mapEventToCard(event: {
 
   return {
     id: event.id,
+    watchId: event.id,
     title: event.title,
     thumbnail: buildThumbnail(event.thumbnailUrl, event.thumbnailVideoUrl),
     channelName,
@@ -162,6 +164,7 @@ function mapVideoToCard(video: {
 
   return {
     id: video.id,
+    watchId: video.folder?.id ?? video.id,
     title: video.title,
     thumbnail: buildThumbnail(video.thumbnailUrl),
     channelName,
@@ -212,6 +215,7 @@ function mapFolderToCard(folder: {
 
   return {
     id: folder.id,
+    watchId: folder.id,
     title: folder.title,
     thumbnail: buildThumbnail(folder.thumbnailUrl, videos[0]?.thumbnail),
     channelName,

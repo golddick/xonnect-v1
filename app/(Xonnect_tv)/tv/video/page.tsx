@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import StreamCard from "@/app/(Xonnect_tv)/tv/_component/stream-card"
 import { AvatarDropdownMenu } from "@/components/common_component/AvatarDropdown"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { buildWatchHref } from "@/lib/tv/watch-href"
 
 type VideoItem = {
   id: string
@@ -183,7 +184,7 @@ export default function VideoPage() {
                   category={video.category}
                   duration={video.duration ?? undefined}
                   pricing={video.pricing}
-                  onWatch={() => router.push(`/tv/watch/${video.watchId}`)}
+                  onWatch={() => router.push(buildWatchHref(video))}
                 />
               ))}
             </div>

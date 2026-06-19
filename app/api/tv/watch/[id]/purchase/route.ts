@@ -92,8 +92,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       },
     })
 
-    const callbackUrl = new URL(
-      `/tv/watch/${video.folderId}`,
+  const callbackUrl = new URL(
+      `/tv/watch/folder/${video.folderId}`,
       process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
     )
     callbackUrl.searchParams.set("accessCode", pendingPurchase.accessCode)
