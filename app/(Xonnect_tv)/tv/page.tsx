@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 
 import StreamCard from "@/app/(Xonnect_tv)/tv/_component/stream-card"
+import TvLoadingState from "@/app/(Xonnect_tv)/tv/_component/tv-loading-state"
 import { AvatarDropdownMenu } from "@/components/common_component/AvatarDropdown"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { buildWatchHref } from "@/lib/tv/watch-href"
@@ -95,6 +96,20 @@ export default function TvPage() {
 
   const currentFeature = featuredStreams[carouselIndex] ?? featuredStreams[0] ?? null
 
+  if (loading) {
+    return <TvLoadingState variant="landing" />
+  }
+
+  const hasAnyContent = Boolean(currentFeature || filteredLive.length > 0 || filteredVideo.length > 0)
+
+  if (!hasAnyContent) {
+    return (
+      <div className="flex h-full min-h-[calc(100vh-4rem)] items-center justify-center p-6 text-muted-foreground">
+        No content available
+      </div>
+    )
+  }
+
   return (
     <div className="flex h-screen bg-background overflow-hidden hidden-scrollbar flex-col lg:flex-row">
       <div className="flex-1 overflow-y-auto hidden-scrollbar flex flex-col">
@@ -143,7 +158,7 @@ export default function TvPage() {
           </div>
         </div>
 
-        <div className="p-4 md:p-6 space-y-8">
+        <div className="md:p-6 space-y-8">
           {currentFeature ? (
             <motion.div
               key={currentFeature.id}
@@ -160,9 +175,15 @@ export default function TvPage() {
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse" />
                   <span className="text-red-500 text-sm font-bold">
-                    {currentFeature.isLive ? "LIVE" : "FEATURED"}
+                    {currentFeature.isLive ? "LIVE" : "COMING UP"}
                   </span>
-                  <span className="text-foreground text-sm">{currentFeature.viewers.toLocaleString()} watching</span>
+                 {currentFeature.isLive && (
+                    <>
+                      <span className="text-foreground text-sm">
+                        {currentFeature.viewers.toLocaleString()} watching
+                      </span>
+                    </>
+                  )}
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-2">{currentFeature.title}</h3>
                 <p className="text-muted-foreground mb-4">{currentFeature.channelName}</p>
@@ -174,11 +195,7 @@ export default function TvPage() {
                 </button>
               </div>
             </motion.div>
-          ) : (
-            <div className="rounded-2xl border border-border bg-muted/20 aspect-video flex items-center justify-center text-muted-foreground">
-              {loading ? "Loading featured content..." : "No featured content available"}
-            </div>
-          )}
+          ) : null}
 
           {featuredStreams.length > 1 && (
             <div className="flex gap-2 justify-center">
@@ -193,54 +210,66 @@ export default function TvPage() {
           )}
 
           <div className="space-y-4">
-            <h2 className="text-xl md:text-2xl font-bold text-foreground">Live Now</h2>
-            <div
-              className={`grid gap-4 ${
-                viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
-              }`}
-            >
-              {filteredLive.map((stream) => (
-                <StreamCard
-                  key={stream.id}
-                  id={stream.id}
-                  thumbnail={stream.thumbnail}
-                  title={stream.title}
-                  channelName={stream.channelName}
-                  channelAvatar={stream.channelAvatar}
-                  viewers={stream.viewers}
-                  isLive={stream.isLive}
-                  category={stream.category}
-                  duration={stream.duration ?? undefined}
-                  onWatch={() => router.push(buildWatchHref(stream))}
-                />
-              ))}
-            </div>
+            <h2 className="text-xl md:text-2xl font-bold text-foreground">Events</h2>
+            {filteredLive.length > 0 ? (
+              <div
+                className={`grid gap-4 ${
+                  viewMode === "grid" ? "grid-cols-2 md:grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" : "grid-cols-1"
+                }`}
+              >
+                {filteredLive.map((stream) => (
+                  <StreamCard
+                    key={stream.id}
+                    id={stream.id}
+                    thumbnail={stream.thumbnail}
+                    title={stream.title}
+                    channelName={stream.channelName}
+                    channelAvatar={stream.channelAvatar}
+                    viewers={stream.viewers}
+                    isLive={stream.isLive}
+                    category={stream.category}
+                    duration={stream.duration ?? undefined}
+                    onWatch={() => router.push(buildWatchHref(stream))}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-border bg-muted/20 p-6 text-sm text-muted-foreground">
+                No content available
+              </div>
+            )}
           </div>
 
           <div className="space-y-4">
             <h2 className="text-xl md:text-2xl font-bold text-foreground">Video</h2>
-            <div
-              className={`grid gap-4 ${
-                viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
-              }`}
-            >
-              {filteredVideo.map((video) => (
-                <StreamCard
-                  key={video.id}
-                  id={video.id}
-                  thumbnail={video.thumbnail}
-                  title={video.title}
-                  channelName={video.channelName}
-                  channelAvatar={video.channelAvatar}
-                  viewers={video.viewers}
-                  isLive={video.isLive}
-                  category={video.category}
-                  duration={video.duration ?? undefined}
-                  pricing={video.pricing}
-                  onWatch={() => router.push(buildWatchHref(video))}
-                />
-              ))}
-            </div>
+            {filteredVideo.length > 0 ? (
+              <div
+                className={`grid gap-4 ${
+                  viewMode === "grid" ? "grid-cols-2 md:grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" : "grid-cols-1"
+                }`}
+              >
+                {filteredVideo.map((video) => (
+                  <StreamCard
+                    key={video.id}
+                    id={video.id}
+                    thumbnail={video.thumbnail}
+                    title={video.title}
+                    channelName={video.channelName}
+                    channelAvatar={video.channelAvatar}
+                    viewers={video.viewers}
+                    isLive={video.isLive}
+                    category={video.category}
+                    duration={video.duration ?? undefined}
+                    pricing={video.pricing}
+                    onWatch={() => router.push(buildWatchHref(video))}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-border bg-muted/20 p-6 text-sm text-muted-foreground">
+                No content available
+              </div>
+            )}
           </div>
         </div>
       </div>

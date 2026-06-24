@@ -27,6 +27,15 @@ export function calculateRevenueSplit(amount: number, platformFeePercentage: num
   }
 }
 
+export function getPlatformVenuePercentageFromEnv() {
+  const raw = process.env.PLATFORM_VENUE_PERCENT
+
+  if (!raw) return null
+
+  const parsed = Number(raw)
+  return Number.isFinite(parsed) ? parsed : 5
+}
+
 export async function getPlatformFeePercentage() {
   const setting = await db.superAdminSetting.findUnique({
     where: {
@@ -44,6 +53,13 @@ export async function getPlatformFeePercentage() {
         }
       : null
   ).platformFeePercentage
+}
+
+export async function getPlatformVenueFeePercentage() {
+  const fromEnv = getPlatformVenuePercentageFromEnv()
+  if (fromEnv !== null) return fromEnv
+
+  return getPlatformFeePercentage()
 }
 
 export async function completePurchase(args: {
@@ -68,21 +84,24 @@ export async function completePurchase(args: {
     return { alreadyCompleted: true }
   }
 
-  const feePercentage = await getPlatformFeePercentage()
-  const revenueSplit = calculateRevenueSplit(args.amount, feePercentage)
-  const ticketCode = createPurchaseTicketCode(args.ticketId, args.reference)
   const ticket = await db.creatorEventTicket.findUnique({
     where: { id: args.ticketId },
     select: {
       quantity: true,
       soldCount: true,
       status: true,
+      access: true,
     },
   })
 
   if (!ticket) {
     throw new Error("Ticket not found")
   }
+
+  const feePercentage =
+    ticket.access === "VENUE" ? await getPlatformVenueFeePercentage() : await getPlatformFeePercentage()
+  const revenueSplit = calculateRevenueSplit(args.amount, feePercentage)
+  const ticketCode = createPurchaseTicketCode(args.ticketId, args.reference)
 
   const purchaseQuantity = Math.max(existing.quantity ?? 1, 1)
 
@@ -146,7 +165,7 @@ export async function completePurchase(args: {
         },
       },
     },
-  })
+  }) 
 
   if (completedPurchase) {
     sendTicketConfirmationEmail({
@@ -194,6 +213,7 @@ export async function createPendingPurchase(args: {
 
   const purchase = await db.creatorEventTicketPurchase.create({
     data: {
+      id:dropid("purchase"),
       ticketId: args.ticketId,
       buyerName: args.buyer.buyerName,
       buyerEmail: args.buyer.buyerEmail,

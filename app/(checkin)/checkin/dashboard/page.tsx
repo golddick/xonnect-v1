@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import CameraSessionPanel from "./_components/camera-session-panel"
 import { sendCameraSessionAction } from "@/lib/checkin-camera-client"
+import LoadingSplash from "@/components/splash_screen/loading-splash"
 
 type DashboardResponse = {
   user: {
@@ -30,6 +31,7 @@ type DashboardResponse = {
     email: string
     scansToday: number
     totalScans: number
+    lastLoginAt: string | null
     event: {
       id: string
       title: string
@@ -196,9 +198,11 @@ export default function CheckInDashboard() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-      </div>
+      <div className="min-h-screen bg-background text-foreground p-6 flex items-center justify-center">
+               
+                <LoadingSplash />
+        
+            </div>
     )
   }
 

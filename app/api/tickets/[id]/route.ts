@@ -12,7 +12,7 @@ async function getPublicEvent(eventId: string) {
   const event = await db.creatorEvent.findFirst({
     where: {
       id: eventId,
-      isPrivate: false,
+      isPrivate: false, 
       status: {
         in: ["SCHEDULED", "LIVE", "ENDED"],
       },

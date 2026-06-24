@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation"
 import { ArrowLeft, Copy, Loader2, Radio, RefreshCw, Ticket, Users, Eye, DollarSign } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import LoadingSplash from "@/components/splash_screen/loading-splash"
 
 type AnalyticsTicketSale = {
   id: string
@@ -106,6 +107,8 @@ export default function EventAnalyticsPage() {
       const response = await fetch(`/api/creator/events/${eventId}/analytics`, { cache: "no-store" })
       const data = (await response.json()) as AnalyticsResponse & { message?: string }
 
+      console.log(data, "analytics data fetched")
+
       if (!response.ok) {
         throw new Error(data.message ?? "Failed to load analytics")
       }
@@ -168,10 +171,9 @@ export default function EventAnalyticsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background text-foreground p-6 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-10 h-10 animate-spin mx-auto mb-4 text-red-500" />
-          <p className="text-muted-foreground">Loading event analytics...</p>
-        </div>
+         
+          <LoadingSplash />
+  
       </div>
     )
   }
@@ -195,14 +197,14 @@ export default function EventAnalyticsPage() {
   if (!analytics) return null
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-6">
+    <div className="min-h-screen bg-background text-foreground p-4">
       <div className="max-w-7xl mx-auto space-y-6">
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Events
+          Back 
         </button>
 
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
@@ -220,7 +222,7 @@ export default function EventAnalyticsPage() {
             className="bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-4 py-2 rounded-lg flex items-center gap-2"
           >
             {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-            Generate Stream Key
+            Generate Key
           </button>
         </div>
 
@@ -267,7 +269,7 @@ export default function EventAnalyticsPage() {
                 <div>
                   <p className="text-muted-foreground text-sm">Revenue</p>
                   <p className="text-2xl font-bold text-yellow-500">
-                    NGN {(analytics.summary.totalTicketRevenue + analytics.event.revenue).toLocaleString()}
+                    NGN {( analytics.event.revenue).toLocaleString()}
                   </p>
                 </div>
                 <DollarSign className="w-8 h-8 text-yellow-500" />
@@ -318,26 +320,26 @@ export default function EventAnalyticsPage() {
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm text-muted-foreground mb-2">Ingress ID</label>
                 <input
                   readOnly
                   value={analytics.event.ingressId ?? "Not generated"}
                   className="w-full bg-transparent border border-border rounded-lg px-3 py-2 text-sm"
                 />
-              </div>
+              </div> */}
 
-              <div>
+              {/* <div>
                 <label className="block text-sm text-muted-foreground mb-2">Room Name</label>
                 <input
                   readOnly
                   value={analytics.event.livekitRoomName ?? "Not generated"}
                   className="w-full bg-transparent border border-border rounded-lg px-3 py-2 text-sm"
                 />
-              </div>
+              </div> */}
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm text-muted-foreground mb-2">WebSocket URL</label>
                 <input
@@ -354,7 +356,7 @@ export default function EventAnalyticsPage() {
                   className="w-full bg-transparent border border-border rounded-lg px-3 py-2 text-sm"
                 />
               </div>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
 
@@ -378,7 +380,7 @@ export default function EventAnalyticsPage() {
                     {analytics.ticketSales.map((ticket) => (
                       <tr key={ticket.id} className="border-b border-border/50">
                         <td className="py-3 pr-4 font-medium">{ticket.ticketType}</td>
-                        <td className="py-3 pr-4">{ticket.completedSales}</td>
+                        <td className="py-3 pr-4">{ticket.soldCount}</td>
                         <td className="py-3 pr-4">NGN {ticket.revenue.toLocaleString()}</td>
                         <td className="py-3 pr-4">{ticket.access}</td>
                       </tr>

@@ -5,6 +5,7 @@ import { Grid3x3, List, Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import StreamCard from "@/app/(Xonnect_tv)/tv/_component/stream-card"
+import TvLoadingState from "@/app/(Xonnect_tv)/tv/_component/tv-loading-state"
 import { AvatarDropdownMenu } from "@/components/common_component/AvatarDropdown"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { buildWatchHref } from "@/lib/tv/watch-href"
@@ -51,7 +52,6 @@ export default function VideoPage() {
       try {
         setLoading(true)
         const params = new URLSearchParams({
-          // folderType: "all",
           pricing,
           search: searchQuery,
         })
@@ -82,6 +82,10 @@ export default function VideoPage() {
     if (loading) return "Loading videos"
     return `${items.length.toLocaleString()} titles`
   }, [items.length, loading])
+
+  if (loading) {
+    return <TvLoadingState variant="section" />
+  }
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -155,19 +159,15 @@ export default function VideoPage() {
         </div>
 
         <div className="flex-1 p-4 md:p-6 hidden-scrollbar overflow-y-auto">
-          {loading ? (
+          {items.length === 0 ? (
             <div className="min-h-[50vh] flex items-center justify-center text-muted-foreground">
-              Loading videos...
-            </div>
-          ) : items.length === 0 ? (
-            <div className="min-h-[50vh] flex items-center justify-center text-muted-foreground">
-              No videos matched the current filters.
+              No content available
             </div>
           ) : (
             <div
               className={`grid gap-6 ${
                 viewMode === "grid"
-                  ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+                  ? "grid-cols-2 md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5"
                   : "grid-cols-1"
               }`}
             >

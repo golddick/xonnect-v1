@@ -168,7 +168,7 @@ export async function sendTicketConfirmationEmail(context: TicketConfirmationCon
       location: context.location ?? null,
       ticketType: context.ticketType,
       access: context.access,
-      quantity: context.quantity,
+      quantity: context.quantity, 
       amount: context.amount,
       ticketCode: context.ticketCode,
       qrImageDataUrl,

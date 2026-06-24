@@ -64,6 +64,7 @@ export async function GET(
         !search ||
         purchase.buyerName.toLowerCase().includes(search) ||
         purchase.buyerEmail.toLowerCase().includes(search) ||
+        purchase.quantity.toLowerCase().includes(search) || 
         purchase.transactionId.toLowerCase().includes(search)
 
       const matchesStatus = status === "all" || purchase.status.toLowerCase() === status

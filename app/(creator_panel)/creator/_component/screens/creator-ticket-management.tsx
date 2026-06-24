@@ -6,6 +6,7 @@ import { Bell, Edit, Eye, Menu, Plus, Search, Ticket, X, Zap } from "lucide-reac
 
 import { ThemeToggle } from "@/components/theme-toggle"
 import { sidebarItems } from "@/lib/constant"
+import LoadingSplash from "@/components/splash_screen/loading-splash"
 
 type EventOption = {
   id: string
@@ -150,7 +151,7 @@ export default function CreatorTicketsManagement() {
       )}
 
       <div className="w-full">
-        <div className="border-b border-border bg-transparent backdrop-blur-sm sticky top-0 z-10 p-6">
+        <div className="border-b border-border bg-transparent backdrop-blur-sm sticky top-0 z-10 p-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
               <button
@@ -160,30 +161,30 @@ export default function CreatorTicketsManagement() {
                 <Menu className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Tickets Management</h1>
+                <h1 className="text-2xl font-bold text-foreground">Tickets </h1>
                 <p className="text-sm text-muted-foreground">
-                  {selectedEvent ? selectedEvent.title : "Select an event to manage its tickets"}
+                  {selectedEvent ? selectedEvent.title : "Select an event "}
                 </p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="relative bg-background hover:bg-muted rounded-lg p-2 transition-colors">
+              {/* <button className="relative bg-background hover:bg-muted rounded-lg p-2 transition-colors">
                 <Bell className="w-5 h-5" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-600 rounded-full" />
-              </button>
+              </button> */}
               <ThemeToggle />
               <button
                 onClick={() => router.push("/creator/tickets/create")}
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
-                <span>Create Ticket</span>
+                <span className="hidden md:block">Create Ticket</span>
               </button>
             </div>
           </div>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-4 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-muted-foreground mb-2">Event</label>
@@ -192,7 +193,7 @@ export default function CreatorTicketsManagement() {
                 onChange={(e) => setSelectedEventId(e.target.value)}
                 className="w-full bg-transparent border border-border rounded-xl px-4 py-3"
               >
-                <option value="">Select an event</option>
+                <option value="">Select</option>
                 {events.map((event) => (
                   <option key={event.id} value={event.id}>
                     {event.title} ({event.status})
@@ -201,7 +202,7 @@ export default function CreatorTicketsManagement() {
               </select>
             </div>
             <div className="relative">
-              <label className="block text-sm text-muted-foreground mb-2">Search tickets</label>
+              <label className="block text-sm text-muted-foreground mb-2">Search </label>
               <Search className="absolute left-3 top-[3.1rem] transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
               <input
                 type="text"
@@ -213,7 +214,9 @@ export default function CreatorTicketsManagement() {
             </div>
           </div>
 
-          {loading && <div className="text-muted-foreground">Loading tickets...</div>}
+          {loading && <div className="min-h-screen bg-background text-foreground p-6 flex items-center justify-center">
+             <LoadingSplash />
+            </div>}
           {error && <div className="text-red-400">{error}</div>}
 
           {!loading && !error && (

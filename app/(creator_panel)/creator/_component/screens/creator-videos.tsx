@@ -86,6 +86,9 @@ export default function CreatorVideos() {
         }
 
         const data = await res.json()
+
+        console.log(data, 'data')
+        
         if (!cancelled) {
           setVideos((data?.items ?? []) as CreatorVideoListItem[])
         }
@@ -356,7 +359,8 @@ export default function CreatorVideos() {
                   </div>
                 </div>
 
-      <div className="p-6">
+       
+        <div className="p-6">
 
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <h3 className="text-lg font-bold text-foreground line-clamp-2">{video.title}</h3>

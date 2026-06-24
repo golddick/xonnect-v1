@@ -2,8 +2,6 @@ import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { Role } from "@/lib/generated/prisma"
 
-const PUBLIC_VIDEO_STATUSES = new Set(["published", "scheduled"])
-
 export type WatchPart = {
   id: string
   title: string
@@ -129,12 +127,6 @@ export async function loadWatchFolderData(
   const videos = await prisma.creatorVideo.findMany({
     where: {
       folderId: folder.id,
-      ...(canBypassAccess
-        ? {}
-        : {
-            isPrivate: false,
-            status: { in: Array.from(PUBLIC_VIDEO_STATUSES) },
-          }),
     },
     orderBy: [{ episodeIndex: "asc" }, { createdAt: "asc" }],
     select: {
@@ -241,7 +233,7 @@ export async function loadWatchFolderData(
     }
   })
 
-  const folderIsLocked = parts.every((part) => part.isLocked)
+  const folderIsLocked = parts.length > 0 && parts.every((part) => part.isLocked)
   const publicParts = parts.filter((part) => !part.isLocked)
   const creatorName = folder.creator.profile.fullName?.trim() || "Xonnect Creator"
 
@@ -263,7 +255,7 @@ export async function loadWatchFolderData(
       access: {
         locked: folderIsLocked,
         accessCodeProvided: Boolean(options?.accessCode),
-        canUseAccessCode: true,
+        canUseAccessCode: parts.some((part) => part.isLocked),
         requiresSignIn: !session?.user?.email,
         loggedIn: Boolean(session?.user?.email),
         canBypassAccess,

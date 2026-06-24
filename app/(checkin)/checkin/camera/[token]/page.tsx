@@ -237,11 +237,23 @@ export default function CameraTokenPage() {
       })
       await peerConnection.setLocalDescription(offer)
 
-      await sendCameraSessionAction(token, "signal", {
-        sender: "phone",
-        type: "offer",
-        payload: offer.toJSON(),
-      })
+      peerConnection.onicecandidate = async (event) => {
+      if (event.candidate) {
+        // Convert the candidate to a plain object using toJSON
+        const candidateJSON = event.candidate.toJSON();
+        await sendCameraSessionAction(token, "signal", {
+          sender: "phone",
+          type: "candidate",
+          payload: candidateJSON,
+        });
+      }
+    }
+      
+      // await sendCameraSessionAction(token, "signal", {
+      //   sender: "phone",
+      //   type: "offer",
+      //   payload: offer.toJSON(),
+      // }) 
 
       lastSignalAtRef.current = new Date().toISOString()
       setStatus("connecting")

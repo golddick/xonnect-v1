@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { BadgePercent, Lock } from "lucide-react"
 
 type PurchaseType = "rent24" | "rent48" | "purchase"
@@ -35,6 +36,8 @@ type WatchAccessOverlayProps = {
   paymentUrl?: string
   onUsePaymentCode?: () => void
   onContinueToPayment?: () => void
+  secondaryActionLabel?: string
+  secondaryActionHref?: string
 }
 
 const PURCHASE_LABELS: Record<PurchaseType, string> = {
@@ -68,6 +71,8 @@ export default function WatchAccessOverlay({
   paymentUrl,
   onUsePaymentCode,
   onContinueToPayment,
+  secondaryActionLabel,
+  secondaryActionHref,
 }: WatchAccessOverlayProps) {
   return (
     <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/72 backdrop-blur-sm p-4">
@@ -145,21 +150,41 @@ export default function WatchAccessOverlay({
               <button
                 key={option.type}
                 type="button"
-                onClick={() => onPurchase(option.type)}
-                className="rounded-xl border border-border px-4 py-3 text-left hover:border-red-600/60 transition-colors disabled:opacity-50"
-                disabled={isPurchasing !== null}
+                onClick={() => {
+                  if (option.price === null || option.price === undefined || option.price <= 0) return
+                  onPurchase(option.type)
+                }}
+                className="rounded-xl border border-border px-4 py-3 text-left transition-colors hover:border-red-600/60 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={
+                  isPurchasing !== null || option.price === null || option.price === undefined || option.price <= 0
+                }
               >
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-sm font-semibold text-foreground">{PURCHASE_LABELS[option.type]}</span>
                   <BadgePercent className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  {option.price ? `NGN ${Number(option.price).toLocaleString()}` : "Unavailable"}
+                  {option.price && option.price > 0 ? `NGN ${Number(option.price).toLocaleString()}` : "Unavailable"}
                 </p>
               </button>
             ))}
           </div>
         )}
+
+        {secondaryActionHref && secondaryActionLabel && (
+          <Link
+            href={secondaryActionHref}
+            className="inline-flex w-full items-center justify-center rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-foreground hover:bg-red-700"
+          >
+            {secondaryActionLabel}
+          </Link>
+        )}
+
+        {purchaseOptions.length > 0 &&
+          onPurchase &&
+          purchaseOptions.every((option) => !option.price || option.price <= 0) && (
+            <p className="text-sm text-muted-foreground">No purchase options are currently available.</p>
+          )}
 
         {paymentAccessCode && (
           <div className="rounded-xl border border-red-600/30 bg-red-600/10 p-4">

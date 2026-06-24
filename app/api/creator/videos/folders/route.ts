@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
     const session = await auth()
     const role = session?.user?.role
 
+
     if (!session?.user?.email || role !== Role.CREATOR) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
     }

@@ -223,7 +223,7 @@ model CreatorVideo {
   isPremium       Boolean  @default(false) @map("is_premium")
   monetizationType String   @default("free") @map("monetization_type")
 
-  status          String   @default("processing")
+  status          String   @default("published") 
   publishNow      Boolean  @default(true) @map("publish_now")
   scheduledAt     DateTime? @map("scheduled_at")
 
