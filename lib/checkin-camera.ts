@@ -3,7 +3,7 @@ import crypto from "crypto"
 import QRCode from "qrcode"
 
 const CAMERA_SESSION_TTL_MINUTES = 2
-const CAMERA_LOGO_URL = process.env.LOGO?.trim() || ""
+const CAMERA_LOGO_URL = process.env.LOGO?.trim() || "https://utfs.io/f/Sgkj9xKh6THfmetGRdWbY8exhNzLoErGW0lkfQ3VPOyXdZDB"
 
 export type CheckInCameraStatus =
   | "ACTIVE"
@@ -94,7 +94,7 @@ export async function createCheckInCameraQrDataUrl(token: string) {
 }
 
 export function getCameraSessionExpiry() {
-  return new Date(Date.now() + CAMERA_SESSION_TTL_MINUTES * 60 * 1000)
+  return new Date(Date.now() + CAMERA_SESSION_TTL_MINUTES + 2 * 60 * 60 * 1000)
 }
 
 export function isCameraStatusActive(status: string) {

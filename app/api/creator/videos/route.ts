@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
         allowComments: body.allowComments ?? true,
         ageRestriction: body.ageRestriction ?? false,
 
-        status: body.status ?? (body.publishNow ? "processing" : "scheduled"),
+        status: body.status ?? (body.publishNow ? "published" : "scheduled"),
 
         publishNow: body.publishNow ?? true,
         scheduledAt: body.scheduledAt ? new Date(body.scheduledAt) : null,

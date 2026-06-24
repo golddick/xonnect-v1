@@ -158,7 +158,7 @@ export async function POST(request: NextRequest) {
           purchaseType,
           buyer: {
             buyerName,
-            buyerEmail,
+            buyerEmail, 
             buyerPhone,
             buyerProfileId:
               typeof metadata.buyerProfileId === "string" ? metadata.buyerProfileId : null,

@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     }
 
     const dashboard = await loadCheckInDashboard(user.id)
-
+ 
     if (!dashboard) {
       return NextResponse.json({ message: "Check-in session not found" }, { status: 404 })
     }

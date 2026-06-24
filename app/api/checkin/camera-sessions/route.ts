@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 
 import { getAuthenticatedCheckInUser } from "@/lib/checkin-service"
-import { createCameraSession } from "@/lib/checkin-camera-service"
+import { createCameraSession } from "@/lib/checkin-camera-service" 
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
     }
 
     const session = await createCameraSession({
+      
       eventId: operator.event.id,
       operatorUserId: operator.id,
       actor: "operator",

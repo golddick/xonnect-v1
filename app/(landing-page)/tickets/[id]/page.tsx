@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PublicTicketEvent, PublicTicketItem } from "@/lib/tickets"
+import LoadingSplash from "@/components/splash_screen/loading-splash"
 
 type EventResponse = {
   event: PublicTicketEvent
@@ -394,7 +395,7 @@ export default function TicketDetailsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-6 text-foreground">
+    <div className="min-h-screen bg-background px-2 text-foreground">
       <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <Link href="/tickets" className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" />
@@ -403,7 +404,7 @@ export default function TicketDetailsPage() {
 
         {loading ? (
           <div className="flex min-h-[60vh] items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <LoadingSplash />
           </div>
         ) : error ? (
           <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-500">
@@ -424,7 +425,6 @@ export default function TicketDetailsPage() {
                     <Badge variant="secondary" className="rounded-full bg-background/90 text-foreground">
                       {formatEventType(event.eventType)}
                     </Badge>
-                    {event.isHybrid && <Badge className="rounded-full bg-primary text-primary-foreground">Hybrid</Badge>}
                   </div>
                 </div>
 
@@ -457,13 +457,6 @@ export default function TicketDetailsPage() {
                         <span>Location</span>
                       </div>
                       <p className="mt-2 text-sm font-medium">{formatLocation(event)}</p>
-                    </div>
-                    <div className="rounded-lg border border-border bg-background p-3">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Users className="h-4 w-4" />
-                        <span>Ticket types</span>
-                      </div>
-                      <p className="mt-2 text-sm font-medium">{event.ticketCount}</p>
                     </div>
                   </div>
                 </div>

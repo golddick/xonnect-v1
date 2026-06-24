@@ -300,16 +300,26 @@ export default function EditVideoPage() {
     }
   }
 
+  // const handleInputChange = (
+  //   e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  // ) => {
+  //   const { name, value, type } = e.currentTarget
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [name]:
+  //       type === "checkbox" ? (e.currentTarget as HTMLInputElement).checked : value,
+  //   }))
+  // }
+
   const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type } = e.currentTarget
-    setFormData((prev) => ({
-      ...prev,
-      [name]:
-        type === "checkbox" ? (e.currentTarget as HTMLInputElement).checked : value,
-    }))
-  }
+  e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+) => {
+  const { name, value, type } = e.target  
+  setFormData((prev) => ({
+    ...prev,
+    [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+  }))
+}
 
   if (loading) {
     return (

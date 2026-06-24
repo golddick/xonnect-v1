@@ -173,6 +173,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         }
 
         const data = await res.json()
+
+        console.log(data, 'data')
+
         if (cancelled) return
 
         if (kind === "event" && data?.kind === "event" && data?.event) {
@@ -331,16 +334,18 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       onBuyerNameChange={setBuyerName}
       onBuyerEmailChange={setBuyerEmail}
       onBuyerPhoneChange={setBuyerPhone}
-      purchaseOptions={(["rent24", "rent48", "purchase"] as PurchaseType[]).map((purchaseType) => ({
-        type: purchaseType,
-        label: purchaseType,
-        price:
-          purchaseType === "rent24"
-            ? currentPart?.rent24Price ?? null
-            : purchaseType === "rent48"
-              ? currentPart?.rent48Price ?? null
-              : currentPart?.purchasePrice ?? null,
-      }))}
+      purchaseOptions={(["rent24", "rent48", "purchase"] as PurchaseType[])
+        .map((purchaseType) => ({
+          type: purchaseType,
+          label: purchaseType,
+          price:
+            purchaseType === "rent24"
+              ? currentPart?.rent24Price ?? null
+              : purchaseType === "rent48"
+                ? currentPart?.rent48Price ?? null
+                : currentPart?.purchasePrice ?? null,
+        }))
+        .filter((option) => typeof option.price === "number" && option.price > 0)}
       onPurchase={async (purchaseType) => {
         if (!currentPart) return
 
@@ -412,16 +417,16 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     }
 
     const eventLockOverlay = eventData.access?.locked ? (
-      <WatchAccessOverlay
-        title={eventData.status === "LIVE" ? "Premium event locked" : "Ticket code required"}
-        description={
-          eventData.access?.loggedIn
-            ? "Enter the ticket code from your purchase to unlock the stream."
-            : "Sign in or enter your ticket code to unlock the stream."
-        }
-        accessCode={accessCode}
-        accessCodePlaceholder="Enter ticket code"
-        onAccessCodeChange={setAccessCode}
+    <WatchAccessOverlay
+      title={eventData.status === "LIVE" ? "Premium event locked" : "Ticket code required"}
+      description={
+        eventData.access?.loggedIn
+          ? "Enter the ticket code from your purchase to unlock the stream."
+          : "Sign in or enter your ticket code to unlock the stream."
+      }
+      accessCode={accessCode}
+      accessCodePlaceholder="Enter ticket code"
+      onAccessCodeChange={setAccessCode}
         onUnlock={() => {
           if (!accessCode.trim()) return
           setBusy("code")
@@ -429,12 +434,14 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           setSubmittedAccessCode(accessCode.trim())
           setCodeNonce((value) => value + 1)
         }}
-        isUnlocking={busy === "code"}
-        message={message}
-        primaryActionLabel="Unlock"
-        loggedIn={eventData.access?.loggedIn ?? false}
-      />
-    ) : null
+      isUnlocking={busy === "code"}
+      message={message}
+      primaryActionLabel="Unlock"
+      loggedIn={eventData.access?.loggedIn ?? false}
+      secondaryActionLabel="Get access"
+      secondaryActionHref={`/tickets/${eventData.id}`}
+    />
+  ) : null
 
     return (
       <div className="min-h-screen bg-background text-foreground pb-20">
@@ -506,6 +513,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                       <Clock className="w-4 h-4" />
                       {eventData.durationMinutes ?? 0} mins
                     </span>
+                    <span className="flex items-center gap-1.5">
+                        {eventData.access?.premium ? "Premium" : "Open"}
+                    </span>
                   </div>
                 </div>
 
@@ -515,25 +525,6 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                     <p className="text-muted-foreground leading-relaxed text-sm">
                       {eventData.description || "No description available"}
                     </p>
-                  </div>
-
-                  <div className="grid gap-3 md:grid-cols-3">
-                    <div className="rounded-2xl border border-border bg-background/50 p-4">
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">Status</p>
-                      <p className="mt-1 text-sm font-semibold text-foreground">{eventData.status}</p>
-                    </div>
-                    <div className="rounded-2xl border border-border bg-background/50 p-4">
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">Access</p>
-                      <p className="mt-1 text-sm font-semibold text-foreground">
-                        {eventData.access?.premium ? "Premium" : "Open"}
-                      </p>
-                    </div>
-                    <div className="rounded-2xl border border-border bg-background/50 p-4">
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">Room</p>
-                      <p className="mt-1 text-sm font-semibold text-foreground truncate">
-                        {eventData.livekitRoomName || "Pending"}
-                      </p>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -581,7 +572,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 </div>
               </div>
 
-              {eventData.tickets?.length > 0 ? (
+              {/* {eventData.tickets?.length > 0 ? (
                 <div className="rounded-2xl border border-border bg-muted/20 p-5 space-y-3">
                   <h3 className="font-bold text-lg">Tickets</h3>
                   <div className="space-y-3">
@@ -602,7 +593,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                     ))}
                   </div>
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
           </div>
         </main>

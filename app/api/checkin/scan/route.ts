@@ -59,6 +59,7 @@ export async function POST(request: Request) {
     if (purchase.checkedInAt) {
       await db.creatorEventCheckInScan.create({
         data: {
+          id: dropid("checkInScan"),
           eventId: checkInUser.event.id,
           checkInUserId: checkInUser.id,
           ticketPurchaseId: purchase.id,

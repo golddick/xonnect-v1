@@ -1,13 +1,12 @@
 
-const dropaphiApiKey = process.env.DROPAPHI_API_KEY
+// lib/auth/dropaphi-upload.ts
+const dropaphiApiKey = process.env.NEXT_PUBLIC_DROPAPHI_API_KEY
 const BASE = 'https://dropaphi.xyz/api'
 // const BASE = 'http://localhost:3001/api'
 
 if (!dropaphiApiKey) {
-        throw new Error("Missing NEXT_PUBLIC_DROPAPHI_API_KEY")
-      }
-
-// ─── Files ──────────────────────────────────────────────────────────────────
+  throw new Error("Missing NEXT_PUBLIC_DROPAPHI_API_KEY")
+}
 
 export interface UploadResult {
   ok: boolean
@@ -68,9 +67,6 @@ export async function uploadFile(
       }
     }
 
-    
-     console.log(dropaphiApiKey, 'dropaphi api')
-
     if (!dropaphiApiKey || typeof dropaphiApiKey !== 'string' || dropaphiApiKey.trim() === '') {
       console.error('[DropAphi] Missing API key. Check your environment variables.')
       return { 
@@ -79,7 +75,6 @@ export async function uploadFile(
       }
     }
 
-    
     // Use XMLHttpRequest for progress tracking if needed
     if (options?.onProgress) {
       return new Promise((resolve, reject) => {
@@ -166,53 +161,3 @@ export async function uploadFile(
   }
 }
 
-
-export async function uploadFileRaw(
-  rawBody: ArrayBuffer,
-  contentType: string
-): Promise<UploadResult> {
-  const dropaphiApiKey = process.env.DROPAPHI_API_KEY
-  
-  if (!dropaphiApiKey || typeof dropaphiApiKey !== 'string' || dropaphiApiKey.trim() === '') {
-    console.error('[DropAphi] Missing API key. Check your environment variables.')
-    return { 
-      ok: false, 
-      message: 'API key is missing. Please configure DROPAPHI_API_KEY in your environment variables.' 
-    }
-  }
-  
-  try {
-    const res = await fetch(`${BASE}/v1/files/upload`, {
-      method: 'POST',
-      headers: {
-        'drop-api-key': dropaphiApiKey,
-        'Content-Type': contentType,
-      } as HeadersInit,
-      body: rawBody,
-    })
-
-    const data = await res.json()
-
-    if (!res.ok) {
-      console.error('[DropAphi File Upload Error]', data)
-      return {
-        ok: false,
-        message: data?.error || data?.message || 'Failed to upload file.',
-        billing: data?.billing
-      }
-    }
-
-    return { 
-      ok: true, 
-      fileId: data?.data?.id, 
-      url: data?.data?.url,
-      directUrl: data?.data?.directUrl,
-      size: data?.data?.size,
-      mimeType: data?.data?.mimeType,
-      billing: data?.data?.billing
-    }
-  } catch (error) {
-    console.error('[DropAphi File Upload Exception]', error)
-    return { ok: false, message: 'File upload service unavailable.' }
-  }
-}

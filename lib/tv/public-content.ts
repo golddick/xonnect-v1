@@ -64,6 +64,16 @@ export type PublicTvSportPayload = {
   }
 }
 
+export type PublicTvMoviePayload = {
+  items: PublicTvCard[]
+  total: number
+  filters: {
+    pricing: string
+    search: string
+  }
+  source: "folders" | "direct_videos" | "empty"
+}
+
 const DEFAULT_CATEGORIES: PublicTvCategory[] = [
   { id: "live-event", label: "Live Event", href: "/tv/live-event" },
   { id: "video", label: "Video", href: "/tv/video" },
@@ -694,5 +704,301 @@ export async function getTvSportPayload(options?: {
       categories: DEFAULT_CATEGORIES,
       liveEvents: orderPriority([...live, ...scheduled]).slice(0, 4),
     },
+  }
+}
+
+
+
+export async function getTvMoviePayload(options?: {
+  pricing?: string | null
+  search?: string | null
+  limit?: number
+}): Promise<PublicTvMoviePayload> {
+  const pricing = options?.pricing ?? null
+  const search = options?.search ?? null
+  const limit = options?.limit ?? 50
+
+  console.log("🔍 [getTvMoviePayload] Starting with:", { pricing, search, limit })
+
+  // Helper: Check if video matches pricing filter
+  function matchesPricing(video: { monetizationType: string | null; isPremium: boolean }, pricingFilter: string | null) {
+    if (!pricingFilter || pricingFilter === "all") return true
+    const monetizationType = (video.monetizationType ?? "free").toLowerCase()
+
+    if (pricingFilter === "free") {
+      return monetizationType === "free" || !video.isPremium
+    }
+
+    if (pricingFilter === "rent") {
+      return monetizationType === "rent"
+    }
+
+    if (pricingFilter === "purchase") {
+      return monetizationType === "purchase"
+    }
+
+    return true
+  }
+
+  // Helper: Check if video matches search
+  function matchesSearch(
+    folderTitle: string | null,
+    videoTitle: string,
+    category: string | null,
+    searchQuery: string | null
+  ) {
+    if (!searchQuery) return true
+
+    const query = searchQuery.toLowerCase()
+    return (
+      (folderTitle?.toLowerCase().includes(query) ?? false) ||
+      videoTitle.toLowerCase().includes(query) ||
+      (category ?? "").toLowerCase().includes(query)
+    )
+  }
+
+  // 🔍 Step 1: Get total videos count first
+  const totalVideos = await prisma.creatorVideo.count({
+    where: {
+      isPrivate: false,
+    },
+  })
+  console.log(`📊 [getTvMoviePayload] Total public videos in DB: ${totalVideos}`)
+
+  // 🔍 Step 1.5: Get sample videos to check status
+  const sampleVideos = await prisma.creatorVideo.findMany({
+    where: {
+      isPrivate: false,
+      status: { in: Array.from(PUBLIC_VIDEO_STATUSES) },
+    },
+    take: 3,
+    select: {
+      id: true,
+      title: true,
+      status: true,
+      isPrivate: true,
+      monetizationType: true,
+      isPremium: true,
+      folderId: true,
+    },
+  })
+  console.log(`📹 [getTvMoviePayload] Sample videos:`, JSON.stringify(sampleVideos, null, 2))
+
+  // 🔍 Step 2: Try to get folders with videos
+  console.log("🔍 [getTvMoviePayload] Fetching folders with videos...")
+  
+  const folders = await prisma.creatorVideoFolder.findMany({
+    where: {
+      status: "active",
+      videos: {
+        some: {
+          isPrivate: false,
+          // status: { in: Array.from(PUBLIC_VIDEO_STATUSES) },
+        },
+      },
+    },
+    orderBy: [{ createdAt: "desc" }],
+    take: limit,
+    select: {
+      id: true,
+      title: true,
+      folderType: true,
+      status: true,
+      thumbnailUrl: true,
+      creator: {
+        select: {
+          profile: {
+            select: {
+              fullName: true,
+              avatarUrl: true,
+            },
+          },
+        },
+      },
+      videos: {
+        where: {
+          isPrivate: false,
+          status: { in: Array.from(PUBLIC_VIDEO_STATUSES) },
+        },
+        orderBy: [{ episodeIndex: "asc" }, { createdAt: "asc" }],
+        select: {
+          id: true,
+          title: true,
+          category: true,
+          status: true,
+          thumbnailUrl: true,
+          duration: true,
+          viewsCount: true,
+          scheduledAt: true,
+          monetizationType: true,
+          isPremium: true,
+          rent24Price: true,
+          rent48Price: true,
+          purchasePrice: true,
+          episodeIndex: true,
+          creator: {
+            select: {
+              profile: {
+                select: {
+                  fullName: true,
+                  avatarUrl: true,
+                },
+              },
+            },
+          },
+          folder: {
+            select: {
+              id: true,
+              title: true,
+              folderType: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  console.log(`📁 [getTvMoviePayload] Found ${folders.length} folders with videos`)
+
+  // Process folders
+  if (folders.length > 0) {
+    console.log(`📁 [getTvMoviePayload] Processing ${folders.length} folders...`)
+    
+    const folderItems = folders
+      .map((folder) => {
+        console.log(`  📂 Processing folder: "${folder.title}" with ${folder.videos.length} videos`)
+        
+        // Filter videos by pricing
+        const videos = folder.videos.filter((video) => matchesPricing(video, pricing))
+        console.log(`    📊 After pricing filter: ${videos.length} videos`)
+        
+        if (videos.length === 0) return null
+
+        // Filter by search
+        const visibleVideos = videos.filter((video) =>
+          matchesSearch(folder.title, video.title, video.category, search)
+        )
+        console.log(`    📊 After search filter: ${visibleVideos.length} videos`)
+        
+        if (visibleVideos.length === 0) return null
+
+        console.log(`    ✅ Folder "${folder.title}" passed all filters`)
+        
+        // Use existing mapFolderToCard function
+        return mapFolderToCard({
+          ...folder,
+          videos: visibleVideos,
+        })
+      })
+      .filter(Boolean) as PublicTvCard[]
+
+    console.log(`✅ [getTvMoviePayload] Created ${folderItems.length} folder items`)
+
+    if (folderItems.length > 0) {
+      return {
+        items: folderItems,
+        total: folderItems.length,
+        filters: {
+          pricing: pricing ?? "all",
+          search: search ?? "",
+        },
+        source: "folders",
+      }
+    }
+  }
+
+  // 🔍 Step 3: Fallback - Get videos directly
+  console.log("🔍 [getTvMoviePayload] No folders found or folders had no videos. Fetching direct videos...")
+  
+  const directVideos = await prisma.creatorVideo.findMany({
+    where: {
+      isPrivate: false,
+      status: { in: Array.from(PUBLIC_VIDEO_STATUSES) },
+    },
+    orderBy: [{ createdAt: "desc" }],
+    take: limit,
+    select: {
+      id: true,
+      title: true,
+      category: true,
+      status: true,
+      thumbnailUrl: true,
+      duration: true,
+      viewsCount: true,
+      scheduledAt: true,
+      monetizationType: true,
+      isPremium: true,
+      rent24Price: true,
+      rent48Price: true,
+      purchasePrice: true,
+      episodeIndex: true,
+      creator: {
+        select: {
+          profile: {
+            select: {
+              fullName: true,
+              avatarUrl: true,
+            },
+          },
+        },
+      },
+      folder: {
+        select: {
+          id: true,
+          title: true,
+          folderType: true,
+        },
+      },
+    },
+  })
+
+  console.log(`📹 [getTvMoviePayload] Found ${directVideos.length} direct videos`)
+
+  // Filter and map direct videos
+  const videoItems = directVideos
+    .filter((video) => {
+      const matches = matchesPricing(video, pricing)
+      if (!matches) {
+        console.log(`  ❌ Video "${video.title}" filtered out by pricing`)
+      }
+      return matches
+    })
+    .filter((video) => {
+      const matches = matchesSearch(null, video.title, video.category, search)
+      if (!matches) {
+        console.log(`  ❌ Video "${video.title}" filtered out by search`)
+      }
+      return matches
+    })
+    .map((video) => {
+      console.log(`  ✅ Video "${video.title}" passed all filters`)
+      return mapVideoToCard(video)
+    })
+
+  console.log(`✅ [getTvMoviePayload] Created ${videoItems.length} video items`)
+
+  if (videoItems.length > 0) {
+    return {
+      items: videoItems,
+      total: videoItems.length,
+      filters: {
+        pricing: pricing ?? "all",
+        search: search ?? "",
+      },
+      source: "direct_videos",
+    }
+  }
+
+  // 🔍 Step 4: No content found
+  console.log("❌ [getTvMoviePayload] No content found at all!")
+  
+  return {
+    items: [],
+    total: 0,
+    filters: {
+      pricing: pricing ?? "all",
+      search: search ?? "",
+    },
+    source: "empty",
   }
 }

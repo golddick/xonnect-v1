@@ -5,6 +5,7 @@ import { Search, Grid3x3, List, Sliders } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import StreamCard from "@/app/(Xonnect_tv)/tv/_component/stream-card"
+import TvLoadingState from "@/app/(Xonnect_tv)/tv/_component/tv-loading-state"
 import { AvatarDropdownMenu } from "@/components/common_component/AvatarDropdown"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { buildWatchHref } from "@/lib/tv/watch-href"
@@ -99,6 +100,10 @@ export default function SportPage() {
     return items
   }, [liveBroadcasts, scheduledBroadcasts, videoFolders, searchQuery, selectedSport, sortBy])
 
+  if (loading) {
+    return <TvLoadingState variant="section" />
+  }
+
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       <div className="flex-1 overflow-y-auto flex flex-col">
@@ -192,11 +197,7 @@ export default function SportPage() {
         </div>
 
         <div className="flex-1 p-4 md:p-6 overflow-y-auto">
-          {loading ? (
-            <div className="min-h-[50vh] flex items-center justify-center text-muted-foreground">
-              Loading sports...
-            </div>
-          ) : (
+          {filteredItems.length > 0 ? (
             <div
               className={`grid gap-4 ${
                 viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
@@ -217,6 +218,10 @@ export default function SportPage() {
                   onWatch={() => router.push(buildWatchHref(item))}
                 />
               ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-border bg-muted/20 p-6 text-sm text-muted-foreground">
+              No content available
             </div>
           )}
         </div>

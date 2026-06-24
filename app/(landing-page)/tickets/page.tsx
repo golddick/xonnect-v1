@@ -149,14 +149,6 @@ export default function TicketsPage() {
               />
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="secondary" className="h-11 rounded-full px-4 text-sm">
-                {events.length} events
-              </Badge>
-              <Badge variant="secondary" className="h-11 rounded-full px-4 text-sm">
-                {events.reduce((sum, event) => sum + event.ticketCount, 0)} ticket types
-              </Badge>
-            </div>
           </div>
 
           <div className="flex flex-wrap gap-2">

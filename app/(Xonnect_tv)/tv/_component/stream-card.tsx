@@ -100,7 +100,7 @@ const StreamCard = ({
               >
                 Watch
               </button>
-              <button
+              {/* <button
                 onClick={(event) => {
                   event.stopPropagation()
                   setNotified(!notified)
@@ -108,7 +108,7 @@ const StreamCard = ({
                 className={`p-2 rounded-lg transition-colors ${notified ? "bg-yellow-500" : "bg-white/20 hover:bg-white/30"}`}
               >
                 <Bell className={`w-5 h-5 ${notified ? "text-foreground fill-white" : "text-foreground"}`} />
-              </button>
+              </button> */}
               <button
                 onClick={(event) => event.stopPropagation()}
                 className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
