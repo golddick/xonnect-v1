@@ -1,11 +1,22 @@
 
 // lib/auth/dropaphi-upload.ts
-const dropaphiApiKey = process.env.NEXT_PUBLIC_DROPAPHI_API_KEY
 const BASE = 'https://dropaphi.xyz/api'
 // const BASE = 'http://localhost:3001/api'
 
-if (!dropaphiApiKey) {
-  throw new Error("Missing NEXT_PUBLIC_DROPAPHI_API_KEY")
+function getPublicDropAphiApiKey() {
+  const apiKey = process.env.NEXT_PUBLIC_DROPAPHI_API_KEY
+  if (!apiKey || typeof apiKey !== 'string' || apiKey.trim() === '') {
+    throw new Error("Missing NEXT_PUBLIC_DROPAPHI_API_KEY")
+  }
+  return apiKey
+}
+
+function getServerDropAphiApiKey() {
+  const apiKey = process.env.DROPAPHI_API_KEY
+  if (!apiKey || typeof apiKey !== 'string' || apiKey.trim() === '') {
+    throw new Error("Missing DROPAPHI_API_KEY")
+  }
+  return apiKey
 }
 
 export interface UploadResult {
@@ -67,13 +78,7 @@ export async function uploadFile(
       }
     }
 
-    if (!dropaphiApiKey || typeof dropaphiApiKey !== 'string' || dropaphiApiKey.trim() === '') {
-      console.error('[DropAphi] Missing API key. Check your environment variables.')
-      return { 
-        ok: false, 
-        message: 'API key is missing. Please configure DROPAPHI_API_KEY in your environment variables.' 
-      }
-    }
+    const apiKey = getPublicDropAphiApiKey()
 
     // Use XMLHttpRequest for progress tracking if needed
     if (options?.onProgress) {
@@ -122,7 +127,7 @@ export async function uploadFile(
         })
         
         xhr.open('POST', `${BASE}/v1/files/upload`)
-        xhr.setRequestHeader('drop-api-key', dropaphiApiKey)
+        xhr.setRequestHeader('drop-api-key', apiKey)
         xhr.send(formData)
       })
     }
@@ -131,7 +136,7 @@ export async function uploadFile(
     const res = await fetch(`${BASE}/v1/files/upload`, {
       method: 'POST',
       headers: {
-        'drop-api-key': dropaphiApiKey,
+        'drop-api-key': apiKey,
       },
       body: formData,
     })
@@ -158,6 +163,42 @@ export async function uploadFile(
   } catch (error) {
     console.error('[DropAphi File Upload Exception]', error)
     return { ok: false, message: 'File upload service unavailable.' }
+  }
+}
+
+export async function uploadFileRaw(rawBody: ArrayBuffer, contentType: string) {
+  try {
+    const apiKey = getServerDropAphiApiKey()
+    const res = await fetch(`${BASE}/v1/files/upload`, {
+      method: 'POST',
+      headers: {
+        'drop-api-key': apiKey,
+        'Content-Type': contentType,
+      },
+      body: rawBody,
+    })
+
+    const data = await res.json()
+    if (!res.ok) {
+      console.error('[DropAphi Raw Upload Error]', data)
+      return {
+        ok: false,
+        message: data?.error || data?.message || 'Failed to upload file raw.',
+      }
+    }
+
+    return {
+      ok: true,
+      fileId: data?.data?.id,
+      url: data?.data?.url,
+      directUrl: data?.data?.directUrl,
+      size: data?.data?.size,
+      mimeType: data?.data?.mimeType,
+      billing: data?.data?.billing,
+    }
+  } catch (error) {
+    console.error('[DropAphi Raw Upload Exception]', error)
+    return { ok: false, message: 'Raw upload service unavailable.' }
   }
 }
 

@@ -39,6 +39,21 @@ export type Category = $Result.DefaultSelection<Prisma.$CategoryPayload>
  */
 export type Creator = $Result.DefaultSelection<Prisma.$CreatorPayload>
 /**
+ * Model CreatorFollow
+ * 
+ */
+export type CreatorFollow = $Result.DefaultSelection<Prisma.$CreatorFollowPayload>
+/**
+ * Model CreatorPayoutAccount
+ * 
+ */
+export type CreatorPayoutAccount = $Result.DefaultSelection<Prisma.$CreatorPayoutAccountPayload>
+/**
+ * Model CreatorPayoutRequest
+ * 
+ */
+export type CreatorPayoutRequest = $Result.DefaultSelection<Prisma.$CreatorPayoutRequestPayload>
+/**
  * Model CreatorVideoFolder
  * 
  */
@@ -64,6 +79,11 @@ export type CreatorVideoView = $Result.DefaultSelection<Prisma.$CreatorVideoView
  */
 export type CreatorVideoLike = $Result.DefaultSelection<Prisma.$CreatorVideoLikePayload>
 /**
+ * Model CreatorEventLike
+ * 
+ */
+export type CreatorEventLike = $Result.DefaultSelection<Prisma.$CreatorEventLikePayload>
+/**
  * Model CreatorVideoComment
  * 
  */
@@ -88,6 +108,11 @@ export type CreatorEventTicket = $Result.DefaultSelection<Prisma.$CreatorEventTi
  * 
  */
 export type CreatorEventTicketPurchase = $Result.DefaultSelection<Prisma.$CreatorEventTicketPurchasePayload>
+/**
+ * Model CreatorEventTicketItem
+ * 
+ */
+export type CreatorEventTicketItem = $Result.DefaultSelection<Prisma.$CreatorEventTicketItemPayload>
 /**
  * Model CreatorEventCheckInUser
  * 
@@ -453,6 +478,36 @@ export class PrismaClient<
   get creator(): Prisma.CreatorDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.creatorFollow`: Exposes CRUD operations for the **CreatorFollow** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CreatorFollows
+    * const creatorFollows = await prisma.creatorFollow.findMany()
+    * ```
+    */
+  get creatorFollow(): Prisma.CreatorFollowDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.creatorPayoutAccount`: Exposes CRUD operations for the **CreatorPayoutAccount** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CreatorPayoutAccounts
+    * const creatorPayoutAccounts = await prisma.creatorPayoutAccount.findMany()
+    * ```
+    */
+  get creatorPayoutAccount(): Prisma.CreatorPayoutAccountDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.creatorPayoutRequest`: Exposes CRUD operations for the **CreatorPayoutRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CreatorPayoutRequests
+    * const creatorPayoutRequests = await prisma.creatorPayoutRequest.findMany()
+    * ```
+    */
+  get creatorPayoutRequest(): Prisma.CreatorPayoutRequestDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.creatorVideoFolder`: Exposes CRUD operations for the **CreatorVideoFolder** model.
     * Example usage:
     * ```ts
@@ -503,6 +558,16 @@ export class PrismaClient<
   get creatorVideoLike(): Prisma.CreatorVideoLikeDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.creatorEventLike`: Exposes CRUD operations for the **CreatorEventLike** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CreatorEventLikes
+    * const creatorEventLikes = await prisma.creatorEventLike.findMany()
+    * ```
+    */
+  get creatorEventLike(): Prisma.CreatorEventLikeDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.creatorVideoComment`: Exposes CRUD operations for the **CreatorVideoComment** model.
     * Example usage:
     * ```ts
@@ -551,6 +616,16 @@ export class PrismaClient<
     * ```
     */
   get creatorEventTicketPurchase(): Prisma.CreatorEventTicketPurchaseDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.creatorEventTicketItem`: Exposes CRUD operations for the **CreatorEventTicketItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CreatorEventTicketItems
+    * const creatorEventTicketItems = await prisma.creatorEventTicketItem.findMany()
+    * ```
+    */
+  get creatorEventTicketItem(): Prisma.CreatorEventTicketItemDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.creatorEventCheckInUser`: Exposes CRUD operations for the **CreatorEventCheckInUser** model.
@@ -1060,16 +1135,21 @@ export namespace Prisma {
     AuthCredential: 'AuthCredential',
     Category: 'Category',
     Creator: 'Creator',
+    CreatorFollow: 'CreatorFollow',
+    CreatorPayoutAccount: 'CreatorPayoutAccount',
+    CreatorPayoutRequest: 'CreatorPayoutRequest',
     CreatorVideoFolder: 'CreatorVideoFolder',
     CreatorVideo: 'CreatorVideo',
     CreatorVideoPurchase: 'CreatorVideoPurchase',
     CreatorVideoView: 'CreatorVideoView',
     CreatorVideoLike: 'CreatorVideoLike',
+    CreatorEventLike: 'CreatorEventLike',
     CreatorVideoComment: 'CreatorVideoComment',
     CreatorEvent: 'CreatorEvent',
     CreatorEventLocationRestriction: 'CreatorEventLocationRestriction',
     CreatorEventTicket: 'CreatorEventTicket',
     CreatorEventTicketPurchase: 'CreatorEventTicketPurchase',
+    CreatorEventTicketItem: 'CreatorEventTicketItem',
     CreatorEventCheckInUser: 'CreatorEventCheckInUser',
     CreatorEventCheckInCameraSession: 'CreatorEventCheckInCameraSession',
     CreatorEventCheckInCameraSignal: 'CreatorEventCheckInCameraSignal',
@@ -1092,7 +1172,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "profile" | "superAdminSetting" | "authCredential" | "category" | "creator" | "creatorVideoFolder" | "creatorVideo" | "creatorVideoPurchase" | "creatorVideoView" | "creatorVideoLike" | "creatorVideoComment" | "creatorEvent" | "creatorEventLocationRestriction" | "creatorEventTicket" | "creatorEventTicketPurchase" | "creatorEventCheckInUser" | "creatorEventCheckInCameraSession" | "creatorEventCheckInCameraSignal" | "creatorEventCheckInCameraAudit" | "creatorEventCheckInScan" | "session" | "verificationToken"
+      modelProps: "profile" | "superAdminSetting" | "authCredential" | "category" | "creator" | "creatorFollow" | "creatorPayoutAccount" | "creatorPayoutRequest" | "creatorVideoFolder" | "creatorVideo" | "creatorVideoPurchase" | "creatorVideoView" | "creatorVideoLike" | "creatorEventLike" | "creatorVideoComment" | "creatorEvent" | "creatorEventLocationRestriction" | "creatorEventTicket" | "creatorEventTicketPurchase" | "creatorEventTicketItem" | "creatorEventCheckInUser" | "creatorEventCheckInCameraSession" | "creatorEventCheckInCameraSignal" | "creatorEventCheckInCameraAudit" | "creatorEventCheckInScan" | "session" | "verificationToken"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1466,6 +1546,228 @@ export namespace Prisma {
           }
         }
       }
+      CreatorFollow: {
+        payload: Prisma.$CreatorFollowPayload<ExtArgs>
+        fields: Prisma.CreatorFollowFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CreatorFollowFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorFollowPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CreatorFollowFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorFollowPayload>
+          }
+          findFirst: {
+            args: Prisma.CreatorFollowFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorFollowPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CreatorFollowFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorFollowPayload>
+          }
+          findMany: {
+            args: Prisma.CreatorFollowFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorFollowPayload>[]
+          }
+          create: {
+            args: Prisma.CreatorFollowCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorFollowPayload>
+          }
+          createMany: {
+            args: Prisma.CreatorFollowCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CreatorFollowCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorFollowPayload>[]
+          }
+          delete: {
+            args: Prisma.CreatorFollowDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorFollowPayload>
+          }
+          update: {
+            args: Prisma.CreatorFollowUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorFollowPayload>
+          }
+          deleteMany: {
+            args: Prisma.CreatorFollowDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CreatorFollowUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CreatorFollowUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorFollowPayload>[]
+          }
+          upsert: {
+            args: Prisma.CreatorFollowUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorFollowPayload>
+          }
+          aggregate: {
+            args: Prisma.CreatorFollowAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCreatorFollow>
+          }
+          groupBy: {
+            args: Prisma.CreatorFollowGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CreatorFollowGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CreatorFollowCountArgs<ExtArgs>
+            result: $Utils.Optional<CreatorFollowCountAggregateOutputType> | number
+          }
+        }
+      }
+      CreatorPayoutAccount: {
+        payload: Prisma.$CreatorPayoutAccountPayload<ExtArgs>
+        fields: Prisma.CreatorPayoutAccountFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CreatorPayoutAccountFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutAccountPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CreatorPayoutAccountFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutAccountPayload>
+          }
+          findFirst: {
+            args: Prisma.CreatorPayoutAccountFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutAccountPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CreatorPayoutAccountFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutAccountPayload>
+          }
+          findMany: {
+            args: Prisma.CreatorPayoutAccountFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutAccountPayload>[]
+          }
+          create: {
+            args: Prisma.CreatorPayoutAccountCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutAccountPayload>
+          }
+          createMany: {
+            args: Prisma.CreatorPayoutAccountCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CreatorPayoutAccountCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutAccountPayload>[]
+          }
+          delete: {
+            args: Prisma.CreatorPayoutAccountDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutAccountPayload>
+          }
+          update: {
+            args: Prisma.CreatorPayoutAccountUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutAccountPayload>
+          }
+          deleteMany: {
+            args: Prisma.CreatorPayoutAccountDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CreatorPayoutAccountUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CreatorPayoutAccountUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutAccountPayload>[]
+          }
+          upsert: {
+            args: Prisma.CreatorPayoutAccountUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutAccountPayload>
+          }
+          aggregate: {
+            args: Prisma.CreatorPayoutAccountAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCreatorPayoutAccount>
+          }
+          groupBy: {
+            args: Prisma.CreatorPayoutAccountGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CreatorPayoutAccountGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CreatorPayoutAccountCountArgs<ExtArgs>
+            result: $Utils.Optional<CreatorPayoutAccountCountAggregateOutputType> | number
+          }
+        }
+      }
+      CreatorPayoutRequest: {
+        payload: Prisma.$CreatorPayoutRequestPayload<ExtArgs>
+        fields: Prisma.CreatorPayoutRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CreatorPayoutRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CreatorPayoutRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.CreatorPayoutRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CreatorPayoutRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutRequestPayload>
+          }
+          findMany: {
+            args: Prisma.CreatorPayoutRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutRequestPayload>[]
+          }
+          create: {
+            args: Prisma.CreatorPayoutRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutRequestPayload>
+          }
+          createMany: {
+            args: Prisma.CreatorPayoutRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CreatorPayoutRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.CreatorPayoutRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutRequestPayload>
+          }
+          update: {
+            args: Prisma.CreatorPayoutRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.CreatorPayoutRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CreatorPayoutRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CreatorPayoutRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.CreatorPayoutRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorPayoutRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.CreatorPayoutRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCreatorPayoutRequest>
+          }
+          groupBy: {
+            args: Prisma.CreatorPayoutRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CreatorPayoutRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CreatorPayoutRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<CreatorPayoutRequestCountAggregateOutputType> | number
+          }
+        }
+      }
       CreatorVideoFolder: {
         payload: Prisma.$CreatorVideoFolderPayload<ExtArgs>
         fields: Prisma.CreatorVideoFolderFieldRefs
@@ -1836,6 +2138,80 @@ export namespace Prisma {
           }
         }
       }
+      CreatorEventLike: {
+        payload: Prisma.$CreatorEventLikePayload<ExtArgs>
+        fields: Prisma.CreatorEventLikeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CreatorEventLikeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventLikePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CreatorEventLikeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventLikePayload>
+          }
+          findFirst: {
+            args: Prisma.CreatorEventLikeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventLikePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CreatorEventLikeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventLikePayload>
+          }
+          findMany: {
+            args: Prisma.CreatorEventLikeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventLikePayload>[]
+          }
+          create: {
+            args: Prisma.CreatorEventLikeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventLikePayload>
+          }
+          createMany: {
+            args: Prisma.CreatorEventLikeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CreatorEventLikeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventLikePayload>[]
+          }
+          delete: {
+            args: Prisma.CreatorEventLikeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventLikePayload>
+          }
+          update: {
+            args: Prisma.CreatorEventLikeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventLikePayload>
+          }
+          deleteMany: {
+            args: Prisma.CreatorEventLikeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CreatorEventLikeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CreatorEventLikeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventLikePayload>[]
+          }
+          upsert: {
+            args: Prisma.CreatorEventLikeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventLikePayload>
+          }
+          aggregate: {
+            args: Prisma.CreatorEventLikeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCreatorEventLike>
+          }
+          groupBy: {
+            args: Prisma.CreatorEventLikeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CreatorEventLikeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CreatorEventLikeCountArgs<ExtArgs>
+            result: $Utils.Optional<CreatorEventLikeCountAggregateOutputType> | number
+          }
+        }
+      }
       CreatorVideoComment: {
         payload: Prisma.$CreatorVideoCommentPayload<ExtArgs>
         fields: Prisma.CreatorVideoCommentFieldRefs
@@ -2203,6 +2579,80 @@ export namespace Prisma {
           count: {
             args: Prisma.CreatorEventTicketPurchaseCountArgs<ExtArgs>
             result: $Utils.Optional<CreatorEventTicketPurchaseCountAggregateOutputType> | number
+          }
+        }
+      }
+      CreatorEventTicketItem: {
+        payload: Prisma.$CreatorEventTicketItemPayload<ExtArgs>
+        fields: Prisma.CreatorEventTicketItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CreatorEventTicketItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventTicketItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CreatorEventTicketItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventTicketItemPayload>
+          }
+          findFirst: {
+            args: Prisma.CreatorEventTicketItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventTicketItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CreatorEventTicketItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventTicketItemPayload>
+          }
+          findMany: {
+            args: Prisma.CreatorEventTicketItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventTicketItemPayload>[]
+          }
+          create: {
+            args: Prisma.CreatorEventTicketItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventTicketItemPayload>
+          }
+          createMany: {
+            args: Prisma.CreatorEventTicketItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CreatorEventTicketItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventTicketItemPayload>[]
+          }
+          delete: {
+            args: Prisma.CreatorEventTicketItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventTicketItemPayload>
+          }
+          update: {
+            args: Prisma.CreatorEventTicketItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventTicketItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.CreatorEventTicketItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CreatorEventTicketItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CreatorEventTicketItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventTicketItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.CreatorEventTicketItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreatorEventTicketItemPayload>
+          }
+          aggregate: {
+            args: Prisma.CreatorEventTicketItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCreatorEventTicketItem>
+          }
+          groupBy: {
+            args: Prisma.CreatorEventTicketItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CreatorEventTicketItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CreatorEventTicketItemCountArgs<ExtArgs>
+            result: $Utils.Optional<CreatorEventTicketItemCountAggregateOutputType> | number
           }
         }
       }
@@ -2837,16 +3287,21 @@ export namespace Prisma {
     authCredential?: AuthCredentialOmit
     category?: CategoryOmit
     creator?: CreatorOmit
+    creatorFollow?: CreatorFollowOmit
+    creatorPayoutAccount?: CreatorPayoutAccountOmit
+    creatorPayoutRequest?: CreatorPayoutRequestOmit
     creatorVideoFolder?: CreatorVideoFolderOmit
     creatorVideo?: CreatorVideoOmit
     creatorVideoPurchase?: CreatorVideoPurchaseOmit
     creatorVideoView?: CreatorVideoViewOmit
     creatorVideoLike?: CreatorVideoLikeOmit
+    creatorEventLike?: CreatorEventLikeOmit
     creatorVideoComment?: CreatorVideoCommentOmit
     creatorEvent?: CreatorEventOmit
     creatorEventLocationRestriction?: CreatorEventLocationRestrictionOmit
     creatorEventTicket?: CreatorEventTicketOmit
     creatorEventTicketPurchase?: CreatorEventTicketPurchaseOmit
+    creatorEventTicketItem?: CreatorEventTicketItemOmit
     creatorEventCheckInUser?: CreatorEventCheckInUserOmit
     creatorEventCheckInCameraSession?: CreatorEventCheckInCameraSessionOmit
     creatorEventCheckInCameraSignal?: CreatorEventCheckInCameraSignalOmit
@@ -2934,11 +3389,17 @@ export namespace Prisma {
    */
 
   export type ProfileCountOutputType = {
+    creatorFollows: number
+    eventLikes: number
+    videoLikes: number
     session: number
     videoPurchases: number
   }
 
   export type ProfileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creatorFollows?: boolean | ProfileCountOutputTypeCountCreatorFollowsArgs
+    eventLikes?: boolean | ProfileCountOutputTypeCountEventLikesArgs
+    videoLikes?: boolean | ProfileCountOutputTypeCountVideoLikesArgs
     session?: boolean | ProfileCountOutputTypeCountSessionArgs
     videoPurchases?: boolean | ProfileCountOutputTypeCountVideoPurchasesArgs
   }
@@ -2952,6 +3413,27 @@ export namespace Prisma {
      * Select specific fields to fetch from the ProfileCountOutputType
      */
     select?: ProfileCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProfileCountOutputType without action
+   */
+  export type ProfileCountOutputTypeCountCreatorFollowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorFollowWhereInput
+  }
+
+  /**
+   * ProfileCountOutputType without action
+   */
+  export type ProfileCountOutputTypeCountEventLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorEventLikeWhereInput
+  }
+
+  /**
+   * ProfileCountOutputType without action
+   */
+  export type ProfileCountOutputTypeCountVideoLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorVideoLikeWhereInput
   }
 
   /**
@@ -2979,6 +3461,9 @@ export namespace Prisma {
     folders: number
     events: number
     checkInUsers: number
+    payoutAccounts: number
+    payoutRequests: number
+    follows: number
   }
 
   export type CreatorCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2987,6 +3472,9 @@ export namespace Prisma {
     folders?: boolean | CreatorCountOutputTypeCountFoldersArgs
     events?: boolean | CreatorCountOutputTypeCountEventsArgs
     checkInUsers?: boolean | CreatorCountOutputTypeCountCheckInUsersArgs
+    payoutAccounts?: boolean | CreatorCountOutputTypeCountPayoutAccountsArgs
+    payoutRequests?: boolean | CreatorCountOutputTypeCountPayoutRequestsArgs
+    follows?: boolean | CreatorCountOutputTypeCountFollowsArgs
   }
 
   // Custom InputTypes
@@ -3033,6 +3521,58 @@ export namespace Prisma {
    */
   export type CreatorCountOutputTypeCountCheckInUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CreatorEventCheckInUserWhereInput
+  }
+
+  /**
+   * CreatorCountOutputType without action
+   */
+  export type CreatorCountOutputTypeCountPayoutAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorPayoutAccountWhereInput
+  }
+
+  /**
+   * CreatorCountOutputType without action
+   */
+  export type CreatorCountOutputTypeCountPayoutRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorPayoutRequestWhereInput
+  }
+
+  /**
+   * CreatorCountOutputType without action
+   */
+  export type CreatorCountOutputTypeCountFollowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorFollowWhereInput
+  }
+
+
+  /**
+   * Count Type CreatorPayoutAccountCountOutputType
+   */
+
+  export type CreatorPayoutAccountCountOutputType = {
+    payoutRequests: number
+  }
+
+  export type CreatorPayoutAccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    payoutRequests?: boolean | CreatorPayoutAccountCountOutputTypeCountPayoutRequestsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CreatorPayoutAccountCountOutputType without action
+   */
+  export type CreatorPayoutAccountCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccountCountOutputType
+     */
+    select?: CreatorPayoutAccountCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CreatorPayoutAccountCountOutputType without action
+   */
+  export type CreatorPayoutAccountCountOutputTypeCountPayoutRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorPayoutRequestWhereInput
   }
 
 
@@ -3132,6 +3672,7 @@ export namespace Prisma {
   export type CreatorEventCountOutputType = {
     restrictedLocations: number
     tickets: number
+    likes: number
     checkInUsers: number
     checkInScans: number
     CheckInCameraSessions: number
@@ -3140,6 +3681,7 @@ export namespace Prisma {
   export type CreatorEventCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     restrictedLocations?: boolean | CreatorEventCountOutputTypeCountRestrictedLocationsArgs
     tickets?: boolean | CreatorEventCountOutputTypeCountTicketsArgs
+    likes?: boolean | CreatorEventCountOutputTypeCountLikesArgs
     checkInUsers?: boolean | CreatorEventCountOutputTypeCountCheckInUsersArgs
     checkInScans?: boolean | CreatorEventCountOutputTypeCountCheckInScansArgs
     CheckInCameraSessions?: boolean | CreatorEventCountOutputTypeCountCheckInCameraSessionsArgs
@@ -3173,6 +3715,13 @@ export namespace Prisma {
   /**
    * CreatorEventCountOutputType without action
    */
+  export type CreatorEventCountOutputTypeCountLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorEventLikeWhereInput
+  }
+
+  /**
+   * CreatorEventCountOutputType without action
+   */
   export type CreatorEventCountOutputTypeCountCheckInUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CreatorEventCheckInUserWhereInput
   }
@@ -3198,10 +3747,12 @@ export namespace Prisma {
 
   export type CreatorEventTicketCountOutputType = {
     purchases: number
+    ticketItems: number
   }
 
   export type CreatorEventTicketCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchases?: boolean | CreatorEventTicketCountOutputTypeCountPurchasesArgs
+    ticketItems?: boolean | CreatorEventTicketCountOutputTypeCountTicketItemsArgs
   }
 
   // Custom InputTypes
@@ -3222,16 +3773,25 @@ export namespace Prisma {
     where?: CreatorEventTicketPurchaseWhereInput
   }
 
+  /**
+   * CreatorEventTicketCountOutputType without action
+   */
+  export type CreatorEventTicketCountOutputTypeCountTicketItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorEventTicketItemWhereInput
+  }
+
 
   /**
    * Count Type CreatorEventTicketPurchaseCountOutputType
    */
 
   export type CreatorEventTicketPurchaseCountOutputType = {
+    ticketItems: number
     scans: number
   }
 
   export type CreatorEventTicketPurchaseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticketItems?: boolean | CreatorEventTicketPurchaseCountOutputTypeCountTicketItemsArgs
     scans?: boolean | CreatorEventTicketPurchaseCountOutputTypeCountScansArgs
   }
 
@@ -3249,6 +3809,13 @@ export namespace Prisma {
   /**
    * CreatorEventTicketPurchaseCountOutputType without action
    */
+  export type CreatorEventTicketPurchaseCountOutputTypeCountTicketItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorEventTicketItemWhereInput
+  }
+
+  /**
+   * CreatorEventTicketPurchaseCountOutputType without action
+   */
   export type CreatorEventTicketPurchaseCountOutputTypeCountScansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CreatorEventCheckInScanWhereInput
   }
@@ -3260,12 +3827,14 @@ export namespace Prisma {
 
   export type CreatorEventCheckInUserCountOutputType = {
     checkedInPurchases: number
+    checkedInTicketItems: number
     scans: number
     cameraSessions: number
   }
 
   export type CreatorEventCheckInUserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     checkedInPurchases?: boolean | CreatorEventCheckInUserCountOutputTypeCountCheckedInPurchasesArgs
+    checkedInTicketItems?: boolean | CreatorEventCheckInUserCountOutputTypeCountCheckedInTicketItemsArgs
     scans?: boolean | CreatorEventCheckInUserCountOutputTypeCountScansArgs
     cameraSessions?: boolean | CreatorEventCheckInUserCountOutputTypeCountCameraSessionsArgs
   }
@@ -3286,6 +3855,13 @@ export namespace Prisma {
    */
   export type CreatorEventCheckInUserCountOutputTypeCountCheckedInPurchasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CreatorEventTicketPurchaseWhereInput
+  }
+
+  /**
+   * CreatorEventCheckInUserCountOutputType without action
+   */
+  export type CreatorEventCheckInUserCountOutputTypeCountCheckedInTicketItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorEventTicketItemWhereInput
   }
 
   /**
@@ -3376,8 +3952,18 @@ export namespace Prisma {
     email: string | null
     role: $Enums.Role | null
     fullName: string | null
+    firstName: string | null
+    lastName: string | null
     avatarUrl: string | null
+    creatorName: string | null
     bio: string | null
+    website: string | null
+    location: string | null
+    profileVisibility: string | null
+    showEmail: boolean | null
+    showLocation: boolean | null
+    allowMessages: boolean | null
+    showOnlineStatus: boolean | null
     addressFull: string | null
     addressLat: number | null
     addressLon: number | null
@@ -3399,8 +3985,18 @@ export namespace Prisma {
     email: string | null
     role: $Enums.Role | null
     fullName: string | null
+    firstName: string | null
+    lastName: string | null
     avatarUrl: string | null
+    creatorName: string | null
     bio: string | null
+    website: string | null
+    location: string | null
+    profileVisibility: string | null
+    showEmail: boolean | null
+    showLocation: boolean | null
+    allowMessages: boolean | null
+    showOnlineStatus: boolean | null
     addressFull: string | null
     addressLat: number | null
     addressLon: number | null
@@ -3422,8 +4018,18 @@ export namespace Prisma {
     email: number
     role: number
     fullName: number
+    firstName: number
+    lastName: number
     avatarUrl: number
+    creatorName: number
     bio: number
+    website: number
+    location: number
+    profileVisibility: number
+    showEmail: number
+    showLocation: number
+    allowMessages: number
+    showOnlineStatus: number
     addressFull: number
     addressLat: number
     addressLon: number
@@ -3459,8 +4065,18 @@ export namespace Prisma {
     email?: true
     role?: true
     fullName?: true
+    firstName?: true
+    lastName?: true
     avatarUrl?: true
+    creatorName?: true
     bio?: true
+    website?: true
+    location?: true
+    profileVisibility?: true
+    showEmail?: true
+    showLocation?: true
+    allowMessages?: true
+    showOnlineStatus?: true
     addressFull?: true
     addressLat?: true
     addressLon?: true
@@ -3482,8 +4098,18 @@ export namespace Prisma {
     email?: true
     role?: true
     fullName?: true
+    firstName?: true
+    lastName?: true
     avatarUrl?: true
+    creatorName?: true
     bio?: true
+    website?: true
+    location?: true
+    profileVisibility?: true
+    showEmail?: true
+    showLocation?: true
+    allowMessages?: true
+    showOnlineStatus?: true
     addressFull?: true
     addressLat?: true
     addressLon?: true
@@ -3505,8 +4131,18 @@ export namespace Prisma {
     email?: true
     role?: true
     fullName?: true
+    firstName?: true
+    lastName?: true
     avatarUrl?: true
+    creatorName?: true
     bio?: true
+    website?: true
+    location?: true
+    profileVisibility?: true
+    showEmail?: true
+    showLocation?: true
+    allowMessages?: true
+    showOnlineStatus?: true
     addressFull?: true
     addressLat?: true
     addressLon?: true
@@ -3615,8 +4251,18 @@ export namespace Prisma {
     email: string
     role: $Enums.Role
     fullName: string | null
+    firstName: string | null
+    lastName: string | null
     avatarUrl: string | null
+    creatorName: string | null
     bio: string | null
+    website: string | null
+    location: string | null
+    profileVisibility: string
+    showEmail: boolean
+    showLocation: boolean
+    allowMessages: boolean
+    showOnlineStatus: boolean
     addressFull: string | null
     addressLat: number | null
     addressLon: number | null
@@ -3657,8 +4303,18 @@ export namespace Prisma {
     email?: boolean
     role?: boolean
     fullName?: boolean
+    firstName?: boolean
+    lastName?: boolean
     avatarUrl?: boolean
+    creatorName?: boolean
     bio?: boolean
+    website?: boolean
+    location?: boolean
+    profileVisibility?: boolean
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: boolean
     addressLat?: boolean
     addressLon?: boolean
@@ -3674,6 +4330,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     creator?: boolean | Profile$creatorArgs<ExtArgs>
+    creatorFollows?: boolean | Profile$creatorFollowsArgs<ExtArgs>
+    eventLikes?: boolean | Profile$eventLikesArgs<ExtArgs>
+    videoLikes?: boolean | Profile$videoLikesArgs<ExtArgs>
     credential?: boolean | Profile$credentialArgs<ExtArgs>
     session?: boolean | Profile$sessionArgs<ExtArgs>
     videoPurchases?: boolean | Profile$videoPurchasesArgs<ExtArgs>
@@ -3685,8 +4344,18 @@ export namespace Prisma {
     email?: boolean
     role?: boolean
     fullName?: boolean
+    firstName?: boolean
+    lastName?: boolean
     avatarUrl?: boolean
+    creatorName?: boolean
     bio?: boolean
+    website?: boolean
+    location?: boolean
+    profileVisibility?: boolean
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: boolean
     addressLat?: boolean
     addressLon?: boolean
@@ -3708,8 +4377,18 @@ export namespace Prisma {
     email?: boolean
     role?: boolean
     fullName?: boolean
+    firstName?: boolean
+    lastName?: boolean
     avatarUrl?: boolean
+    creatorName?: boolean
     bio?: boolean
+    website?: boolean
+    location?: boolean
+    profileVisibility?: boolean
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: boolean
     addressLat?: boolean
     addressLon?: boolean
@@ -3731,8 +4410,18 @@ export namespace Prisma {
     email?: boolean
     role?: boolean
     fullName?: boolean
+    firstName?: boolean
+    lastName?: boolean
     avatarUrl?: boolean
+    creatorName?: boolean
     bio?: boolean
+    website?: boolean
+    location?: boolean
+    profileVisibility?: boolean
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: boolean
     addressLat?: boolean
     addressLon?: boolean
@@ -3749,9 +4438,12 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "role" | "fullName" | "avatarUrl" | "bio" | "addressFull" | "addressLat" | "addressLon" | "addressType" | "addressCountry" | "addressState" | "addressName" | "age" | "sex" | "emailVerified" | "hasPassword" | "lastLogin" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "role" | "fullName" | "firstName" | "lastName" | "avatarUrl" | "creatorName" | "bio" | "website" | "location" | "profileVisibility" | "showEmail" | "showLocation" | "allowMessages" | "showOnlineStatus" | "addressFull" | "addressLat" | "addressLon" | "addressType" | "addressCountry" | "addressState" | "addressName" | "age" | "sex" | "emailVerified" | "hasPassword" | "lastLogin" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
   export type ProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creator?: boolean | Profile$creatorArgs<ExtArgs>
+    creatorFollows?: boolean | Profile$creatorFollowsArgs<ExtArgs>
+    eventLikes?: boolean | Profile$eventLikesArgs<ExtArgs>
+    videoLikes?: boolean | Profile$videoLikesArgs<ExtArgs>
     credential?: boolean | Profile$credentialArgs<ExtArgs>
     session?: boolean | Profile$sessionArgs<ExtArgs>
     videoPurchases?: boolean | Profile$videoPurchasesArgs<ExtArgs>
@@ -3764,6 +4456,9 @@ export namespace Prisma {
     name: "Profile"
     objects: {
       creator: Prisma.$CreatorPayload<ExtArgs> | null
+      creatorFollows: Prisma.$CreatorFollowPayload<ExtArgs>[]
+      eventLikes: Prisma.$CreatorEventLikePayload<ExtArgs>[]
+      videoLikes: Prisma.$CreatorVideoLikePayload<ExtArgs>[]
       credential: Prisma.$AuthCredentialPayload<ExtArgs> | null
       session: Prisma.$SessionPayload<ExtArgs>[]
       videoPurchases: Prisma.$CreatorVideoPurchasePayload<ExtArgs>[]
@@ -3773,8 +4468,18 @@ export namespace Prisma {
       email: string
       role: $Enums.Role
       fullName: string | null
+      firstName: string | null
+      lastName: string | null
       avatarUrl: string | null
+      creatorName: string | null
       bio: string | null
+      website: string | null
+      location: string | null
+      profileVisibility: string
+      showEmail: boolean
+      showLocation: boolean
+      allowMessages: boolean
+      showOnlineStatus: boolean
       addressFull: string | null
       addressLat: number | null
       addressLon: number | null
@@ -4184,6 +4889,9 @@ export namespace Prisma {
   export interface Prisma__ProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     creator<T extends Profile$creatorArgs<ExtArgs> = {}>(args?: Subset<T, Profile$creatorArgs<ExtArgs>>): Prisma__CreatorClient<$Result.GetResult<Prisma.$CreatorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    creatorFollows<T extends Profile$creatorFollowsArgs<ExtArgs> = {}>(args?: Subset<T, Profile$creatorFollowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    eventLikes<T extends Profile$eventLikesArgs<ExtArgs> = {}>(args?: Subset<T, Profile$eventLikesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    videoLikes<T extends Profile$videoLikesArgs<ExtArgs> = {}>(args?: Subset<T, Profile$videoLikesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorVideoLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     credential<T extends Profile$credentialArgs<ExtArgs> = {}>(args?: Subset<T, Profile$credentialArgs<ExtArgs>>): Prisma__AuthCredentialClient<$Result.GetResult<Prisma.$AuthCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     session<T extends Profile$sessionArgs<ExtArgs> = {}>(args?: Subset<T, Profile$sessionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     videoPurchases<T extends Profile$videoPurchasesArgs<ExtArgs> = {}>(args?: Subset<T, Profile$videoPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorVideoPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4220,8 +4928,18 @@ export namespace Prisma {
     readonly email: FieldRef<"Profile", 'String'>
     readonly role: FieldRef<"Profile", 'Role'>
     readonly fullName: FieldRef<"Profile", 'String'>
+    readonly firstName: FieldRef<"Profile", 'String'>
+    readonly lastName: FieldRef<"Profile", 'String'>
     readonly avatarUrl: FieldRef<"Profile", 'String'>
+    readonly creatorName: FieldRef<"Profile", 'String'>
     readonly bio: FieldRef<"Profile", 'String'>
+    readonly website: FieldRef<"Profile", 'String'>
+    readonly location: FieldRef<"Profile", 'String'>
+    readonly profileVisibility: FieldRef<"Profile", 'String'>
+    readonly showEmail: FieldRef<"Profile", 'Boolean'>
+    readonly showLocation: FieldRef<"Profile", 'Boolean'>
+    readonly allowMessages: FieldRef<"Profile", 'Boolean'>
+    readonly showOnlineStatus: FieldRef<"Profile", 'Boolean'>
     readonly addressFull: FieldRef<"Profile", 'String'>
     readonly addressLat: FieldRef<"Profile", 'Float'>
     readonly addressLon: FieldRef<"Profile", 'Float'>
@@ -4645,6 +5363,78 @@ export namespace Prisma {
      */
     include?: CreatorInclude<ExtArgs> | null
     where?: CreatorWhereInput
+  }
+
+  /**
+   * Profile.creatorFollows
+   */
+  export type Profile$creatorFollowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+    where?: CreatorFollowWhereInput
+    orderBy?: CreatorFollowOrderByWithRelationInput | CreatorFollowOrderByWithRelationInput[]
+    cursor?: CreatorFollowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorFollowScalarFieldEnum | CreatorFollowScalarFieldEnum[]
+  }
+
+  /**
+   * Profile.eventLikes
+   */
+  export type Profile$eventLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
+    where?: CreatorEventLikeWhereInput
+    orderBy?: CreatorEventLikeOrderByWithRelationInput | CreatorEventLikeOrderByWithRelationInput[]
+    cursor?: CreatorEventLikeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorEventLikeScalarFieldEnum | CreatorEventLikeScalarFieldEnum[]
+  }
+
+  /**
+   * Profile.videoLikes
+   */
+  export type Profile$videoLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorVideoLike
+     */
+    select?: CreatorVideoLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorVideoLike
+     */
+    omit?: CreatorVideoLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorVideoLikeInclude<ExtArgs> | null
+    where?: CreatorVideoLikeWhereInput
+    orderBy?: CreatorVideoLikeOrderByWithRelationInput | CreatorVideoLikeOrderByWithRelationInput[]
+    cursor?: CreatorVideoLikeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorVideoLikeScalarFieldEnum | CreatorVideoLikeScalarFieldEnum[]
   }
 
   /**
@@ -8004,8 +8794,26 @@ export namespace Prisma {
 
   export type AggregateCreator = {
     _count: CreatorCountAggregateOutputType | null
+    _avg: CreatorAvgAggregateOutputType | null
+    _sum: CreatorSumAggregateOutputType | null
     _min: CreatorMinAggregateOutputType | null
     _max: CreatorMaxAggregateOutputType | null
+  }
+
+  export type CreatorAvgAggregateOutputType = {
+    videoPayoutPercent: number | null
+    eventStreamPayout: number | null
+    eventVenuePayout: number | null
+    followersCount: number | null
+    followingCount: number | null
+  }
+
+  export type CreatorSumAggregateOutputType = {
+    videoPayoutPercent: number | null
+    eventStreamPayout: number | null
+    eventVenuePayout: number | null
+    followersCount: number | null
+    followingCount: number | null
   }
 
   export type CreatorMinAggregateOutputType = {
@@ -8013,6 +8821,12 @@ export namespace Prisma {
     profileId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    status: string | null
+    videoPayoutPercent: number | null
+    eventStreamPayout: number | null
+    eventVenuePayout: number | null
+    followersCount: number | null
+    followingCount: number | null
   }
 
   export type CreatorMaxAggregateOutputType = {
@@ -8020,6 +8834,12 @@ export namespace Prisma {
     profileId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    status: string | null
+    videoPayoutPercent: number | null
+    eventStreamPayout: number | null
+    eventVenuePayout: number | null
+    followersCount: number | null
+    followingCount: number | null
   }
 
   export type CreatorCountAggregateOutputType = {
@@ -8027,15 +8847,43 @@ export namespace Prisma {
     profileId: number
     createdAt: number
     updatedAt: number
+    status: number
+    videoPayoutPercent: number
+    eventStreamPayout: number
+    eventVenuePayout: number
+    followersCount: number
+    followingCount: number
     _all: number
   }
 
+
+  export type CreatorAvgAggregateInputType = {
+    videoPayoutPercent?: true
+    eventStreamPayout?: true
+    eventVenuePayout?: true
+    followersCount?: true
+    followingCount?: true
+  }
+
+  export type CreatorSumAggregateInputType = {
+    videoPayoutPercent?: true
+    eventStreamPayout?: true
+    eventVenuePayout?: true
+    followersCount?: true
+    followingCount?: true
+  }
 
   export type CreatorMinAggregateInputType = {
     id?: true
     profileId?: true
     createdAt?: true
     updatedAt?: true
+    status?: true
+    videoPayoutPercent?: true
+    eventStreamPayout?: true
+    eventVenuePayout?: true
+    followersCount?: true
+    followingCount?: true
   }
 
   export type CreatorMaxAggregateInputType = {
@@ -8043,6 +8891,12 @@ export namespace Prisma {
     profileId?: true
     createdAt?: true
     updatedAt?: true
+    status?: true
+    videoPayoutPercent?: true
+    eventStreamPayout?: true
+    eventVenuePayout?: true
+    followersCount?: true
+    followingCount?: true
   }
 
   export type CreatorCountAggregateInputType = {
@@ -8050,6 +8904,12 @@ export namespace Prisma {
     profileId?: true
     createdAt?: true
     updatedAt?: true
+    status?: true
+    videoPayoutPercent?: true
+    eventStreamPayout?: true
+    eventVenuePayout?: true
+    followersCount?: true
+    followingCount?: true
     _all?: true
   }
 
@@ -8091,6 +8951,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: CreatorAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CreatorSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: CreatorMinAggregateInputType
@@ -8121,6 +8993,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: CreatorCountAggregateInputType | true
+    _avg?: CreatorAvgAggregateInputType
+    _sum?: CreatorSumAggregateInputType
     _min?: CreatorMinAggregateInputType
     _max?: CreatorMaxAggregateInputType
   }
@@ -8130,7 +9004,15 @@ export namespace Prisma {
     profileId: string
     createdAt: Date
     updatedAt: Date
+    status: string
+    videoPayoutPercent: number
+    eventStreamPayout: number
+    eventVenuePayout: number
+    followersCount: number
+    followingCount: number
     _count: CreatorCountAggregateOutputType | null
+    _avg: CreatorAvgAggregateOutputType | null
+    _sum: CreatorSumAggregateOutputType | null
     _min: CreatorMinAggregateOutputType | null
     _max: CreatorMaxAggregateOutputType | null
   }
@@ -8154,12 +9036,21 @@ export namespace Prisma {
     profileId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    status?: boolean
+    videoPayoutPercent?: boolean
+    eventStreamPayout?: boolean
+    eventVenuePayout?: boolean
+    followersCount?: boolean
+    followingCount?: boolean
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
     videos?: boolean | Creator$videosArgs<ExtArgs>
     videoPurchases?: boolean | Creator$videoPurchasesArgs<ExtArgs>
     folders?: boolean | Creator$foldersArgs<ExtArgs>
     events?: boolean | Creator$eventsArgs<ExtArgs>
     checkInUsers?: boolean | Creator$checkInUsersArgs<ExtArgs>
+    payoutAccounts?: boolean | Creator$payoutAccountsArgs<ExtArgs>
+    payoutRequests?: boolean | Creator$payoutRequestsArgs<ExtArgs>
+    follows?: boolean | Creator$followsArgs<ExtArgs>
     _count?: boolean | CreatorCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["creator"]>
 
@@ -8168,6 +9059,12 @@ export namespace Prisma {
     profileId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    status?: boolean
+    videoPayoutPercent?: boolean
+    eventStreamPayout?: boolean
+    eventVenuePayout?: boolean
+    followersCount?: boolean
+    followingCount?: boolean
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["creator"]>
 
@@ -8176,6 +9073,12 @@ export namespace Prisma {
     profileId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    status?: boolean
+    videoPayoutPercent?: boolean
+    eventStreamPayout?: boolean
+    eventVenuePayout?: boolean
+    followersCount?: boolean
+    followingCount?: boolean
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["creator"]>
 
@@ -8184,9 +9087,15 @@ export namespace Prisma {
     profileId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    status?: boolean
+    videoPayoutPercent?: boolean
+    eventStreamPayout?: boolean
+    eventVenuePayout?: boolean
+    followersCount?: boolean
+    followingCount?: boolean
   }
 
-  export type CreatorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "profileId" | "createdAt" | "updatedAt", ExtArgs["result"]["creator"]>
+  export type CreatorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "profileId" | "createdAt" | "updatedAt" | "status" | "videoPayoutPercent" | "eventStreamPayout" | "eventVenuePayout" | "followersCount" | "followingCount", ExtArgs["result"]["creator"]>
   export type CreatorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
     videos?: boolean | Creator$videosArgs<ExtArgs>
@@ -8194,6 +9103,9 @@ export namespace Prisma {
     folders?: boolean | Creator$foldersArgs<ExtArgs>
     events?: boolean | Creator$eventsArgs<ExtArgs>
     checkInUsers?: boolean | Creator$checkInUsersArgs<ExtArgs>
+    payoutAccounts?: boolean | Creator$payoutAccountsArgs<ExtArgs>
+    payoutRequests?: boolean | Creator$payoutRequestsArgs<ExtArgs>
+    follows?: boolean | Creator$followsArgs<ExtArgs>
     _count?: boolean | CreatorCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CreatorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8212,12 +9124,21 @@ export namespace Prisma {
       folders: Prisma.$CreatorVideoFolderPayload<ExtArgs>[]
       events: Prisma.$CreatorEventPayload<ExtArgs>[]
       checkInUsers: Prisma.$CreatorEventCheckInUserPayload<ExtArgs>[]
+      payoutAccounts: Prisma.$CreatorPayoutAccountPayload<ExtArgs>[]
+      payoutRequests: Prisma.$CreatorPayoutRequestPayload<ExtArgs>[]
+      follows: Prisma.$CreatorFollowPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       profileId: string
       createdAt: Date
       updatedAt: Date
+      status: string
+      videoPayoutPercent: number
+      eventStreamPayout: number
+      eventVenuePayout: number
+      followersCount: number
+      followingCount: number
     }, ExtArgs["result"]["creator"]>
     composites: {}
   }
@@ -8618,6 +9539,9 @@ export namespace Prisma {
     folders<T extends Creator$foldersArgs<ExtArgs> = {}>(args?: Subset<T, Creator$foldersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorVideoFolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     events<T extends Creator$eventsArgs<ExtArgs> = {}>(args?: Subset<T, Creator$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     checkInUsers<T extends Creator$checkInUsersArgs<ExtArgs> = {}>(args?: Subset<T, Creator$checkInUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventCheckInUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payoutAccounts<T extends Creator$payoutAccountsArgs<ExtArgs> = {}>(args?: Subset<T, Creator$payoutAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payoutRequests<T extends Creator$payoutRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Creator$payoutRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    follows<T extends Creator$followsArgs<ExtArgs> = {}>(args?: Subset<T, Creator$followsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8651,6 +9575,12 @@ export namespace Prisma {
     readonly profileId: FieldRef<"Creator", 'String'>
     readonly createdAt: FieldRef<"Creator", 'DateTime'>
     readonly updatedAt: FieldRef<"Creator", 'DateTime'>
+    readonly status: FieldRef<"Creator", 'String'>
+    readonly videoPayoutPercent: FieldRef<"Creator", 'Int'>
+    readonly eventStreamPayout: FieldRef<"Creator", 'Int'>
+    readonly eventVenuePayout: FieldRef<"Creator", 'Int'>
+    readonly followersCount: FieldRef<"Creator", 'Int'>
+    readonly followingCount: FieldRef<"Creator", 'Int'>
   }
     
 
@@ -9172,6 +10102,78 @@ export namespace Prisma {
   }
 
   /**
+   * Creator.payoutAccounts
+   */
+  export type Creator$payoutAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+    where?: CreatorPayoutAccountWhereInput
+    orderBy?: CreatorPayoutAccountOrderByWithRelationInput | CreatorPayoutAccountOrderByWithRelationInput[]
+    cursor?: CreatorPayoutAccountWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorPayoutAccountScalarFieldEnum | CreatorPayoutAccountScalarFieldEnum[]
+  }
+
+  /**
+   * Creator.payoutRequests
+   */
+  export type Creator$payoutRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
+    where?: CreatorPayoutRequestWhereInput
+    orderBy?: CreatorPayoutRequestOrderByWithRelationInput | CreatorPayoutRequestOrderByWithRelationInput[]
+    cursor?: CreatorPayoutRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorPayoutRequestScalarFieldEnum | CreatorPayoutRequestScalarFieldEnum[]
+  }
+
+  /**
+   * Creator.follows
+   */
+  export type Creator$followsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+    where?: CreatorFollowWhereInput
+    orderBy?: CreatorFollowOrderByWithRelationInput | CreatorFollowOrderByWithRelationInput[]
+    cursor?: CreatorFollowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorFollowScalarFieldEnum | CreatorFollowScalarFieldEnum[]
+  }
+
+  /**
    * Creator without action
    */
   export type CreatorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9187,6 +10189,3476 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CreatorInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CreatorFollow
+   */
+
+  export type AggregateCreatorFollow = {
+    _count: CreatorFollowCountAggregateOutputType | null
+    _min: CreatorFollowMinAggregateOutputType | null
+    _max: CreatorFollowMaxAggregateOutputType | null
+  }
+
+  export type CreatorFollowMinAggregateOutputType = {
+    id: string | null
+    creatorId: string | null
+    followerProfileId: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CreatorFollowMaxAggregateOutputType = {
+    id: string | null
+    creatorId: string | null
+    followerProfileId: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CreatorFollowCountAggregateOutputType = {
+    id: number
+    creatorId: number
+    followerProfileId: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CreatorFollowMinAggregateInputType = {
+    id?: true
+    creatorId?: true
+    followerProfileId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CreatorFollowMaxAggregateInputType = {
+    id?: true
+    creatorId?: true
+    followerProfileId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CreatorFollowCountAggregateInputType = {
+    id?: true
+    creatorId?: true
+    followerProfileId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CreatorFollowAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreatorFollow to aggregate.
+     */
+    where?: CreatorFollowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorFollows to fetch.
+     */
+    orderBy?: CreatorFollowOrderByWithRelationInput | CreatorFollowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CreatorFollowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorFollows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorFollows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CreatorFollows
+    **/
+    _count?: true | CreatorFollowCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CreatorFollowMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CreatorFollowMaxAggregateInputType
+  }
+
+  export type GetCreatorFollowAggregateType<T extends CreatorFollowAggregateArgs> = {
+        [P in keyof T & keyof AggregateCreatorFollow]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCreatorFollow[P]>
+      : GetScalarType<T[P], AggregateCreatorFollow[P]>
+  }
+
+
+
+
+  export type CreatorFollowGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorFollowWhereInput
+    orderBy?: CreatorFollowOrderByWithAggregationInput | CreatorFollowOrderByWithAggregationInput[]
+    by: CreatorFollowScalarFieldEnum[] | CreatorFollowScalarFieldEnum
+    having?: CreatorFollowScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CreatorFollowCountAggregateInputType | true
+    _min?: CreatorFollowMinAggregateInputType
+    _max?: CreatorFollowMaxAggregateInputType
+  }
+
+  export type CreatorFollowGroupByOutputType = {
+    id: string
+    creatorId: string
+    followerProfileId: string
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: CreatorFollowCountAggregateOutputType | null
+    _min: CreatorFollowMinAggregateOutputType | null
+    _max: CreatorFollowMaxAggregateOutputType | null
+  }
+
+  type GetCreatorFollowGroupByPayload<T extends CreatorFollowGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CreatorFollowGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CreatorFollowGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CreatorFollowGroupByOutputType[P]>
+            : GetScalarType<T[P], CreatorFollowGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CreatorFollowSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorId?: boolean
+    followerProfileId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    followerProfile?: boolean | ProfileDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorFollow"]>
+
+  export type CreatorFollowSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorId?: boolean
+    followerProfileId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    followerProfile?: boolean | ProfileDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorFollow"]>
+
+  export type CreatorFollowSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorId?: boolean
+    followerProfileId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    followerProfile?: boolean | ProfileDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorFollow"]>
+
+  export type CreatorFollowSelectScalar = {
+    id?: boolean
+    creatorId?: boolean
+    followerProfileId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CreatorFollowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "followerProfileId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorFollow"]>
+  export type CreatorFollowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    followerProfile?: boolean | ProfileDefaultArgs<ExtArgs>
+  }
+  export type CreatorFollowIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    followerProfile?: boolean | ProfileDefaultArgs<ExtArgs>
+  }
+  export type CreatorFollowIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    followerProfile?: boolean | ProfileDefaultArgs<ExtArgs>
+  }
+
+  export type $CreatorFollowPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CreatorFollow"
+    objects: {
+      creator: Prisma.$CreatorPayload<ExtArgs>
+      followerProfile: Prisma.$ProfilePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      creatorId: string
+      followerProfileId: string
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["creatorFollow"]>
+    composites: {}
+  }
+
+  type CreatorFollowGetPayload<S extends boolean | null | undefined | CreatorFollowDefaultArgs> = $Result.GetResult<Prisma.$CreatorFollowPayload, S>
+
+  type CreatorFollowCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CreatorFollowFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CreatorFollowCountAggregateInputType | true
+    }
+
+  export interface CreatorFollowDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CreatorFollow'], meta: { name: 'CreatorFollow' } }
+    /**
+     * Find zero or one CreatorFollow that matches the filter.
+     * @param {CreatorFollowFindUniqueArgs} args - Arguments to find a CreatorFollow
+     * @example
+     * // Get one CreatorFollow
+     * const creatorFollow = await prisma.creatorFollow.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CreatorFollowFindUniqueArgs>(args: SelectSubset<T, CreatorFollowFindUniqueArgs<ExtArgs>>): Prisma__CreatorFollowClient<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CreatorFollow that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CreatorFollowFindUniqueOrThrowArgs} args - Arguments to find a CreatorFollow
+     * @example
+     * // Get one CreatorFollow
+     * const creatorFollow = await prisma.creatorFollow.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CreatorFollowFindUniqueOrThrowArgs>(args: SelectSubset<T, CreatorFollowFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CreatorFollowClient<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreatorFollow that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorFollowFindFirstArgs} args - Arguments to find a CreatorFollow
+     * @example
+     * // Get one CreatorFollow
+     * const creatorFollow = await prisma.creatorFollow.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CreatorFollowFindFirstArgs>(args?: SelectSubset<T, CreatorFollowFindFirstArgs<ExtArgs>>): Prisma__CreatorFollowClient<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreatorFollow that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorFollowFindFirstOrThrowArgs} args - Arguments to find a CreatorFollow
+     * @example
+     * // Get one CreatorFollow
+     * const creatorFollow = await prisma.creatorFollow.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CreatorFollowFindFirstOrThrowArgs>(args?: SelectSubset<T, CreatorFollowFindFirstOrThrowArgs<ExtArgs>>): Prisma__CreatorFollowClient<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CreatorFollows that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorFollowFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CreatorFollows
+     * const creatorFollows = await prisma.creatorFollow.findMany()
+     * 
+     * // Get first 10 CreatorFollows
+     * const creatorFollows = await prisma.creatorFollow.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const creatorFollowWithIdOnly = await prisma.creatorFollow.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CreatorFollowFindManyArgs>(args?: SelectSubset<T, CreatorFollowFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CreatorFollow.
+     * @param {CreatorFollowCreateArgs} args - Arguments to create a CreatorFollow.
+     * @example
+     * // Create one CreatorFollow
+     * const CreatorFollow = await prisma.creatorFollow.create({
+     *   data: {
+     *     // ... data to create a CreatorFollow
+     *   }
+     * })
+     * 
+     */
+    create<T extends CreatorFollowCreateArgs>(args: SelectSubset<T, CreatorFollowCreateArgs<ExtArgs>>): Prisma__CreatorFollowClient<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CreatorFollows.
+     * @param {CreatorFollowCreateManyArgs} args - Arguments to create many CreatorFollows.
+     * @example
+     * // Create many CreatorFollows
+     * const creatorFollow = await prisma.creatorFollow.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CreatorFollowCreateManyArgs>(args?: SelectSubset<T, CreatorFollowCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CreatorFollows and returns the data saved in the database.
+     * @param {CreatorFollowCreateManyAndReturnArgs} args - Arguments to create many CreatorFollows.
+     * @example
+     * // Create many CreatorFollows
+     * const creatorFollow = await prisma.creatorFollow.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CreatorFollows and only return the `id`
+     * const creatorFollowWithIdOnly = await prisma.creatorFollow.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CreatorFollowCreateManyAndReturnArgs>(args?: SelectSubset<T, CreatorFollowCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CreatorFollow.
+     * @param {CreatorFollowDeleteArgs} args - Arguments to delete one CreatorFollow.
+     * @example
+     * // Delete one CreatorFollow
+     * const CreatorFollow = await prisma.creatorFollow.delete({
+     *   where: {
+     *     // ... filter to delete one CreatorFollow
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CreatorFollowDeleteArgs>(args: SelectSubset<T, CreatorFollowDeleteArgs<ExtArgs>>): Prisma__CreatorFollowClient<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CreatorFollow.
+     * @param {CreatorFollowUpdateArgs} args - Arguments to update one CreatorFollow.
+     * @example
+     * // Update one CreatorFollow
+     * const creatorFollow = await prisma.creatorFollow.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CreatorFollowUpdateArgs>(args: SelectSubset<T, CreatorFollowUpdateArgs<ExtArgs>>): Prisma__CreatorFollowClient<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CreatorFollows.
+     * @param {CreatorFollowDeleteManyArgs} args - Arguments to filter CreatorFollows to delete.
+     * @example
+     * // Delete a few CreatorFollows
+     * const { count } = await prisma.creatorFollow.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CreatorFollowDeleteManyArgs>(args?: SelectSubset<T, CreatorFollowDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreatorFollows.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorFollowUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CreatorFollows
+     * const creatorFollow = await prisma.creatorFollow.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CreatorFollowUpdateManyArgs>(args: SelectSubset<T, CreatorFollowUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreatorFollows and returns the data updated in the database.
+     * @param {CreatorFollowUpdateManyAndReturnArgs} args - Arguments to update many CreatorFollows.
+     * @example
+     * // Update many CreatorFollows
+     * const creatorFollow = await prisma.creatorFollow.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CreatorFollows and only return the `id`
+     * const creatorFollowWithIdOnly = await prisma.creatorFollow.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CreatorFollowUpdateManyAndReturnArgs>(args: SelectSubset<T, CreatorFollowUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CreatorFollow.
+     * @param {CreatorFollowUpsertArgs} args - Arguments to update or create a CreatorFollow.
+     * @example
+     * // Update or create a CreatorFollow
+     * const creatorFollow = await prisma.creatorFollow.upsert({
+     *   create: {
+     *     // ... data to create a CreatorFollow
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CreatorFollow we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CreatorFollowUpsertArgs>(args: SelectSubset<T, CreatorFollowUpsertArgs<ExtArgs>>): Prisma__CreatorFollowClient<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CreatorFollows.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorFollowCountArgs} args - Arguments to filter CreatorFollows to count.
+     * @example
+     * // Count the number of CreatorFollows
+     * const count = await prisma.creatorFollow.count({
+     *   where: {
+     *     // ... the filter for the CreatorFollows we want to count
+     *   }
+     * })
+    **/
+    count<T extends CreatorFollowCountArgs>(
+      args?: Subset<T, CreatorFollowCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CreatorFollowCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CreatorFollow.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorFollowAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CreatorFollowAggregateArgs>(args: Subset<T, CreatorFollowAggregateArgs>): Prisma.PrismaPromise<GetCreatorFollowAggregateType<T>>
+
+    /**
+     * Group by CreatorFollow.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorFollowGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CreatorFollowGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CreatorFollowGroupByArgs['orderBy'] }
+        : { orderBy?: CreatorFollowGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CreatorFollowGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCreatorFollowGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CreatorFollow model
+   */
+  readonly fields: CreatorFollowFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CreatorFollow.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CreatorFollowClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    creator<T extends CreatorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorDefaultArgs<ExtArgs>>): Prisma__CreatorClient<$Result.GetResult<Prisma.$CreatorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    followerProfile<T extends ProfileDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProfileDefaultArgs<ExtArgs>>): Prisma__ProfileClient<$Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CreatorFollow model
+   */
+  interface CreatorFollowFieldRefs {
+    readonly id: FieldRef<"CreatorFollow", 'String'>
+    readonly creatorId: FieldRef<"CreatorFollow", 'String'>
+    readonly followerProfileId: FieldRef<"CreatorFollow", 'String'>
+    readonly status: FieldRef<"CreatorFollow", 'String'>
+    readonly createdAt: FieldRef<"CreatorFollow", 'DateTime'>
+    readonly updatedAt: FieldRef<"CreatorFollow", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CreatorFollow findUnique
+   */
+  export type CreatorFollowFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorFollow to fetch.
+     */
+    where: CreatorFollowWhereUniqueInput
+  }
+
+  /**
+   * CreatorFollow findUniqueOrThrow
+   */
+  export type CreatorFollowFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorFollow to fetch.
+     */
+    where: CreatorFollowWhereUniqueInput
+  }
+
+  /**
+   * CreatorFollow findFirst
+   */
+  export type CreatorFollowFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorFollow to fetch.
+     */
+    where?: CreatorFollowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorFollows to fetch.
+     */
+    orderBy?: CreatorFollowOrderByWithRelationInput | CreatorFollowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreatorFollows.
+     */
+    cursor?: CreatorFollowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorFollows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorFollows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorFollows.
+     */
+    distinct?: CreatorFollowScalarFieldEnum | CreatorFollowScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorFollow findFirstOrThrow
+   */
+  export type CreatorFollowFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorFollow to fetch.
+     */
+    where?: CreatorFollowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorFollows to fetch.
+     */
+    orderBy?: CreatorFollowOrderByWithRelationInput | CreatorFollowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreatorFollows.
+     */
+    cursor?: CreatorFollowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorFollows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorFollows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorFollows.
+     */
+    distinct?: CreatorFollowScalarFieldEnum | CreatorFollowScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorFollow findMany
+   */
+  export type CreatorFollowFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorFollows to fetch.
+     */
+    where?: CreatorFollowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorFollows to fetch.
+     */
+    orderBy?: CreatorFollowOrderByWithRelationInput | CreatorFollowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CreatorFollows.
+     */
+    cursor?: CreatorFollowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorFollows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorFollows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorFollows.
+     */
+    distinct?: CreatorFollowScalarFieldEnum | CreatorFollowScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorFollow create
+   */
+  export type CreatorFollowCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CreatorFollow.
+     */
+    data: XOR<CreatorFollowCreateInput, CreatorFollowUncheckedCreateInput>
+  }
+
+  /**
+   * CreatorFollow createMany
+   */
+  export type CreatorFollowCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CreatorFollows.
+     */
+    data: CreatorFollowCreateManyInput | CreatorFollowCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CreatorFollow createManyAndReturn
+   */
+  export type CreatorFollowCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * The data used to create many CreatorFollows.
+     */
+    data: CreatorFollowCreateManyInput | CreatorFollowCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CreatorFollow update
+   */
+  export type CreatorFollowUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CreatorFollow.
+     */
+    data: XOR<CreatorFollowUpdateInput, CreatorFollowUncheckedUpdateInput>
+    /**
+     * Choose, which CreatorFollow to update.
+     */
+    where: CreatorFollowWhereUniqueInput
+  }
+
+  /**
+   * CreatorFollow updateMany
+   */
+  export type CreatorFollowUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CreatorFollows.
+     */
+    data: XOR<CreatorFollowUpdateManyMutationInput, CreatorFollowUncheckedUpdateManyInput>
+    /**
+     * Filter which CreatorFollows to update
+     */
+    where?: CreatorFollowWhereInput
+    /**
+     * Limit how many CreatorFollows to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreatorFollow updateManyAndReturn
+   */
+  export type CreatorFollowUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * The data used to update CreatorFollows.
+     */
+    data: XOR<CreatorFollowUpdateManyMutationInput, CreatorFollowUncheckedUpdateManyInput>
+    /**
+     * Filter which CreatorFollows to update
+     */
+    where?: CreatorFollowWhereInput
+    /**
+     * Limit how many CreatorFollows to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CreatorFollow upsert
+   */
+  export type CreatorFollowUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CreatorFollow to update in case it exists.
+     */
+    where: CreatorFollowWhereUniqueInput
+    /**
+     * In case the CreatorFollow found by the `where` argument doesn't exist, create a new CreatorFollow with this data.
+     */
+    create: XOR<CreatorFollowCreateInput, CreatorFollowUncheckedCreateInput>
+    /**
+     * In case the CreatorFollow was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CreatorFollowUpdateInput, CreatorFollowUncheckedUpdateInput>
+  }
+
+  /**
+   * CreatorFollow delete
+   */
+  export type CreatorFollowDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+    /**
+     * Filter which CreatorFollow to delete.
+     */
+    where: CreatorFollowWhereUniqueInput
+  }
+
+  /**
+   * CreatorFollow deleteMany
+   */
+  export type CreatorFollowDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreatorFollows to delete
+     */
+    where?: CreatorFollowWhereInput
+    /**
+     * Limit how many CreatorFollows to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreatorFollow without action
+   */
+  export type CreatorFollowDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorFollow
+     */
+    select?: CreatorFollowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorFollow
+     */
+    omit?: CreatorFollowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorFollowInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CreatorPayoutAccount
+   */
+
+  export type AggregateCreatorPayoutAccount = {
+    _count: CreatorPayoutAccountCountAggregateOutputType | null
+    _min: CreatorPayoutAccountMinAggregateOutputType | null
+    _max: CreatorPayoutAccountMaxAggregateOutputType | null
+  }
+
+  export type CreatorPayoutAccountMinAggregateOutputType = {
+    id: string | null
+    creatorId: string | null
+    bankName: string | null
+    accountNumber: string | null
+    accountName: string | null
+    accountType: string | null
+    isPrimary: boolean | null
+    verified: boolean | null
+    verifiedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CreatorPayoutAccountMaxAggregateOutputType = {
+    id: string | null
+    creatorId: string | null
+    bankName: string | null
+    accountNumber: string | null
+    accountName: string | null
+    accountType: string | null
+    isPrimary: boolean | null
+    verified: boolean | null
+    verifiedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CreatorPayoutAccountCountAggregateOutputType = {
+    id: number
+    creatorId: number
+    bankName: number
+    accountNumber: number
+    accountName: number
+    accountType: number
+    isPrimary: number
+    verified: number
+    verifiedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CreatorPayoutAccountMinAggregateInputType = {
+    id?: true
+    creatorId?: true
+    bankName?: true
+    accountNumber?: true
+    accountName?: true
+    accountType?: true
+    isPrimary?: true
+    verified?: true
+    verifiedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CreatorPayoutAccountMaxAggregateInputType = {
+    id?: true
+    creatorId?: true
+    bankName?: true
+    accountNumber?: true
+    accountName?: true
+    accountType?: true
+    isPrimary?: true
+    verified?: true
+    verifiedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CreatorPayoutAccountCountAggregateInputType = {
+    id?: true
+    creatorId?: true
+    bankName?: true
+    accountNumber?: true
+    accountName?: true
+    accountType?: true
+    isPrimary?: true
+    verified?: true
+    verifiedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CreatorPayoutAccountAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreatorPayoutAccount to aggregate.
+     */
+    where?: CreatorPayoutAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorPayoutAccounts to fetch.
+     */
+    orderBy?: CreatorPayoutAccountOrderByWithRelationInput | CreatorPayoutAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CreatorPayoutAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorPayoutAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorPayoutAccounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CreatorPayoutAccounts
+    **/
+    _count?: true | CreatorPayoutAccountCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CreatorPayoutAccountMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CreatorPayoutAccountMaxAggregateInputType
+  }
+
+  export type GetCreatorPayoutAccountAggregateType<T extends CreatorPayoutAccountAggregateArgs> = {
+        [P in keyof T & keyof AggregateCreatorPayoutAccount]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCreatorPayoutAccount[P]>
+      : GetScalarType<T[P], AggregateCreatorPayoutAccount[P]>
+  }
+
+
+
+
+  export type CreatorPayoutAccountGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorPayoutAccountWhereInput
+    orderBy?: CreatorPayoutAccountOrderByWithAggregationInput | CreatorPayoutAccountOrderByWithAggregationInput[]
+    by: CreatorPayoutAccountScalarFieldEnum[] | CreatorPayoutAccountScalarFieldEnum
+    having?: CreatorPayoutAccountScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CreatorPayoutAccountCountAggregateInputType | true
+    _min?: CreatorPayoutAccountMinAggregateInputType
+    _max?: CreatorPayoutAccountMaxAggregateInputType
+  }
+
+  export type CreatorPayoutAccountGroupByOutputType = {
+    id: string
+    creatorId: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    accountType: string
+    isPrimary: boolean
+    verified: boolean
+    verifiedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CreatorPayoutAccountCountAggregateOutputType | null
+    _min: CreatorPayoutAccountMinAggregateOutputType | null
+    _max: CreatorPayoutAccountMaxAggregateOutputType | null
+  }
+
+  type GetCreatorPayoutAccountGroupByPayload<T extends CreatorPayoutAccountGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CreatorPayoutAccountGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CreatorPayoutAccountGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CreatorPayoutAccountGroupByOutputType[P]>
+            : GetScalarType<T[P], CreatorPayoutAccountGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CreatorPayoutAccountSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    accountType?: boolean
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    payoutRequests?: boolean | CreatorPayoutAccount$payoutRequestsArgs<ExtArgs>
+    _count?: boolean | CreatorPayoutAccountCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorPayoutAccount"]>
+
+  export type CreatorPayoutAccountSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    accountType?: boolean
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorPayoutAccount"]>
+
+  export type CreatorPayoutAccountSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    accountType?: boolean
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorPayoutAccount"]>
+
+  export type CreatorPayoutAccountSelectScalar = {
+    id?: boolean
+    creatorId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    accountType?: boolean
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CreatorPayoutAccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "bankName" | "accountNumber" | "accountName" | "accountType" | "isPrimary" | "verified" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorPayoutAccount"]>
+  export type CreatorPayoutAccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    payoutRequests?: boolean | CreatorPayoutAccount$payoutRequestsArgs<ExtArgs>
+    _count?: boolean | CreatorPayoutAccountCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CreatorPayoutAccountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+  }
+  export type CreatorPayoutAccountIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+  }
+
+  export type $CreatorPayoutAccountPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CreatorPayoutAccount"
+    objects: {
+      creator: Prisma.$CreatorPayload<ExtArgs>
+      payoutRequests: Prisma.$CreatorPayoutRequestPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      creatorId: string
+      bankName: string
+      accountNumber: string
+      accountName: string
+      accountType: string
+      isPrimary: boolean
+      verified: boolean
+      verifiedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["creatorPayoutAccount"]>
+    composites: {}
+  }
+
+  type CreatorPayoutAccountGetPayload<S extends boolean | null | undefined | CreatorPayoutAccountDefaultArgs> = $Result.GetResult<Prisma.$CreatorPayoutAccountPayload, S>
+
+  type CreatorPayoutAccountCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CreatorPayoutAccountFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CreatorPayoutAccountCountAggregateInputType | true
+    }
+
+  export interface CreatorPayoutAccountDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CreatorPayoutAccount'], meta: { name: 'CreatorPayoutAccount' } }
+    /**
+     * Find zero or one CreatorPayoutAccount that matches the filter.
+     * @param {CreatorPayoutAccountFindUniqueArgs} args - Arguments to find a CreatorPayoutAccount
+     * @example
+     * // Get one CreatorPayoutAccount
+     * const creatorPayoutAccount = await prisma.creatorPayoutAccount.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CreatorPayoutAccountFindUniqueArgs>(args: SelectSubset<T, CreatorPayoutAccountFindUniqueArgs<ExtArgs>>): Prisma__CreatorPayoutAccountClient<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CreatorPayoutAccount that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CreatorPayoutAccountFindUniqueOrThrowArgs} args - Arguments to find a CreatorPayoutAccount
+     * @example
+     * // Get one CreatorPayoutAccount
+     * const creatorPayoutAccount = await prisma.creatorPayoutAccount.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CreatorPayoutAccountFindUniqueOrThrowArgs>(args: SelectSubset<T, CreatorPayoutAccountFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CreatorPayoutAccountClient<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreatorPayoutAccount that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutAccountFindFirstArgs} args - Arguments to find a CreatorPayoutAccount
+     * @example
+     * // Get one CreatorPayoutAccount
+     * const creatorPayoutAccount = await prisma.creatorPayoutAccount.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CreatorPayoutAccountFindFirstArgs>(args?: SelectSubset<T, CreatorPayoutAccountFindFirstArgs<ExtArgs>>): Prisma__CreatorPayoutAccountClient<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreatorPayoutAccount that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutAccountFindFirstOrThrowArgs} args - Arguments to find a CreatorPayoutAccount
+     * @example
+     * // Get one CreatorPayoutAccount
+     * const creatorPayoutAccount = await prisma.creatorPayoutAccount.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CreatorPayoutAccountFindFirstOrThrowArgs>(args?: SelectSubset<T, CreatorPayoutAccountFindFirstOrThrowArgs<ExtArgs>>): Prisma__CreatorPayoutAccountClient<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CreatorPayoutAccounts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutAccountFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CreatorPayoutAccounts
+     * const creatorPayoutAccounts = await prisma.creatorPayoutAccount.findMany()
+     * 
+     * // Get first 10 CreatorPayoutAccounts
+     * const creatorPayoutAccounts = await prisma.creatorPayoutAccount.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const creatorPayoutAccountWithIdOnly = await prisma.creatorPayoutAccount.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CreatorPayoutAccountFindManyArgs>(args?: SelectSubset<T, CreatorPayoutAccountFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CreatorPayoutAccount.
+     * @param {CreatorPayoutAccountCreateArgs} args - Arguments to create a CreatorPayoutAccount.
+     * @example
+     * // Create one CreatorPayoutAccount
+     * const CreatorPayoutAccount = await prisma.creatorPayoutAccount.create({
+     *   data: {
+     *     // ... data to create a CreatorPayoutAccount
+     *   }
+     * })
+     * 
+     */
+    create<T extends CreatorPayoutAccountCreateArgs>(args: SelectSubset<T, CreatorPayoutAccountCreateArgs<ExtArgs>>): Prisma__CreatorPayoutAccountClient<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CreatorPayoutAccounts.
+     * @param {CreatorPayoutAccountCreateManyArgs} args - Arguments to create many CreatorPayoutAccounts.
+     * @example
+     * // Create many CreatorPayoutAccounts
+     * const creatorPayoutAccount = await prisma.creatorPayoutAccount.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CreatorPayoutAccountCreateManyArgs>(args?: SelectSubset<T, CreatorPayoutAccountCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CreatorPayoutAccounts and returns the data saved in the database.
+     * @param {CreatorPayoutAccountCreateManyAndReturnArgs} args - Arguments to create many CreatorPayoutAccounts.
+     * @example
+     * // Create many CreatorPayoutAccounts
+     * const creatorPayoutAccount = await prisma.creatorPayoutAccount.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CreatorPayoutAccounts and only return the `id`
+     * const creatorPayoutAccountWithIdOnly = await prisma.creatorPayoutAccount.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CreatorPayoutAccountCreateManyAndReturnArgs>(args?: SelectSubset<T, CreatorPayoutAccountCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CreatorPayoutAccount.
+     * @param {CreatorPayoutAccountDeleteArgs} args - Arguments to delete one CreatorPayoutAccount.
+     * @example
+     * // Delete one CreatorPayoutAccount
+     * const CreatorPayoutAccount = await prisma.creatorPayoutAccount.delete({
+     *   where: {
+     *     // ... filter to delete one CreatorPayoutAccount
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CreatorPayoutAccountDeleteArgs>(args: SelectSubset<T, CreatorPayoutAccountDeleteArgs<ExtArgs>>): Prisma__CreatorPayoutAccountClient<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CreatorPayoutAccount.
+     * @param {CreatorPayoutAccountUpdateArgs} args - Arguments to update one CreatorPayoutAccount.
+     * @example
+     * // Update one CreatorPayoutAccount
+     * const creatorPayoutAccount = await prisma.creatorPayoutAccount.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CreatorPayoutAccountUpdateArgs>(args: SelectSubset<T, CreatorPayoutAccountUpdateArgs<ExtArgs>>): Prisma__CreatorPayoutAccountClient<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CreatorPayoutAccounts.
+     * @param {CreatorPayoutAccountDeleteManyArgs} args - Arguments to filter CreatorPayoutAccounts to delete.
+     * @example
+     * // Delete a few CreatorPayoutAccounts
+     * const { count } = await prisma.creatorPayoutAccount.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CreatorPayoutAccountDeleteManyArgs>(args?: SelectSubset<T, CreatorPayoutAccountDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreatorPayoutAccounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutAccountUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CreatorPayoutAccounts
+     * const creatorPayoutAccount = await prisma.creatorPayoutAccount.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CreatorPayoutAccountUpdateManyArgs>(args: SelectSubset<T, CreatorPayoutAccountUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreatorPayoutAccounts and returns the data updated in the database.
+     * @param {CreatorPayoutAccountUpdateManyAndReturnArgs} args - Arguments to update many CreatorPayoutAccounts.
+     * @example
+     * // Update many CreatorPayoutAccounts
+     * const creatorPayoutAccount = await prisma.creatorPayoutAccount.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CreatorPayoutAccounts and only return the `id`
+     * const creatorPayoutAccountWithIdOnly = await prisma.creatorPayoutAccount.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CreatorPayoutAccountUpdateManyAndReturnArgs>(args: SelectSubset<T, CreatorPayoutAccountUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CreatorPayoutAccount.
+     * @param {CreatorPayoutAccountUpsertArgs} args - Arguments to update or create a CreatorPayoutAccount.
+     * @example
+     * // Update or create a CreatorPayoutAccount
+     * const creatorPayoutAccount = await prisma.creatorPayoutAccount.upsert({
+     *   create: {
+     *     // ... data to create a CreatorPayoutAccount
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CreatorPayoutAccount we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CreatorPayoutAccountUpsertArgs>(args: SelectSubset<T, CreatorPayoutAccountUpsertArgs<ExtArgs>>): Prisma__CreatorPayoutAccountClient<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CreatorPayoutAccounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutAccountCountArgs} args - Arguments to filter CreatorPayoutAccounts to count.
+     * @example
+     * // Count the number of CreatorPayoutAccounts
+     * const count = await prisma.creatorPayoutAccount.count({
+     *   where: {
+     *     // ... the filter for the CreatorPayoutAccounts we want to count
+     *   }
+     * })
+    **/
+    count<T extends CreatorPayoutAccountCountArgs>(
+      args?: Subset<T, CreatorPayoutAccountCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CreatorPayoutAccountCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CreatorPayoutAccount.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutAccountAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CreatorPayoutAccountAggregateArgs>(args: Subset<T, CreatorPayoutAccountAggregateArgs>): Prisma.PrismaPromise<GetCreatorPayoutAccountAggregateType<T>>
+
+    /**
+     * Group by CreatorPayoutAccount.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutAccountGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CreatorPayoutAccountGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CreatorPayoutAccountGroupByArgs['orderBy'] }
+        : { orderBy?: CreatorPayoutAccountGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CreatorPayoutAccountGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCreatorPayoutAccountGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CreatorPayoutAccount model
+   */
+  readonly fields: CreatorPayoutAccountFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CreatorPayoutAccount.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CreatorPayoutAccountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    creator<T extends CreatorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorDefaultArgs<ExtArgs>>): Prisma__CreatorClient<$Result.GetResult<Prisma.$CreatorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    payoutRequests<T extends CreatorPayoutAccount$payoutRequestsArgs<ExtArgs> = {}>(args?: Subset<T, CreatorPayoutAccount$payoutRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CreatorPayoutAccount model
+   */
+  interface CreatorPayoutAccountFieldRefs {
+    readonly id: FieldRef<"CreatorPayoutAccount", 'String'>
+    readonly creatorId: FieldRef<"CreatorPayoutAccount", 'String'>
+    readonly bankName: FieldRef<"CreatorPayoutAccount", 'String'>
+    readonly accountNumber: FieldRef<"CreatorPayoutAccount", 'String'>
+    readonly accountName: FieldRef<"CreatorPayoutAccount", 'String'>
+    readonly accountType: FieldRef<"CreatorPayoutAccount", 'String'>
+    readonly isPrimary: FieldRef<"CreatorPayoutAccount", 'Boolean'>
+    readonly verified: FieldRef<"CreatorPayoutAccount", 'Boolean'>
+    readonly verifiedAt: FieldRef<"CreatorPayoutAccount", 'DateTime'>
+    readonly createdAt: FieldRef<"CreatorPayoutAccount", 'DateTime'>
+    readonly updatedAt: FieldRef<"CreatorPayoutAccount", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CreatorPayoutAccount findUnique
+   */
+  export type CreatorPayoutAccountFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorPayoutAccount to fetch.
+     */
+    where: CreatorPayoutAccountWhereUniqueInput
+  }
+
+  /**
+   * CreatorPayoutAccount findUniqueOrThrow
+   */
+  export type CreatorPayoutAccountFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorPayoutAccount to fetch.
+     */
+    where: CreatorPayoutAccountWhereUniqueInput
+  }
+
+  /**
+   * CreatorPayoutAccount findFirst
+   */
+  export type CreatorPayoutAccountFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorPayoutAccount to fetch.
+     */
+    where?: CreatorPayoutAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorPayoutAccounts to fetch.
+     */
+    orderBy?: CreatorPayoutAccountOrderByWithRelationInput | CreatorPayoutAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreatorPayoutAccounts.
+     */
+    cursor?: CreatorPayoutAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorPayoutAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorPayoutAccounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorPayoutAccounts.
+     */
+    distinct?: CreatorPayoutAccountScalarFieldEnum | CreatorPayoutAccountScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorPayoutAccount findFirstOrThrow
+   */
+  export type CreatorPayoutAccountFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorPayoutAccount to fetch.
+     */
+    where?: CreatorPayoutAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorPayoutAccounts to fetch.
+     */
+    orderBy?: CreatorPayoutAccountOrderByWithRelationInput | CreatorPayoutAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreatorPayoutAccounts.
+     */
+    cursor?: CreatorPayoutAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorPayoutAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorPayoutAccounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorPayoutAccounts.
+     */
+    distinct?: CreatorPayoutAccountScalarFieldEnum | CreatorPayoutAccountScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorPayoutAccount findMany
+   */
+  export type CreatorPayoutAccountFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorPayoutAccounts to fetch.
+     */
+    where?: CreatorPayoutAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorPayoutAccounts to fetch.
+     */
+    orderBy?: CreatorPayoutAccountOrderByWithRelationInput | CreatorPayoutAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CreatorPayoutAccounts.
+     */
+    cursor?: CreatorPayoutAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorPayoutAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorPayoutAccounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorPayoutAccounts.
+     */
+    distinct?: CreatorPayoutAccountScalarFieldEnum | CreatorPayoutAccountScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorPayoutAccount create
+   */
+  export type CreatorPayoutAccountCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CreatorPayoutAccount.
+     */
+    data: XOR<CreatorPayoutAccountCreateInput, CreatorPayoutAccountUncheckedCreateInput>
+  }
+
+  /**
+   * CreatorPayoutAccount createMany
+   */
+  export type CreatorPayoutAccountCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CreatorPayoutAccounts.
+     */
+    data: CreatorPayoutAccountCreateManyInput | CreatorPayoutAccountCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CreatorPayoutAccount createManyAndReturn
+   */
+  export type CreatorPayoutAccountCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * The data used to create many CreatorPayoutAccounts.
+     */
+    data: CreatorPayoutAccountCreateManyInput | CreatorPayoutAccountCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CreatorPayoutAccount update
+   */
+  export type CreatorPayoutAccountUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CreatorPayoutAccount.
+     */
+    data: XOR<CreatorPayoutAccountUpdateInput, CreatorPayoutAccountUncheckedUpdateInput>
+    /**
+     * Choose, which CreatorPayoutAccount to update.
+     */
+    where: CreatorPayoutAccountWhereUniqueInput
+  }
+
+  /**
+   * CreatorPayoutAccount updateMany
+   */
+  export type CreatorPayoutAccountUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CreatorPayoutAccounts.
+     */
+    data: XOR<CreatorPayoutAccountUpdateManyMutationInput, CreatorPayoutAccountUncheckedUpdateManyInput>
+    /**
+     * Filter which CreatorPayoutAccounts to update
+     */
+    where?: CreatorPayoutAccountWhereInput
+    /**
+     * Limit how many CreatorPayoutAccounts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreatorPayoutAccount updateManyAndReturn
+   */
+  export type CreatorPayoutAccountUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * The data used to update CreatorPayoutAccounts.
+     */
+    data: XOR<CreatorPayoutAccountUpdateManyMutationInput, CreatorPayoutAccountUncheckedUpdateManyInput>
+    /**
+     * Filter which CreatorPayoutAccounts to update
+     */
+    where?: CreatorPayoutAccountWhereInput
+    /**
+     * Limit how many CreatorPayoutAccounts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CreatorPayoutAccount upsert
+   */
+  export type CreatorPayoutAccountUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CreatorPayoutAccount to update in case it exists.
+     */
+    where: CreatorPayoutAccountWhereUniqueInput
+    /**
+     * In case the CreatorPayoutAccount found by the `where` argument doesn't exist, create a new CreatorPayoutAccount with this data.
+     */
+    create: XOR<CreatorPayoutAccountCreateInput, CreatorPayoutAccountUncheckedCreateInput>
+    /**
+     * In case the CreatorPayoutAccount was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CreatorPayoutAccountUpdateInput, CreatorPayoutAccountUncheckedUpdateInput>
+  }
+
+  /**
+   * CreatorPayoutAccount delete
+   */
+  export type CreatorPayoutAccountDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter which CreatorPayoutAccount to delete.
+     */
+    where: CreatorPayoutAccountWhereUniqueInput
+  }
+
+  /**
+   * CreatorPayoutAccount deleteMany
+   */
+  export type CreatorPayoutAccountDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreatorPayoutAccounts to delete
+     */
+    where?: CreatorPayoutAccountWhereInput
+    /**
+     * Limit how many CreatorPayoutAccounts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreatorPayoutAccount.payoutRequests
+   */
+  export type CreatorPayoutAccount$payoutRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
+    where?: CreatorPayoutRequestWhereInput
+    orderBy?: CreatorPayoutRequestOrderByWithRelationInput | CreatorPayoutRequestOrderByWithRelationInput[]
+    cursor?: CreatorPayoutRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorPayoutRequestScalarFieldEnum | CreatorPayoutRequestScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorPayoutAccount without action
+   */
+  export type CreatorPayoutAccountDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CreatorPayoutRequest
+   */
+
+  export type AggregateCreatorPayoutRequest = {
+    _count: CreatorPayoutRequestCountAggregateOutputType | null
+    _avg: CreatorPayoutRequestAvgAggregateOutputType | null
+    _sum: CreatorPayoutRequestSumAggregateOutputType | null
+    _min: CreatorPayoutRequestMinAggregateOutputType | null
+    _max: CreatorPayoutRequestMaxAggregateOutputType | null
+  }
+
+  export type CreatorPayoutRequestAvgAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type CreatorPayoutRequestSumAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type CreatorPayoutRequestMinAggregateOutputType = {
+    id: string | null
+    creatorId: string | null
+    payoutAccountId: string | null
+    amount: number | null
+    currency: string | null
+    status: string | null
+    note: string | null
+    transactionId: string | null
+    requestedAt: Date | null
+    processedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CreatorPayoutRequestMaxAggregateOutputType = {
+    id: string | null
+    creatorId: string | null
+    payoutAccountId: string | null
+    amount: number | null
+    currency: string | null
+    status: string | null
+    note: string | null
+    transactionId: string | null
+    requestedAt: Date | null
+    processedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CreatorPayoutRequestCountAggregateOutputType = {
+    id: number
+    creatorId: number
+    payoutAccountId: number
+    amount: number
+    currency: number
+    status: number
+    note: number
+    transactionId: number
+    requestedAt: number
+    processedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CreatorPayoutRequestAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type CreatorPayoutRequestSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type CreatorPayoutRequestMinAggregateInputType = {
+    id?: true
+    creatorId?: true
+    payoutAccountId?: true
+    amount?: true
+    currency?: true
+    status?: true
+    note?: true
+    transactionId?: true
+    requestedAt?: true
+    processedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CreatorPayoutRequestMaxAggregateInputType = {
+    id?: true
+    creatorId?: true
+    payoutAccountId?: true
+    amount?: true
+    currency?: true
+    status?: true
+    note?: true
+    transactionId?: true
+    requestedAt?: true
+    processedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CreatorPayoutRequestCountAggregateInputType = {
+    id?: true
+    creatorId?: true
+    payoutAccountId?: true
+    amount?: true
+    currency?: true
+    status?: true
+    note?: true
+    transactionId?: true
+    requestedAt?: true
+    processedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CreatorPayoutRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreatorPayoutRequest to aggregate.
+     */
+    where?: CreatorPayoutRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorPayoutRequests to fetch.
+     */
+    orderBy?: CreatorPayoutRequestOrderByWithRelationInput | CreatorPayoutRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CreatorPayoutRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorPayoutRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorPayoutRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CreatorPayoutRequests
+    **/
+    _count?: true | CreatorPayoutRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CreatorPayoutRequestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CreatorPayoutRequestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CreatorPayoutRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CreatorPayoutRequestMaxAggregateInputType
+  }
+
+  export type GetCreatorPayoutRequestAggregateType<T extends CreatorPayoutRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateCreatorPayoutRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCreatorPayoutRequest[P]>
+      : GetScalarType<T[P], AggregateCreatorPayoutRequest[P]>
+  }
+
+
+
+
+  export type CreatorPayoutRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorPayoutRequestWhereInput
+    orderBy?: CreatorPayoutRequestOrderByWithAggregationInput | CreatorPayoutRequestOrderByWithAggregationInput[]
+    by: CreatorPayoutRequestScalarFieldEnum[] | CreatorPayoutRequestScalarFieldEnum
+    having?: CreatorPayoutRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CreatorPayoutRequestCountAggregateInputType | true
+    _avg?: CreatorPayoutRequestAvgAggregateInputType
+    _sum?: CreatorPayoutRequestSumAggregateInputType
+    _min?: CreatorPayoutRequestMinAggregateInputType
+    _max?: CreatorPayoutRequestMaxAggregateInputType
+  }
+
+  export type CreatorPayoutRequestGroupByOutputType = {
+    id: string
+    creatorId: string
+    payoutAccountId: string | null
+    amount: number
+    currency: string
+    status: string
+    note: string | null
+    transactionId: string | null
+    requestedAt: Date
+    processedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CreatorPayoutRequestCountAggregateOutputType | null
+    _avg: CreatorPayoutRequestAvgAggregateOutputType | null
+    _sum: CreatorPayoutRequestSumAggregateOutputType | null
+    _min: CreatorPayoutRequestMinAggregateOutputType | null
+    _max: CreatorPayoutRequestMaxAggregateOutputType | null
+  }
+
+  type GetCreatorPayoutRequestGroupByPayload<T extends CreatorPayoutRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CreatorPayoutRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CreatorPayoutRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CreatorPayoutRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], CreatorPayoutRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CreatorPayoutRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorId?: boolean
+    payoutAccountId?: boolean
+    amount?: boolean
+    currency?: boolean
+    status?: boolean
+    note?: boolean
+    transactionId?: boolean
+    requestedAt?: boolean
+    processedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    payoutAccount?: boolean | CreatorPayoutRequest$payoutAccountArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorPayoutRequest"]>
+
+  export type CreatorPayoutRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorId?: boolean
+    payoutAccountId?: boolean
+    amount?: boolean
+    currency?: boolean
+    status?: boolean
+    note?: boolean
+    transactionId?: boolean
+    requestedAt?: boolean
+    processedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    payoutAccount?: boolean | CreatorPayoutRequest$payoutAccountArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorPayoutRequest"]>
+
+  export type CreatorPayoutRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorId?: boolean
+    payoutAccountId?: boolean
+    amount?: boolean
+    currency?: boolean
+    status?: boolean
+    note?: boolean
+    transactionId?: boolean
+    requestedAt?: boolean
+    processedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    payoutAccount?: boolean | CreatorPayoutRequest$payoutAccountArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorPayoutRequest"]>
+
+  export type CreatorPayoutRequestSelectScalar = {
+    id?: boolean
+    creatorId?: boolean
+    payoutAccountId?: boolean
+    amount?: boolean
+    currency?: boolean
+    status?: boolean
+    note?: boolean
+    transactionId?: boolean
+    requestedAt?: boolean
+    processedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CreatorPayoutRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "payoutAccountId" | "amount" | "currency" | "status" | "note" | "transactionId" | "requestedAt" | "processedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorPayoutRequest"]>
+  export type CreatorPayoutRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    payoutAccount?: boolean | CreatorPayoutRequest$payoutAccountArgs<ExtArgs>
+  }
+  export type CreatorPayoutRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    payoutAccount?: boolean | CreatorPayoutRequest$payoutAccountArgs<ExtArgs>
+  }
+  export type CreatorPayoutRequestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | CreatorDefaultArgs<ExtArgs>
+    payoutAccount?: boolean | CreatorPayoutRequest$payoutAccountArgs<ExtArgs>
+  }
+
+  export type $CreatorPayoutRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CreatorPayoutRequest"
+    objects: {
+      creator: Prisma.$CreatorPayload<ExtArgs>
+      payoutAccount: Prisma.$CreatorPayoutAccountPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      creatorId: string
+      payoutAccountId: string | null
+      amount: number
+      currency: string
+      status: string
+      note: string | null
+      transactionId: string | null
+      requestedAt: Date
+      processedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["creatorPayoutRequest"]>
+    composites: {}
+  }
+
+  type CreatorPayoutRequestGetPayload<S extends boolean | null | undefined | CreatorPayoutRequestDefaultArgs> = $Result.GetResult<Prisma.$CreatorPayoutRequestPayload, S>
+
+  type CreatorPayoutRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CreatorPayoutRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CreatorPayoutRequestCountAggregateInputType | true
+    }
+
+  export interface CreatorPayoutRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CreatorPayoutRequest'], meta: { name: 'CreatorPayoutRequest' } }
+    /**
+     * Find zero or one CreatorPayoutRequest that matches the filter.
+     * @param {CreatorPayoutRequestFindUniqueArgs} args - Arguments to find a CreatorPayoutRequest
+     * @example
+     * // Get one CreatorPayoutRequest
+     * const creatorPayoutRequest = await prisma.creatorPayoutRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CreatorPayoutRequestFindUniqueArgs>(args: SelectSubset<T, CreatorPayoutRequestFindUniqueArgs<ExtArgs>>): Prisma__CreatorPayoutRequestClient<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CreatorPayoutRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CreatorPayoutRequestFindUniqueOrThrowArgs} args - Arguments to find a CreatorPayoutRequest
+     * @example
+     * // Get one CreatorPayoutRequest
+     * const creatorPayoutRequest = await prisma.creatorPayoutRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CreatorPayoutRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, CreatorPayoutRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CreatorPayoutRequestClient<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreatorPayoutRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutRequestFindFirstArgs} args - Arguments to find a CreatorPayoutRequest
+     * @example
+     * // Get one CreatorPayoutRequest
+     * const creatorPayoutRequest = await prisma.creatorPayoutRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CreatorPayoutRequestFindFirstArgs>(args?: SelectSubset<T, CreatorPayoutRequestFindFirstArgs<ExtArgs>>): Prisma__CreatorPayoutRequestClient<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreatorPayoutRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutRequestFindFirstOrThrowArgs} args - Arguments to find a CreatorPayoutRequest
+     * @example
+     * // Get one CreatorPayoutRequest
+     * const creatorPayoutRequest = await prisma.creatorPayoutRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CreatorPayoutRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, CreatorPayoutRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__CreatorPayoutRequestClient<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CreatorPayoutRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CreatorPayoutRequests
+     * const creatorPayoutRequests = await prisma.creatorPayoutRequest.findMany()
+     * 
+     * // Get first 10 CreatorPayoutRequests
+     * const creatorPayoutRequests = await prisma.creatorPayoutRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const creatorPayoutRequestWithIdOnly = await prisma.creatorPayoutRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CreatorPayoutRequestFindManyArgs>(args?: SelectSubset<T, CreatorPayoutRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CreatorPayoutRequest.
+     * @param {CreatorPayoutRequestCreateArgs} args - Arguments to create a CreatorPayoutRequest.
+     * @example
+     * // Create one CreatorPayoutRequest
+     * const CreatorPayoutRequest = await prisma.creatorPayoutRequest.create({
+     *   data: {
+     *     // ... data to create a CreatorPayoutRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends CreatorPayoutRequestCreateArgs>(args: SelectSubset<T, CreatorPayoutRequestCreateArgs<ExtArgs>>): Prisma__CreatorPayoutRequestClient<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CreatorPayoutRequests.
+     * @param {CreatorPayoutRequestCreateManyArgs} args - Arguments to create many CreatorPayoutRequests.
+     * @example
+     * // Create many CreatorPayoutRequests
+     * const creatorPayoutRequest = await prisma.creatorPayoutRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CreatorPayoutRequestCreateManyArgs>(args?: SelectSubset<T, CreatorPayoutRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CreatorPayoutRequests and returns the data saved in the database.
+     * @param {CreatorPayoutRequestCreateManyAndReturnArgs} args - Arguments to create many CreatorPayoutRequests.
+     * @example
+     * // Create many CreatorPayoutRequests
+     * const creatorPayoutRequest = await prisma.creatorPayoutRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CreatorPayoutRequests and only return the `id`
+     * const creatorPayoutRequestWithIdOnly = await prisma.creatorPayoutRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CreatorPayoutRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, CreatorPayoutRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CreatorPayoutRequest.
+     * @param {CreatorPayoutRequestDeleteArgs} args - Arguments to delete one CreatorPayoutRequest.
+     * @example
+     * // Delete one CreatorPayoutRequest
+     * const CreatorPayoutRequest = await prisma.creatorPayoutRequest.delete({
+     *   where: {
+     *     // ... filter to delete one CreatorPayoutRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CreatorPayoutRequestDeleteArgs>(args: SelectSubset<T, CreatorPayoutRequestDeleteArgs<ExtArgs>>): Prisma__CreatorPayoutRequestClient<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CreatorPayoutRequest.
+     * @param {CreatorPayoutRequestUpdateArgs} args - Arguments to update one CreatorPayoutRequest.
+     * @example
+     * // Update one CreatorPayoutRequest
+     * const creatorPayoutRequest = await prisma.creatorPayoutRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CreatorPayoutRequestUpdateArgs>(args: SelectSubset<T, CreatorPayoutRequestUpdateArgs<ExtArgs>>): Prisma__CreatorPayoutRequestClient<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CreatorPayoutRequests.
+     * @param {CreatorPayoutRequestDeleteManyArgs} args - Arguments to filter CreatorPayoutRequests to delete.
+     * @example
+     * // Delete a few CreatorPayoutRequests
+     * const { count } = await prisma.creatorPayoutRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CreatorPayoutRequestDeleteManyArgs>(args?: SelectSubset<T, CreatorPayoutRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreatorPayoutRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CreatorPayoutRequests
+     * const creatorPayoutRequest = await prisma.creatorPayoutRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CreatorPayoutRequestUpdateManyArgs>(args: SelectSubset<T, CreatorPayoutRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreatorPayoutRequests and returns the data updated in the database.
+     * @param {CreatorPayoutRequestUpdateManyAndReturnArgs} args - Arguments to update many CreatorPayoutRequests.
+     * @example
+     * // Update many CreatorPayoutRequests
+     * const creatorPayoutRequest = await prisma.creatorPayoutRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CreatorPayoutRequests and only return the `id`
+     * const creatorPayoutRequestWithIdOnly = await prisma.creatorPayoutRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CreatorPayoutRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, CreatorPayoutRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CreatorPayoutRequest.
+     * @param {CreatorPayoutRequestUpsertArgs} args - Arguments to update or create a CreatorPayoutRequest.
+     * @example
+     * // Update or create a CreatorPayoutRequest
+     * const creatorPayoutRequest = await prisma.creatorPayoutRequest.upsert({
+     *   create: {
+     *     // ... data to create a CreatorPayoutRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CreatorPayoutRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CreatorPayoutRequestUpsertArgs>(args: SelectSubset<T, CreatorPayoutRequestUpsertArgs<ExtArgs>>): Prisma__CreatorPayoutRequestClient<$Result.GetResult<Prisma.$CreatorPayoutRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CreatorPayoutRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutRequestCountArgs} args - Arguments to filter CreatorPayoutRequests to count.
+     * @example
+     * // Count the number of CreatorPayoutRequests
+     * const count = await prisma.creatorPayoutRequest.count({
+     *   where: {
+     *     // ... the filter for the CreatorPayoutRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends CreatorPayoutRequestCountArgs>(
+      args?: Subset<T, CreatorPayoutRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CreatorPayoutRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CreatorPayoutRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CreatorPayoutRequestAggregateArgs>(args: Subset<T, CreatorPayoutRequestAggregateArgs>): Prisma.PrismaPromise<GetCreatorPayoutRequestAggregateType<T>>
+
+    /**
+     * Group by CreatorPayoutRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorPayoutRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CreatorPayoutRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CreatorPayoutRequestGroupByArgs['orderBy'] }
+        : { orderBy?: CreatorPayoutRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CreatorPayoutRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCreatorPayoutRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CreatorPayoutRequest model
+   */
+  readonly fields: CreatorPayoutRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CreatorPayoutRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CreatorPayoutRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    creator<T extends CreatorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorDefaultArgs<ExtArgs>>): Prisma__CreatorClient<$Result.GetResult<Prisma.$CreatorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    payoutAccount<T extends CreatorPayoutRequest$payoutAccountArgs<ExtArgs> = {}>(args?: Subset<T, CreatorPayoutRequest$payoutAccountArgs<ExtArgs>>): Prisma__CreatorPayoutAccountClient<$Result.GetResult<Prisma.$CreatorPayoutAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CreatorPayoutRequest model
+   */
+  interface CreatorPayoutRequestFieldRefs {
+    readonly id: FieldRef<"CreatorPayoutRequest", 'String'>
+    readonly creatorId: FieldRef<"CreatorPayoutRequest", 'String'>
+    readonly payoutAccountId: FieldRef<"CreatorPayoutRequest", 'String'>
+    readonly amount: FieldRef<"CreatorPayoutRequest", 'Int'>
+    readonly currency: FieldRef<"CreatorPayoutRequest", 'String'>
+    readonly status: FieldRef<"CreatorPayoutRequest", 'String'>
+    readonly note: FieldRef<"CreatorPayoutRequest", 'String'>
+    readonly transactionId: FieldRef<"CreatorPayoutRequest", 'String'>
+    readonly requestedAt: FieldRef<"CreatorPayoutRequest", 'DateTime'>
+    readonly processedAt: FieldRef<"CreatorPayoutRequest", 'DateTime'>
+    readonly createdAt: FieldRef<"CreatorPayoutRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"CreatorPayoutRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CreatorPayoutRequest findUnique
+   */
+  export type CreatorPayoutRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorPayoutRequest to fetch.
+     */
+    where: CreatorPayoutRequestWhereUniqueInput
+  }
+
+  /**
+   * CreatorPayoutRequest findUniqueOrThrow
+   */
+  export type CreatorPayoutRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorPayoutRequest to fetch.
+     */
+    where: CreatorPayoutRequestWhereUniqueInput
+  }
+
+  /**
+   * CreatorPayoutRequest findFirst
+   */
+  export type CreatorPayoutRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorPayoutRequest to fetch.
+     */
+    where?: CreatorPayoutRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorPayoutRequests to fetch.
+     */
+    orderBy?: CreatorPayoutRequestOrderByWithRelationInput | CreatorPayoutRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreatorPayoutRequests.
+     */
+    cursor?: CreatorPayoutRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorPayoutRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorPayoutRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorPayoutRequests.
+     */
+    distinct?: CreatorPayoutRequestScalarFieldEnum | CreatorPayoutRequestScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorPayoutRequest findFirstOrThrow
+   */
+  export type CreatorPayoutRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorPayoutRequest to fetch.
+     */
+    where?: CreatorPayoutRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorPayoutRequests to fetch.
+     */
+    orderBy?: CreatorPayoutRequestOrderByWithRelationInput | CreatorPayoutRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreatorPayoutRequests.
+     */
+    cursor?: CreatorPayoutRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorPayoutRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorPayoutRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorPayoutRequests.
+     */
+    distinct?: CreatorPayoutRequestScalarFieldEnum | CreatorPayoutRequestScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorPayoutRequest findMany
+   */
+  export type CreatorPayoutRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorPayoutRequests to fetch.
+     */
+    where?: CreatorPayoutRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorPayoutRequests to fetch.
+     */
+    orderBy?: CreatorPayoutRequestOrderByWithRelationInput | CreatorPayoutRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CreatorPayoutRequests.
+     */
+    cursor?: CreatorPayoutRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorPayoutRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorPayoutRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorPayoutRequests.
+     */
+    distinct?: CreatorPayoutRequestScalarFieldEnum | CreatorPayoutRequestScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorPayoutRequest create
+   */
+  export type CreatorPayoutRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CreatorPayoutRequest.
+     */
+    data: XOR<CreatorPayoutRequestCreateInput, CreatorPayoutRequestUncheckedCreateInput>
+  }
+
+  /**
+   * CreatorPayoutRequest createMany
+   */
+  export type CreatorPayoutRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CreatorPayoutRequests.
+     */
+    data: CreatorPayoutRequestCreateManyInput | CreatorPayoutRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CreatorPayoutRequest createManyAndReturn
+   */
+  export type CreatorPayoutRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many CreatorPayoutRequests.
+     */
+    data: CreatorPayoutRequestCreateManyInput | CreatorPayoutRequestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CreatorPayoutRequest update
+   */
+  export type CreatorPayoutRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CreatorPayoutRequest.
+     */
+    data: XOR<CreatorPayoutRequestUpdateInput, CreatorPayoutRequestUncheckedUpdateInput>
+    /**
+     * Choose, which CreatorPayoutRequest to update.
+     */
+    where: CreatorPayoutRequestWhereUniqueInput
+  }
+
+  /**
+   * CreatorPayoutRequest updateMany
+   */
+  export type CreatorPayoutRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CreatorPayoutRequests.
+     */
+    data: XOR<CreatorPayoutRequestUpdateManyMutationInput, CreatorPayoutRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which CreatorPayoutRequests to update
+     */
+    where?: CreatorPayoutRequestWhereInput
+    /**
+     * Limit how many CreatorPayoutRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreatorPayoutRequest updateManyAndReturn
+   */
+  export type CreatorPayoutRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update CreatorPayoutRequests.
+     */
+    data: XOR<CreatorPayoutRequestUpdateManyMutationInput, CreatorPayoutRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which CreatorPayoutRequests to update
+     */
+    where?: CreatorPayoutRequestWhereInput
+    /**
+     * Limit how many CreatorPayoutRequests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CreatorPayoutRequest upsert
+   */
+  export type CreatorPayoutRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CreatorPayoutRequest to update in case it exists.
+     */
+    where: CreatorPayoutRequestWhereUniqueInput
+    /**
+     * In case the CreatorPayoutRequest found by the `where` argument doesn't exist, create a new CreatorPayoutRequest with this data.
+     */
+    create: XOR<CreatorPayoutRequestCreateInput, CreatorPayoutRequestUncheckedCreateInput>
+    /**
+     * In case the CreatorPayoutRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CreatorPayoutRequestUpdateInput, CreatorPayoutRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * CreatorPayoutRequest delete
+   */
+  export type CreatorPayoutRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
+    /**
+     * Filter which CreatorPayoutRequest to delete.
+     */
+    where: CreatorPayoutRequestWhereUniqueInput
+  }
+
+  /**
+   * CreatorPayoutRequest deleteMany
+   */
+  export type CreatorPayoutRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreatorPayoutRequests to delete
+     */
+    where?: CreatorPayoutRequestWhereInput
+    /**
+     * Limit how many CreatorPayoutRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreatorPayoutRequest.payoutAccount
+   */
+  export type CreatorPayoutRequest$payoutAccountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutAccount
+     */
+    select?: CreatorPayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutAccount
+     */
+    omit?: CreatorPayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutAccountInclude<ExtArgs> | null
+    where?: CreatorPayoutAccountWhereInput
+  }
+
+  /**
+   * CreatorPayoutRequest without action
+   */
+  export type CreatorPayoutRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorPayoutRequest
+     */
+    select?: CreatorPayoutRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorPayoutRequest
+     */
+    omit?: CreatorPayoutRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorPayoutRequestInclude<ExtArgs> | null
   }
 
 
@@ -10351,22 +14823,24 @@ export namespace Prisma {
     rent24Price: number | null
     rent48Price: number | null
     purchasePrice: number | null
+    revenue: number | null
+    platformFee: number | null
     episodeIndex: number | null
     viewsCount: number | null
     likesCount: number | null
     commentsCount: number | null
-    revenue: number | null
   }
 
   export type CreatorVideoSumAggregateOutputType = {
     rent24Price: number | null
     rent48Price: number | null
     purchasePrice: number | null
+    revenue: number | null
+    platformFee: number | null
     episodeIndex: number | null
     viewsCount: number | null
     likesCount: number | null
     commentsCount: number | null
-    revenue: number | null
   }
 
   export type CreatorVideoMinAggregateOutputType = {
@@ -10389,6 +14863,8 @@ export namespace Prisma {
     rent24Price: number | null
     rent48Price: number | null
     purchasePrice: number | null
+    revenue: number | null
+    platformFee: number | null
     packageName: string | null
     episodeIndex: number | null
     duration: string | null
@@ -10397,7 +14873,6 @@ export namespace Prisma {
     viewsCount: number | null
     likesCount: number | null
     commentsCount: number | null
-    revenue: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10422,6 +14897,8 @@ export namespace Prisma {
     rent24Price: number | null
     rent48Price: number | null
     purchasePrice: number | null
+    revenue: number | null
+    platformFee: number | null
     packageName: string | null
     episodeIndex: number | null
     duration: string | null
@@ -10430,7 +14907,6 @@ export namespace Prisma {
     viewsCount: number | null
     likesCount: number | null
     commentsCount: number | null
-    revenue: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10455,6 +14931,8 @@ export namespace Prisma {
     rent24Price: number
     rent48Price: number
     purchasePrice: number
+    revenue: number
+    platformFee: number
     tags: number
     packageName: number
     episodeIndex: number
@@ -10464,7 +14942,6 @@ export namespace Prisma {
     viewsCount: number
     likesCount: number
     commentsCount: number
-    revenue: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -10475,22 +14952,24 @@ export namespace Prisma {
     rent24Price?: true
     rent48Price?: true
     purchasePrice?: true
+    revenue?: true
+    platformFee?: true
     episodeIndex?: true
     viewsCount?: true
     likesCount?: true
     commentsCount?: true
-    revenue?: true
   }
 
   export type CreatorVideoSumAggregateInputType = {
     rent24Price?: true
     rent48Price?: true
     purchasePrice?: true
+    revenue?: true
+    platformFee?: true
     episodeIndex?: true
     viewsCount?: true
     likesCount?: true
     commentsCount?: true
-    revenue?: true
   }
 
   export type CreatorVideoMinAggregateInputType = {
@@ -10513,6 +14992,8 @@ export namespace Prisma {
     rent24Price?: true
     rent48Price?: true
     purchasePrice?: true
+    revenue?: true
+    platformFee?: true
     packageName?: true
     episodeIndex?: true
     duration?: true
@@ -10521,7 +15002,6 @@ export namespace Prisma {
     viewsCount?: true
     likesCount?: true
     commentsCount?: true
-    revenue?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10546,6 +15026,8 @@ export namespace Prisma {
     rent24Price?: true
     rent48Price?: true
     purchasePrice?: true
+    revenue?: true
+    platformFee?: true
     packageName?: true
     episodeIndex?: true
     duration?: true
@@ -10554,7 +15036,6 @@ export namespace Prisma {
     viewsCount?: true
     likesCount?: true
     commentsCount?: true
-    revenue?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10579,6 +15060,8 @@ export namespace Prisma {
     rent24Price?: true
     rent48Price?: true
     purchasePrice?: true
+    revenue?: true
+    platformFee?: true
     tags?: true
     packageName?: true
     episodeIndex?: true
@@ -10588,7 +15071,6 @@ export namespace Prisma {
     viewsCount?: true
     likesCount?: true
     commentsCount?: true
-    revenue?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10700,6 +15182,8 @@ export namespace Prisma {
     rent24Price: number | null
     rent48Price: number | null
     purchasePrice: number | null
+    revenue: number
+    platformFee: number
     tags: string[]
     packageName: string | null
     episodeIndex: number | null
@@ -10709,7 +15193,6 @@ export namespace Prisma {
     viewsCount: number
     likesCount: number
     commentsCount: number
-    revenue: number
     createdAt: Date
     updatedAt: Date
     _count: CreatorVideoCountAggregateOutputType | null
@@ -10753,6 +15236,8 @@ export namespace Prisma {
     rent24Price?: boolean
     rent48Price?: boolean
     purchasePrice?: boolean
+    revenue?: boolean
+    platformFee?: boolean
     tags?: boolean
     packageName?: boolean
     episodeIndex?: boolean
@@ -10762,7 +15247,6 @@ export namespace Prisma {
     viewsCount?: boolean
     likesCount?: boolean
     commentsCount?: boolean
-    revenue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
@@ -10794,6 +15278,8 @@ export namespace Prisma {
     rent24Price?: boolean
     rent48Price?: boolean
     purchasePrice?: boolean
+    revenue?: boolean
+    platformFee?: boolean
     tags?: boolean
     packageName?: boolean
     episodeIndex?: boolean
@@ -10803,7 +15289,6 @@ export namespace Prisma {
     viewsCount?: boolean
     likesCount?: boolean
     commentsCount?: boolean
-    revenue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
@@ -10830,6 +15315,8 @@ export namespace Prisma {
     rent24Price?: boolean
     rent48Price?: boolean
     purchasePrice?: boolean
+    revenue?: boolean
+    platformFee?: boolean
     tags?: boolean
     packageName?: boolean
     episodeIndex?: boolean
@@ -10839,7 +15326,6 @@ export namespace Prisma {
     viewsCount?: boolean
     likesCount?: boolean
     commentsCount?: boolean
-    revenue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
@@ -10866,6 +15352,8 @@ export namespace Prisma {
     rent24Price?: boolean
     rent48Price?: boolean
     purchasePrice?: boolean
+    revenue?: boolean
+    platformFee?: boolean
     tags?: boolean
     packageName?: boolean
     episodeIndex?: boolean
@@ -10875,12 +15363,11 @@ export namespace Prisma {
     viewsCount?: boolean
     likesCount?: boolean
     commentsCount?: boolean
-    revenue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CreatorVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "folderId" | "title" | "description" | "category" | "videoUrl" | "videoFileId" | "thumbnailUrl" | "thumbnailFileId" | "isPrivate" | "isPremium" | "monetizationType" | "status" | "publishNow" | "scheduledAt" | "rent24Price" | "rent48Price" | "purchasePrice" | "tags" | "packageName" | "episodeIndex" | "duration" | "allowComments" | "ageRestriction" | "viewsCount" | "likesCount" | "commentsCount" | "revenue" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorVideo"]>
+  export type CreatorVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "folderId" | "title" | "description" | "category" | "videoUrl" | "videoFileId" | "thumbnailUrl" | "thumbnailFileId" | "isPrivate" | "isPremium" | "monetizationType" | "status" | "publishNow" | "scheduledAt" | "rent24Price" | "rent48Price" | "purchasePrice" | "revenue" | "platformFee" | "tags" | "packageName" | "episodeIndex" | "duration" | "allowComments" | "ageRestriction" | "viewsCount" | "likesCount" | "commentsCount" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorVideo"]>
   export type CreatorVideoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
     folder?: boolean | CreatorVideoFolderDefaultArgs<ExtArgs>
@@ -10929,6 +15416,8 @@ export namespace Prisma {
       rent24Price: number | null
       rent48Price: number | null
       purchasePrice: number | null
+      revenue: number
+      platformFee: number
       tags: string[]
       packageName: string | null
       episodeIndex: number | null
@@ -10938,7 +15427,6 @@ export namespace Prisma {
       viewsCount: number
       likesCount: number
       commentsCount: number
-      revenue: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["creatorVideo"]>
@@ -11389,6 +15877,8 @@ export namespace Prisma {
     readonly rent24Price: FieldRef<"CreatorVideo", 'Int'>
     readonly rent48Price: FieldRef<"CreatorVideo", 'Int'>
     readonly purchasePrice: FieldRef<"CreatorVideo", 'Int'>
+    readonly revenue: FieldRef<"CreatorVideo", 'Int'>
+    readonly platformFee: FieldRef<"CreatorVideo", 'Int'>
     readonly tags: FieldRef<"CreatorVideo", 'String[]'>
     readonly packageName: FieldRef<"CreatorVideo", 'String'>
     readonly episodeIndex: FieldRef<"CreatorVideo", 'Int'>
@@ -11398,7 +15888,6 @@ export namespace Prisma {
     readonly viewsCount: FieldRef<"CreatorVideo", 'Int'>
     readonly likesCount: FieldRef<"CreatorVideo", 'Int'>
     readonly commentsCount: FieldRef<"CreatorVideo", 'Int'>
-    readonly revenue: FieldRef<"CreatorVideo", 'Int'>
     readonly createdAt: FieldRef<"CreatorVideo", 'DateTime'>
     readonly updatedAt: FieldRef<"CreatorVideo", 'DateTime'>
   }
@@ -14255,21 +18744,27 @@ export namespace Prisma {
     id: string | null
     creatorVideoId: string | null
     likerProfileId: string | null
+    status: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type CreatorVideoLikeMaxAggregateOutputType = {
     id: string | null
     creatorVideoId: string | null
     likerProfileId: string | null
+    status: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type CreatorVideoLikeCountAggregateOutputType = {
     id: number
     creatorVideoId: number
     likerProfileId: number
+    status: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -14278,21 +18773,27 @@ export namespace Prisma {
     id?: true
     creatorVideoId?: true
     likerProfileId?: true
+    status?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type CreatorVideoLikeMaxAggregateInputType = {
     id?: true
     creatorVideoId?: true
     likerProfileId?: true
+    status?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type CreatorVideoLikeCountAggregateInputType = {
     id?: true
     creatorVideoId?: true
     likerProfileId?: true
+    status?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -14372,7 +18873,9 @@ export namespace Prisma {
     id: string
     creatorVideoId: string
     likerProfileId: string | null
+    status: string
     createdAt: Date
+    updatedAt: Date
     _count: CreatorVideoLikeCountAggregateOutputType | null
     _min: CreatorVideoLikeMinAggregateOutputType | null
     _max: CreatorVideoLikeMaxAggregateOutputType | null
@@ -14396,54 +18899,71 @@ export namespace Prisma {
     id?: boolean
     creatorVideoId?: boolean
     likerProfileId?: boolean
+    status?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorVideoLike$likerProfileArgs<ExtArgs>
   }, ExtArgs["result"]["creatorVideoLike"]>
 
   export type CreatorVideoLikeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     creatorVideoId?: boolean
     likerProfileId?: boolean
+    status?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorVideoLike$likerProfileArgs<ExtArgs>
   }, ExtArgs["result"]["creatorVideoLike"]>
 
   export type CreatorVideoLikeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     creatorVideoId?: boolean
     likerProfileId?: boolean
+    status?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorVideoLike$likerProfileArgs<ExtArgs>
   }, ExtArgs["result"]["creatorVideoLike"]>
 
   export type CreatorVideoLikeSelectScalar = {
     id?: boolean
     creatorVideoId?: boolean
     likerProfileId?: boolean
+    status?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type CreatorVideoLikeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorVideoId" | "likerProfileId" | "createdAt", ExtArgs["result"]["creatorVideoLike"]>
+  export type CreatorVideoLikeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorVideoId" | "likerProfileId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorVideoLike"]>
   export type CreatorVideoLikeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorVideoLike$likerProfileArgs<ExtArgs>
   }
   export type CreatorVideoLikeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorVideoLike$likerProfileArgs<ExtArgs>
   }
   export type CreatorVideoLikeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorVideoLike$likerProfileArgs<ExtArgs>
   }
 
   export type $CreatorVideoLikePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CreatorVideoLike"
     objects: {
       creatorVideo: Prisma.$CreatorVideoPayload<ExtArgs>
+      likerProfile: Prisma.$ProfilePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       creatorVideoId: string
       likerProfileId: string | null
+      status: string
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["creatorVideoLike"]>
     composites: {}
   }
@@ -14839,6 +19359,7 @@ export namespace Prisma {
   export interface Prisma__CreatorVideoLikeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     creatorVideo<T extends CreatorVideoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorVideoDefaultArgs<ExtArgs>>): Prisma__CreatorVideoClient<$Result.GetResult<Prisma.$CreatorVideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    likerProfile<T extends CreatorVideoLike$likerProfileArgs<ExtArgs> = {}>(args?: Subset<T, CreatorVideoLike$likerProfileArgs<ExtArgs>>): Prisma__ProfileClient<$Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14871,7 +19392,9 @@ export namespace Prisma {
     readonly id: FieldRef<"CreatorVideoLike", 'String'>
     readonly creatorVideoId: FieldRef<"CreatorVideoLike", 'String'>
     readonly likerProfileId: FieldRef<"CreatorVideoLike", 'String'>
+    readonly status: FieldRef<"CreatorVideoLike", 'String'>
     readonly createdAt: FieldRef<"CreatorVideoLike", 'DateTime'>
+    readonly updatedAt: FieldRef<"CreatorVideoLike", 'DateTime'>
   }
     
 
@@ -15273,6 +19796,25 @@ export namespace Prisma {
   }
 
   /**
+   * CreatorVideoLike.likerProfile
+   */
+  export type CreatorVideoLike$likerProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profile
+     */
+    select?: ProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profile
+     */
+    omit?: ProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
+    where?: ProfileWhereInput
+  }
+
+  /**
    * CreatorVideoLike without action
    */
   export type CreatorVideoLikeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15288,6 +19830,1109 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CreatorVideoLikeInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CreatorEventLike
+   */
+
+  export type AggregateCreatorEventLike = {
+    _count: CreatorEventLikeCountAggregateOutputType | null
+    _min: CreatorEventLikeMinAggregateOutputType | null
+    _max: CreatorEventLikeMaxAggregateOutputType | null
+  }
+
+  export type CreatorEventLikeMinAggregateOutputType = {
+    id: string | null
+    creatorEventId: string | null
+    likerProfileId: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CreatorEventLikeMaxAggregateOutputType = {
+    id: string | null
+    creatorEventId: string | null
+    likerProfileId: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CreatorEventLikeCountAggregateOutputType = {
+    id: number
+    creatorEventId: number
+    likerProfileId: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CreatorEventLikeMinAggregateInputType = {
+    id?: true
+    creatorEventId?: true
+    likerProfileId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CreatorEventLikeMaxAggregateInputType = {
+    id?: true
+    creatorEventId?: true
+    likerProfileId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CreatorEventLikeCountAggregateInputType = {
+    id?: true
+    creatorEventId?: true
+    likerProfileId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CreatorEventLikeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreatorEventLike to aggregate.
+     */
+    where?: CreatorEventLikeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorEventLikes to fetch.
+     */
+    orderBy?: CreatorEventLikeOrderByWithRelationInput | CreatorEventLikeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CreatorEventLikeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorEventLikes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorEventLikes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CreatorEventLikes
+    **/
+    _count?: true | CreatorEventLikeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CreatorEventLikeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CreatorEventLikeMaxAggregateInputType
+  }
+
+  export type GetCreatorEventLikeAggregateType<T extends CreatorEventLikeAggregateArgs> = {
+        [P in keyof T & keyof AggregateCreatorEventLike]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCreatorEventLike[P]>
+      : GetScalarType<T[P], AggregateCreatorEventLike[P]>
+  }
+
+
+
+
+  export type CreatorEventLikeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorEventLikeWhereInput
+    orderBy?: CreatorEventLikeOrderByWithAggregationInput | CreatorEventLikeOrderByWithAggregationInput[]
+    by: CreatorEventLikeScalarFieldEnum[] | CreatorEventLikeScalarFieldEnum
+    having?: CreatorEventLikeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CreatorEventLikeCountAggregateInputType | true
+    _min?: CreatorEventLikeMinAggregateInputType
+    _max?: CreatorEventLikeMaxAggregateInputType
+  }
+
+  export type CreatorEventLikeGroupByOutputType = {
+    id: string
+    creatorEventId: string
+    likerProfileId: string | null
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: CreatorEventLikeCountAggregateOutputType | null
+    _min: CreatorEventLikeMinAggregateOutputType | null
+    _max: CreatorEventLikeMaxAggregateOutputType | null
+  }
+
+  type GetCreatorEventLikeGroupByPayload<T extends CreatorEventLikeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CreatorEventLikeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CreatorEventLikeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CreatorEventLikeGroupByOutputType[P]>
+            : GetScalarType<T[P], CreatorEventLikeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CreatorEventLikeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorEventId?: boolean
+    likerProfileId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creatorEvent?: boolean | CreatorEventDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorEventLike$likerProfileArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorEventLike"]>
+
+  export type CreatorEventLikeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorEventId?: boolean
+    likerProfileId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creatorEvent?: boolean | CreatorEventDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorEventLike$likerProfileArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorEventLike"]>
+
+  export type CreatorEventLikeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    creatorEventId?: boolean
+    likerProfileId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creatorEvent?: boolean | CreatorEventDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorEventLike$likerProfileArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorEventLike"]>
+
+  export type CreatorEventLikeSelectScalar = {
+    id?: boolean
+    creatorEventId?: boolean
+    likerProfileId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CreatorEventLikeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorEventId" | "likerProfileId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEventLike"]>
+  export type CreatorEventLikeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creatorEvent?: boolean | CreatorEventDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorEventLike$likerProfileArgs<ExtArgs>
+  }
+  export type CreatorEventLikeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creatorEvent?: boolean | CreatorEventDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorEventLike$likerProfileArgs<ExtArgs>
+  }
+  export type CreatorEventLikeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creatorEvent?: boolean | CreatorEventDefaultArgs<ExtArgs>
+    likerProfile?: boolean | CreatorEventLike$likerProfileArgs<ExtArgs>
+  }
+
+  export type $CreatorEventLikePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CreatorEventLike"
+    objects: {
+      creatorEvent: Prisma.$CreatorEventPayload<ExtArgs>
+      likerProfile: Prisma.$ProfilePayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      creatorEventId: string
+      likerProfileId: string | null
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["creatorEventLike"]>
+    composites: {}
+  }
+
+  type CreatorEventLikeGetPayload<S extends boolean | null | undefined | CreatorEventLikeDefaultArgs> = $Result.GetResult<Prisma.$CreatorEventLikePayload, S>
+
+  type CreatorEventLikeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CreatorEventLikeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CreatorEventLikeCountAggregateInputType | true
+    }
+
+  export interface CreatorEventLikeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CreatorEventLike'], meta: { name: 'CreatorEventLike' } }
+    /**
+     * Find zero or one CreatorEventLike that matches the filter.
+     * @param {CreatorEventLikeFindUniqueArgs} args - Arguments to find a CreatorEventLike
+     * @example
+     * // Get one CreatorEventLike
+     * const creatorEventLike = await prisma.creatorEventLike.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CreatorEventLikeFindUniqueArgs>(args: SelectSubset<T, CreatorEventLikeFindUniqueArgs<ExtArgs>>): Prisma__CreatorEventLikeClient<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CreatorEventLike that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CreatorEventLikeFindUniqueOrThrowArgs} args - Arguments to find a CreatorEventLike
+     * @example
+     * // Get one CreatorEventLike
+     * const creatorEventLike = await prisma.creatorEventLike.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CreatorEventLikeFindUniqueOrThrowArgs>(args: SelectSubset<T, CreatorEventLikeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CreatorEventLikeClient<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreatorEventLike that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventLikeFindFirstArgs} args - Arguments to find a CreatorEventLike
+     * @example
+     * // Get one CreatorEventLike
+     * const creatorEventLike = await prisma.creatorEventLike.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CreatorEventLikeFindFirstArgs>(args?: SelectSubset<T, CreatorEventLikeFindFirstArgs<ExtArgs>>): Prisma__CreatorEventLikeClient<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreatorEventLike that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventLikeFindFirstOrThrowArgs} args - Arguments to find a CreatorEventLike
+     * @example
+     * // Get one CreatorEventLike
+     * const creatorEventLike = await prisma.creatorEventLike.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CreatorEventLikeFindFirstOrThrowArgs>(args?: SelectSubset<T, CreatorEventLikeFindFirstOrThrowArgs<ExtArgs>>): Prisma__CreatorEventLikeClient<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CreatorEventLikes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventLikeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CreatorEventLikes
+     * const creatorEventLikes = await prisma.creatorEventLike.findMany()
+     * 
+     * // Get first 10 CreatorEventLikes
+     * const creatorEventLikes = await prisma.creatorEventLike.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const creatorEventLikeWithIdOnly = await prisma.creatorEventLike.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CreatorEventLikeFindManyArgs>(args?: SelectSubset<T, CreatorEventLikeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CreatorEventLike.
+     * @param {CreatorEventLikeCreateArgs} args - Arguments to create a CreatorEventLike.
+     * @example
+     * // Create one CreatorEventLike
+     * const CreatorEventLike = await prisma.creatorEventLike.create({
+     *   data: {
+     *     // ... data to create a CreatorEventLike
+     *   }
+     * })
+     * 
+     */
+    create<T extends CreatorEventLikeCreateArgs>(args: SelectSubset<T, CreatorEventLikeCreateArgs<ExtArgs>>): Prisma__CreatorEventLikeClient<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CreatorEventLikes.
+     * @param {CreatorEventLikeCreateManyArgs} args - Arguments to create many CreatorEventLikes.
+     * @example
+     * // Create many CreatorEventLikes
+     * const creatorEventLike = await prisma.creatorEventLike.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CreatorEventLikeCreateManyArgs>(args?: SelectSubset<T, CreatorEventLikeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CreatorEventLikes and returns the data saved in the database.
+     * @param {CreatorEventLikeCreateManyAndReturnArgs} args - Arguments to create many CreatorEventLikes.
+     * @example
+     * // Create many CreatorEventLikes
+     * const creatorEventLike = await prisma.creatorEventLike.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CreatorEventLikes and only return the `id`
+     * const creatorEventLikeWithIdOnly = await prisma.creatorEventLike.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CreatorEventLikeCreateManyAndReturnArgs>(args?: SelectSubset<T, CreatorEventLikeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CreatorEventLike.
+     * @param {CreatorEventLikeDeleteArgs} args - Arguments to delete one CreatorEventLike.
+     * @example
+     * // Delete one CreatorEventLike
+     * const CreatorEventLike = await prisma.creatorEventLike.delete({
+     *   where: {
+     *     // ... filter to delete one CreatorEventLike
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CreatorEventLikeDeleteArgs>(args: SelectSubset<T, CreatorEventLikeDeleteArgs<ExtArgs>>): Prisma__CreatorEventLikeClient<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CreatorEventLike.
+     * @param {CreatorEventLikeUpdateArgs} args - Arguments to update one CreatorEventLike.
+     * @example
+     * // Update one CreatorEventLike
+     * const creatorEventLike = await prisma.creatorEventLike.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CreatorEventLikeUpdateArgs>(args: SelectSubset<T, CreatorEventLikeUpdateArgs<ExtArgs>>): Prisma__CreatorEventLikeClient<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CreatorEventLikes.
+     * @param {CreatorEventLikeDeleteManyArgs} args - Arguments to filter CreatorEventLikes to delete.
+     * @example
+     * // Delete a few CreatorEventLikes
+     * const { count } = await prisma.creatorEventLike.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CreatorEventLikeDeleteManyArgs>(args?: SelectSubset<T, CreatorEventLikeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreatorEventLikes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventLikeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CreatorEventLikes
+     * const creatorEventLike = await prisma.creatorEventLike.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CreatorEventLikeUpdateManyArgs>(args: SelectSubset<T, CreatorEventLikeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreatorEventLikes and returns the data updated in the database.
+     * @param {CreatorEventLikeUpdateManyAndReturnArgs} args - Arguments to update many CreatorEventLikes.
+     * @example
+     * // Update many CreatorEventLikes
+     * const creatorEventLike = await prisma.creatorEventLike.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CreatorEventLikes and only return the `id`
+     * const creatorEventLikeWithIdOnly = await prisma.creatorEventLike.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CreatorEventLikeUpdateManyAndReturnArgs>(args: SelectSubset<T, CreatorEventLikeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CreatorEventLike.
+     * @param {CreatorEventLikeUpsertArgs} args - Arguments to update or create a CreatorEventLike.
+     * @example
+     * // Update or create a CreatorEventLike
+     * const creatorEventLike = await prisma.creatorEventLike.upsert({
+     *   create: {
+     *     // ... data to create a CreatorEventLike
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CreatorEventLike we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CreatorEventLikeUpsertArgs>(args: SelectSubset<T, CreatorEventLikeUpsertArgs<ExtArgs>>): Prisma__CreatorEventLikeClient<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CreatorEventLikes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventLikeCountArgs} args - Arguments to filter CreatorEventLikes to count.
+     * @example
+     * // Count the number of CreatorEventLikes
+     * const count = await prisma.creatorEventLike.count({
+     *   where: {
+     *     // ... the filter for the CreatorEventLikes we want to count
+     *   }
+     * })
+    **/
+    count<T extends CreatorEventLikeCountArgs>(
+      args?: Subset<T, CreatorEventLikeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CreatorEventLikeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CreatorEventLike.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventLikeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CreatorEventLikeAggregateArgs>(args: Subset<T, CreatorEventLikeAggregateArgs>): Prisma.PrismaPromise<GetCreatorEventLikeAggregateType<T>>
+
+    /**
+     * Group by CreatorEventLike.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventLikeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CreatorEventLikeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CreatorEventLikeGroupByArgs['orderBy'] }
+        : { orderBy?: CreatorEventLikeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CreatorEventLikeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCreatorEventLikeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CreatorEventLike model
+   */
+  readonly fields: CreatorEventLikeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CreatorEventLike.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CreatorEventLikeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    creatorEvent<T extends CreatorEventDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventDefaultArgs<ExtArgs>>): Prisma__CreatorEventClient<$Result.GetResult<Prisma.$CreatorEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    likerProfile<T extends CreatorEventLike$likerProfileArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventLike$likerProfileArgs<ExtArgs>>): Prisma__ProfileClient<$Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CreatorEventLike model
+   */
+  interface CreatorEventLikeFieldRefs {
+    readonly id: FieldRef<"CreatorEventLike", 'String'>
+    readonly creatorEventId: FieldRef<"CreatorEventLike", 'String'>
+    readonly likerProfileId: FieldRef<"CreatorEventLike", 'String'>
+    readonly status: FieldRef<"CreatorEventLike", 'String'>
+    readonly createdAt: FieldRef<"CreatorEventLike", 'DateTime'>
+    readonly updatedAt: FieldRef<"CreatorEventLike", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CreatorEventLike findUnique
+   */
+  export type CreatorEventLikeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorEventLike to fetch.
+     */
+    where: CreatorEventLikeWhereUniqueInput
+  }
+
+  /**
+   * CreatorEventLike findUniqueOrThrow
+   */
+  export type CreatorEventLikeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorEventLike to fetch.
+     */
+    where: CreatorEventLikeWhereUniqueInput
+  }
+
+  /**
+   * CreatorEventLike findFirst
+   */
+  export type CreatorEventLikeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorEventLike to fetch.
+     */
+    where?: CreatorEventLikeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorEventLikes to fetch.
+     */
+    orderBy?: CreatorEventLikeOrderByWithRelationInput | CreatorEventLikeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreatorEventLikes.
+     */
+    cursor?: CreatorEventLikeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorEventLikes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorEventLikes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorEventLikes.
+     */
+    distinct?: CreatorEventLikeScalarFieldEnum | CreatorEventLikeScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorEventLike findFirstOrThrow
+   */
+  export type CreatorEventLikeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorEventLike to fetch.
+     */
+    where?: CreatorEventLikeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorEventLikes to fetch.
+     */
+    orderBy?: CreatorEventLikeOrderByWithRelationInput | CreatorEventLikeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreatorEventLikes.
+     */
+    cursor?: CreatorEventLikeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorEventLikes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorEventLikes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorEventLikes.
+     */
+    distinct?: CreatorEventLikeScalarFieldEnum | CreatorEventLikeScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorEventLike findMany
+   */
+  export type CreatorEventLikeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorEventLikes to fetch.
+     */
+    where?: CreatorEventLikeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorEventLikes to fetch.
+     */
+    orderBy?: CreatorEventLikeOrderByWithRelationInput | CreatorEventLikeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CreatorEventLikes.
+     */
+    cursor?: CreatorEventLikeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorEventLikes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorEventLikes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorEventLikes.
+     */
+    distinct?: CreatorEventLikeScalarFieldEnum | CreatorEventLikeScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorEventLike create
+   */
+  export type CreatorEventLikeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CreatorEventLike.
+     */
+    data: XOR<CreatorEventLikeCreateInput, CreatorEventLikeUncheckedCreateInput>
+  }
+
+  /**
+   * CreatorEventLike createMany
+   */
+  export type CreatorEventLikeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CreatorEventLikes.
+     */
+    data: CreatorEventLikeCreateManyInput | CreatorEventLikeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CreatorEventLike createManyAndReturn
+   */
+  export type CreatorEventLikeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * The data used to create many CreatorEventLikes.
+     */
+    data: CreatorEventLikeCreateManyInput | CreatorEventLikeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CreatorEventLike update
+   */
+  export type CreatorEventLikeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CreatorEventLike.
+     */
+    data: XOR<CreatorEventLikeUpdateInput, CreatorEventLikeUncheckedUpdateInput>
+    /**
+     * Choose, which CreatorEventLike to update.
+     */
+    where: CreatorEventLikeWhereUniqueInput
+  }
+
+  /**
+   * CreatorEventLike updateMany
+   */
+  export type CreatorEventLikeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CreatorEventLikes.
+     */
+    data: XOR<CreatorEventLikeUpdateManyMutationInput, CreatorEventLikeUncheckedUpdateManyInput>
+    /**
+     * Filter which CreatorEventLikes to update
+     */
+    where?: CreatorEventLikeWhereInput
+    /**
+     * Limit how many CreatorEventLikes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreatorEventLike updateManyAndReturn
+   */
+  export type CreatorEventLikeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * The data used to update CreatorEventLikes.
+     */
+    data: XOR<CreatorEventLikeUpdateManyMutationInput, CreatorEventLikeUncheckedUpdateManyInput>
+    /**
+     * Filter which CreatorEventLikes to update
+     */
+    where?: CreatorEventLikeWhereInput
+    /**
+     * Limit how many CreatorEventLikes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CreatorEventLike upsert
+   */
+  export type CreatorEventLikeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CreatorEventLike to update in case it exists.
+     */
+    where: CreatorEventLikeWhereUniqueInput
+    /**
+     * In case the CreatorEventLike found by the `where` argument doesn't exist, create a new CreatorEventLike with this data.
+     */
+    create: XOR<CreatorEventLikeCreateInput, CreatorEventLikeUncheckedCreateInput>
+    /**
+     * In case the CreatorEventLike was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CreatorEventLikeUpdateInput, CreatorEventLikeUncheckedUpdateInput>
+  }
+
+  /**
+   * CreatorEventLike delete
+   */
+  export type CreatorEventLikeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
+    /**
+     * Filter which CreatorEventLike to delete.
+     */
+    where: CreatorEventLikeWhereUniqueInput
+  }
+
+  /**
+   * CreatorEventLike deleteMany
+   */
+  export type CreatorEventLikeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreatorEventLikes to delete
+     */
+    where?: CreatorEventLikeWhereInput
+    /**
+     * Limit how many CreatorEventLikes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreatorEventLike.likerProfile
+   */
+  export type CreatorEventLike$likerProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profile
+     */
+    select?: ProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profile
+     */
+    omit?: ProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
+    where?: ProfileWhereInput
+  }
+
+  /**
+   * CreatorEventLike without action
+   */
+  export type CreatorEventLikeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
   }
 
 
@@ -16379,6 +22024,7 @@ export namespace Prisma {
     currentViewersCount: number | null
     venueParticipantCount: number | null
     revenue: number | null
+    platformFee: number | null
   }
 
   export type CreatorEventSumAggregateOutputType = {
@@ -16394,6 +22040,7 @@ export namespace Prisma {
     currentViewersCount: number | null
     venueParticipantCount: number | null
     revenue: number | null
+    platformFee: number | null
   }
 
   export type CreatorEventMinAggregateOutputType = {
@@ -16449,6 +22096,7 @@ export namespace Prisma {
     currentViewersCount: number | null
     venueParticipantCount: number | null
     revenue: number | null
+    platformFee: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -16506,6 +22154,7 @@ export namespace Prisma {
     currentViewersCount: number | null
     venueParticipantCount: number | null
     revenue: number | null
+    platformFee: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -16564,6 +22213,7 @@ export namespace Prisma {
     currentViewersCount: number
     venueParticipantCount: number
     revenue: number
+    platformFee: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -16583,6 +22233,7 @@ export namespace Prisma {
     currentViewersCount?: true
     venueParticipantCount?: true
     revenue?: true
+    platformFee?: true
   }
 
   export type CreatorEventSumAggregateInputType = {
@@ -16598,6 +22249,7 @@ export namespace Prisma {
     currentViewersCount?: true
     venueParticipantCount?: true
     revenue?: true
+    platformFee?: true
   }
 
   export type CreatorEventMinAggregateInputType = {
@@ -16653,6 +22305,7 @@ export namespace Prisma {
     currentViewersCount?: true
     venueParticipantCount?: true
     revenue?: true
+    platformFee?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -16710,6 +22363,7 @@ export namespace Prisma {
     currentViewersCount?: true
     venueParticipantCount?: true
     revenue?: true
+    platformFee?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -16768,6 +22422,7 @@ export namespace Prisma {
     currentViewersCount?: true
     venueParticipantCount?: true
     revenue?: true
+    platformFee?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -16913,6 +22568,7 @@ export namespace Prisma {
     currentViewersCount: number
     venueParticipantCount: number
     revenue: number
+    platformFee: number
     createdAt: Date
     updatedAt: Date
     _count: CreatorEventCountAggregateOutputType | null
@@ -16990,11 +22646,13 @@ export namespace Prisma {
     currentViewersCount?: boolean
     venueParticipantCount?: boolean
     revenue?: boolean
+    platformFee?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
     restrictedLocations?: boolean | CreatorEvent$restrictedLocationsArgs<ExtArgs>
     tickets?: boolean | CreatorEvent$ticketsArgs<ExtArgs>
+    likes?: boolean | CreatorEvent$likesArgs<ExtArgs>
     checkInUsers?: boolean | CreatorEvent$checkInUsersArgs<ExtArgs>
     checkInScans?: boolean | CreatorEvent$checkInScansArgs<ExtArgs>
     CheckInCameraSessions?: boolean | CreatorEvent$CheckInCameraSessionsArgs<ExtArgs>
@@ -17055,6 +22713,7 @@ export namespace Prisma {
     currentViewersCount?: boolean
     venueParticipantCount?: boolean
     revenue?: boolean
+    platformFee?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
@@ -17114,6 +22773,7 @@ export namespace Prisma {
     currentViewersCount?: boolean
     venueParticipantCount?: boolean
     revenue?: boolean
+    platformFee?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
@@ -17173,15 +22833,17 @@ export namespace Prisma {
     currentViewersCount?: boolean
     venueParticipantCount?: boolean
     revenue?: boolean
+    platformFee?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CreatorEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "title" | "description" | "category" | "status" | "isPrivate" | "isPaid" | "requireTicket" | "enableDonations" | "enableLocationRestriction" | "locationRestrictionType" | "address" | "locationName" | "locationCountry" | "locationState" | "locationType" | "locationLat" | "locationLon" | "locationFullAddress" | "thumbnailUrl" | "thumbnailFileId" | "thumbnailVideoUrl" | "thumbnailVideoFileId" | "recordedVideoUrl" | "recordedVideoFileId" | "streamKey" | "rtmpUrl" | "ingressId" | "livekitRoomName" | "recordingEnabled" | "recordingStatus" | "recordingAssetId" | "recordingUrl" | "recordingFileId" | "recordingStartedAt" | "recordingEndedAt" | "hasRecordedVideo" | "timezone" | "scheduledAt" | "startedAt" | "endedAt" | "durationMinutes" | "maxViewers" | "estimatedUsers" | "tags" | "viewsCount" | "likesCount" | "commentsCount" | "peakViewersCount" | "currentViewersCount" | "venueParticipantCount" | "revenue" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEvent"]>
+  export type CreatorEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "title" | "description" | "category" | "status" | "isPrivate" | "isPaid" | "requireTicket" | "enableDonations" | "enableLocationRestriction" | "locationRestrictionType" | "address" | "locationName" | "locationCountry" | "locationState" | "locationType" | "locationLat" | "locationLon" | "locationFullAddress" | "thumbnailUrl" | "thumbnailFileId" | "thumbnailVideoUrl" | "thumbnailVideoFileId" | "recordedVideoUrl" | "recordedVideoFileId" | "streamKey" | "rtmpUrl" | "ingressId" | "livekitRoomName" | "recordingEnabled" | "recordingStatus" | "recordingAssetId" | "recordingUrl" | "recordingFileId" | "recordingStartedAt" | "recordingEndedAt" | "hasRecordedVideo" | "timezone" | "scheduledAt" | "startedAt" | "endedAt" | "durationMinutes" | "maxViewers" | "estimatedUsers" | "tags" | "viewsCount" | "likesCount" | "commentsCount" | "peakViewersCount" | "currentViewersCount" | "venueParticipantCount" | "revenue" | "platformFee" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEvent"]>
   export type CreatorEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
     restrictedLocations?: boolean | CreatorEvent$restrictedLocationsArgs<ExtArgs>
     tickets?: boolean | CreatorEvent$ticketsArgs<ExtArgs>
+    likes?: boolean | CreatorEvent$likesArgs<ExtArgs>
     checkInUsers?: boolean | CreatorEvent$checkInUsersArgs<ExtArgs>
     checkInScans?: boolean | CreatorEvent$checkInScansArgs<ExtArgs>
     CheckInCameraSessions?: boolean | CreatorEvent$CheckInCameraSessionsArgs<ExtArgs>
@@ -17200,6 +22862,7 @@ export namespace Prisma {
       creator: Prisma.$CreatorPayload<ExtArgs>
       restrictedLocations: Prisma.$CreatorEventLocationRestrictionPayload<ExtArgs>[]
       tickets: Prisma.$CreatorEventTicketPayload<ExtArgs>[]
+      likes: Prisma.$CreatorEventLikePayload<ExtArgs>[]
       checkInUsers: Prisma.$CreatorEventCheckInUserPayload<ExtArgs>[]
       checkInScans: Prisma.$CreatorEventCheckInScanPayload<ExtArgs>[]
       CheckInCameraSessions: Prisma.$CreatorEventCheckInCameraSessionPayload<ExtArgs>[]
@@ -17258,6 +22921,7 @@ export namespace Prisma {
       currentViewersCount: number
       venueParticipantCount: number
       revenue: number
+      platformFee: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["creatorEvent"]>
@@ -17657,6 +23321,7 @@ export namespace Prisma {
     creator<T extends CreatorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorDefaultArgs<ExtArgs>>): Prisma__CreatorClient<$Result.GetResult<Prisma.$CreatorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     restrictedLocations<T extends CreatorEvent$restrictedLocationsArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEvent$restrictedLocationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventLocationRestrictionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tickets<T extends CreatorEvent$ticketsArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEvent$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    likes<T extends CreatorEvent$likesArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEvent$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     checkInUsers<T extends CreatorEvent$checkInUsersArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEvent$checkInUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventCheckInUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     checkInScans<T extends CreatorEvent$checkInScansArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEvent$checkInScansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventCheckInScanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     CheckInCameraSessions<T extends CreatorEvent$CheckInCameraSessionsArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEvent$CheckInCameraSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventCheckInCameraSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -17742,6 +23407,7 @@ export namespace Prisma {
     readonly currentViewersCount: FieldRef<"CreatorEvent", 'Int'>
     readonly venueParticipantCount: FieldRef<"CreatorEvent", 'Int'>
     readonly revenue: FieldRef<"CreatorEvent", 'Int'>
+    readonly platformFee: FieldRef<"CreatorEvent", 'Int'>
     readonly createdAt: FieldRef<"CreatorEvent", 'DateTime'>
     readonly updatedAt: FieldRef<"CreatorEvent", 'DateTime'>
   }
@@ -18190,6 +23856,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CreatorEventTicketScalarFieldEnum | CreatorEventTicketScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorEvent.likes
+   */
+  export type CreatorEvent$likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventLike
+     */
+    select?: CreatorEventLikeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventLike
+     */
+    omit?: CreatorEventLikeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventLikeInclude<ExtArgs> | null
+    where?: CreatorEventLikeWhereInput
+    orderBy?: CreatorEventLikeOrderByWithRelationInput | CreatorEventLikeOrderByWithRelationInput[]
+    cursor?: CreatorEventLikeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorEventLikeScalarFieldEnum | CreatorEventLikeScalarFieldEnum[]
   }
 
   /**
@@ -19466,6 +25156,7 @@ export namespace Prisma {
     quantity: number | null
     soldCount: number | null
     revenue: number | null
+    platformFee: number | null
   }
 
   export type CreatorEventTicketSumAggregateOutputType = {
@@ -19473,6 +25164,7 @@ export namespace Prisma {
     quantity: number | null
     soldCount: number | null
     revenue: number | null
+    platformFee: number | null
   }
 
   export type CreatorEventTicketMinAggregateOutputType = {
@@ -19484,6 +25176,7 @@ export namespace Prisma {
     quantity: number | null
     soldCount: number | null
     revenue: number | null
+    platformFee: number | null
     description: string | null
     status: $Enums.CreatorEventTicketStatus | null
     createdAt: Date | null
@@ -19499,6 +25192,7 @@ export namespace Prisma {
     quantity: number | null
     soldCount: number | null
     revenue: number | null
+    platformFee: number | null
     description: string | null
     status: $Enums.CreatorEventTicketStatus | null
     createdAt: Date | null
@@ -19514,6 +25208,7 @@ export namespace Prisma {
     quantity: number
     soldCount: number
     revenue: number
+    platformFee: number
     description: number
     benefits: number
     status: number
@@ -19528,6 +25223,7 @@ export namespace Prisma {
     quantity?: true
     soldCount?: true
     revenue?: true
+    platformFee?: true
   }
 
   export type CreatorEventTicketSumAggregateInputType = {
@@ -19535,6 +25231,7 @@ export namespace Prisma {
     quantity?: true
     soldCount?: true
     revenue?: true
+    platformFee?: true
   }
 
   export type CreatorEventTicketMinAggregateInputType = {
@@ -19546,6 +25243,7 @@ export namespace Prisma {
     quantity?: true
     soldCount?: true
     revenue?: true
+    platformFee?: true
     description?: true
     status?: true
     createdAt?: true
@@ -19561,6 +25259,7 @@ export namespace Prisma {
     quantity?: true
     soldCount?: true
     revenue?: true
+    platformFee?: true
     description?: true
     status?: true
     createdAt?: true
@@ -19576,6 +25275,7 @@ export namespace Prisma {
     quantity?: true
     soldCount?: true
     revenue?: true
+    platformFee?: true
     description?: true
     benefits?: true
     status?: true
@@ -19679,6 +25379,7 @@ export namespace Prisma {
     quantity: number
     soldCount: number
     revenue: number
+    platformFee: number
     description: string | null
     benefits: string[]
     status: $Enums.CreatorEventTicketStatus
@@ -19714,6 +25415,7 @@ export namespace Prisma {
     quantity?: boolean
     soldCount?: boolean
     revenue?: boolean
+    platformFee?: boolean
     description?: boolean
     benefits?: boolean
     status?: boolean
@@ -19721,6 +25423,7 @@ export namespace Prisma {
     updatedAt?: boolean
     event?: boolean | CreatorEventDefaultArgs<ExtArgs>
     purchases?: boolean | CreatorEventTicket$purchasesArgs<ExtArgs>
+    ticketItems?: boolean | CreatorEventTicket$ticketItemsArgs<ExtArgs>
     _count?: boolean | CreatorEventTicketCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["creatorEventTicket"]>
 
@@ -19733,6 +25436,7 @@ export namespace Prisma {
     quantity?: boolean
     soldCount?: boolean
     revenue?: boolean
+    platformFee?: boolean
     description?: boolean
     benefits?: boolean
     status?: boolean
@@ -19750,6 +25454,7 @@ export namespace Prisma {
     quantity?: boolean
     soldCount?: boolean
     revenue?: boolean
+    platformFee?: boolean
     description?: boolean
     benefits?: boolean
     status?: boolean
@@ -19767,6 +25472,7 @@ export namespace Prisma {
     quantity?: boolean
     soldCount?: boolean
     revenue?: boolean
+    platformFee?: boolean
     description?: boolean
     benefits?: boolean
     status?: boolean
@@ -19774,10 +25480,11 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CreatorEventTicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "ticketType" | "access" | "price" | "quantity" | "soldCount" | "revenue" | "description" | "benefits" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEventTicket"]>
+  export type CreatorEventTicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "ticketType" | "access" | "price" | "quantity" | "soldCount" | "revenue" | "platformFee" | "description" | "benefits" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEventTicket"]>
   export type CreatorEventTicketInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     event?: boolean | CreatorEventDefaultArgs<ExtArgs>
     purchases?: boolean | CreatorEventTicket$purchasesArgs<ExtArgs>
+    ticketItems?: boolean | CreatorEventTicket$ticketItemsArgs<ExtArgs>
     _count?: boolean | CreatorEventTicketCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CreatorEventTicketIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19792,6 +25499,7 @@ export namespace Prisma {
     objects: {
       event: Prisma.$CreatorEventPayload<ExtArgs>
       purchases: Prisma.$CreatorEventTicketPurchasePayload<ExtArgs>[]
+      ticketItems: Prisma.$CreatorEventTicketItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -19802,6 +25510,7 @@ export namespace Prisma {
       quantity: number
       soldCount: number
       revenue: number
+      platformFee: number
       description: string | null
       benefits: string[]
       status: $Enums.CreatorEventTicketStatus
@@ -20203,6 +25912,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     event<T extends CreatorEventDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventDefaultArgs<ExtArgs>>): Prisma__CreatorEventClient<$Result.GetResult<Prisma.$CreatorEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     purchases<T extends CreatorEventTicket$purchasesArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventTicket$purchasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventTicketPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    ticketItems<T extends CreatorEventTicket$ticketItemsArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventTicket$ticketItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20240,6 +25950,7 @@ export namespace Prisma {
     readonly quantity: FieldRef<"CreatorEventTicket", 'Int'>
     readonly soldCount: FieldRef<"CreatorEventTicket", 'Int'>
     readonly revenue: FieldRef<"CreatorEventTicket", 'Int'>
+    readonly platformFee: FieldRef<"CreatorEventTicket", 'Int'>
     readonly description: FieldRef<"CreatorEventTicket", 'String'>
     readonly benefits: FieldRef<"CreatorEventTicket", 'String[]'>
     readonly status: FieldRef<"CreatorEventTicket", 'CreatorEventTicketStatus'>
@@ -20670,6 +26381,30 @@ export namespace Prisma {
   }
 
   /**
+   * CreatorEventTicket.ticketItems
+   */
+  export type CreatorEventTicket$ticketItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    where?: CreatorEventTicketItemWhereInput
+    orderBy?: CreatorEventTicketItemOrderByWithRelationInput | CreatorEventTicketItemOrderByWithRelationInput[]
+    cursor?: CreatorEventTicketItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorEventTicketItemScalarFieldEnum | CreatorEventTicketItemScalarFieldEnum[]
+  }
+
+  /**
    * CreatorEventTicket without action
    */
   export type CreatorEventTicketDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20972,6 +26707,7 @@ export namespace Prisma {
     checkedInByUserId?: boolean
     ticket?: boolean | CreatorEventTicketDefaultArgs<ExtArgs>
     checkedInByUser?: boolean | CreatorEventTicketPurchase$checkedInByUserArgs<ExtArgs>
+    ticketItems?: boolean | CreatorEventTicketPurchase$ticketItemsArgs<ExtArgs>
     scans?: boolean | CreatorEventTicketPurchase$scansArgs<ExtArgs>
     _count?: boolean | CreatorEventTicketPurchaseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["creatorEventTicketPurchase"]>
@@ -21038,6 +26774,7 @@ export namespace Prisma {
   export type CreatorEventTicketPurchaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     ticket?: boolean | CreatorEventTicketDefaultArgs<ExtArgs>
     checkedInByUser?: boolean | CreatorEventTicketPurchase$checkedInByUserArgs<ExtArgs>
+    ticketItems?: boolean | CreatorEventTicketPurchase$ticketItemsArgs<ExtArgs>
     scans?: boolean | CreatorEventTicketPurchase$scansArgs<ExtArgs>
     _count?: boolean | CreatorEventTicketPurchaseCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -21055,6 +26792,7 @@ export namespace Prisma {
     objects: {
       ticket: Prisma.$CreatorEventTicketPayload<ExtArgs>
       checkedInByUser: Prisma.$CreatorEventCheckInUserPayload<ExtArgs> | null
+      ticketItems: Prisma.$CreatorEventTicketItemPayload<ExtArgs>[]
       scans: Prisma.$CreatorEventCheckInScanPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -21469,6 +27207,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     ticket<T extends CreatorEventTicketDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventTicketDefaultArgs<ExtArgs>>): Prisma__CreatorEventTicketClient<$Result.GetResult<Prisma.$CreatorEventTicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     checkedInByUser<T extends CreatorEventTicketPurchase$checkedInByUserArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventTicketPurchase$checkedInByUserArgs<ExtArgs>>): Prisma__CreatorEventCheckInUserClient<$Result.GetResult<Prisma.$CreatorEventCheckInUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    ticketItems<T extends CreatorEventTicketPurchase$ticketItemsArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventTicketPurchase$ticketItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     scans<T extends CreatorEventTicketPurchase$scansArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventTicketPurchase$scansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventCheckInScanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -21934,6 +27673,30 @@ export namespace Prisma {
   }
 
   /**
+   * CreatorEventTicketPurchase.ticketItems
+   */
+  export type CreatorEventTicketPurchase$ticketItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    where?: CreatorEventTicketItemWhereInput
+    orderBy?: CreatorEventTicketItemOrderByWithRelationInput | CreatorEventTicketItemOrderByWithRelationInput[]
+    cursor?: CreatorEventTicketItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorEventTicketItemScalarFieldEnum | CreatorEventTicketItemScalarFieldEnum[]
+  }
+
+  /**
    * CreatorEventTicketPurchase.scans
    */
   export type CreatorEventTicketPurchase$scansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -21973,6 +27736,1190 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CreatorEventTicketPurchaseInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CreatorEventTicketItem
+   */
+
+  export type AggregateCreatorEventTicketItem = {
+    _count: CreatorEventTicketItemCountAggregateOutputType | null
+    _avg: CreatorEventTicketItemAvgAggregateOutputType | null
+    _sum: CreatorEventTicketItemSumAggregateOutputType | null
+    _min: CreatorEventTicketItemMinAggregateOutputType | null
+    _max: CreatorEventTicketItemMaxAggregateOutputType | null
+  }
+
+  export type CreatorEventTicketItemAvgAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type CreatorEventTicketItemSumAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type CreatorEventTicketItemMinAggregateOutputType = {
+    id: string | null
+    purchaseId: string | null
+    ticketId: string | null
+    ticketCode: string | null
+    quantity: number | null
+    checkedInAt: Date | null
+    checkedInByUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CreatorEventTicketItemMaxAggregateOutputType = {
+    id: string | null
+    purchaseId: string | null
+    ticketId: string | null
+    ticketCode: string | null
+    quantity: number | null
+    checkedInAt: Date | null
+    checkedInByUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CreatorEventTicketItemCountAggregateOutputType = {
+    id: number
+    purchaseId: number
+    ticketId: number
+    ticketCode: number
+    quantity: number
+    checkedInAt: number
+    checkedInByUserId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CreatorEventTicketItemAvgAggregateInputType = {
+    quantity?: true
+  }
+
+  export type CreatorEventTicketItemSumAggregateInputType = {
+    quantity?: true
+  }
+
+  export type CreatorEventTicketItemMinAggregateInputType = {
+    id?: true
+    purchaseId?: true
+    ticketId?: true
+    ticketCode?: true
+    quantity?: true
+    checkedInAt?: true
+    checkedInByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CreatorEventTicketItemMaxAggregateInputType = {
+    id?: true
+    purchaseId?: true
+    ticketId?: true
+    ticketCode?: true
+    quantity?: true
+    checkedInAt?: true
+    checkedInByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CreatorEventTicketItemCountAggregateInputType = {
+    id?: true
+    purchaseId?: true
+    ticketId?: true
+    ticketCode?: true
+    quantity?: true
+    checkedInAt?: true
+    checkedInByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CreatorEventTicketItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreatorEventTicketItem to aggregate.
+     */
+    where?: CreatorEventTicketItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorEventTicketItems to fetch.
+     */
+    orderBy?: CreatorEventTicketItemOrderByWithRelationInput | CreatorEventTicketItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CreatorEventTicketItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorEventTicketItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorEventTicketItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CreatorEventTicketItems
+    **/
+    _count?: true | CreatorEventTicketItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CreatorEventTicketItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CreatorEventTicketItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CreatorEventTicketItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CreatorEventTicketItemMaxAggregateInputType
+  }
+
+  export type GetCreatorEventTicketItemAggregateType<T extends CreatorEventTicketItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateCreatorEventTicketItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCreatorEventTicketItem[P]>
+      : GetScalarType<T[P], AggregateCreatorEventTicketItem[P]>
+  }
+
+
+
+
+  export type CreatorEventTicketItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorEventTicketItemWhereInput
+    orderBy?: CreatorEventTicketItemOrderByWithAggregationInput | CreatorEventTicketItemOrderByWithAggregationInput[]
+    by: CreatorEventTicketItemScalarFieldEnum[] | CreatorEventTicketItemScalarFieldEnum
+    having?: CreatorEventTicketItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CreatorEventTicketItemCountAggregateInputType | true
+    _avg?: CreatorEventTicketItemAvgAggregateInputType
+    _sum?: CreatorEventTicketItemSumAggregateInputType
+    _min?: CreatorEventTicketItemMinAggregateInputType
+    _max?: CreatorEventTicketItemMaxAggregateInputType
+  }
+
+  export type CreatorEventTicketItemGroupByOutputType = {
+    id: string
+    purchaseId: string
+    ticketId: string
+    ticketCode: string
+    quantity: number
+    checkedInAt: Date | null
+    checkedInByUserId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CreatorEventTicketItemCountAggregateOutputType | null
+    _avg: CreatorEventTicketItemAvgAggregateOutputType | null
+    _sum: CreatorEventTicketItemSumAggregateOutputType | null
+    _min: CreatorEventTicketItemMinAggregateOutputType | null
+    _max: CreatorEventTicketItemMaxAggregateOutputType | null
+  }
+
+  type GetCreatorEventTicketItemGroupByPayload<T extends CreatorEventTicketItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CreatorEventTicketItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CreatorEventTicketItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CreatorEventTicketItemGroupByOutputType[P]>
+            : GetScalarType<T[P], CreatorEventTicketItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CreatorEventTicketItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    purchaseId?: boolean
+    ticketId?: boolean
+    ticketCode?: boolean
+    quantity?: boolean
+    checkedInAt?: boolean
+    checkedInByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    purchase?: boolean | CreatorEventTicketPurchaseDefaultArgs<ExtArgs>
+    ticket?: boolean | CreatorEventTicketDefaultArgs<ExtArgs>
+    checkedInByUser?: boolean | CreatorEventTicketItem$checkedInByUserArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorEventTicketItem"]>
+
+  export type CreatorEventTicketItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    purchaseId?: boolean
+    ticketId?: boolean
+    ticketCode?: boolean
+    quantity?: boolean
+    checkedInAt?: boolean
+    checkedInByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    purchase?: boolean | CreatorEventTicketPurchaseDefaultArgs<ExtArgs>
+    ticket?: boolean | CreatorEventTicketDefaultArgs<ExtArgs>
+    checkedInByUser?: boolean | CreatorEventTicketItem$checkedInByUserArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorEventTicketItem"]>
+
+  export type CreatorEventTicketItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    purchaseId?: boolean
+    ticketId?: boolean
+    ticketCode?: boolean
+    quantity?: boolean
+    checkedInAt?: boolean
+    checkedInByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    purchase?: boolean | CreatorEventTicketPurchaseDefaultArgs<ExtArgs>
+    ticket?: boolean | CreatorEventTicketDefaultArgs<ExtArgs>
+    checkedInByUser?: boolean | CreatorEventTicketItem$checkedInByUserArgs<ExtArgs>
+  }, ExtArgs["result"]["creatorEventTicketItem"]>
+
+  export type CreatorEventTicketItemSelectScalar = {
+    id?: boolean
+    purchaseId?: boolean
+    ticketId?: boolean
+    ticketCode?: boolean
+    quantity?: boolean
+    checkedInAt?: boolean
+    checkedInByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CreatorEventTicketItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "purchaseId" | "ticketId" | "ticketCode" | "quantity" | "checkedInAt" | "checkedInByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEventTicketItem"]>
+  export type CreatorEventTicketItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    purchase?: boolean | CreatorEventTicketPurchaseDefaultArgs<ExtArgs>
+    ticket?: boolean | CreatorEventTicketDefaultArgs<ExtArgs>
+    checkedInByUser?: boolean | CreatorEventTicketItem$checkedInByUserArgs<ExtArgs>
+  }
+  export type CreatorEventTicketItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    purchase?: boolean | CreatorEventTicketPurchaseDefaultArgs<ExtArgs>
+    ticket?: boolean | CreatorEventTicketDefaultArgs<ExtArgs>
+    checkedInByUser?: boolean | CreatorEventTicketItem$checkedInByUserArgs<ExtArgs>
+  }
+  export type CreatorEventTicketItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    purchase?: boolean | CreatorEventTicketPurchaseDefaultArgs<ExtArgs>
+    ticket?: boolean | CreatorEventTicketDefaultArgs<ExtArgs>
+    checkedInByUser?: boolean | CreatorEventTicketItem$checkedInByUserArgs<ExtArgs>
+  }
+
+  export type $CreatorEventTicketItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CreatorEventTicketItem"
+    objects: {
+      purchase: Prisma.$CreatorEventTicketPurchasePayload<ExtArgs>
+      ticket: Prisma.$CreatorEventTicketPayload<ExtArgs>
+      checkedInByUser: Prisma.$CreatorEventCheckInUserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      purchaseId: string
+      ticketId: string
+      ticketCode: string
+      quantity: number
+      checkedInAt: Date | null
+      checkedInByUserId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["creatorEventTicketItem"]>
+    composites: {}
+  }
+
+  type CreatorEventTicketItemGetPayload<S extends boolean | null | undefined | CreatorEventTicketItemDefaultArgs> = $Result.GetResult<Prisma.$CreatorEventTicketItemPayload, S>
+
+  type CreatorEventTicketItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CreatorEventTicketItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CreatorEventTicketItemCountAggregateInputType | true
+    }
+
+  export interface CreatorEventTicketItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CreatorEventTicketItem'], meta: { name: 'CreatorEventTicketItem' } }
+    /**
+     * Find zero or one CreatorEventTicketItem that matches the filter.
+     * @param {CreatorEventTicketItemFindUniqueArgs} args - Arguments to find a CreatorEventTicketItem
+     * @example
+     * // Get one CreatorEventTicketItem
+     * const creatorEventTicketItem = await prisma.creatorEventTicketItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CreatorEventTicketItemFindUniqueArgs>(args: SelectSubset<T, CreatorEventTicketItemFindUniqueArgs<ExtArgs>>): Prisma__CreatorEventTicketItemClient<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CreatorEventTicketItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CreatorEventTicketItemFindUniqueOrThrowArgs} args - Arguments to find a CreatorEventTicketItem
+     * @example
+     * // Get one CreatorEventTicketItem
+     * const creatorEventTicketItem = await prisma.creatorEventTicketItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CreatorEventTicketItemFindUniqueOrThrowArgs>(args: SelectSubset<T, CreatorEventTicketItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CreatorEventTicketItemClient<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreatorEventTicketItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventTicketItemFindFirstArgs} args - Arguments to find a CreatorEventTicketItem
+     * @example
+     * // Get one CreatorEventTicketItem
+     * const creatorEventTicketItem = await prisma.creatorEventTicketItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CreatorEventTicketItemFindFirstArgs>(args?: SelectSubset<T, CreatorEventTicketItemFindFirstArgs<ExtArgs>>): Prisma__CreatorEventTicketItemClient<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreatorEventTicketItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventTicketItemFindFirstOrThrowArgs} args - Arguments to find a CreatorEventTicketItem
+     * @example
+     * // Get one CreatorEventTicketItem
+     * const creatorEventTicketItem = await prisma.creatorEventTicketItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CreatorEventTicketItemFindFirstOrThrowArgs>(args?: SelectSubset<T, CreatorEventTicketItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__CreatorEventTicketItemClient<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CreatorEventTicketItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventTicketItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CreatorEventTicketItems
+     * const creatorEventTicketItems = await prisma.creatorEventTicketItem.findMany()
+     * 
+     * // Get first 10 CreatorEventTicketItems
+     * const creatorEventTicketItems = await prisma.creatorEventTicketItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const creatorEventTicketItemWithIdOnly = await prisma.creatorEventTicketItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CreatorEventTicketItemFindManyArgs>(args?: SelectSubset<T, CreatorEventTicketItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CreatorEventTicketItem.
+     * @param {CreatorEventTicketItemCreateArgs} args - Arguments to create a CreatorEventTicketItem.
+     * @example
+     * // Create one CreatorEventTicketItem
+     * const CreatorEventTicketItem = await prisma.creatorEventTicketItem.create({
+     *   data: {
+     *     // ... data to create a CreatorEventTicketItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends CreatorEventTicketItemCreateArgs>(args: SelectSubset<T, CreatorEventTicketItemCreateArgs<ExtArgs>>): Prisma__CreatorEventTicketItemClient<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CreatorEventTicketItems.
+     * @param {CreatorEventTicketItemCreateManyArgs} args - Arguments to create many CreatorEventTicketItems.
+     * @example
+     * // Create many CreatorEventTicketItems
+     * const creatorEventTicketItem = await prisma.creatorEventTicketItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CreatorEventTicketItemCreateManyArgs>(args?: SelectSubset<T, CreatorEventTicketItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CreatorEventTicketItems and returns the data saved in the database.
+     * @param {CreatorEventTicketItemCreateManyAndReturnArgs} args - Arguments to create many CreatorEventTicketItems.
+     * @example
+     * // Create many CreatorEventTicketItems
+     * const creatorEventTicketItem = await prisma.creatorEventTicketItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CreatorEventTicketItems and only return the `id`
+     * const creatorEventTicketItemWithIdOnly = await prisma.creatorEventTicketItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CreatorEventTicketItemCreateManyAndReturnArgs>(args?: SelectSubset<T, CreatorEventTicketItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CreatorEventTicketItem.
+     * @param {CreatorEventTicketItemDeleteArgs} args - Arguments to delete one CreatorEventTicketItem.
+     * @example
+     * // Delete one CreatorEventTicketItem
+     * const CreatorEventTicketItem = await prisma.creatorEventTicketItem.delete({
+     *   where: {
+     *     // ... filter to delete one CreatorEventTicketItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CreatorEventTicketItemDeleteArgs>(args: SelectSubset<T, CreatorEventTicketItemDeleteArgs<ExtArgs>>): Prisma__CreatorEventTicketItemClient<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CreatorEventTicketItem.
+     * @param {CreatorEventTicketItemUpdateArgs} args - Arguments to update one CreatorEventTicketItem.
+     * @example
+     * // Update one CreatorEventTicketItem
+     * const creatorEventTicketItem = await prisma.creatorEventTicketItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CreatorEventTicketItemUpdateArgs>(args: SelectSubset<T, CreatorEventTicketItemUpdateArgs<ExtArgs>>): Prisma__CreatorEventTicketItemClient<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CreatorEventTicketItems.
+     * @param {CreatorEventTicketItemDeleteManyArgs} args - Arguments to filter CreatorEventTicketItems to delete.
+     * @example
+     * // Delete a few CreatorEventTicketItems
+     * const { count } = await prisma.creatorEventTicketItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CreatorEventTicketItemDeleteManyArgs>(args?: SelectSubset<T, CreatorEventTicketItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreatorEventTicketItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventTicketItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CreatorEventTicketItems
+     * const creatorEventTicketItem = await prisma.creatorEventTicketItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CreatorEventTicketItemUpdateManyArgs>(args: SelectSubset<T, CreatorEventTicketItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreatorEventTicketItems and returns the data updated in the database.
+     * @param {CreatorEventTicketItemUpdateManyAndReturnArgs} args - Arguments to update many CreatorEventTicketItems.
+     * @example
+     * // Update many CreatorEventTicketItems
+     * const creatorEventTicketItem = await prisma.creatorEventTicketItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CreatorEventTicketItems and only return the `id`
+     * const creatorEventTicketItemWithIdOnly = await prisma.creatorEventTicketItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CreatorEventTicketItemUpdateManyAndReturnArgs>(args: SelectSubset<T, CreatorEventTicketItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CreatorEventTicketItem.
+     * @param {CreatorEventTicketItemUpsertArgs} args - Arguments to update or create a CreatorEventTicketItem.
+     * @example
+     * // Update or create a CreatorEventTicketItem
+     * const creatorEventTicketItem = await prisma.creatorEventTicketItem.upsert({
+     *   create: {
+     *     // ... data to create a CreatorEventTicketItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CreatorEventTicketItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CreatorEventTicketItemUpsertArgs>(args: SelectSubset<T, CreatorEventTicketItemUpsertArgs<ExtArgs>>): Prisma__CreatorEventTicketItemClient<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CreatorEventTicketItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventTicketItemCountArgs} args - Arguments to filter CreatorEventTicketItems to count.
+     * @example
+     * // Count the number of CreatorEventTicketItems
+     * const count = await prisma.creatorEventTicketItem.count({
+     *   where: {
+     *     // ... the filter for the CreatorEventTicketItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends CreatorEventTicketItemCountArgs>(
+      args?: Subset<T, CreatorEventTicketItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CreatorEventTicketItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CreatorEventTicketItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventTicketItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CreatorEventTicketItemAggregateArgs>(args: Subset<T, CreatorEventTicketItemAggregateArgs>): Prisma.PrismaPromise<GetCreatorEventTicketItemAggregateType<T>>
+
+    /**
+     * Group by CreatorEventTicketItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreatorEventTicketItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CreatorEventTicketItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CreatorEventTicketItemGroupByArgs['orderBy'] }
+        : { orderBy?: CreatorEventTicketItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CreatorEventTicketItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCreatorEventTicketItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CreatorEventTicketItem model
+   */
+  readonly fields: CreatorEventTicketItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CreatorEventTicketItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CreatorEventTicketItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    purchase<T extends CreatorEventTicketPurchaseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventTicketPurchaseDefaultArgs<ExtArgs>>): Prisma__CreatorEventTicketPurchaseClient<$Result.GetResult<Prisma.$CreatorEventTicketPurchasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    ticket<T extends CreatorEventTicketDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventTicketDefaultArgs<ExtArgs>>): Prisma__CreatorEventTicketClient<$Result.GetResult<Prisma.$CreatorEventTicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    checkedInByUser<T extends CreatorEventTicketItem$checkedInByUserArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventTicketItem$checkedInByUserArgs<ExtArgs>>): Prisma__CreatorEventCheckInUserClient<$Result.GetResult<Prisma.$CreatorEventCheckInUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CreatorEventTicketItem model
+   */
+  interface CreatorEventTicketItemFieldRefs {
+    readonly id: FieldRef<"CreatorEventTicketItem", 'String'>
+    readonly purchaseId: FieldRef<"CreatorEventTicketItem", 'String'>
+    readonly ticketId: FieldRef<"CreatorEventTicketItem", 'String'>
+    readonly ticketCode: FieldRef<"CreatorEventTicketItem", 'String'>
+    readonly quantity: FieldRef<"CreatorEventTicketItem", 'Int'>
+    readonly checkedInAt: FieldRef<"CreatorEventTicketItem", 'DateTime'>
+    readonly checkedInByUserId: FieldRef<"CreatorEventTicketItem", 'String'>
+    readonly createdAt: FieldRef<"CreatorEventTicketItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"CreatorEventTicketItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CreatorEventTicketItem findUnique
+   */
+  export type CreatorEventTicketItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorEventTicketItem to fetch.
+     */
+    where: CreatorEventTicketItemWhereUniqueInput
+  }
+
+  /**
+   * CreatorEventTicketItem findUniqueOrThrow
+   */
+  export type CreatorEventTicketItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorEventTicketItem to fetch.
+     */
+    where: CreatorEventTicketItemWhereUniqueInput
+  }
+
+  /**
+   * CreatorEventTicketItem findFirst
+   */
+  export type CreatorEventTicketItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorEventTicketItem to fetch.
+     */
+    where?: CreatorEventTicketItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorEventTicketItems to fetch.
+     */
+    orderBy?: CreatorEventTicketItemOrderByWithRelationInput | CreatorEventTicketItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreatorEventTicketItems.
+     */
+    cursor?: CreatorEventTicketItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorEventTicketItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorEventTicketItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorEventTicketItems.
+     */
+    distinct?: CreatorEventTicketItemScalarFieldEnum | CreatorEventTicketItemScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorEventTicketItem findFirstOrThrow
+   */
+  export type CreatorEventTicketItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorEventTicketItem to fetch.
+     */
+    where?: CreatorEventTicketItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorEventTicketItems to fetch.
+     */
+    orderBy?: CreatorEventTicketItemOrderByWithRelationInput | CreatorEventTicketItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreatorEventTicketItems.
+     */
+    cursor?: CreatorEventTicketItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorEventTicketItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorEventTicketItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorEventTicketItems.
+     */
+    distinct?: CreatorEventTicketItemScalarFieldEnum | CreatorEventTicketItemScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorEventTicketItem findMany
+   */
+  export type CreatorEventTicketItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    /**
+     * Filter, which CreatorEventTicketItems to fetch.
+     */
+    where?: CreatorEventTicketItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreatorEventTicketItems to fetch.
+     */
+    orderBy?: CreatorEventTicketItemOrderByWithRelationInput | CreatorEventTicketItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CreatorEventTicketItems.
+     */
+    cursor?: CreatorEventTicketItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreatorEventTicketItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreatorEventTicketItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreatorEventTicketItems.
+     */
+    distinct?: CreatorEventTicketItemScalarFieldEnum | CreatorEventTicketItemScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorEventTicketItem create
+   */
+  export type CreatorEventTicketItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CreatorEventTicketItem.
+     */
+    data: XOR<CreatorEventTicketItemCreateInput, CreatorEventTicketItemUncheckedCreateInput>
+  }
+
+  /**
+   * CreatorEventTicketItem createMany
+   */
+  export type CreatorEventTicketItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CreatorEventTicketItems.
+     */
+    data: CreatorEventTicketItemCreateManyInput | CreatorEventTicketItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CreatorEventTicketItem createManyAndReturn
+   */
+  export type CreatorEventTicketItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many CreatorEventTicketItems.
+     */
+    data: CreatorEventTicketItemCreateManyInput | CreatorEventTicketItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CreatorEventTicketItem update
+   */
+  export type CreatorEventTicketItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CreatorEventTicketItem.
+     */
+    data: XOR<CreatorEventTicketItemUpdateInput, CreatorEventTicketItemUncheckedUpdateInput>
+    /**
+     * Choose, which CreatorEventTicketItem to update.
+     */
+    where: CreatorEventTicketItemWhereUniqueInput
+  }
+
+  /**
+   * CreatorEventTicketItem updateMany
+   */
+  export type CreatorEventTicketItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CreatorEventTicketItems.
+     */
+    data: XOR<CreatorEventTicketItemUpdateManyMutationInput, CreatorEventTicketItemUncheckedUpdateManyInput>
+    /**
+     * Filter which CreatorEventTicketItems to update
+     */
+    where?: CreatorEventTicketItemWhereInput
+    /**
+     * Limit how many CreatorEventTicketItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreatorEventTicketItem updateManyAndReturn
+   */
+  export type CreatorEventTicketItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * The data used to update CreatorEventTicketItems.
+     */
+    data: XOR<CreatorEventTicketItemUpdateManyMutationInput, CreatorEventTicketItemUncheckedUpdateManyInput>
+    /**
+     * Filter which CreatorEventTicketItems to update
+     */
+    where?: CreatorEventTicketItemWhereInput
+    /**
+     * Limit how many CreatorEventTicketItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CreatorEventTicketItem upsert
+   */
+  export type CreatorEventTicketItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CreatorEventTicketItem to update in case it exists.
+     */
+    where: CreatorEventTicketItemWhereUniqueInput
+    /**
+     * In case the CreatorEventTicketItem found by the `where` argument doesn't exist, create a new CreatorEventTicketItem with this data.
+     */
+    create: XOR<CreatorEventTicketItemCreateInput, CreatorEventTicketItemUncheckedCreateInput>
+    /**
+     * In case the CreatorEventTicketItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CreatorEventTicketItemUpdateInput, CreatorEventTicketItemUncheckedUpdateInput>
+  }
+
+  /**
+   * CreatorEventTicketItem delete
+   */
+  export type CreatorEventTicketItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    /**
+     * Filter which CreatorEventTicketItem to delete.
+     */
+    where: CreatorEventTicketItemWhereUniqueInput
+  }
+
+  /**
+   * CreatorEventTicketItem deleteMany
+   */
+  export type CreatorEventTicketItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreatorEventTicketItems to delete
+     */
+    where?: CreatorEventTicketItemWhereInput
+    /**
+     * Limit how many CreatorEventTicketItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreatorEventTicketItem.checkedInByUser
+   */
+  export type CreatorEventTicketItem$checkedInByUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventCheckInUser
+     */
+    select?: CreatorEventCheckInUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventCheckInUser
+     */
+    omit?: CreatorEventCheckInUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventCheckInUserInclude<ExtArgs> | null
+    where?: CreatorEventCheckInUserWhereInput
+  }
+
+  /**
+   * CreatorEventTicketItem without action
+   */
+  export type CreatorEventTicketItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
   }
 
 
@@ -22277,6 +29224,7 @@ export namespace Prisma {
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
     event?: boolean | CreatorEventDefaultArgs<ExtArgs>
     checkedInPurchases?: boolean | CreatorEventCheckInUser$checkedInPurchasesArgs<ExtArgs>
+    checkedInTicketItems?: boolean | CreatorEventCheckInUser$checkedInTicketItemsArgs<ExtArgs>
     scans?: boolean | CreatorEventCheckInUser$scansArgs<ExtArgs>
     cameraSessions?: boolean | CreatorEventCheckInUser$cameraSessionsArgs<ExtArgs>
     _count?: boolean | CreatorEventCheckInUserCountOutputTypeDefaultArgs<ExtArgs>
@@ -22351,6 +29299,7 @@ export namespace Prisma {
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
     event?: boolean | CreatorEventDefaultArgs<ExtArgs>
     checkedInPurchases?: boolean | CreatorEventCheckInUser$checkedInPurchasesArgs<ExtArgs>
+    checkedInTicketItems?: boolean | CreatorEventCheckInUser$checkedInTicketItemsArgs<ExtArgs>
     scans?: boolean | CreatorEventCheckInUser$scansArgs<ExtArgs>
     cameraSessions?: boolean | CreatorEventCheckInUser$cameraSessionsArgs<ExtArgs>
     _count?: boolean | CreatorEventCheckInUserCountOutputTypeDefaultArgs<ExtArgs>
@@ -22370,6 +29319,7 @@ export namespace Prisma {
       creator: Prisma.$CreatorPayload<ExtArgs>
       event: Prisma.$CreatorEventPayload<ExtArgs>
       checkedInPurchases: Prisma.$CreatorEventTicketPurchasePayload<ExtArgs>[]
+      checkedInTicketItems: Prisma.$CreatorEventTicketItemPayload<ExtArgs>[]
       scans: Prisma.$CreatorEventCheckInScanPayload<ExtArgs>[]
       cameraSessions: Prisma.$CreatorEventCheckInCameraSessionPayload<ExtArgs>[]
     }
@@ -22788,6 +29738,7 @@ export namespace Prisma {
     creator<T extends CreatorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorDefaultArgs<ExtArgs>>): Prisma__CreatorClient<$Result.GetResult<Prisma.$CreatorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     event<T extends CreatorEventDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventDefaultArgs<ExtArgs>>): Prisma__CreatorEventClient<$Result.GetResult<Prisma.$CreatorEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     checkedInPurchases<T extends CreatorEventCheckInUser$checkedInPurchasesArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventCheckInUser$checkedInPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventTicketPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    checkedInTicketItems<T extends CreatorEventCheckInUser$checkedInTicketItemsArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventCheckInUser$checkedInTicketItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventTicketItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     scans<T extends CreatorEventCheckInUser$scansArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventCheckInUser$scansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventCheckInScanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cameraSessions<T extends CreatorEventCheckInUser$cameraSessionsArgs<ExtArgs> = {}>(args?: Subset<T, CreatorEventCheckInUser$cameraSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventCheckInCameraSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -23258,6 +30209,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CreatorEventTicketPurchaseScalarFieldEnum | CreatorEventTicketPurchaseScalarFieldEnum[]
+  }
+
+  /**
+   * CreatorEventCheckInUser.checkedInTicketItems
+   */
+  export type CreatorEventCheckInUser$checkedInTicketItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorEventTicketItem
+     */
+    select?: CreatorEventTicketItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorEventTicketItem
+     */
+    omit?: CreatorEventTicketItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorEventTicketItemInclude<ExtArgs> | null
+    where?: CreatorEventTicketItemWhereInput
+    orderBy?: CreatorEventTicketItemOrderByWithRelationInput | CreatorEventTicketItemOrderByWithRelationInput[]
+    cursor?: CreatorEventTicketItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorEventTicketItemScalarFieldEnum | CreatorEventTicketItemScalarFieldEnum[]
   }
 
   /**
@@ -30008,8 +36983,18 @@ export namespace Prisma {
     email: 'email',
     role: 'role',
     fullName: 'fullName',
+    firstName: 'firstName',
+    lastName: 'lastName',
     avatarUrl: 'avatarUrl',
+    creatorName: 'creatorName',
     bio: 'bio',
+    website: 'website',
+    location: 'location',
+    profileVisibility: 'profileVisibility',
+    showEmail: 'showEmail',
+    showLocation: 'showLocation',
+    allowMessages: 'allowMessages',
+    showOnlineStatus: 'showOnlineStatus',
     addressFull: 'addressFull',
     addressLat: 'addressLat',
     addressLon: 'addressLon',
@@ -30078,10 +37063,63 @@ export namespace Prisma {
     id: 'id',
     profileId: 'profileId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    status: 'status',
+    videoPayoutPercent: 'videoPayoutPercent',
+    eventStreamPayout: 'eventStreamPayout',
+    eventVenuePayout: 'eventVenuePayout',
+    followersCount: 'followersCount',
+    followingCount: 'followingCount'
   };
 
   export type CreatorScalarFieldEnum = (typeof CreatorScalarFieldEnum)[keyof typeof CreatorScalarFieldEnum]
+
+
+  export const CreatorFollowScalarFieldEnum: {
+    id: 'id',
+    creatorId: 'creatorId',
+    followerProfileId: 'followerProfileId',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CreatorFollowScalarFieldEnum = (typeof CreatorFollowScalarFieldEnum)[keyof typeof CreatorFollowScalarFieldEnum]
+
+
+  export const CreatorPayoutAccountScalarFieldEnum: {
+    id: 'id',
+    creatorId: 'creatorId',
+    bankName: 'bankName',
+    accountNumber: 'accountNumber',
+    accountName: 'accountName',
+    accountType: 'accountType',
+    isPrimary: 'isPrimary',
+    verified: 'verified',
+    verifiedAt: 'verifiedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CreatorPayoutAccountScalarFieldEnum = (typeof CreatorPayoutAccountScalarFieldEnum)[keyof typeof CreatorPayoutAccountScalarFieldEnum]
+
+
+  export const CreatorPayoutRequestScalarFieldEnum: {
+    id: 'id',
+    creatorId: 'creatorId',
+    payoutAccountId: 'payoutAccountId',
+    amount: 'amount',
+    currency: 'currency',
+    status: 'status',
+    note: 'note',
+    transactionId: 'transactionId',
+    requestedAt: 'requestedAt',
+    processedAt: 'processedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CreatorPayoutRequestScalarFieldEnum = (typeof CreatorPayoutRequestScalarFieldEnum)[keyof typeof CreatorPayoutRequestScalarFieldEnum]
 
 
   export const CreatorVideoFolderScalarFieldEnum: {
@@ -30119,6 +37157,8 @@ export namespace Prisma {
     rent24Price: 'rent24Price',
     rent48Price: 'rent48Price',
     purchasePrice: 'purchasePrice',
+    revenue: 'revenue',
+    platformFee: 'platformFee',
     tags: 'tags',
     packageName: 'packageName',
     episodeIndex: 'episodeIndex',
@@ -30128,7 +37168,6 @@ export namespace Prisma {
     viewsCount: 'viewsCount',
     likesCount: 'likesCount',
     commentsCount: 'commentsCount',
-    revenue: 'revenue',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -30172,10 +37211,24 @@ export namespace Prisma {
     id: 'id',
     creatorVideoId: 'creatorVideoId',
     likerProfileId: 'likerProfileId',
-    createdAt: 'createdAt'
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type CreatorVideoLikeScalarFieldEnum = (typeof CreatorVideoLikeScalarFieldEnum)[keyof typeof CreatorVideoLikeScalarFieldEnum]
+
+
+  export const CreatorEventLikeScalarFieldEnum: {
+    id: 'id',
+    creatorEventId: 'creatorEventId',
+    likerProfileId: 'likerProfileId',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CreatorEventLikeScalarFieldEnum = (typeof CreatorEventLikeScalarFieldEnum)[keyof typeof CreatorEventLikeScalarFieldEnum]
 
 
   export const CreatorVideoCommentScalarFieldEnum: {
@@ -30243,6 +37296,7 @@ export namespace Prisma {
     currentViewersCount: 'currentViewersCount',
     venueParticipantCount: 'venueParticipantCount',
     revenue: 'revenue',
+    platformFee: 'platformFee',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -30275,6 +37329,7 @@ export namespace Prisma {
     quantity: 'quantity',
     soldCount: 'soldCount',
     revenue: 'revenue',
+    platformFee: 'platformFee',
     description: 'description',
     benefits: 'benefits',
     status: 'status',
@@ -30304,6 +37359,21 @@ export namespace Prisma {
   };
 
   export type CreatorEventTicketPurchaseScalarFieldEnum = (typeof CreatorEventTicketPurchaseScalarFieldEnum)[keyof typeof CreatorEventTicketPurchaseScalarFieldEnum]
+
+
+  export const CreatorEventTicketItemScalarFieldEnum: {
+    id: 'id',
+    purchaseId: 'purchaseId',
+    ticketId: 'ticketId',
+    ticketCode: 'ticketCode',
+    quantity: 'quantity',
+    checkedInAt: 'checkedInAt',
+    checkedInByUserId: 'checkedInByUserId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CreatorEventTicketItemScalarFieldEnum = (typeof CreatorEventTicketItemScalarFieldEnum)[keyof typeof CreatorEventTicketItemScalarFieldEnum]
 
 
   export const CreatorEventCheckInUserScalarFieldEnum: {
@@ -30469,6 +37539,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -30493,13 +37570,6 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -30668,8 +37738,18 @@ export namespace Prisma {
     email?: StringFilter<"Profile"> | string
     role?: EnumRoleFilter<"Profile"> | $Enums.Role
     fullName?: StringNullableFilter<"Profile"> | string | null
+    firstName?: StringNullableFilter<"Profile"> | string | null
+    lastName?: StringNullableFilter<"Profile"> | string | null
     avatarUrl?: StringNullableFilter<"Profile"> | string | null
+    creatorName?: StringNullableFilter<"Profile"> | string | null
     bio?: StringNullableFilter<"Profile"> | string | null
+    website?: StringNullableFilter<"Profile"> | string | null
+    location?: StringNullableFilter<"Profile"> | string | null
+    profileVisibility?: StringFilter<"Profile"> | string
+    showEmail?: BoolFilter<"Profile"> | boolean
+    showLocation?: BoolFilter<"Profile"> | boolean
+    allowMessages?: BoolFilter<"Profile"> | boolean
+    showOnlineStatus?: BoolFilter<"Profile"> | boolean
     addressFull?: StringNullableFilter<"Profile"> | string | null
     addressLat?: FloatNullableFilter<"Profile"> | number | null
     addressLon?: FloatNullableFilter<"Profile"> | number | null
@@ -30685,6 +37765,9 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     creator?: XOR<CreatorNullableScalarRelationFilter, CreatorWhereInput> | null
+    creatorFollows?: CreatorFollowListRelationFilter
+    eventLikes?: CreatorEventLikeListRelationFilter
+    videoLikes?: CreatorVideoLikeListRelationFilter
     credential?: XOR<AuthCredentialNullableScalarRelationFilter, AuthCredentialWhereInput> | null
     session?: SessionListRelationFilter
     videoPurchases?: CreatorVideoPurchaseListRelationFilter
@@ -30695,8 +37778,18 @@ export namespace Prisma {
     email?: SortOrder
     role?: SortOrder
     fullName?: SortOrderInput | SortOrder
+    firstName?: SortOrderInput | SortOrder
+    lastName?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
+    creatorName?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    location?: SortOrderInput | SortOrder
+    profileVisibility?: SortOrder
+    showEmail?: SortOrder
+    showLocation?: SortOrder
+    allowMessages?: SortOrder
+    showOnlineStatus?: SortOrder
     addressFull?: SortOrderInput | SortOrder
     addressLat?: SortOrderInput | SortOrder
     addressLon?: SortOrderInput | SortOrder
@@ -30712,6 +37805,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     creator?: CreatorOrderByWithRelationInput
+    creatorFollows?: CreatorFollowOrderByRelationAggregateInput
+    eventLikes?: CreatorEventLikeOrderByRelationAggregateInput
+    videoLikes?: CreatorVideoLikeOrderByRelationAggregateInput
     credential?: AuthCredentialOrderByWithRelationInput
     session?: SessionOrderByRelationAggregateInput
     videoPurchases?: CreatorVideoPurchaseOrderByRelationAggregateInput
@@ -30725,8 +37821,18 @@ export namespace Prisma {
     NOT?: ProfileWhereInput | ProfileWhereInput[]
     role?: EnumRoleFilter<"Profile"> | $Enums.Role
     fullName?: StringNullableFilter<"Profile"> | string | null
+    firstName?: StringNullableFilter<"Profile"> | string | null
+    lastName?: StringNullableFilter<"Profile"> | string | null
     avatarUrl?: StringNullableFilter<"Profile"> | string | null
+    creatorName?: StringNullableFilter<"Profile"> | string | null
     bio?: StringNullableFilter<"Profile"> | string | null
+    website?: StringNullableFilter<"Profile"> | string | null
+    location?: StringNullableFilter<"Profile"> | string | null
+    profileVisibility?: StringFilter<"Profile"> | string
+    showEmail?: BoolFilter<"Profile"> | boolean
+    showLocation?: BoolFilter<"Profile"> | boolean
+    allowMessages?: BoolFilter<"Profile"> | boolean
+    showOnlineStatus?: BoolFilter<"Profile"> | boolean
     addressFull?: StringNullableFilter<"Profile"> | string | null
     addressLat?: FloatNullableFilter<"Profile"> | number | null
     addressLon?: FloatNullableFilter<"Profile"> | number | null
@@ -30742,6 +37848,9 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     creator?: XOR<CreatorNullableScalarRelationFilter, CreatorWhereInput> | null
+    creatorFollows?: CreatorFollowListRelationFilter
+    eventLikes?: CreatorEventLikeListRelationFilter
+    videoLikes?: CreatorVideoLikeListRelationFilter
     credential?: XOR<AuthCredentialNullableScalarRelationFilter, AuthCredentialWhereInput> | null
     session?: SessionListRelationFilter
     videoPurchases?: CreatorVideoPurchaseListRelationFilter
@@ -30752,8 +37861,18 @@ export namespace Prisma {
     email?: SortOrder
     role?: SortOrder
     fullName?: SortOrderInput | SortOrder
+    firstName?: SortOrderInput | SortOrder
+    lastName?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
+    creatorName?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    location?: SortOrderInput | SortOrder
+    profileVisibility?: SortOrder
+    showEmail?: SortOrder
+    showLocation?: SortOrder
+    allowMessages?: SortOrder
+    showOnlineStatus?: SortOrder
     addressFull?: SortOrderInput | SortOrder
     addressLat?: SortOrderInput | SortOrder
     addressLon?: SortOrderInput | SortOrder
@@ -30783,8 +37902,18 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"Profile"> | string
     role?: EnumRoleWithAggregatesFilter<"Profile"> | $Enums.Role
     fullName?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    firstName?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    lastName?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     avatarUrl?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    creatorName?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     bio?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    website?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    location?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    profileVisibility?: StringWithAggregatesFilter<"Profile"> | string
+    showEmail?: BoolWithAggregatesFilter<"Profile"> | boolean
+    showLocation?: BoolWithAggregatesFilter<"Profile"> | boolean
+    allowMessages?: BoolWithAggregatesFilter<"Profile"> | boolean
+    showOnlineStatus?: BoolWithAggregatesFilter<"Profile"> | boolean
     addressFull?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     addressLat?: FloatNullableWithAggregatesFilter<"Profile"> | number | null
     addressLon?: FloatNullableWithAggregatesFilter<"Profile"> | number | null
@@ -31030,12 +38159,21 @@ export namespace Prisma {
     profileId?: StringFilter<"Creator"> | string
     createdAt?: DateTimeFilter<"Creator"> | Date | string
     updatedAt?: DateTimeFilter<"Creator"> | Date | string
+    status?: StringFilter<"Creator"> | string
+    videoPayoutPercent?: IntFilter<"Creator"> | number
+    eventStreamPayout?: IntFilter<"Creator"> | number
+    eventVenuePayout?: IntFilter<"Creator"> | number
+    followersCount?: IntFilter<"Creator"> | number
+    followingCount?: IntFilter<"Creator"> | number
     profile?: XOR<ProfileScalarRelationFilter, ProfileWhereInput>
     videos?: CreatorVideoListRelationFilter
     videoPurchases?: CreatorVideoPurchaseListRelationFilter
     folders?: CreatorVideoFolderListRelationFilter
     events?: CreatorEventListRelationFilter
     checkInUsers?: CreatorEventCheckInUserListRelationFilter
+    payoutAccounts?: CreatorPayoutAccountListRelationFilter
+    payoutRequests?: CreatorPayoutRequestListRelationFilter
+    follows?: CreatorFollowListRelationFilter
   }
 
   export type CreatorOrderByWithRelationInput = {
@@ -31043,12 +38181,21 @@ export namespace Prisma {
     profileId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    status?: SortOrder
+    videoPayoutPercent?: SortOrder
+    eventStreamPayout?: SortOrder
+    eventVenuePayout?: SortOrder
+    followersCount?: SortOrder
+    followingCount?: SortOrder
     profile?: ProfileOrderByWithRelationInput
     videos?: CreatorVideoOrderByRelationAggregateInput
     videoPurchases?: CreatorVideoPurchaseOrderByRelationAggregateInput
     folders?: CreatorVideoFolderOrderByRelationAggregateInput
     events?: CreatorEventOrderByRelationAggregateInput
     checkInUsers?: CreatorEventCheckInUserOrderByRelationAggregateInput
+    payoutAccounts?: CreatorPayoutAccountOrderByRelationAggregateInput
+    payoutRequests?: CreatorPayoutRequestOrderByRelationAggregateInput
+    follows?: CreatorFollowOrderByRelationAggregateInput
   }
 
   export type CreatorWhereUniqueInput = Prisma.AtLeast<{
@@ -31059,12 +38206,21 @@ export namespace Prisma {
     NOT?: CreatorWhereInput | CreatorWhereInput[]
     createdAt?: DateTimeFilter<"Creator"> | Date | string
     updatedAt?: DateTimeFilter<"Creator"> | Date | string
+    status?: StringFilter<"Creator"> | string
+    videoPayoutPercent?: IntFilter<"Creator"> | number
+    eventStreamPayout?: IntFilter<"Creator"> | number
+    eventVenuePayout?: IntFilter<"Creator"> | number
+    followersCount?: IntFilter<"Creator"> | number
+    followingCount?: IntFilter<"Creator"> | number
     profile?: XOR<ProfileScalarRelationFilter, ProfileWhereInput>
     videos?: CreatorVideoListRelationFilter
     videoPurchases?: CreatorVideoPurchaseListRelationFilter
     folders?: CreatorVideoFolderListRelationFilter
     events?: CreatorEventListRelationFilter
     checkInUsers?: CreatorEventCheckInUserListRelationFilter
+    payoutAccounts?: CreatorPayoutAccountListRelationFilter
+    payoutRequests?: CreatorPayoutRequestListRelationFilter
+    follows?: CreatorFollowListRelationFilter
   }, "id" | "profileId">
 
   export type CreatorOrderByWithAggregationInput = {
@@ -31072,9 +38228,17 @@ export namespace Prisma {
     profileId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    status?: SortOrder
+    videoPayoutPercent?: SortOrder
+    eventStreamPayout?: SortOrder
+    eventVenuePayout?: SortOrder
+    followersCount?: SortOrder
+    followingCount?: SortOrder
     _count?: CreatorCountOrderByAggregateInput
+    _avg?: CreatorAvgOrderByAggregateInput
     _max?: CreatorMaxOrderByAggregateInput
     _min?: CreatorMinOrderByAggregateInput
+    _sum?: CreatorSumOrderByAggregateInput
   }
 
   export type CreatorScalarWhereWithAggregatesInput = {
@@ -31085,6 +38249,259 @@ export namespace Prisma {
     profileId?: StringWithAggregatesFilter<"Creator"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Creator"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Creator"> | Date | string
+    status?: StringWithAggregatesFilter<"Creator"> | string
+    videoPayoutPercent?: IntWithAggregatesFilter<"Creator"> | number
+    eventStreamPayout?: IntWithAggregatesFilter<"Creator"> | number
+    eventVenuePayout?: IntWithAggregatesFilter<"Creator"> | number
+    followersCount?: IntWithAggregatesFilter<"Creator"> | number
+    followingCount?: IntWithAggregatesFilter<"Creator"> | number
+  }
+
+  export type CreatorFollowWhereInput = {
+    AND?: CreatorFollowWhereInput | CreatorFollowWhereInput[]
+    OR?: CreatorFollowWhereInput[]
+    NOT?: CreatorFollowWhereInput | CreatorFollowWhereInput[]
+    id?: StringFilter<"CreatorFollow"> | string
+    creatorId?: StringFilter<"CreatorFollow"> | string
+    followerProfileId?: StringFilter<"CreatorFollow"> | string
+    status?: StringFilter<"CreatorFollow"> | string
+    createdAt?: DateTimeFilter<"CreatorFollow"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorFollow"> | Date | string
+    creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
+    followerProfile?: XOR<ProfileScalarRelationFilter, ProfileWhereInput>
+  }
+
+  export type CreatorFollowOrderByWithRelationInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    followerProfileId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    creator?: CreatorOrderByWithRelationInput
+    followerProfile?: ProfileOrderByWithRelationInput
+  }
+
+  export type CreatorFollowWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    followerProfileId_creatorId?: CreatorFollowFollowerProfileIdCreatorIdCompoundUniqueInput
+    AND?: CreatorFollowWhereInput | CreatorFollowWhereInput[]
+    OR?: CreatorFollowWhereInput[]
+    NOT?: CreatorFollowWhereInput | CreatorFollowWhereInput[]
+    creatorId?: StringFilter<"CreatorFollow"> | string
+    followerProfileId?: StringFilter<"CreatorFollow"> | string
+    status?: StringFilter<"CreatorFollow"> | string
+    createdAt?: DateTimeFilter<"CreatorFollow"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorFollow"> | Date | string
+    creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
+    followerProfile?: XOR<ProfileScalarRelationFilter, ProfileWhereInput>
+  }, "id" | "followerProfileId_creatorId">
+
+  export type CreatorFollowOrderByWithAggregationInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    followerProfileId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CreatorFollowCountOrderByAggregateInput
+    _max?: CreatorFollowMaxOrderByAggregateInput
+    _min?: CreatorFollowMinOrderByAggregateInput
+  }
+
+  export type CreatorFollowScalarWhereWithAggregatesInput = {
+    AND?: CreatorFollowScalarWhereWithAggregatesInput | CreatorFollowScalarWhereWithAggregatesInput[]
+    OR?: CreatorFollowScalarWhereWithAggregatesInput[]
+    NOT?: CreatorFollowScalarWhereWithAggregatesInput | CreatorFollowScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CreatorFollow"> | string
+    creatorId?: StringWithAggregatesFilter<"CreatorFollow"> | string
+    followerProfileId?: StringWithAggregatesFilter<"CreatorFollow"> | string
+    status?: StringWithAggregatesFilter<"CreatorFollow"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"CreatorFollow"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CreatorFollow"> | Date | string
+  }
+
+  export type CreatorPayoutAccountWhereInput = {
+    AND?: CreatorPayoutAccountWhereInput | CreatorPayoutAccountWhereInput[]
+    OR?: CreatorPayoutAccountWhereInput[]
+    NOT?: CreatorPayoutAccountWhereInput | CreatorPayoutAccountWhereInput[]
+    id?: StringFilter<"CreatorPayoutAccount"> | string
+    creatorId?: StringFilter<"CreatorPayoutAccount"> | string
+    bankName?: StringFilter<"CreatorPayoutAccount"> | string
+    accountNumber?: StringFilter<"CreatorPayoutAccount"> | string
+    accountName?: StringFilter<"CreatorPayoutAccount"> | string
+    accountType?: StringFilter<"CreatorPayoutAccount"> | string
+    isPrimary?: BoolFilter<"CreatorPayoutAccount"> | boolean
+    verified?: BoolFilter<"CreatorPayoutAccount"> | boolean
+    verifiedAt?: DateTimeNullableFilter<"CreatorPayoutAccount"> | Date | string | null
+    createdAt?: DateTimeFilter<"CreatorPayoutAccount"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorPayoutAccount"> | Date | string
+    creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
+    payoutRequests?: CreatorPayoutRequestListRelationFilter
+  }
+
+  export type CreatorPayoutAccountOrderByWithRelationInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    accountType?: SortOrder
+    isPrimary?: SortOrder
+    verified?: SortOrder
+    verifiedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    creator?: CreatorOrderByWithRelationInput
+    payoutRequests?: CreatorPayoutRequestOrderByRelationAggregateInput
+  }
+
+  export type CreatorPayoutAccountWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CreatorPayoutAccountWhereInput | CreatorPayoutAccountWhereInput[]
+    OR?: CreatorPayoutAccountWhereInput[]
+    NOT?: CreatorPayoutAccountWhereInput | CreatorPayoutAccountWhereInput[]
+    creatorId?: StringFilter<"CreatorPayoutAccount"> | string
+    bankName?: StringFilter<"CreatorPayoutAccount"> | string
+    accountNumber?: StringFilter<"CreatorPayoutAccount"> | string
+    accountName?: StringFilter<"CreatorPayoutAccount"> | string
+    accountType?: StringFilter<"CreatorPayoutAccount"> | string
+    isPrimary?: BoolFilter<"CreatorPayoutAccount"> | boolean
+    verified?: BoolFilter<"CreatorPayoutAccount"> | boolean
+    verifiedAt?: DateTimeNullableFilter<"CreatorPayoutAccount"> | Date | string | null
+    createdAt?: DateTimeFilter<"CreatorPayoutAccount"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorPayoutAccount"> | Date | string
+    creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
+    payoutRequests?: CreatorPayoutRequestListRelationFilter
+  }, "id">
+
+  export type CreatorPayoutAccountOrderByWithAggregationInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    accountType?: SortOrder
+    isPrimary?: SortOrder
+    verified?: SortOrder
+    verifiedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CreatorPayoutAccountCountOrderByAggregateInput
+    _max?: CreatorPayoutAccountMaxOrderByAggregateInput
+    _min?: CreatorPayoutAccountMinOrderByAggregateInput
+  }
+
+  export type CreatorPayoutAccountScalarWhereWithAggregatesInput = {
+    AND?: CreatorPayoutAccountScalarWhereWithAggregatesInput | CreatorPayoutAccountScalarWhereWithAggregatesInput[]
+    OR?: CreatorPayoutAccountScalarWhereWithAggregatesInput[]
+    NOT?: CreatorPayoutAccountScalarWhereWithAggregatesInput | CreatorPayoutAccountScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CreatorPayoutAccount"> | string
+    creatorId?: StringWithAggregatesFilter<"CreatorPayoutAccount"> | string
+    bankName?: StringWithAggregatesFilter<"CreatorPayoutAccount"> | string
+    accountNumber?: StringWithAggregatesFilter<"CreatorPayoutAccount"> | string
+    accountName?: StringWithAggregatesFilter<"CreatorPayoutAccount"> | string
+    accountType?: StringWithAggregatesFilter<"CreatorPayoutAccount"> | string
+    isPrimary?: BoolWithAggregatesFilter<"CreatorPayoutAccount"> | boolean
+    verified?: BoolWithAggregatesFilter<"CreatorPayoutAccount"> | boolean
+    verifiedAt?: DateTimeNullableWithAggregatesFilter<"CreatorPayoutAccount"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CreatorPayoutAccount"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CreatorPayoutAccount"> | Date | string
+  }
+
+  export type CreatorPayoutRequestWhereInput = {
+    AND?: CreatorPayoutRequestWhereInput | CreatorPayoutRequestWhereInput[]
+    OR?: CreatorPayoutRequestWhereInput[]
+    NOT?: CreatorPayoutRequestWhereInput | CreatorPayoutRequestWhereInput[]
+    id?: StringFilter<"CreatorPayoutRequest"> | string
+    creatorId?: StringFilter<"CreatorPayoutRequest"> | string
+    payoutAccountId?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    amount?: IntFilter<"CreatorPayoutRequest"> | number
+    currency?: StringFilter<"CreatorPayoutRequest"> | string
+    status?: StringFilter<"CreatorPayoutRequest"> | string
+    note?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    transactionId?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    requestedAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
+    processedAt?: DateTimeNullableFilter<"CreatorPayoutRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
+    creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
+    payoutAccount?: XOR<CreatorPayoutAccountNullableScalarRelationFilter, CreatorPayoutAccountWhereInput> | null
+  }
+
+  export type CreatorPayoutRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    payoutAccountId?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    note?: SortOrderInput | SortOrder
+    transactionId?: SortOrderInput | SortOrder
+    requestedAt?: SortOrder
+    processedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    creator?: CreatorOrderByWithRelationInput
+    payoutAccount?: CreatorPayoutAccountOrderByWithRelationInput
+  }
+
+  export type CreatorPayoutRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CreatorPayoutRequestWhereInput | CreatorPayoutRequestWhereInput[]
+    OR?: CreatorPayoutRequestWhereInput[]
+    NOT?: CreatorPayoutRequestWhereInput | CreatorPayoutRequestWhereInput[]
+    creatorId?: StringFilter<"CreatorPayoutRequest"> | string
+    payoutAccountId?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    amount?: IntFilter<"CreatorPayoutRequest"> | number
+    currency?: StringFilter<"CreatorPayoutRequest"> | string
+    status?: StringFilter<"CreatorPayoutRequest"> | string
+    note?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    transactionId?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    requestedAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
+    processedAt?: DateTimeNullableFilter<"CreatorPayoutRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
+    creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
+    payoutAccount?: XOR<CreatorPayoutAccountNullableScalarRelationFilter, CreatorPayoutAccountWhereInput> | null
+  }, "id">
+
+  export type CreatorPayoutRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    payoutAccountId?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    note?: SortOrderInput | SortOrder
+    transactionId?: SortOrderInput | SortOrder
+    requestedAt?: SortOrder
+    processedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CreatorPayoutRequestCountOrderByAggregateInput
+    _avg?: CreatorPayoutRequestAvgOrderByAggregateInput
+    _max?: CreatorPayoutRequestMaxOrderByAggregateInput
+    _min?: CreatorPayoutRequestMinOrderByAggregateInput
+    _sum?: CreatorPayoutRequestSumOrderByAggregateInput
+  }
+
+  export type CreatorPayoutRequestScalarWhereWithAggregatesInput = {
+    AND?: CreatorPayoutRequestScalarWhereWithAggregatesInput | CreatorPayoutRequestScalarWhereWithAggregatesInput[]
+    OR?: CreatorPayoutRequestScalarWhereWithAggregatesInput[]
+    NOT?: CreatorPayoutRequestScalarWhereWithAggregatesInput | CreatorPayoutRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CreatorPayoutRequest"> | string
+    creatorId?: StringWithAggregatesFilter<"CreatorPayoutRequest"> | string
+    payoutAccountId?: StringNullableWithAggregatesFilter<"CreatorPayoutRequest"> | string | null
+    amount?: IntWithAggregatesFilter<"CreatorPayoutRequest"> | number
+    currency?: StringWithAggregatesFilter<"CreatorPayoutRequest"> | string
+    status?: StringWithAggregatesFilter<"CreatorPayoutRequest"> | string
+    note?: StringNullableWithAggregatesFilter<"CreatorPayoutRequest"> | string | null
+    transactionId?: StringNullableWithAggregatesFilter<"CreatorPayoutRequest"> | string | null
+    requestedAt?: DateTimeWithAggregatesFilter<"CreatorPayoutRequest"> | Date | string
+    processedAt?: DateTimeNullableWithAggregatesFilter<"CreatorPayoutRequest"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CreatorPayoutRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CreatorPayoutRequest"> | Date | string
   }
 
   export type CreatorVideoFolderWhereInput = {
@@ -31188,6 +38605,8 @@ export namespace Prisma {
     rent24Price?: IntNullableFilter<"CreatorVideo"> | number | null
     rent48Price?: IntNullableFilter<"CreatorVideo"> | number | null
     purchasePrice?: IntNullableFilter<"CreatorVideo"> | number | null
+    revenue?: IntFilter<"CreatorVideo"> | number
+    platformFee?: IntFilter<"CreatorVideo"> | number
     tags?: StringNullableListFilter<"CreatorVideo">
     packageName?: StringNullableFilter<"CreatorVideo"> | string | null
     episodeIndex?: IntNullableFilter<"CreatorVideo"> | number | null
@@ -31197,7 +38616,6 @@ export namespace Prisma {
     viewsCount?: IntFilter<"CreatorVideo"> | number
     likesCount?: IntFilter<"CreatorVideo"> | number
     commentsCount?: IntFilter<"CreatorVideo"> | number
-    revenue?: IntFilter<"CreatorVideo"> | number
     createdAt?: DateTimeFilter<"CreatorVideo"> | Date | string
     updatedAt?: DateTimeFilter<"CreatorVideo"> | Date | string
     creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
@@ -31228,6 +38646,8 @@ export namespace Prisma {
     rent24Price?: SortOrderInput | SortOrder
     rent48Price?: SortOrderInput | SortOrder
     purchasePrice?: SortOrderInput | SortOrder
+    revenue?: SortOrder
+    platformFee?: SortOrder
     tags?: SortOrder
     packageName?: SortOrderInput | SortOrder
     episodeIndex?: SortOrderInput | SortOrder
@@ -31237,7 +38657,6 @@ export namespace Prisma {
     viewsCount?: SortOrder
     likesCount?: SortOrder
     commentsCount?: SortOrder
-    revenue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     creator?: CreatorOrderByWithRelationInput
@@ -31271,6 +38690,8 @@ export namespace Prisma {
     rent24Price?: IntNullableFilter<"CreatorVideo"> | number | null
     rent48Price?: IntNullableFilter<"CreatorVideo"> | number | null
     purchasePrice?: IntNullableFilter<"CreatorVideo"> | number | null
+    revenue?: IntFilter<"CreatorVideo"> | number
+    platformFee?: IntFilter<"CreatorVideo"> | number
     tags?: StringNullableListFilter<"CreatorVideo">
     packageName?: StringNullableFilter<"CreatorVideo"> | string | null
     episodeIndex?: IntNullableFilter<"CreatorVideo"> | number | null
@@ -31280,7 +38701,6 @@ export namespace Prisma {
     viewsCount?: IntFilter<"CreatorVideo"> | number
     likesCount?: IntFilter<"CreatorVideo"> | number
     commentsCount?: IntFilter<"CreatorVideo"> | number
-    revenue?: IntFilter<"CreatorVideo"> | number
     createdAt?: DateTimeFilter<"CreatorVideo"> | Date | string
     updatedAt?: DateTimeFilter<"CreatorVideo"> | Date | string
     creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
@@ -31311,6 +38731,8 @@ export namespace Prisma {
     rent24Price?: SortOrderInput | SortOrder
     rent48Price?: SortOrderInput | SortOrder
     purchasePrice?: SortOrderInput | SortOrder
+    revenue?: SortOrder
+    platformFee?: SortOrder
     tags?: SortOrder
     packageName?: SortOrderInput | SortOrder
     episodeIndex?: SortOrderInput | SortOrder
@@ -31320,7 +38742,6 @@ export namespace Prisma {
     viewsCount?: SortOrder
     likesCount?: SortOrder
     commentsCount?: SortOrder
-    revenue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CreatorVideoCountOrderByAggregateInput
@@ -31353,6 +38774,8 @@ export namespace Prisma {
     rent24Price?: IntNullableWithAggregatesFilter<"CreatorVideo"> | number | null
     rent48Price?: IntNullableWithAggregatesFilter<"CreatorVideo"> | number | null
     purchasePrice?: IntNullableWithAggregatesFilter<"CreatorVideo"> | number | null
+    revenue?: IntWithAggregatesFilter<"CreatorVideo"> | number
+    platformFee?: IntWithAggregatesFilter<"CreatorVideo"> | number
     tags?: StringNullableListFilter<"CreatorVideo">
     packageName?: StringNullableWithAggregatesFilter<"CreatorVideo"> | string | null
     episodeIndex?: IntNullableWithAggregatesFilter<"CreatorVideo"> | number | null
@@ -31362,7 +38785,6 @@ export namespace Prisma {
     viewsCount?: IntWithAggregatesFilter<"CreatorVideo"> | number
     likesCount?: IntWithAggregatesFilter<"CreatorVideo"> | number
     commentsCount?: IntWithAggregatesFilter<"CreatorVideo"> | number
-    revenue?: IntWithAggregatesFilter<"CreatorVideo"> | number
     createdAt?: DateTimeWithAggregatesFilter<"CreatorVideo"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CreatorVideo"> | Date | string
   }
@@ -31542,34 +38964,46 @@ export namespace Prisma {
     id?: StringFilter<"CreatorVideoLike"> | string
     creatorVideoId?: StringFilter<"CreatorVideoLike"> | string
     likerProfileId?: StringNullableFilter<"CreatorVideoLike"> | string | null
+    status?: StringFilter<"CreatorVideoLike"> | string
     createdAt?: DateTimeFilter<"CreatorVideoLike"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorVideoLike"> | Date | string
     creatorVideo?: XOR<CreatorVideoScalarRelationFilter, CreatorVideoWhereInput>
+    likerProfile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
   }
 
   export type CreatorVideoLikeOrderByWithRelationInput = {
     id?: SortOrder
     creatorVideoId?: SortOrder
     likerProfileId?: SortOrderInput | SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     creatorVideo?: CreatorVideoOrderByWithRelationInput
+    likerProfile?: ProfileOrderByWithRelationInput
   }
 
   export type CreatorVideoLikeWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    creatorVideoId_likerProfileId?: CreatorVideoLikeCreatorVideoIdLikerProfileIdCompoundUniqueInput
     AND?: CreatorVideoLikeWhereInput | CreatorVideoLikeWhereInput[]
     OR?: CreatorVideoLikeWhereInput[]
     NOT?: CreatorVideoLikeWhereInput | CreatorVideoLikeWhereInput[]
     creatorVideoId?: StringFilter<"CreatorVideoLike"> | string
     likerProfileId?: StringNullableFilter<"CreatorVideoLike"> | string | null
+    status?: StringFilter<"CreatorVideoLike"> | string
     createdAt?: DateTimeFilter<"CreatorVideoLike"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorVideoLike"> | Date | string
     creatorVideo?: XOR<CreatorVideoScalarRelationFilter, CreatorVideoWhereInput>
-  }, "id">
+    likerProfile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
+  }, "id" | "creatorVideoId_likerProfileId">
 
   export type CreatorVideoLikeOrderByWithAggregationInput = {
     id?: SortOrder
     creatorVideoId?: SortOrder
     likerProfileId?: SortOrderInput | SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: CreatorVideoLikeCountOrderByAggregateInput
     _max?: CreatorVideoLikeMaxOrderByAggregateInput
     _min?: CreatorVideoLikeMinOrderByAggregateInput
@@ -31582,7 +39016,73 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"CreatorVideoLike"> | string
     creatorVideoId?: StringWithAggregatesFilter<"CreatorVideoLike"> | string
     likerProfileId?: StringNullableWithAggregatesFilter<"CreatorVideoLike"> | string | null
+    status?: StringWithAggregatesFilter<"CreatorVideoLike"> | string
     createdAt?: DateTimeWithAggregatesFilter<"CreatorVideoLike"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CreatorVideoLike"> | Date | string
+  }
+
+  export type CreatorEventLikeWhereInput = {
+    AND?: CreatorEventLikeWhereInput | CreatorEventLikeWhereInput[]
+    OR?: CreatorEventLikeWhereInput[]
+    NOT?: CreatorEventLikeWhereInput | CreatorEventLikeWhereInput[]
+    id?: StringFilter<"CreatorEventLike"> | string
+    creatorEventId?: StringFilter<"CreatorEventLike"> | string
+    likerProfileId?: StringNullableFilter<"CreatorEventLike"> | string | null
+    status?: StringFilter<"CreatorEventLike"> | string
+    createdAt?: DateTimeFilter<"CreatorEventLike"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorEventLike"> | Date | string
+    creatorEvent?: XOR<CreatorEventScalarRelationFilter, CreatorEventWhereInput>
+    likerProfile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
+  }
+
+  export type CreatorEventLikeOrderByWithRelationInput = {
+    id?: SortOrder
+    creatorEventId?: SortOrder
+    likerProfileId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    creatorEvent?: CreatorEventOrderByWithRelationInput
+    likerProfile?: ProfileOrderByWithRelationInput
+  }
+
+  export type CreatorEventLikeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    creatorEventId_likerProfileId?: CreatorEventLikeCreatorEventIdLikerProfileIdCompoundUniqueInput
+    AND?: CreatorEventLikeWhereInput | CreatorEventLikeWhereInput[]
+    OR?: CreatorEventLikeWhereInput[]
+    NOT?: CreatorEventLikeWhereInput | CreatorEventLikeWhereInput[]
+    creatorEventId?: StringFilter<"CreatorEventLike"> | string
+    likerProfileId?: StringNullableFilter<"CreatorEventLike"> | string | null
+    status?: StringFilter<"CreatorEventLike"> | string
+    createdAt?: DateTimeFilter<"CreatorEventLike"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorEventLike"> | Date | string
+    creatorEvent?: XOR<CreatorEventScalarRelationFilter, CreatorEventWhereInput>
+    likerProfile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
+  }, "id" | "creatorEventId_likerProfileId">
+
+  export type CreatorEventLikeOrderByWithAggregationInput = {
+    id?: SortOrder
+    creatorEventId?: SortOrder
+    likerProfileId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CreatorEventLikeCountOrderByAggregateInput
+    _max?: CreatorEventLikeMaxOrderByAggregateInput
+    _min?: CreatorEventLikeMinOrderByAggregateInput
+  }
+
+  export type CreatorEventLikeScalarWhereWithAggregatesInput = {
+    AND?: CreatorEventLikeScalarWhereWithAggregatesInput | CreatorEventLikeScalarWhereWithAggregatesInput[]
+    OR?: CreatorEventLikeScalarWhereWithAggregatesInput[]
+    NOT?: CreatorEventLikeScalarWhereWithAggregatesInput | CreatorEventLikeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CreatorEventLike"> | string
+    creatorEventId?: StringWithAggregatesFilter<"CreatorEventLike"> | string
+    likerProfileId?: StringNullableWithAggregatesFilter<"CreatorEventLike"> | string | null
+    status?: StringWithAggregatesFilter<"CreatorEventLike"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"CreatorEventLike"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CreatorEventLike"> | Date | string
   }
 
   export type CreatorVideoCommentWhereInput = {
@@ -31697,11 +39197,13 @@ export namespace Prisma {
     currentViewersCount?: IntFilter<"CreatorEvent"> | number
     venueParticipantCount?: IntFilter<"CreatorEvent"> | number
     revenue?: IntFilter<"CreatorEvent"> | number
+    platformFee?: IntFilter<"CreatorEvent"> | number
     createdAt?: DateTimeFilter<"CreatorEvent"> | Date | string
     updatedAt?: DateTimeFilter<"CreatorEvent"> | Date | string
     creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
     restrictedLocations?: CreatorEventLocationRestrictionListRelationFilter
     tickets?: CreatorEventTicketListRelationFilter
+    likes?: CreatorEventLikeListRelationFilter
     checkInUsers?: CreatorEventCheckInUserListRelationFilter
     checkInScans?: CreatorEventCheckInScanListRelationFilter
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionListRelationFilter
@@ -31761,11 +39263,13 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     creator?: CreatorOrderByWithRelationInput
     restrictedLocations?: CreatorEventLocationRestrictionOrderByRelationAggregateInput
     tickets?: CreatorEventTicketOrderByRelationAggregateInput
+    likes?: CreatorEventLikeOrderByRelationAggregateInput
     checkInUsers?: CreatorEventCheckInUserOrderByRelationAggregateInput
     checkInScans?: CreatorEventCheckInScanOrderByRelationAggregateInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionOrderByRelationAggregateInput
@@ -31828,11 +39332,13 @@ export namespace Prisma {
     currentViewersCount?: IntFilter<"CreatorEvent"> | number
     venueParticipantCount?: IntFilter<"CreatorEvent"> | number
     revenue?: IntFilter<"CreatorEvent"> | number
+    platformFee?: IntFilter<"CreatorEvent"> | number
     createdAt?: DateTimeFilter<"CreatorEvent"> | Date | string
     updatedAt?: DateTimeFilter<"CreatorEvent"> | Date | string
     creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
     restrictedLocations?: CreatorEventLocationRestrictionListRelationFilter
     tickets?: CreatorEventTicketListRelationFilter
+    likes?: CreatorEventLikeListRelationFilter
     checkInUsers?: CreatorEventCheckInUserListRelationFilter
     checkInScans?: CreatorEventCheckInScanListRelationFilter
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionListRelationFilter
@@ -31892,6 +39398,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CreatorEventCountOrderByAggregateInput
@@ -31958,6 +39465,7 @@ export namespace Prisma {
     currentViewersCount?: IntWithAggregatesFilter<"CreatorEvent"> | number
     venueParticipantCount?: IntWithAggregatesFilter<"CreatorEvent"> | number
     revenue?: IntWithAggregatesFilter<"CreatorEvent"> | number
+    platformFee?: IntWithAggregatesFilter<"CreatorEvent"> | number
     createdAt?: DateTimeWithAggregatesFilter<"CreatorEvent"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CreatorEvent"> | Date | string
   }
@@ -32056,6 +39564,7 @@ export namespace Prisma {
     quantity?: IntFilter<"CreatorEventTicket"> | number
     soldCount?: IntFilter<"CreatorEventTicket"> | number
     revenue?: IntFilter<"CreatorEventTicket"> | number
+    platformFee?: IntFilter<"CreatorEventTicket"> | number
     description?: StringNullableFilter<"CreatorEventTicket"> | string | null
     benefits?: StringNullableListFilter<"CreatorEventTicket">
     status?: EnumCreatorEventTicketStatusFilter<"CreatorEventTicket"> | $Enums.CreatorEventTicketStatus
@@ -32063,6 +39572,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CreatorEventTicket"> | Date | string
     event?: XOR<CreatorEventScalarRelationFilter, CreatorEventWhereInput>
     purchases?: CreatorEventTicketPurchaseListRelationFilter
+    ticketItems?: CreatorEventTicketItemListRelationFilter
   }
 
   export type CreatorEventTicketOrderByWithRelationInput = {
@@ -32074,6 +39584,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
     description?: SortOrderInput | SortOrder
     benefits?: SortOrder
     status?: SortOrder
@@ -32081,6 +39592,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     event?: CreatorEventOrderByWithRelationInput
     purchases?: CreatorEventTicketPurchaseOrderByRelationAggregateInput
+    ticketItems?: CreatorEventTicketItemOrderByRelationAggregateInput
   }
 
   export type CreatorEventTicketWhereUniqueInput = Prisma.AtLeast<{
@@ -32096,6 +39608,7 @@ export namespace Prisma {
     quantity?: IntFilter<"CreatorEventTicket"> | number
     soldCount?: IntFilter<"CreatorEventTicket"> | number
     revenue?: IntFilter<"CreatorEventTicket"> | number
+    platformFee?: IntFilter<"CreatorEventTicket"> | number
     description?: StringNullableFilter<"CreatorEventTicket"> | string | null
     benefits?: StringNullableListFilter<"CreatorEventTicket">
     status?: EnumCreatorEventTicketStatusFilter<"CreatorEventTicket"> | $Enums.CreatorEventTicketStatus
@@ -32103,6 +39616,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CreatorEventTicket"> | Date | string
     event?: XOR<CreatorEventScalarRelationFilter, CreatorEventWhereInput>
     purchases?: CreatorEventTicketPurchaseListRelationFilter
+    ticketItems?: CreatorEventTicketItemListRelationFilter
   }, "id" | "eventId_ticketType">
 
   export type CreatorEventTicketOrderByWithAggregationInput = {
@@ -32114,6 +39628,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
     description?: SortOrderInput | SortOrder
     benefits?: SortOrder
     status?: SortOrder
@@ -32138,6 +39653,7 @@ export namespace Prisma {
     quantity?: IntWithAggregatesFilter<"CreatorEventTicket"> | number
     soldCount?: IntWithAggregatesFilter<"CreatorEventTicket"> | number
     revenue?: IntWithAggregatesFilter<"CreatorEventTicket"> | number
+    platformFee?: IntWithAggregatesFilter<"CreatorEventTicket"> | number
     description?: StringNullableWithAggregatesFilter<"CreatorEventTicket"> | string | null
     benefits?: StringNullableListFilter<"CreatorEventTicket">
     status?: EnumCreatorEventTicketStatusWithAggregatesFilter<"CreatorEventTicket"> | $Enums.CreatorEventTicketStatus
@@ -32166,6 +39682,7 @@ export namespace Prisma {
     checkedInByUserId?: StringNullableFilter<"CreatorEventTicketPurchase"> | string | null
     ticket?: XOR<CreatorEventTicketScalarRelationFilter, CreatorEventTicketWhereInput>
     checkedInByUser?: XOR<CreatorEventCheckInUserNullableScalarRelationFilter, CreatorEventCheckInUserWhereInput> | null
+    ticketItems?: CreatorEventTicketItemListRelationFilter
     scans?: CreatorEventCheckInScanListRelationFilter
   }
 
@@ -32187,6 +39704,7 @@ export namespace Prisma {
     checkedInByUserId?: SortOrderInput | SortOrder
     ticket?: CreatorEventTicketOrderByWithRelationInput
     checkedInByUser?: CreatorEventCheckInUserOrderByWithRelationInput
+    ticketItems?: CreatorEventTicketItemOrderByRelationAggregateInput
     scans?: CreatorEventCheckInScanOrderByRelationAggregateInput
   }
 
@@ -32211,6 +39729,7 @@ export namespace Prisma {
     checkedInByUserId?: StringNullableFilter<"CreatorEventTicketPurchase"> | string | null
     ticket?: XOR<CreatorEventTicketScalarRelationFilter, CreatorEventTicketWhereInput>
     checkedInByUser?: XOR<CreatorEventCheckInUserNullableScalarRelationFilter, CreatorEventCheckInUserWhereInput> | null
+    ticketItems?: CreatorEventTicketItemListRelationFilter
     scans?: CreatorEventCheckInScanListRelationFilter
   }, "id" | "transactionId" | "ticketCode">
 
@@ -32258,6 +39777,89 @@ export namespace Prisma {
     checkedInByUserId?: StringNullableWithAggregatesFilter<"CreatorEventTicketPurchase"> | string | null
   }
 
+  export type CreatorEventTicketItemWhereInput = {
+    AND?: CreatorEventTicketItemWhereInput | CreatorEventTicketItemWhereInput[]
+    OR?: CreatorEventTicketItemWhereInput[]
+    NOT?: CreatorEventTicketItemWhereInput | CreatorEventTicketItemWhereInput[]
+    id?: StringFilter<"CreatorEventTicketItem"> | string
+    purchaseId?: StringFilter<"CreatorEventTicketItem"> | string
+    ticketId?: StringFilter<"CreatorEventTicketItem"> | string
+    ticketCode?: StringFilter<"CreatorEventTicketItem"> | string
+    quantity?: IntFilter<"CreatorEventTicketItem"> | number
+    checkedInAt?: DateTimeNullableFilter<"CreatorEventTicketItem"> | Date | string | null
+    checkedInByUserId?: StringNullableFilter<"CreatorEventTicketItem"> | string | null
+    createdAt?: DateTimeFilter<"CreatorEventTicketItem"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorEventTicketItem"> | Date | string
+    purchase?: XOR<CreatorEventTicketPurchaseScalarRelationFilter, CreatorEventTicketPurchaseWhereInput>
+    ticket?: XOR<CreatorEventTicketScalarRelationFilter, CreatorEventTicketWhereInput>
+    checkedInByUser?: XOR<CreatorEventCheckInUserNullableScalarRelationFilter, CreatorEventCheckInUserWhereInput> | null
+  }
+
+  export type CreatorEventTicketItemOrderByWithRelationInput = {
+    id?: SortOrder
+    purchaseId?: SortOrder
+    ticketId?: SortOrder
+    ticketCode?: SortOrder
+    quantity?: SortOrder
+    checkedInAt?: SortOrderInput | SortOrder
+    checkedInByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    purchase?: CreatorEventTicketPurchaseOrderByWithRelationInput
+    ticket?: CreatorEventTicketOrderByWithRelationInput
+    checkedInByUser?: CreatorEventCheckInUserOrderByWithRelationInput
+  }
+
+  export type CreatorEventTicketItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    ticketCode?: string
+    AND?: CreatorEventTicketItemWhereInput | CreatorEventTicketItemWhereInput[]
+    OR?: CreatorEventTicketItemWhereInput[]
+    NOT?: CreatorEventTicketItemWhereInput | CreatorEventTicketItemWhereInput[]
+    purchaseId?: StringFilter<"CreatorEventTicketItem"> | string
+    ticketId?: StringFilter<"CreatorEventTicketItem"> | string
+    quantity?: IntFilter<"CreatorEventTicketItem"> | number
+    checkedInAt?: DateTimeNullableFilter<"CreatorEventTicketItem"> | Date | string | null
+    checkedInByUserId?: StringNullableFilter<"CreatorEventTicketItem"> | string | null
+    createdAt?: DateTimeFilter<"CreatorEventTicketItem"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorEventTicketItem"> | Date | string
+    purchase?: XOR<CreatorEventTicketPurchaseScalarRelationFilter, CreatorEventTicketPurchaseWhereInput>
+    ticket?: XOR<CreatorEventTicketScalarRelationFilter, CreatorEventTicketWhereInput>
+    checkedInByUser?: XOR<CreatorEventCheckInUserNullableScalarRelationFilter, CreatorEventCheckInUserWhereInput> | null
+  }, "id" | "ticketCode">
+
+  export type CreatorEventTicketItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    purchaseId?: SortOrder
+    ticketId?: SortOrder
+    ticketCode?: SortOrder
+    quantity?: SortOrder
+    checkedInAt?: SortOrderInput | SortOrder
+    checkedInByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CreatorEventTicketItemCountOrderByAggregateInput
+    _avg?: CreatorEventTicketItemAvgOrderByAggregateInput
+    _max?: CreatorEventTicketItemMaxOrderByAggregateInput
+    _min?: CreatorEventTicketItemMinOrderByAggregateInput
+    _sum?: CreatorEventTicketItemSumOrderByAggregateInput
+  }
+
+  export type CreatorEventTicketItemScalarWhereWithAggregatesInput = {
+    AND?: CreatorEventTicketItemScalarWhereWithAggregatesInput | CreatorEventTicketItemScalarWhereWithAggregatesInput[]
+    OR?: CreatorEventTicketItemScalarWhereWithAggregatesInput[]
+    NOT?: CreatorEventTicketItemScalarWhereWithAggregatesInput | CreatorEventTicketItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CreatorEventTicketItem"> | string
+    purchaseId?: StringWithAggregatesFilter<"CreatorEventTicketItem"> | string
+    ticketId?: StringWithAggregatesFilter<"CreatorEventTicketItem"> | string
+    ticketCode?: StringWithAggregatesFilter<"CreatorEventTicketItem"> | string
+    quantity?: IntWithAggregatesFilter<"CreatorEventTicketItem"> | number
+    checkedInAt?: DateTimeNullableWithAggregatesFilter<"CreatorEventTicketItem"> | Date | string | null
+    checkedInByUserId?: StringNullableWithAggregatesFilter<"CreatorEventTicketItem"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CreatorEventTicketItem"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CreatorEventTicketItem"> | Date | string
+  }
+
   export type CreatorEventCheckInUserWhereInput = {
     AND?: CreatorEventCheckInUserWhereInput | CreatorEventCheckInUserWhereInput[]
     OR?: CreatorEventCheckInUserWhereInput[]
@@ -32282,6 +39884,7 @@ export namespace Prisma {
     creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
     event?: XOR<CreatorEventScalarRelationFilter, CreatorEventWhereInput>
     checkedInPurchases?: CreatorEventTicketPurchaseListRelationFilter
+    checkedInTicketItems?: CreatorEventTicketItemListRelationFilter
     scans?: CreatorEventCheckInScanListRelationFilter
     cameraSessions?: CreatorEventCheckInCameraSessionListRelationFilter
   }
@@ -32307,6 +39910,7 @@ export namespace Prisma {
     creator?: CreatorOrderByWithRelationInput
     event?: CreatorEventOrderByWithRelationInput
     checkedInPurchases?: CreatorEventTicketPurchaseOrderByRelationAggregateInput
+    checkedInTicketItems?: CreatorEventTicketItemOrderByRelationAggregateInput
     scans?: CreatorEventCheckInScanOrderByRelationAggregateInput
     cameraSessions?: CreatorEventCheckInCameraSessionOrderByRelationAggregateInput
   }
@@ -32335,6 +39939,7 @@ export namespace Prisma {
     creator?: XOR<CreatorScalarRelationFilter, CreatorWhereInput>
     event?: XOR<CreatorEventScalarRelationFilter, CreatorEventWhereInput>
     checkedInPurchases?: CreatorEventTicketPurchaseListRelationFilter
+    checkedInTicketItems?: CreatorEventTicketItemListRelationFilter
     scans?: CreatorEventCheckInScanListRelationFilter
     cameraSessions?: CreatorEventCheckInCameraSessionListRelationFilter
   }, "id" | "email" | "username">
@@ -32815,8 +40420,18 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     avatarUrl?: string | null
+    creatorName?: string | null
     bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: string | null
     addressLat?: number | null
     addressLon?: number | null
@@ -32832,6 +40447,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     creator?: CreatorCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
     credential?: AuthCredentialCreateNestedOneWithoutProfileInput
     session?: SessionCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
@@ -32842,8 +40460,18 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     avatarUrl?: string | null
+    creatorName?: string | null
     bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: string | null
     addressLat?: number | null
     addressLon?: number | null
@@ -32859,6 +40487,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     creator?: CreatorUncheckedCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
     credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
     session?: SessionUncheckedCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
@@ -32869,8 +40500,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -32886,6 +40527,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
     credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
     session?: SessionUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
@@ -32896,8 +40540,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -32913,6 +40567,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUncheckedUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
     credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
     session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
@@ -32923,8 +40580,18 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     avatarUrl?: string | null
+    creatorName?: string | null
     bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: string | null
     addressLat?: number | null
     addressLon?: number | null
@@ -32946,8 +40613,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -32969,8 +40646,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -33242,12 +40929,21 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     profile: ProfileCreateNestedOneWithoutCreatorInput
     videos?: CreatorVideoCreateNestedManyWithoutCreatorInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderCreateNestedManyWithoutCreatorInput
     events?: CreatorEventCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorUncheckedCreateInput = {
@@ -33255,23 +40951,41 @@ export namespace Prisma {
     profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     videos?: CreatorVideoUncheckedCreateNestedManyWithoutCreatorInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderUncheckedCreateNestedManyWithoutCreatorInput
     events?: CreatorEventUncheckedCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestUncheckedCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     profile?: ProfileUpdateOneRequiredWithoutCreatorNestedInput
     videos?: CreatorVideoUpdateManyWithoutCreatorNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorUncheckedUpdateInput = {
@@ -33279,11 +40993,20 @@ export namespace Prisma {
     profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     videos?: CreatorVideoUncheckedUpdateManyWithoutCreatorNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUncheckedUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUncheckedUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorCreateManyInput = {
@@ -33291,17 +41014,300 @@ export namespace Prisma {
     profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
   }
 
   export type CreatorUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type CreatorUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     profileId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CreatorFollowCreateInput = {
+    id: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: CreatorCreateNestedOneWithoutFollowsInput
+    followerProfile: ProfileCreateNestedOneWithoutCreatorFollowsInput
+  }
+
+  export type CreatorFollowUncheckedCreateInput = {
+    id: string
+    creatorId: string
+    followerProfileId: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorFollowUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneRequiredWithoutFollowsNestedInput
+    followerProfile?: ProfileUpdateOneRequiredWithoutCreatorFollowsNestedInput
+  }
+
+  export type CreatorFollowUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    followerProfileId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorFollowCreateManyInput = {
+    id: string
+    creatorId: string
+    followerProfileId: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorFollowUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorFollowUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    followerProfileId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorPayoutAccountCreateInput = {
+    id: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    accountType: string
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: CreatorCreateNestedOneWithoutPayoutAccountsInput
+    payoutRequests?: CreatorPayoutRequestCreateNestedManyWithoutPayoutAccountInput
+  }
+
+  export type CreatorPayoutAccountUncheckedCreateInput = {
+    id: string
+    creatorId: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    accountType: string
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payoutRequests?: CreatorPayoutRequestUncheckedCreateNestedManyWithoutPayoutAccountInput
+  }
+
+  export type CreatorPayoutAccountUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    accountType?: StringFieldUpdateOperationsInput | string
+    isPrimary?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneRequiredWithoutPayoutAccountsNestedInput
+    payoutRequests?: CreatorPayoutRequestUpdateManyWithoutPayoutAccountNestedInput
+  }
+
+  export type CreatorPayoutAccountUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    accountType?: StringFieldUpdateOperationsInput | string
+    isPrimary?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payoutRequests?: CreatorPayoutRequestUncheckedUpdateManyWithoutPayoutAccountNestedInput
+  }
+
+  export type CreatorPayoutAccountCreateManyInput = {
+    id: string
+    creatorId: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    accountType: string
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorPayoutAccountUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    accountType?: StringFieldUpdateOperationsInput | string
+    isPrimary?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorPayoutAccountUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    accountType?: StringFieldUpdateOperationsInput | string
+    isPrimary?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorPayoutRequestCreateInput = {
+    id: string
+    amount: number
+    currency?: string
+    status?: string
+    note?: string | null
+    transactionId?: string | null
+    requestedAt?: Date | string
+    processedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: CreatorCreateNestedOneWithoutPayoutRequestsInput
+    payoutAccount?: CreatorPayoutAccountCreateNestedOneWithoutPayoutRequestsInput
+  }
+
+  export type CreatorPayoutRequestUncheckedCreateInput = {
+    id: string
+    creatorId: string
+    payoutAccountId?: string | null
+    amount: number
+    currency?: string
+    status?: string
+    note?: string | null
+    transactionId?: string | null
+    requestedAt?: Date | string
+    processedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorPayoutRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneRequiredWithoutPayoutRequestsNestedInput
+    payoutAccount?: CreatorPayoutAccountUpdateOneWithoutPayoutRequestsNestedInput
+  }
+
+  export type CreatorPayoutRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    payoutAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorPayoutRequestCreateManyInput = {
+    id: string
+    creatorId: string
+    payoutAccountId?: string | null
+    amount: number
+    currency?: string
+    status?: string
+    note?: string | null
+    transactionId?: string | null
+    requestedAt?: Date | string
+    processedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorPayoutRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorPayoutRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    payoutAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33411,6 +41417,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -33420,7 +41428,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutVideosInput
@@ -33451,6 +41458,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -33460,7 +41469,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     views?: CreatorVideoViewUncheckedCreateNestedManyWithoutCreatorVideoInput
@@ -33487,6 +41495,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33496,7 +41506,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutVideosNestedInput
@@ -33527,6 +41536,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33536,7 +41547,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     views?: CreatorVideoViewUncheckedUpdateManyWithoutCreatorVideoNestedInput
@@ -33565,6 +41575,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -33574,7 +41586,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -33597,6 +41608,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33606,7 +41619,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33631,6 +41643,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33640,7 +41654,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33825,50 +41838,124 @@ export namespace Prisma {
 
   export type CreatorVideoLikeCreateInput = {
     id: string
-    likerProfileId?: string | null
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
     creatorVideo: CreatorVideoCreateNestedOneWithoutLikesInput
+    likerProfile?: ProfileCreateNestedOneWithoutVideoLikesInput
   }
 
   export type CreatorVideoLikeUncheckedCreateInput = {
     id: string
     creatorVideoId: string
     likerProfileId?: string | null
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type CreatorVideoLikeUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    likerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creatorVideo?: CreatorVideoUpdateOneRequiredWithoutLikesNestedInput
+    likerProfile?: ProfileUpdateOneWithoutVideoLikesNestedInput
   }
 
   export type CreatorVideoLikeUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     creatorVideoId?: StringFieldUpdateOperationsInput | string
     likerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CreatorVideoLikeCreateManyInput = {
     id: string
     creatorVideoId: string
     likerProfileId?: string | null
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type CreatorVideoLikeUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    likerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CreatorVideoLikeUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     creatorVideoId?: StringFieldUpdateOperationsInput | string
     likerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventLikeCreateInput = {
+    id: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creatorEvent: CreatorEventCreateNestedOneWithoutLikesInput
+    likerProfile?: ProfileCreateNestedOneWithoutEventLikesInput
+  }
+
+  export type CreatorEventLikeUncheckedCreateInput = {
+    id: string
+    creatorEventId: string
+    likerProfileId?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorEventLikeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorEvent?: CreatorEventUpdateOneRequiredWithoutLikesNestedInput
+    likerProfile?: ProfileUpdateOneWithoutEventLikesNestedInput
+  }
+
+  export type CreatorEventLikeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorEventId?: StringFieldUpdateOperationsInput | string
+    likerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventLikeCreateManyInput = {
+    id: string
+    creatorEventId: string
+    likerProfileId?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorEventLikeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventLikeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorEventId?: StringFieldUpdateOperationsInput | string
+    likerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CreatorVideoCommentCreateInput = {
@@ -33979,11 +42066,13 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutEventsInput
     restrictedLocations?: CreatorEventLocationRestrictionCreateNestedManyWithoutEventInput
     tickets?: CreatorEventTicketCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutEventInput
     checkInScans?: CreatorEventCheckInScanCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutEventInput
@@ -34043,10 +42132,12 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedCreateNestedManyWithoutEventInput
     tickets?: CreatorEventTicketUncheckedCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeUncheckedCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutEventInput
     checkInScans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutEventInput
@@ -34105,11 +42196,13 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutEventsNestedInput
     restrictedLocations?: CreatorEventLocationRestrictionUpdateManyWithoutEventNestedInput
     tickets?: CreatorEventTicketUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutEventNestedInput
     checkInScans?: CreatorEventCheckInScanUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutEventNestedInput
@@ -34169,10 +42262,12 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedUpdateManyWithoutEventNestedInput
     tickets?: CreatorEventTicketUncheckedUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUncheckedUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutEventNestedInput
     checkInScans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutEventNestedInput
@@ -34232,6 +42327,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34289,6 +42385,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34347,6 +42444,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34449,6 +42547,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
     status?: $Enums.CreatorEventTicketStatus
@@ -34456,6 +42555,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     event: CreatorEventCreateNestedOneWithoutTicketsInput
     purchases?: CreatorEventTicketPurchaseCreateNestedManyWithoutTicketInput
+    ticketItems?: CreatorEventTicketItemCreateNestedManyWithoutTicketInput
   }
 
   export type CreatorEventTicketUncheckedCreateInput = {
@@ -34467,12 +42567,14 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
     status?: $Enums.CreatorEventTicketStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     purchases?: CreatorEventTicketPurchaseUncheckedCreateNestedManyWithoutTicketInput
+    ticketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutTicketInput
   }
 
   export type CreatorEventTicketUpdateInput = {
@@ -34483,6 +42585,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
     status?: EnumCreatorEventTicketStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketStatus
@@ -34490,6 +42593,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     event?: CreatorEventUpdateOneRequiredWithoutTicketsNestedInput
     purchases?: CreatorEventTicketPurchaseUpdateManyWithoutTicketNestedInput
+    ticketItems?: CreatorEventTicketItemUpdateManyWithoutTicketNestedInput
   }
 
   export type CreatorEventTicketUncheckedUpdateInput = {
@@ -34501,12 +42605,14 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
     status?: EnumCreatorEventTicketStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     purchases?: CreatorEventTicketPurchaseUncheckedUpdateManyWithoutTicketNestedInput
+    ticketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutTicketNestedInput
   }
 
   export type CreatorEventTicketCreateManyInput = {
@@ -34518,6 +42624,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
     status?: $Enums.CreatorEventTicketStatus
@@ -34533,6 +42640,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
     status?: EnumCreatorEventTicketStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketStatus
@@ -34549,6 +42657,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
     status?: EnumCreatorEventTicketStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketStatus
@@ -34572,6 +42681,7 @@ export namespace Prisma {
     checkedInAt?: Date | string | null
     ticket: CreatorEventTicketCreateNestedOneWithoutPurchasesInput
     checkedInByUser?: CreatorEventCheckInUserCreateNestedOneWithoutCheckedInPurchasesInput
+    ticketItems?: CreatorEventTicketItemCreateNestedManyWithoutPurchaseInput
     scans?: CreatorEventCheckInScanCreateNestedManyWithoutTicketPurchaseInput
   }
 
@@ -34591,6 +42701,7 @@ export namespace Prisma {
     refundedAt?: Date | string | null
     checkedInAt?: Date | string | null
     checkedInByUserId?: string | null
+    ticketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutPurchaseInput
     scans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutTicketPurchaseInput
   }
 
@@ -34610,6 +42721,7 @@ export namespace Prisma {
     checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ticket?: CreatorEventTicketUpdateOneRequiredWithoutPurchasesNestedInput
     checkedInByUser?: CreatorEventCheckInUserUpdateOneWithoutCheckedInPurchasesNestedInput
+    ticketItems?: CreatorEventTicketItemUpdateManyWithoutPurchaseNestedInput
     scans?: CreatorEventCheckInScanUpdateManyWithoutTicketPurchaseNestedInput
   }
 
@@ -34629,6 +42741,7 @@ export namespace Prisma {
     refundedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutPurchaseNestedInput
     scans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutTicketPurchaseNestedInput
   }
 
@@ -34684,6 +42797,87 @@ export namespace Prisma {
     checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type CreatorEventTicketItemCreateInput = {
+    id: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    purchase: CreatorEventTicketPurchaseCreateNestedOneWithoutTicketItemsInput
+    ticket: CreatorEventTicketCreateNestedOneWithoutTicketItemsInput
+    checkedInByUser?: CreatorEventCheckInUserCreateNestedOneWithoutCheckedInTicketItemsInput
+  }
+
+  export type CreatorEventTicketItemUncheckedCreateInput = {
+    id: string
+    purchaseId: string
+    ticketId: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    checkedInByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorEventTicketItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchase?: CreatorEventTicketPurchaseUpdateOneRequiredWithoutTicketItemsNestedInput
+    ticket?: CreatorEventTicketUpdateOneRequiredWithoutTicketItemsNestedInput
+    checkedInByUser?: CreatorEventCheckInUserUpdateOneWithoutCheckedInTicketItemsNestedInput
+  }
+
+  export type CreatorEventTicketItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purchaseId?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventTicketItemCreateManyInput = {
+    id: string
+    purchaseId: string
+    ticketId: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    checkedInByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorEventTicketItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventTicketItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purchaseId?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CreatorEventCheckInUserCreateInput = {
     id: string
     fullName: string
@@ -34703,6 +42897,7 @@ export namespace Prisma {
     creator: CreatorCreateNestedOneWithoutCheckInUsersInput
     event: CreatorEventCreateNestedOneWithoutCheckInUsersInput
     checkedInPurchases?: CreatorEventTicketPurchaseCreateNestedManyWithoutCheckedInByUserInput
+    checkedInTicketItems?: CreatorEventTicketItemCreateNestedManyWithoutCheckedInByUserInput
     scans?: CreatorEventCheckInScanCreateNestedManyWithoutCheckInUserInput
     cameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutOperatorUserInput
   }
@@ -34726,6 +42921,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     checkedInPurchases?: CreatorEventTicketPurchaseUncheckedCreateNestedManyWithoutCheckedInByUserInput
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutCheckedInByUserInput
     scans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutCheckInUserInput
     cameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutOperatorUserInput
   }
@@ -34749,6 +42945,7 @@ export namespace Prisma {
     creator?: CreatorUpdateOneRequiredWithoutCheckInUsersNestedInput
     event?: CreatorEventUpdateOneRequiredWithoutCheckInUsersNestedInput
     checkedInPurchases?: CreatorEventTicketPurchaseUpdateManyWithoutCheckedInByUserNestedInput
+    checkedInTicketItems?: CreatorEventTicketItemUpdateManyWithoutCheckedInByUserNestedInput
     scans?: CreatorEventCheckInScanUpdateManyWithoutCheckInUserNestedInput
     cameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutOperatorUserNestedInput
   }
@@ -34772,6 +42969,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     checkedInPurchases?: CreatorEventTicketPurchaseUncheckedUpdateManyWithoutCheckedInByUserNestedInput
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutCheckedInByUserNestedInput
     scans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutCheckInUserNestedInput
     cameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutOperatorUserNestedInput
   }
@@ -35319,6 +43517,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type FloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -35339,11 +43542,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -35373,6 +43571,24 @@ export namespace Prisma {
     isNot?: CreatorWhereInput | null
   }
 
+  export type CreatorFollowListRelationFilter = {
+    every?: CreatorFollowWhereInput
+    some?: CreatorFollowWhereInput
+    none?: CreatorFollowWhereInput
+  }
+
+  export type CreatorEventLikeListRelationFilter = {
+    every?: CreatorEventLikeWhereInput
+    some?: CreatorEventLikeWhereInput
+    none?: CreatorEventLikeWhereInput
+  }
+
+  export type CreatorVideoLikeListRelationFilter = {
+    every?: CreatorVideoLikeWhereInput
+    some?: CreatorVideoLikeWhereInput
+    none?: CreatorVideoLikeWhereInput
+  }
+
   export type AuthCredentialNullableScalarRelationFilter = {
     is?: AuthCredentialWhereInput | null
     isNot?: AuthCredentialWhereInput | null
@@ -35395,6 +43611,18 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
+  export type CreatorFollowOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CreatorEventLikeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CreatorVideoLikeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type SessionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -35408,8 +43636,18 @@ export namespace Prisma {
     email?: SortOrder
     role?: SortOrder
     fullName?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     avatarUrl?: SortOrder
+    creatorName?: SortOrder
     bio?: SortOrder
+    website?: SortOrder
+    location?: SortOrder
+    profileVisibility?: SortOrder
+    showEmail?: SortOrder
+    showLocation?: SortOrder
+    allowMessages?: SortOrder
+    showOnlineStatus?: SortOrder
     addressFull?: SortOrder
     addressLat?: SortOrder
     addressLon?: SortOrder
@@ -35437,8 +43675,18 @@ export namespace Prisma {
     email?: SortOrder
     role?: SortOrder
     fullName?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     avatarUrl?: SortOrder
+    creatorName?: SortOrder
     bio?: SortOrder
+    website?: SortOrder
+    location?: SortOrder
+    profileVisibility?: SortOrder
+    showEmail?: SortOrder
+    showLocation?: SortOrder
+    allowMessages?: SortOrder
+    showOnlineStatus?: SortOrder
     addressFull?: SortOrder
     addressLat?: SortOrder
     addressLon?: SortOrder
@@ -35460,8 +43708,18 @@ export namespace Prisma {
     email?: SortOrder
     role?: SortOrder
     fullName?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     avatarUrl?: SortOrder
+    creatorName?: SortOrder
     bio?: SortOrder
+    website?: SortOrder
+    location?: SortOrder
+    profileVisibility?: SortOrder
+    showEmail?: SortOrder
+    showLocation?: SortOrder
+    allowMessages?: SortOrder
+    showOnlineStatus?: SortOrder
     addressFull?: SortOrder
     addressLat?: SortOrder
     addressLon?: SortOrder
@@ -35530,6 +43788,14 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -35560,14 +43826,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -35742,6 +44000,17 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type CreatorVideoListRelationFilter = {
     every?: CreatorVideoWhereInput
     some?: CreatorVideoWhereInput
@@ -35766,6 +44035,18 @@ export namespace Prisma {
     none?: CreatorEventCheckInUserWhereInput
   }
 
+  export type CreatorPayoutAccountListRelationFilter = {
+    every?: CreatorPayoutAccountWhereInput
+    some?: CreatorPayoutAccountWhereInput
+    none?: CreatorPayoutAccountWhereInput
+  }
+
+  export type CreatorPayoutRequestListRelationFilter = {
+    every?: CreatorPayoutRequestWhereInput
+    some?: CreatorPayoutRequestWhereInput
+    none?: CreatorPayoutRequestWhereInput
+  }
+
   export type CreatorVideoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -35782,11 +44063,33 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type CreatorPayoutAccountOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CreatorPayoutRequestOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type CreatorCountOrderByAggregateInput = {
     id?: SortOrder
     profileId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    status?: SortOrder
+    videoPayoutPercent?: SortOrder
+    eventStreamPayout?: SortOrder
+    eventVenuePayout?: SortOrder
+    followersCount?: SortOrder
+    followingCount?: SortOrder
+  }
+
+  export type CreatorAvgOrderByAggregateInput = {
+    videoPayoutPercent?: SortOrder
+    eventStreamPayout?: SortOrder
+    eventVenuePayout?: SortOrder
+    followersCount?: SortOrder
+    followingCount?: SortOrder
   }
 
   export type CreatorMaxOrderByAggregateInput = {
@@ -35794,6 +44097,12 @@ export namespace Prisma {
     profileId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    status?: SortOrder
+    videoPayoutPercent?: SortOrder
+    eventStreamPayout?: SortOrder
+    eventVenuePayout?: SortOrder
+    followersCount?: SortOrder
+    followingCount?: SortOrder
   }
 
   export type CreatorMinOrderByAggregateInput = {
@@ -35801,11 +44110,173 @@ export namespace Prisma {
     profileId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    status?: SortOrder
+    videoPayoutPercent?: SortOrder
+    eventStreamPayout?: SortOrder
+    eventVenuePayout?: SortOrder
+    followersCount?: SortOrder
+    followingCount?: SortOrder
+  }
+
+  export type CreatorSumOrderByAggregateInput = {
+    videoPayoutPercent?: SortOrder
+    eventStreamPayout?: SortOrder
+    eventVenuePayout?: SortOrder
+    followersCount?: SortOrder
+    followingCount?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type CreatorScalarRelationFilter = {
     is?: CreatorWhereInput
     isNot?: CreatorWhereInput
+  }
+
+  export type CreatorFollowFollowerProfileIdCreatorIdCompoundUniqueInput = {
+    followerProfileId: string
+    creatorId: string
+  }
+
+  export type CreatorFollowCountOrderByAggregateInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    followerProfileId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorFollowMaxOrderByAggregateInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    followerProfileId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorFollowMinOrderByAggregateInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    followerProfileId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorPayoutAccountCountOrderByAggregateInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    accountType?: SortOrder
+    isPrimary?: SortOrder
+    verified?: SortOrder
+    verifiedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorPayoutAccountMaxOrderByAggregateInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    accountType?: SortOrder
+    isPrimary?: SortOrder
+    verified?: SortOrder
+    verifiedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorPayoutAccountMinOrderByAggregateInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    accountType?: SortOrder
+    isPrimary?: SortOrder
+    verified?: SortOrder
+    verifiedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorPayoutAccountNullableScalarRelationFilter = {
+    is?: CreatorPayoutAccountWhereInput | null
+    isNot?: CreatorPayoutAccountWhereInput | null
+  }
+
+  export type CreatorPayoutRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    payoutAccountId?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    note?: SortOrder
+    transactionId?: SortOrder
+    requestedAt?: SortOrder
+    processedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorPayoutRequestAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type CreatorPayoutRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    payoutAccountId?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    note?: SortOrder
+    transactionId?: SortOrder
+    requestedAt?: SortOrder
+    processedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorPayoutRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    creatorId?: SortOrder
+    payoutAccountId?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    note?: SortOrder
+    transactionId?: SortOrder
+    requestedAt?: SortOrder
+    processedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorPayoutRequestSumOrderByAggregateInput = {
+    amount?: SortOrder
   }
 
   export type CreatorVideoFolderCountOrderByAggregateInput = {
@@ -35852,17 +44323,6 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type CreatorVideoFolderScalarRelationFilter = {
     is?: CreatorVideoFolderWhereInput
     isNot?: CreatorVideoFolderWhereInput
@@ -35874,12 +44334,6 @@ export namespace Prisma {
     none?: CreatorVideoViewWhereInput
   }
 
-  export type CreatorVideoLikeListRelationFilter = {
-    every?: CreatorVideoLikeWhereInput
-    some?: CreatorVideoLikeWhereInput
-    none?: CreatorVideoLikeWhereInput
-  }
-
   export type CreatorVideoCommentListRelationFilter = {
     every?: CreatorVideoCommentWhereInput
     some?: CreatorVideoCommentWhereInput
@@ -35887,10 +44341,6 @@ export namespace Prisma {
   }
 
   export type CreatorVideoViewOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type CreatorVideoLikeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -35918,6 +44368,8 @@ export namespace Prisma {
     rent24Price?: SortOrder
     rent48Price?: SortOrder
     purchasePrice?: SortOrder
+    revenue?: SortOrder
+    platformFee?: SortOrder
     tags?: SortOrder
     packageName?: SortOrder
     episodeIndex?: SortOrder
@@ -35927,7 +44379,6 @@ export namespace Prisma {
     viewsCount?: SortOrder
     likesCount?: SortOrder
     commentsCount?: SortOrder
-    revenue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -35936,11 +44387,12 @@ export namespace Prisma {
     rent24Price?: SortOrder
     rent48Price?: SortOrder
     purchasePrice?: SortOrder
+    revenue?: SortOrder
+    platformFee?: SortOrder
     episodeIndex?: SortOrder
     viewsCount?: SortOrder
     likesCount?: SortOrder
     commentsCount?: SortOrder
-    revenue?: SortOrder
   }
 
   export type CreatorVideoMaxOrderByAggregateInput = {
@@ -35963,6 +44415,8 @@ export namespace Prisma {
     rent24Price?: SortOrder
     rent48Price?: SortOrder
     purchasePrice?: SortOrder
+    revenue?: SortOrder
+    platformFee?: SortOrder
     packageName?: SortOrder
     episodeIndex?: SortOrder
     duration?: SortOrder
@@ -35971,7 +44425,6 @@ export namespace Prisma {
     viewsCount?: SortOrder
     likesCount?: SortOrder
     commentsCount?: SortOrder
-    revenue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -35996,6 +44449,8 @@ export namespace Prisma {
     rent24Price?: SortOrder
     rent48Price?: SortOrder
     purchasePrice?: SortOrder
+    revenue?: SortOrder
+    platformFee?: SortOrder
     packageName?: SortOrder
     episodeIndex?: SortOrder
     duration?: SortOrder
@@ -36004,7 +44459,6 @@ export namespace Prisma {
     viewsCount?: SortOrder
     likesCount?: SortOrder
     commentsCount?: SortOrder
-    revenue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36013,27 +44467,12 @@ export namespace Prisma {
     rent24Price?: SortOrder
     rent48Price?: SortOrder
     purchasePrice?: SortOrder
+    revenue?: SortOrder
+    platformFee?: SortOrder
     episodeIndex?: SortOrder
     viewsCount?: SortOrder
     likesCount?: SortOrder
     commentsCount?: SortOrder
-    revenue?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type CreatorVideoScalarRelationFilter = {
@@ -36132,25 +44571,73 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type CreatorVideoLikeCreatorVideoIdLikerProfileIdCompoundUniqueInput = {
+    creatorVideoId: string
+    likerProfileId: string
+  }
+
   export type CreatorVideoLikeCountOrderByAggregateInput = {
     id?: SortOrder
     creatorVideoId?: SortOrder
     likerProfileId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type CreatorVideoLikeMaxOrderByAggregateInput = {
     id?: SortOrder
     creatorVideoId?: SortOrder
     likerProfileId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type CreatorVideoLikeMinOrderByAggregateInput = {
     id?: SortOrder
     creatorVideoId?: SortOrder
     likerProfileId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorEventScalarRelationFilter = {
+    is?: CreatorEventWhereInput
+    isNot?: CreatorEventWhereInput
+  }
+
+  export type CreatorEventLikeCreatorEventIdLikerProfileIdCompoundUniqueInput = {
+    creatorEventId: string
+    likerProfileId: string
+  }
+
+  export type CreatorEventLikeCountOrderByAggregateInput = {
+    id?: SortOrder
+    creatorEventId?: SortOrder
+    likerProfileId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorEventLikeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    creatorEventId?: SortOrder
+    likerProfileId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorEventLikeMinOrderByAggregateInput = {
+    id?: SortOrder
+    creatorEventId?: SortOrder
+    likerProfileId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type CreatorVideoCommentCountOrderByAggregateInput = {
@@ -36299,6 +44786,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36316,6 +44804,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
   }
 
   export type CreatorEventMaxOrderByAggregateInput = {
@@ -36371,6 +44860,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36428,6 +44918,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36445,6 +44936,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
   }
 
   export type EnumCreatorEventStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -36492,11 +44984,6 @@ export namespace Prisma {
     in?: $Enums.CreatorEventLocationType[] | ListEnumCreatorEventLocationTypeFieldRefInput<$PrismaModel>
     notIn?: $Enums.CreatorEventLocationType[] | ListEnumCreatorEventLocationTypeFieldRefInput<$PrismaModel>
     not?: NestedEnumCreatorEventLocationTypeFilter<$PrismaModel> | $Enums.CreatorEventLocationType
-  }
-
-  export type CreatorEventScalarRelationFilter = {
-    is?: CreatorEventWhereInput
-    isNot?: CreatorEventWhereInput
   }
 
   export type CreatorEventLocationRestrictionCountOrderByAggregateInput = {
@@ -36578,7 +45065,17 @@ export namespace Prisma {
     none?: CreatorEventTicketPurchaseWhereInput
   }
 
+  export type CreatorEventTicketItemListRelationFilter = {
+    every?: CreatorEventTicketItemWhereInput
+    some?: CreatorEventTicketItemWhereInput
+    none?: CreatorEventTicketItemWhereInput
+  }
+
   export type CreatorEventTicketPurchaseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CreatorEventTicketItemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -36596,6 +45093,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
     description?: SortOrder
     benefits?: SortOrder
     status?: SortOrder
@@ -36608,6 +45106,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
   }
 
   export type CreatorEventTicketMaxOrderByAggregateInput = {
@@ -36619,6 +45118,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
     description?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -36634,6 +45134,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
     description?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -36645,6 +45146,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    platformFee?: SortOrder
   }
 
   export type EnumCreatorEventTicketAccessTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -36756,6 +45258,55 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCreatorEventTicketPurchaseStatusFilter<$PrismaModel>
     _max?: NestedEnumCreatorEventTicketPurchaseStatusFilter<$PrismaModel>
+  }
+
+  export type CreatorEventTicketPurchaseScalarRelationFilter = {
+    is?: CreatorEventTicketPurchaseWhereInput
+    isNot?: CreatorEventTicketPurchaseWhereInput
+  }
+
+  export type CreatorEventTicketItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    purchaseId?: SortOrder
+    ticketId?: SortOrder
+    ticketCode?: SortOrder
+    quantity?: SortOrder
+    checkedInAt?: SortOrder
+    checkedInByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorEventTicketItemAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type CreatorEventTicketItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    purchaseId?: SortOrder
+    ticketId?: SortOrder
+    ticketCode?: SortOrder
+    quantity?: SortOrder
+    checkedInAt?: SortOrder
+    checkedInByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorEventTicketItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    purchaseId?: SortOrder
+    ticketId?: SortOrder
+    ticketCode?: SortOrder
+    quantity?: SortOrder
+    checkedInAt?: SortOrder
+    checkedInByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CreatorEventTicketItemSumOrderByAggregateInput = {
+    quantity?: SortOrder
   }
 
   export type EnumCreatorEventCheckInUserStatusFilter<$PrismaModel = never> = {
@@ -37105,6 +45656,27 @@ export namespace Prisma {
     connect?: CreatorWhereUniqueInput
   }
 
+  export type CreatorFollowCreateNestedManyWithoutFollowerProfileInput = {
+    create?: XOR<CreatorFollowCreateWithoutFollowerProfileInput, CreatorFollowUncheckedCreateWithoutFollowerProfileInput> | CreatorFollowCreateWithoutFollowerProfileInput[] | CreatorFollowUncheckedCreateWithoutFollowerProfileInput[]
+    connectOrCreate?: CreatorFollowCreateOrConnectWithoutFollowerProfileInput | CreatorFollowCreateOrConnectWithoutFollowerProfileInput[]
+    createMany?: CreatorFollowCreateManyFollowerProfileInputEnvelope
+    connect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+  }
+
+  export type CreatorEventLikeCreateNestedManyWithoutLikerProfileInput = {
+    create?: XOR<CreatorEventLikeCreateWithoutLikerProfileInput, CreatorEventLikeUncheckedCreateWithoutLikerProfileInput> | CreatorEventLikeCreateWithoutLikerProfileInput[] | CreatorEventLikeUncheckedCreateWithoutLikerProfileInput[]
+    connectOrCreate?: CreatorEventLikeCreateOrConnectWithoutLikerProfileInput | CreatorEventLikeCreateOrConnectWithoutLikerProfileInput[]
+    createMany?: CreatorEventLikeCreateManyLikerProfileInputEnvelope
+    connect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+  }
+
+  export type CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput = {
+    create?: XOR<CreatorVideoLikeCreateWithoutLikerProfileInput, CreatorVideoLikeUncheckedCreateWithoutLikerProfileInput> | CreatorVideoLikeCreateWithoutLikerProfileInput[] | CreatorVideoLikeUncheckedCreateWithoutLikerProfileInput[]
+    connectOrCreate?: CreatorVideoLikeCreateOrConnectWithoutLikerProfileInput | CreatorVideoLikeCreateOrConnectWithoutLikerProfileInput[]
+    createMany?: CreatorVideoLikeCreateManyLikerProfileInputEnvelope
+    connect?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
+  }
+
   export type AuthCredentialCreateNestedOneWithoutProfileInput = {
     create?: XOR<AuthCredentialCreateWithoutProfileInput, AuthCredentialUncheckedCreateWithoutProfileInput>
     connectOrCreate?: AuthCredentialCreateOrConnectWithoutProfileInput
@@ -37129,6 +45701,27 @@ export namespace Prisma {
     create?: XOR<CreatorCreateWithoutProfileInput, CreatorUncheckedCreateWithoutProfileInput>
     connectOrCreate?: CreatorCreateOrConnectWithoutProfileInput
     connect?: CreatorWhereUniqueInput
+  }
+
+  export type CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput = {
+    create?: XOR<CreatorFollowCreateWithoutFollowerProfileInput, CreatorFollowUncheckedCreateWithoutFollowerProfileInput> | CreatorFollowCreateWithoutFollowerProfileInput[] | CreatorFollowUncheckedCreateWithoutFollowerProfileInput[]
+    connectOrCreate?: CreatorFollowCreateOrConnectWithoutFollowerProfileInput | CreatorFollowCreateOrConnectWithoutFollowerProfileInput[]
+    createMany?: CreatorFollowCreateManyFollowerProfileInputEnvelope
+    connect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+  }
+
+  export type CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput = {
+    create?: XOR<CreatorEventLikeCreateWithoutLikerProfileInput, CreatorEventLikeUncheckedCreateWithoutLikerProfileInput> | CreatorEventLikeCreateWithoutLikerProfileInput[] | CreatorEventLikeUncheckedCreateWithoutLikerProfileInput[]
+    connectOrCreate?: CreatorEventLikeCreateOrConnectWithoutLikerProfileInput | CreatorEventLikeCreateOrConnectWithoutLikerProfileInput[]
+    createMany?: CreatorEventLikeCreateManyLikerProfileInputEnvelope
+    connect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+  }
+
+  export type CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput = {
+    create?: XOR<CreatorVideoLikeCreateWithoutLikerProfileInput, CreatorVideoLikeUncheckedCreateWithoutLikerProfileInput> | CreatorVideoLikeCreateWithoutLikerProfileInput[] | CreatorVideoLikeUncheckedCreateWithoutLikerProfileInput[]
+    connectOrCreate?: CreatorVideoLikeCreateOrConnectWithoutLikerProfileInput | CreatorVideoLikeCreateOrConnectWithoutLikerProfileInput[]
+    createMany?: CreatorVideoLikeCreateManyLikerProfileInputEnvelope
+    connect?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
   }
 
   export type AuthCredentialUncheckedCreateNestedOneWithoutProfileInput = {
@@ -37163,6 +45756,10 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type NullableFloatFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -37177,10 +45774,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -37199,6 +45792,48 @@ export namespace Prisma {
     delete?: CreatorWhereInput | boolean
     connect?: CreatorWhereUniqueInput
     update?: XOR<XOR<CreatorUpdateToOneWithWhereWithoutProfileInput, CreatorUpdateWithoutProfileInput>, CreatorUncheckedUpdateWithoutProfileInput>
+  }
+
+  export type CreatorFollowUpdateManyWithoutFollowerProfileNestedInput = {
+    create?: XOR<CreatorFollowCreateWithoutFollowerProfileInput, CreatorFollowUncheckedCreateWithoutFollowerProfileInput> | CreatorFollowCreateWithoutFollowerProfileInput[] | CreatorFollowUncheckedCreateWithoutFollowerProfileInput[]
+    connectOrCreate?: CreatorFollowCreateOrConnectWithoutFollowerProfileInput | CreatorFollowCreateOrConnectWithoutFollowerProfileInput[]
+    upsert?: CreatorFollowUpsertWithWhereUniqueWithoutFollowerProfileInput | CreatorFollowUpsertWithWhereUniqueWithoutFollowerProfileInput[]
+    createMany?: CreatorFollowCreateManyFollowerProfileInputEnvelope
+    set?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    disconnect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    delete?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    connect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    update?: CreatorFollowUpdateWithWhereUniqueWithoutFollowerProfileInput | CreatorFollowUpdateWithWhereUniqueWithoutFollowerProfileInput[]
+    updateMany?: CreatorFollowUpdateManyWithWhereWithoutFollowerProfileInput | CreatorFollowUpdateManyWithWhereWithoutFollowerProfileInput[]
+    deleteMany?: CreatorFollowScalarWhereInput | CreatorFollowScalarWhereInput[]
+  }
+
+  export type CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput = {
+    create?: XOR<CreatorEventLikeCreateWithoutLikerProfileInput, CreatorEventLikeUncheckedCreateWithoutLikerProfileInput> | CreatorEventLikeCreateWithoutLikerProfileInput[] | CreatorEventLikeUncheckedCreateWithoutLikerProfileInput[]
+    connectOrCreate?: CreatorEventLikeCreateOrConnectWithoutLikerProfileInput | CreatorEventLikeCreateOrConnectWithoutLikerProfileInput[]
+    upsert?: CreatorEventLikeUpsertWithWhereUniqueWithoutLikerProfileInput | CreatorEventLikeUpsertWithWhereUniqueWithoutLikerProfileInput[]
+    createMany?: CreatorEventLikeCreateManyLikerProfileInputEnvelope
+    set?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    disconnect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    delete?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    connect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    update?: CreatorEventLikeUpdateWithWhereUniqueWithoutLikerProfileInput | CreatorEventLikeUpdateWithWhereUniqueWithoutLikerProfileInput[]
+    updateMany?: CreatorEventLikeUpdateManyWithWhereWithoutLikerProfileInput | CreatorEventLikeUpdateManyWithWhereWithoutLikerProfileInput[]
+    deleteMany?: CreatorEventLikeScalarWhereInput | CreatorEventLikeScalarWhereInput[]
+  }
+
+  export type CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput = {
+    create?: XOR<CreatorVideoLikeCreateWithoutLikerProfileInput, CreatorVideoLikeUncheckedCreateWithoutLikerProfileInput> | CreatorVideoLikeCreateWithoutLikerProfileInput[] | CreatorVideoLikeUncheckedCreateWithoutLikerProfileInput[]
+    connectOrCreate?: CreatorVideoLikeCreateOrConnectWithoutLikerProfileInput | CreatorVideoLikeCreateOrConnectWithoutLikerProfileInput[]
+    upsert?: CreatorVideoLikeUpsertWithWhereUniqueWithoutLikerProfileInput | CreatorVideoLikeUpsertWithWhereUniqueWithoutLikerProfileInput[]
+    createMany?: CreatorVideoLikeCreateManyLikerProfileInputEnvelope
+    set?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
+    disconnect?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
+    delete?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
+    connect?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
+    update?: CreatorVideoLikeUpdateWithWhereUniqueWithoutLikerProfileInput | CreatorVideoLikeUpdateWithWhereUniqueWithoutLikerProfileInput[]
+    updateMany?: CreatorVideoLikeUpdateManyWithWhereWithoutLikerProfileInput | CreatorVideoLikeUpdateManyWithWhereWithoutLikerProfileInput[]
+    deleteMany?: CreatorVideoLikeScalarWhereInput | CreatorVideoLikeScalarWhereInput[]
   }
 
   export type AuthCredentialUpdateOneWithoutProfileNestedInput = {
@@ -37247,6 +45882,48 @@ export namespace Prisma {
     delete?: CreatorWhereInput | boolean
     connect?: CreatorWhereUniqueInput
     update?: XOR<XOR<CreatorUpdateToOneWithWhereWithoutProfileInput, CreatorUpdateWithoutProfileInput>, CreatorUncheckedUpdateWithoutProfileInput>
+  }
+
+  export type CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput = {
+    create?: XOR<CreatorFollowCreateWithoutFollowerProfileInput, CreatorFollowUncheckedCreateWithoutFollowerProfileInput> | CreatorFollowCreateWithoutFollowerProfileInput[] | CreatorFollowUncheckedCreateWithoutFollowerProfileInput[]
+    connectOrCreate?: CreatorFollowCreateOrConnectWithoutFollowerProfileInput | CreatorFollowCreateOrConnectWithoutFollowerProfileInput[]
+    upsert?: CreatorFollowUpsertWithWhereUniqueWithoutFollowerProfileInput | CreatorFollowUpsertWithWhereUniqueWithoutFollowerProfileInput[]
+    createMany?: CreatorFollowCreateManyFollowerProfileInputEnvelope
+    set?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    disconnect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    delete?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    connect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    update?: CreatorFollowUpdateWithWhereUniqueWithoutFollowerProfileInput | CreatorFollowUpdateWithWhereUniqueWithoutFollowerProfileInput[]
+    updateMany?: CreatorFollowUpdateManyWithWhereWithoutFollowerProfileInput | CreatorFollowUpdateManyWithWhereWithoutFollowerProfileInput[]
+    deleteMany?: CreatorFollowScalarWhereInput | CreatorFollowScalarWhereInput[]
+  }
+
+  export type CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput = {
+    create?: XOR<CreatorEventLikeCreateWithoutLikerProfileInput, CreatorEventLikeUncheckedCreateWithoutLikerProfileInput> | CreatorEventLikeCreateWithoutLikerProfileInput[] | CreatorEventLikeUncheckedCreateWithoutLikerProfileInput[]
+    connectOrCreate?: CreatorEventLikeCreateOrConnectWithoutLikerProfileInput | CreatorEventLikeCreateOrConnectWithoutLikerProfileInput[]
+    upsert?: CreatorEventLikeUpsertWithWhereUniqueWithoutLikerProfileInput | CreatorEventLikeUpsertWithWhereUniqueWithoutLikerProfileInput[]
+    createMany?: CreatorEventLikeCreateManyLikerProfileInputEnvelope
+    set?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    disconnect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    delete?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    connect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    update?: CreatorEventLikeUpdateWithWhereUniqueWithoutLikerProfileInput | CreatorEventLikeUpdateWithWhereUniqueWithoutLikerProfileInput[]
+    updateMany?: CreatorEventLikeUpdateManyWithWhereWithoutLikerProfileInput | CreatorEventLikeUpdateManyWithWhereWithoutLikerProfileInput[]
+    deleteMany?: CreatorEventLikeScalarWhereInput | CreatorEventLikeScalarWhereInput[]
+  }
+
+  export type CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput = {
+    create?: XOR<CreatorVideoLikeCreateWithoutLikerProfileInput, CreatorVideoLikeUncheckedCreateWithoutLikerProfileInput> | CreatorVideoLikeCreateWithoutLikerProfileInput[] | CreatorVideoLikeUncheckedCreateWithoutLikerProfileInput[]
+    connectOrCreate?: CreatorVideoLikeCreateOrConnectWithoutLikerProfileInput | CreatorVideoLikeCreateOrConnectWithoutLikerProfileInput[]
+    upsert?: CreatorVideoLikeUpsertWithWhereUniqueWithoutLikerProfileInput | CreatorVideoLikeUpsertWithWhereUniqueWithoutLikerProfileInput[]
+    createMany?: CreatorVideoLikeCreateManyLikerProfileInputEnvelope
+    set?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
+    disconnect?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
+    delete?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
+    connect?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
+    update?: CreatorVideoLikeUpdateWithWhereUniqueWithoutLikerProfileInput | CreatorVideoLikeUpdateWithWhereUniqueWithoutLikerProfileInput[]
+    updateMany?: CreatorVideoLikeUpdateManyWithWhereWithoutLikerProfileInput | CreatorVideoLikeUpdateManyWithWhereWithoutLikerProfileInput[]
+    deleteMany?: CreatorVideoLikeScalarWhereInput | CreatorVideoLikeScalarWhereInput[]
   }
 
   export type AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput = {
@@ -37346,6 +46023,27 @@ export namespace Prisma {
     connect?: CreatorEventCheckInUserWhereUniqueInput | CreatorEventCheckInUserWhereUniqueInput[]
   }
 
+  export type CreatorPayoutAccountCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<CreatorPayoutAccountCreateWithoutCreatorInput, CreatorPayoutAccountUncheckedCreateWithoutCreatorInput> | CreatorPayoutAccountCreateWithoutCreatorInput[] | CreatorPayoutAccountUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorPayoutAccountCreateOrConnectWithoutCreatorInput | CreatorPayoutAccountCreateOrConnectWithoutCreatorInput[]
+    createMany?: CreatorPayoutAccountCreateManyCreatorInputEnvelope
+    connect?: CreatorPayoutAccountWhereUniqueInput | CreatorPayoutAccountWhereUniqueInput[]
+  }
+
+  export type CreatorPayoutRequestCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<CreatorPayoutRequestCreateWithoutCreatorInput, CreatorPayoutRequestUncheckedCreateWithoutCreatorInput> | CreatorPayoutRequestCreateWithoutCreatorInput[] | CreatorPayoutRequestUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorPayoutRequestCreateOrConnectWithoutCreatorInput | CreatorPayoutRequestCreateOrConnectWithoutCreatorInput[]
+    createMany?: CreatorPayoutRequestCreateManyCreatorInputEnvelope
+    connect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+  }
+
+  export type CreatorFollowCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<CreatorFollowCreateWithoutCreatorInput, CreatorFollowUncheckedCreateWithoutCreatorInput> | CreatorFollowCreateWithoutCreatorInput[] | CreatorFollowUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorFollowCreateOrConnectWithoutCreatorInput | CreatorFollowCreateOrConnectWithoutCreatorInput[]
+    createMany?: CreatorFollowCreateManyCreatorInputEnvelope
+    connect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+  }
+
   export type CreatorVideoUncheckedCreateNestedManyWithoutCreatorInput = {
     create?: XOR<CreatorVideoCreateWithoutCreatorInput, CreatorVideoUncheckedCreateWithoutCreatorInput> | CreatorVideoCreateWithoutCreatorInput[] | CreatorVideoUncheckedCreateWithoutCreatorInput[]
     connectOrCreate?: CreatorVideoCreateOrConnectWithoutCreatorInput | CreatorVideoCreateOrConnectWithoutCreatorInput[]
@@ -37379,6 +46077,35 @@ export namespace Prisma {
     connectOrCreate?: CreatorEventCheckInUserCreateOrConnectWithoutCreatorInput | CreatorEventCheckInUserCreateOrConnectWithoutCreatorInput[]
     createMany?: CreatorEventCheckInUserCreateManyCreatorInputEnvelope
     connect?: CreatorEventCheckInUserWhereUniqueInput | CreatorEventCheckInUserWhereUniqueInput[]
+  }
+
+  export type CreatorPayoutAccountUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<CreatorPayoutAccountCreateWithoutCreatorInput, CreatorPayoutAccountUncheckedCreateWithoutCreatorInput> | CreatorPayoutAccountCreateWithoutCreatorInput[] | CreatorPayoutAccountUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorPayoutAccountCreateOrConnectWithoutCreatorInput | CreatorPayoutAccountCreateOrConnectWithoutCreatorInput[]
+    createMany?: CreatorPayoutAccountCreateManyCreatorInputEnvelope
+    connect?: CreatorPayoutAccountWhereUniqueInput | CreatorPayoutAccountWhereUniqueInput[]
+  }
+
+  export type CreatorPayoutRequestUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<CreatorPayoutRequestCreateWithoutCreatorInput, CreatorPayoutRequestUncheckedCreateWithoutCreatorInput> | CreatorPayoutRequestCreateWithoutCreatorInput[] | CreatorPayoutRequestUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorPayoutRequestCreateOrConnectWithoutCreatorInput | CreatorPayoutRequestCreateOrConnectWithoutCreatorInput[]
+    createMany?: CreatorPayoutRequestCreateManyCreatorInputEnvelope
+    connect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+  }
+
+  export type CreatorFollowUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<CreatorFollowCreateWithoutCreatorInput, CreatorFollowUncheckedCreateWithoutCreatorInput> | CreatorFollowCreateWithoutCreatorInput[] | CreatorFollowUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorFollowCreateOrConnectWithoutCreatorInput | CreatorFollowCreateOrConnectWithoutCreatorInput[]
+    createMany?: CreatorFollowCreateManyCreatorInputEnvelope
+    connect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type ProfileUpdateOneRequiredWithoutCreatorNestedInput = {
@@ -37459,6 +46186,48 @@ export namespace Prisma {
     deleteMany?: CreatorEventCheckInUserScalarWhereInput | CreatorEventCheckInUserScalarWhereInput[]
   }
 
+  export type CreatorPayoutAccountUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<CreatorPayoutAccountCreateWithoutCreatorInput, CreatorPayoutAccountUncheckedCreateWithoutCreatorInput> | CreatorPayoutAccountCreateWithoutCreatorInput[] | CreatorPayoutAccountUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorPayoutAccountCreateOrConnectWithoutCreatorInput | CreatorPayoutAccountCreateOrConnectWithoutCreatorInput[]
+    upsert?: CreatorPayoutAccountUpsertWithWhereUniqueWithoutCreatorInput | CreatorPayoutAccountUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: CreatorPayoutAccountCreateManyCreatorInputEnvelope
+    set?: CreatorPayoutAccountWhereUniqueInput | CreatorPayoutAccountWhereUniqueInput[]
+    disconnect?: CreatorPayoutAccountWhereUniqueInput | CreatorPayoutAccountWhereUniqueInput[]
+    delete?: CreatorPayoutAccountWhereUniqueInput | CreatorPayoutAccountWhereUniqueInput[]
+    connect?: CreatorPayoutAccountWhereUniqueInput | CreatorPayoutAccountWhereUniqueInput[]
+    update?: CreatorPayoutAccountUpdateWithWhereUniqueWithoutCreatorInput | CreatorPayoutAccountUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: CreatorPayoutAccountUpdateManyWithWhereWithoutCreatorInput | CreatorPayoutAccountUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: CreatorPayoutAccountScalarWhereInput | CreatorPayoutAccountScalarWhereInput[]
+  }
+
+  export type CreatorPayoutRequestUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<CreatorPayoutRequestCreateWithoutCreatorInput, CreatorPayoutRequestUncheckedCreateWithoutCreatorInput> | CreatorPayoutRequestCreateWithoutCreatorInput[] | CreatorPayoutRequestUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorPayoutRequestCreateOrConnectWithoutCreatorInput | CreatorPayoutRequestCreateOrConnectWithoutCreatorInput[]
+    upsert?: CreatorPayoutRequestUpsertWithWhereUniqueWithoutCreatorInput | CreatorPayoutRequestUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: CreatorPayoutRequestCreateManyCreatorInputEnvelope
+    set?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    disconnect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    delete?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    connect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    update?: CreatorPayoutRequestUpdateWithWhereUniqueWithoutCreatorInput | CreatorPayoutRequestUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: CreatorPayoutRequestUpdateManyWithWhereWithoutCreatorInput | CreatorPayoutRequestUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: CreatorPayoutRequestScalarWhereInput | CreatorPayoutRequestScalarWhereInput[]
+  }
+
+  export type CreatorFollowUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<CreatorFollowCreateWithoutCreatorInput, CreatorFollowUncheckedCreateWithoutCreatorInput> | CreatorFollowCreateWithoutCreatorInput[] | CreatorFollowUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorFollowCreateOrConnectWithoutCreatorInput | CreatorFollowCreateOrConnectWithoutCreatorInput[]
+    upsert?: CreatorFollowUpsertWithWhereUniqueWithoutCreatorInput | CreatorFollowUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: CreatorFollowCreateManyCreatorInputEnvelope
+    set?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    disconnect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    delete?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    connect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    update?: CreatorFollowUpdateWithWhereUniqueWithoutCreatorInput | CreatorFollowUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: CreatorFollowUpdateManyWithWhereWithoutCreatorInput | CreatorFollowUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: CreatorFollowScalarWhereInput | CreatorFollowScalarWhereInput[]
+  }
+
   export type CreatorVideoUncheckedUpdateManyWithoutCreatorNestedInput = {
     create?: XOR<CreatorVideoCreateWithoutCreatorInput, CreatorVideoUncheckedCreateWithoutCreatorInput> | CreatorVideoCreateWithoutCreatorInput[] | CreatorVideoUncheckedCreateWithoutCreatorInput[]
     connectOrCreate?: CreatorVideoCreateOrConnectWithoutCreatorInput | CreatorVideoCreateOrConnectWithoutCreatorInput[]
@@ -37527,6 +46296,162 @@ export namespace Prisma {
     update?: CreatorEventCheckInUserUpdateWithWhereUniqueWithoutCreatorInput | CreatorEventCheckInUserUpdateWithWhereUniqueWithoutCreatorInput[]
     updateMany?: CreatorEventCheckInUserUpdateManyWithWhereWithoutCreatorInput | CreatorEventCheckInUserUpdateManyWithWhereWithoutCreatorInput[]
     deleteMany?: CreatorEventCheckInUserScalarWhereInput | CreatorEventCheckInUserScalarWhereInput[]
+  }
+
+  export type CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<CreatorPayoutAccountCreateWithoutCreatorInput, CreatorPayoutAccountUncheckedCreateWithoutCreatorInput> | CreatorPayoutAccountCreateWithoutCreatorInput[] | CreatorPayoutAccountUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorPayoutAccountCreateOrConnectWithoutCreatorInput | CreatorPayoutAccountCreateOrConnectWithoutCreatorInput[]
+    upsert?: CreatorPayoutAccountUpsertWithWhereUniqueWithoutCreatorInput | CreatorPayoutAccountUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: CreatorPayoutAccountCreateManyCreatorInputEnvelope
+    set?: CreatorPayoutAccountWhereUniqueInput | CreatorPayoutAccountWhereUniqueInput[]
+    disconnect?: CreatorPayoutAccountWhereUniqueInput | CreatorPayoutAccountWhereUniqueInput[]
+    delete?: CreatorPayoutAccountWhereUniqueInput | CreatorPayoutAccountWhereUniqueInput[]
+    connect?: CreatorPayoutAccountWhereUniqueInput | CreatorPayoutAccountWhereUniqueInput[]
+    update?: CreatorPayoutAccountUpdateWithWhereUniqueWithoutCreatorInput | CreatorPayoutAccountUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: CreatorPayoutAccountUpdateManyWithWhereWithoutCreatorInput | CreatorPayoutAccountUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: CreatorPayoutAccountScalarWhereInput | CreatorPayoutAccountScalarWhereInput[]
+  }
+
+  export type CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<CreatorPayoutRequestCreateWithoutCreatorInput, CreatorPayoutRequestUncheckedCreateWithoutCreatorInput> | CreatorPayoutRequestCreateWithoutCreatorInput[] | CreatorPayoutRequestUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorPayoutRequestCreateOrConnectWithoutCreatorInput | CreatorPayoutRequestCreateOrConnectWithoutCreatorInput[]
+    upsert?: CreatorPayoutRequestUpsertWithWhereUniqueWithoutCreatorInput | CreatorPayoutRequestUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: CreatorPayoutRequestCreateManyCreatorInputEnvelope
+    set?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    disconnect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    delete?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    connect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    update?: CreatorPayoutRequestUpdateWithWhereUniqueWithoutCreatorInput | CreatorPayoutRequestUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: CreatorPayoutRequestUpdateManyWithWhereWithoutCreatorInput | CreatorPayoutRequestUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: CreatorPayoutRequestScalarWhereInput | CreatorPayoutRequestScalarWhereInput[]
+  }
+
+  export type CreatorFollowUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<CreatorFollowCreateWithoutCreatorInput, CreatorFollowUncheckedCreateWithoutCreatorInput> | CreatorFollowCreateWithoutCreatorInput[] | CreatorFollowUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: CreatorFollowCreateOrConnectWithoutCreatorInput | CreatorFollowCreateOrConnectWithoutCreatorInput[]
+    upsert?: CreatorFollowUpsertWithWhereUniqueWithoutCreatorInput | CreatorFollowUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: CreatorFollowCreateManyCreatorInputEnvelope
+    set?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    disconnect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    delete?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    connect?: CreatorFollowWhereUniqueInput | CreatorFollowWhereUniqueInput[]
+    update?: CreatorFollowUpdateWithWhereUniqueWithoutCreatorInput | CreatorFollowUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: CreatorFollowUpdateManyWithWhereWithoutCreatorInput | CreatorFollowUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: CreatorFollowScalarWhereInput | CreatorFollowScalarWhereInput[]
+  }
+
+  export type CreatorCreateNestedOneWithoutFollowsInput = {
+    create?: XOR<CreatorCreateWithoutFollowsInput, CreatorUncheckedCreateWithoutFollowsInput>
+    connectOrCreate?: CreatorCreateOrConnectWithoutFollowsInput
+    connect?: CreatorWhereUniqueInput
+  }
+
+  export type ProfileCreateNestedOneWithoutCreatorFollowsInput = {
+    create?: XOR<ProfileCreateWithoutCreatorFollowsInput, ProfileUncheckedCreateWithoutCreatorFollowsInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutCreatorFollowsInput
+    connect?: ProfileWhereUniqueInput
+  }
+
+  export type CreatorUpdateOneRequiredWithoutFollowsNestedInput = {
+    create?: XOR<CreatorCreateWithoutFollowsInput, CreatorUncheckedCreateWithoutFollowsInput>
+    connectOrCreate?: CreatorCreateOrConnectWithoutFollowsInput
+    upsert?: CreatorUpsertWithoutFollowsInput
+    connect?: CreatorWhereUniqueInput
+    update?: XOR<XOR<CreatorUpdateToOneWithWhereWithoutFollowsInput, CreatorUpdateWithoutFollowsInput>, CreatorUncheckedUpdateWithoutFollowsInput>
+  }
+
+  export type ProfileUpdateOneRequiredWithoutCreatorFollowsNestedInput = {
+    create?: XOR<ProfileCreateWithoutCreatorFollowsInput, ProfileUncheckedCreateWithoutCreatorFollowsInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutCreatorFollowsInput
+    upsert?: ProfileUpsertWithoutCreatorFollowsInput
+    connect?: ProfileWhereUniqueInput
+    update?: XOR<XOR<ProfileUpdateToOneWithWhereWithoutCreatorFollowsInput, ProfileUpdateWithoutCreatorFollowsInput>, ProfileUncheckedUpdateWithoutCreatorFollowsInput>
+  }
+
+  export type CreatorCreateNestedOneWithoutPayoutAccountsInput = {
+    create?: XOR<CreatorCreateWithoutPayoutAccountsInput, CreatorUncheckedCreateWithoutPayoutAccountsInput>
+    connectOrCreate?: CreatorCreateOrConnectWithoutPayoutAccountsInput
+    connect?: CreatorWhereUniqueInput
+  }
+
+  export type CreatorPayoutRequestCreateNestedManyWithoutPayoutAccountInput = {
+    create?: XOR<CreatorPayoutRequestCreateWithoutPayoutAccountInput, CreatorPayoutRequestUncheckedCreateWithoutPayoutAccountInput> | CreatorPayoutRequestCreateWithoutPayoutAccountInput[] | CreatorPayoutRequestUncheckedCreateWithoutPayoutAccountInput[]
+    connectOrCreate?: CreatorPayoutRequestCreateOrConnectWithoutPayoutAccountInput | CreatorPayoutRequestCreateOrConnectWithoutPayoutAccountInput[]
+    createMany?: CreatorPayoutRequestCreateManyPayoutAccountInputEnvelope
+    connect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+  }
+
+  export type CreatorPayoutRequestUncheckedCreateNestedManyWithoutPayoutAccountInput = {
+    create?: XOR<CreatorPayoutRequestCreateWithoutPayoutAccountInput, CreatorPayoutRequestUncheckedCreateWithoutPayoutAccountInput> | CreatorPayoutRequestCreateWithoutPayoutAccountInput[] | CreatorPayoutRequestUncheckedCreateWithoutPayoutAccountInput[]
+    connectOrCreate?: CreatorPayoutRequestCreateOrConnectWithoutPayoutAccountInput | CreatorPayoutRequestCreateOrConnectWithoutPayoutAccountInput[]
+    createMany?: CreatorPayoutRequestCreateManyPayoutAccountInputEnvelope
+    connect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+  }
+
+  export type CreatorUpdateOneRequiredWithoutPayoutAccountsNestedInput = {
+    create?: XOR<CreatorCreateWithoutPayoutAccountsInput, CreatorUncheckedCreateWithoutPayoutAccountsInput>
+    connectOrCreate?: CreatorCreateOrConnectWithoutPayoutAccountsInput
+    upsert?: CreatorUpsertWithoutPayoutAccountsInput
+    connect?: CreatorWhereUniqueInput
+    update?: XOR<XOR<CreatorUpdateToOneWithWhereWithoutPayoutAccountsInput, CreatorUpdateWithoutPayoutAccountsInput>, CreatorUncheckedUpdateWithoutPayoutAccountsInput>
+  }
+
+  export type CreatorPayoutRequestUpdateManyWithoutPayoutAccountNestedInput = {
+    create?: XOR<CreatorPayoutRequestCreateWithoutPayoutAccountInput, CreatorPayoutRequestUncheckedCreateWithoutPayoutAccountInput> | CreatorPayoutRequestCreateWithoutPayoutAccountInput[] | CreatorPayoutRequestUncheckedCreateWithoutPayoutAccountInput[]
+    connectOrCreate?: CreatorPayoutRequestCreateOrConnectWithoutPayoutAccountInput | CreatorPayoutRequestCreateOrConnectWithoutPayoutAccountInput[]
+    upsert?: CreatorPayoutRequestUpsertWithWhereUniqueWithoutPayoutAccountInput | CreatorPayoutRequestUpsertWithWhereUniqueWithoutPayoutAccountInput[]
+    createMany?: CreatorPayoutRequestCreateManyPayoutAccountInputEnvelope
+    set?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    disconnect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    delete?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    connect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    update?: CreatorPayoutRequestUpdateWithWhereUniqueWithoutPayoutAccountInput | CreatorPayoutRequestUpdateWithWhereUniqueWithoutPayoutAccountInput[]
+    updateMany?: CreatorPayoutRequestUpdateManyWithWhereWithoutPayoutAccountInput | CreatorPayoutRequestUpdateManyWithWhereWithoutPayoutAccountInput[]
+    deleteMany?: CreatorPayoutRequestScalarWhereInput | CreatorPayoutRequestScalarWhereInput[]
+  }
+
+  export type CreatorPayoutRequestUncheckedUpdateManyWithoutPayoutAccountNestedInput = {
+    create?: XOR<CreatorPayoutRequestCreateWithoutPayoutAccountInput, CreatorPayoutRequestUncheckedCreateWithoutPayoutAccountInput> | CreatorPayoutRequestCreateWithoutPayoutAccountInput[] | CreatorPayoutRequestUncheckedCreateWithoutPayoutAccountInput[]
+    connectOrCreate?: CreatorPayoutRequestCreateOrConnectWithoutPayoutAccountInput | CreatorPayoutRequestCreateOrConnectWithoutPayoutAccountInput[]
+    upsert?: CreatorPayoutRequestUpsertWithWhereUniqueWithoutPayoutAccountInput | CreatorPayoutRequestUpsertWithWhereUniqueWithoutPayoutAccountInput[]
+    createMany?: CreatorPayoutRequestCreateManyPayoutAccountInputEnvelope
+    set?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    disconnect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    delete?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    connect?: CreatorPayoutRequestWhereUniqueInput | CreatorPayoutRequestWhereUniqueInput[]
+    update?: CreatorPayoutRequestUpdateWithWhereUniqueWithoutPayoutAccountInput | CreatorPayoutRequestUpdateWithWhereUniqueWithoutPayoutAccountInput[]
+    updateMany?: CreatorPayoutRequestUpdateManyWithWhereWithoutPayoutAccountInput | CreatorPayoutRequestUpdateManyWithWhereWithoutPayoutAccountInput[]
+    deleteMany?: CreatorPayoutRequestScalarWhereInput | CreatorPayoutRequestScalarWhereInput[]
+  }
+
+  export type CreatorCreateNestedOneWithoutPayoutRequestsInput = {
+    create?: XOR<CreatorCreateWithoutPayoutRequestsInput, CreatorUncheckedCreateWithoutPayoutRequestsInput>
+    connectOrCreate?: CreatorCreateOrConnectWithoutPayoutRequestsInput
+    connect?: CreatorWhereUniqueInput
+  }
+
+  export type CreatorPayoutAccountCreateNestedOneWithoutPayoutRequestsInput = {
+    create?: XOR<CreatorPayoutAccountCreateWithoutPayoutRequestsInput, CreatorPayoutAccountUncheckedCreateWithoutPayoutRequestsInput>
+    connectOrCreate?: CreatorPayoutAccountCreateOrConnectWithoutPayoutRequestsInput
+    connect?: CreatorPayoutAccountWhereUniqueInput
+  }
+
+  export type CreatorUpdateOneRequiredWithoutPayoutRequestsNestedInput = {
+    create?: XOR<CreatorCreateWithoutPayoutRequestsInput, CreatorUncheckedCreateWithoutPayoutRequestsInput>
+    connectOrCreate?: CreatorCreateOrConnectWithoutPayoutRequestsInput
+    upsert?: CreatorUpsertWithoutPayoutRequestsInput
+    connect?: CreatorWhereUniqueInput
+    update?: XOR<XOR<CreatorUpdateToOneWithWhereWithoutPayoutRequestsInput, CreatorUpdateWithoutPayoutRequestsInput>, CreatorUncheckedUpdateWithoutPayoutRequestsInput>
+  }
+
+  export type CreatorPayoutAccountUpdateOneWithoutPayoutRequestsNestedInput = {
+    create?: XOR<CreatorPayoutAccountCreateWithoutPayoutRequestsInput, CreatorPayoutAccountUncheckedCreateWithoutPayoutRequestsInput>
+    connectOrCreate?: CreatorPayoutAccountCreateOrConnectWithoutPayoutRequestsInput
+    upsert?: CreatorPayoutAccountUpsertWithoutPayoutRequestsInput
+    disconnect?: CreatorPayoutAccountWhereInput | boolean
+    delete?: CreatorPayoutAccountWhereInput | boolean
+    connect?: CreatorPayoutAccountWhereUniqueInput
+    update?: XOR<XOR<CreatorPayoutAccountUpdateToOneWithWhereWithoutPayoutRequestsInput, CreatorPayoutAccountUpdateWithoutPayoutRequestsInput>, CreatorPayoutAccountUncheckedUpdateWithoutPayoutRequestsInput>
   }
 
   export type CreatorCreateNestedOneWithoutFoldersInput = {
@@ -37660,14 +46585,6 @@ export namespace Prisma {
   export type CreatorVideoUpdatetagsInput = {
     set?: string[]
     push?: string | string[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type CreatorUpdateOneRequiredWithoutVideosNestedInput = {
@@ -37862,12 +46779,58 @@ export namespace Prisma {
     connect?: CreatorVideoWhereUniqueInput
   }
 
+  export type ProfileCreateNestedOneWithoutVideoLikesInput = {
+    create?: XOR<ProfileCreateWithoutVideoLikesInput, ProfileUncheckedCreateWithoutVideoLikesInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutVideoLikesInput
+    connect?: ProfileWhereUniqueInput
+  }
+
   export type CreatorVideoUpdateOneRequiredWithoutLikesNestedInput = {
     create?: XOR<CreatorVideoCreateWithoutLikesInput, CreatorVideoUncheckedCreateWithoutLikesInput>
     connectOrCreate?: CreatorVideoCreateOrConnectWithoutLikesInput
     upsert?: CreatorVideoUpsertWithoutLikesInput
     connect?: CreatorVideoWhereUniqueInput
     update?: XOR<XOR<CreatorVideoUpdateToOneWithWhereWithoutLikesInput, CreatorVideoUpdateWithoutLikesInput>, CreatorVideoUncheckedUpdateWithoutLikesInput>
+  }
+
+  export type ProfileUpdateOneWithoutVideoLikesNestedInput = {
+    create?: XOR<ProfileCreateWithoutVideoLikesInput, ProfileUncheckedCreateWithoutVideoLikesInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutVideoLikesInput
+    upsert?: ProfileUpsertWithoutVideoLikesInput
+    disconnect?: ProfileWhereInput | boolean
+    delete?: ProfileWhereInput | boolean
+    connect?: ProfileWhereUniqueInput
+    update?: XOR<XOR<ProfileUpdateToOneWithWhereWithoutVideoLikesInput, ProfileUpdateWithoutVideoLikesInput>, ProfileUncheckedUpdateWithoutVideoLikesInput>
+  }
+
+  export type CreatorEventCreateNestedOneWithoutLikesInput = {
+    create?: XOR<CreatorEventCreateWithoutLikesInput, CreatorEventUncheckedCreateWithoutLikesInput>
+    connectOrCreate?: CreatorEventCreateOrConnectWithoutLikesInput
+    connect?: CreatorEventWhereUniqueInput
+  }
+
+  export type ProfileCreateNestedOneWithoutEventLikesInput = {
+    create?: XOR<ProfileCreateWithoutEventLikesInput, ProfileUncheckedCreateWithoutEventLikesInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutEventLikesInput
+    connect?: ProfileWhereUniqueInput
+  }
+
+  export type CreatorEventUpdateOneRequiredWithoutLikesNestedInput = {
+    create?: XOR<CreatorEventCreateWithoutLikesInput, CreatorEventUncheckedCreateWithoutLikesInput>
+    connectOrCreate?: CreatorEventCreateOrConnectWithoutLikesInput
+    upsert?: CreatorEventUpsertWithoutLikesInput
+    connect?: CreatorEventWhereUniqueInput
+    update?: XOR<XOR<CreatorEventUpdateToOneWithWhereWithoutLikesInput, CreatorEventUpdateWithoutLikesInput>, CreatorEventUncheckedUpdateWithoutLikesInput>
+  }
+
+  export type ProfileUpdateOneWithoutEventLikesNestedInput = {
+    create?: XOR<ProfileCreateWithoutEventLikesInput, ProfileUncheckedCreateWithoutEventLikesInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutEventLikesInput
+    upsert?: ProfileUpsertWithoutEventLikesInput
+    disconnect?: ProfileWhereInput | boolean
+    delete?: ProfileWhereInput | boolean
+    connect?: ProfileWhereUniqueInput
+    update?: XOR<XOR<ProfileUpdateToOneWithWhereWithoutEventLikesInput, ProfileUpdateWithoutEventLikesInput>, ProfileUncheckedUpdateWithoutEventLikesInput>
   }
 
   export type CreatorVideoCreateNestedOneWithoutCommentsInput = {
@@ -37908,6 +46871,13 @@ export namespace Prisma {
     connect?: CreatorEventTicketWhereUniqueInput | CreatorEventTicketWhereUniqueInput[]
   }
 
+  export type CreatorEventLikeCreateNestedManyWithoutCreatorEventInput = {
+    create?: XOR<CreatorEventLikeCreateWithoutCreatorEventInput, CreatorEventLikeUncheckedCreateWithoutCreatorEventInput> | CreatorEventLikeCreateWithoutCreatorEventInput[] | CreatorEventLikeUncheckedCreateWithoutCreatorEventInput[]
+    connectOrCreate?: CreatorEventLikeCreateOrConnectWithoutCreatorEventInput | CreatorEventLikeCreateOrConnectWithoutCreatorEventInput[]
+    createMany?: CreatorEventLikeCreateManyCreatorEventInputEnvelope
+    connect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+  }
+
   export type CreatorEventCheckInUserCreateNestedManyWithoutEventInput = {
     create?: XOR<CreatorEventCheckInUserCreateWithoutEventInput, CreatorEventCheckInUserUncheckedCreateWithoutEventInput> | CreatorEventCheckInUserCreateWithoutEventInput[] | CreatorEventCheckInUserUncheckedCreateWithoutEventInput[]
     connectOrCreate?: CreatorEventCheckInUserCreateOrConnectWithoutEventInput | CreatorEventCheckInUserCreateOrConnectWithoutEventInput[]
@@ -37941,6 +46911,13 @@ export namespace Prisma {
     connectOrCreate?: CreatorEventTicketCreateOrConnectWithoutEventInput | CreatorEventTicketCreateOrConnectWithoutEventInput[]
     createMany?: CreatorEventTicketCreateManyEventInputEnvelope
     connect?: CreatorEventTicketWhereUniqueInput | CreatorEventTicketWhereUniqueInput[]
+  }
+
+  export type CreatorEventLikeUncheckedCreateNestedManyWithoutCreatorEventInput = {
+    create?: XOR<CreatorEventLikeCreateWithoutCreatorEventInput, CreatorEventLikeUncheckedCreateWithoutCreatorEventInput> | CreatorEventLikeCreateWithoutCreatorEventInput[] | CreatorEventLikeUncheckedCreateWithoutCreatorEventInput[]
+    connectOrCreate?: CreatorEventLikeCreateOrConnectWithoutCreatorEventInput | CreatorEventLikeCreateOrConnectWithoutCreatorEventInput[]
+    createMany?: CreatorEventLikeCreateManyCreatorEventInputEnvelope
+    connect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
   }
 
   export type CreatorEventCheckInUserUncheckedCreateNestedManyWithoutEventInput = {
@@ -38021,6 +46998,20 @@ export namespace Prisma {
     deleteMany?: CreatorEventTicketScalarWhereInput | CreatorEventTicketScalarWhereInput[]
   }
 
+  export type CreatorEventLikeUpdateManyWithoutCreatorEventNestedInput = {
+    create?: XOR<CreatorEventLikeCreateWithoutCreatorEventInput, CreatorEventLikeUncheckedCreateWithoutCreatorEventInput> | CreatorEventLikeCreateWithoutCreatorEventInput[] | CreatorEventLikeUncheckedCreateWithoutCreatorEventInput[]
+    connectOrCreate?: CreatorEventLikeCreateOrConnectWithoutCreatorEventInput | CreatorEventLikeCreateOrConnectWithoutCreatorEventInput[]
+    upsert?: CreatorEventLikeUpsertWithWhereUniqueWithoutCreatorEventInput | CreatorEventLikeUpsertWithWhereUniqueWithoutCreatorEventInput[]
+    createMany?: CreatorEventLikeCreateManyCreatorEventInputEnvelope
+    set?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    disconnect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    delete?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    connect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    update?: CreatorEventLikeUpdateWithWhereUniqueWithoutCreatorEventInput | CreatorEventLikeUpdateWithWhereUniqueWithoutCreatorEventInput[]
+    updateMany?: CreatorEventLikeUpdateManyWithWhereWithoutCreatorEventInput | CreatorEventLikeUpdateManyWithWhereWithoutCreatorEventInput[]
+    deleteMany?: CreatorEventLikeScalarWhereInput | CreatorEventLikeScalarWhereInput[]
+  }
+
   export type CreatorEventCheckInUserUpdateManyWithoutEventNestedInput = {
     create?: XOR<CreatorEventCheckInUserCreateWithoutEventInput, CreatorEventCheckInUserUncheckedCreateWithoutEventInput> | CreatorEventCheckInUserCreateWithoutEventInput[] | CreatorEventCheckInUserUncheckedCreateWithoutEventInput[]
     connectOrCreate?: CreatorEventCheckInUserCreateOrConnectWithoutEventInput | CreatorEventCheckInUserCreateOrConnectWithoutEventInput[]
@@ -38089,6 +47080,20 @@ export namespace Prisma {
     update?: CreatorEventTicketUpdateWithWhereUniqueWithoutEventInput | CreatorEventTicketUpdateWithWhereUniqueWithoutEventInput[]
     updateMany?: CreatorEventTicketUpdateManyWithWhereWithoutEventInput | CreatorEventTicketUpdateManyWithWhereWithoutEventInput[]
     deleteMany?: CreatorEventTicketScalarWhereInput | CreatorEventTicketScalarWhereInput[]
+  }
+
+  export type CreatorEventLikeUncheckedUpdateManyWithoutCreatorEventNestedInput = {
+    create?: XOR<CreatorEventLikeCreateWithoutCreatorEventInput, CreatorEventLikeUncheckedCreateWithoutCreatorEventInput> | CreatorEventLikeCreateWithoutCreatorEventInput[] | CreatorEventLikeUncheckedCreateWithoutCreatorEventInput[]
+    connectOrCreate?: CreatorEventLikeCreateOrConnectWithoutCreatorEventInput | CreatorEventLikeCreateOrConnectWithoutCreatorEventInput[]
+    upsert?: CreatorEventLikeUpsertWithWhereUniqueWithoutCreatorEventInput | CreatorEventLikeUpsertWithWhereUniqueWithoutCreatorEventInput[]
+    createMany?: CreatorEventLikeCreateManyCreatorEventInputEnvelope
+    set?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    disconnect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    delete?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    connect?: CreatorEventLikeWhereUniqueInput | CreatorEventLikeWhereUniqueInput[]
+    update?: CreatorEventLikeUpdateWithWhereUniqueWithoutCreatorEventInput | CreatorEventLikeUpdateWithWhereUniqueWithoutCreatorEventInput[]
+    updateMany?: CreatorEventLikeUpdateManyWithWhereWithoutCreatorEventInput | CreatorEventLikeUpdateManyWithWhereWithoutCreatorEventInput[]
+    deleteMany?: CreatorEventLikeScalarWhereInput | CreatorEventLikeScalarWhereInput[]
   }
 
   export type CreatorEventCheckInUserUncheckedUpdateManyWithoutEventNestedInput = {
@@ -38168,11 +47173,25 @@ export namespace Prisma {
     connect?: CreatorEventTicketPurchaseWhereUniqueInput | CreatorEventTicketPurchaseWhereUniqueInput[]
   }
 
+  export type CreatorEventTicketItemCreateNestedManyWithoutTicketInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutTicketInput, CreatorEventTicketItemUncheckedCreateWithoutTicketInput> | CreatorEventTicketItemCreateWithoutTicketInput[] | CreatorEventTicketItemUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutTicketInput | CreatorEventTicketItemCreateOrConnectWithoutTicketInput[]
+    createMany?: CreatorEventTicketItemCreateManyTicketInputEnvelope
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+  }
+
   export type CreatorEventTicketPurchaseUncheckedCreateNestedManyWithoutTicketInput = {
     create?: XOR<CreatorEventTicketPurchaseCreateWithoutTicketInput, CreatorEventTicketPurchaseUncheckedCreateWithoutTicketInput> | CreatorEventTicketPurchaseCreateWithoutTicketInput[] | CreatorEventTicketPurchaseUncheckedCreateWithoutTicketInput[]
     connectOrCreate?: CreatorEventTicketPurchaseCreateOrConnectWithoutTicketInput | CreatorEventTicketPurchaseCreateOrConnectWithoutTicketInput[]
     createMany?: CreatorEventTicketPurchaseCreateManyTicketInputEnvelope
     connect?: CreatorEventTicketPurchaseWhereUniqueInput | CreatorEventTicketPurchaseWhereUniqueInput[]
+  }
+
+  export type CreatorEventTicketItemUncheckedCreateNestedManyWithoutTicketInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutTicketInput, CreatorEventTicketItemUncheckedCreateWithoutTicketInput> | CreatorEventTicketItemCreateWithoutTicketInput[] | CreatorEventTicketItemUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutTicketInput | CreatorEventTicketItemCreateOrConnectWithoutTicketInput[]
+    createMany?: CreatorEventTicketItemCreateManyTicketInputEnvelope
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
   }
 
   export type EnumCreatorEventTicketAccessTypeFieldUpdateOperationsInput = {
@@ -38210,6 +47229,20 @@ export namespace Prisma {
     deleteMany?: CreatorEventTicketPurchaseScalarWhereInput | CreatorEventTicketPurchaseScalarWhereInput[]
   }
 
+  export type CreatorEventTicketItemUpdateManyWithoutTicketNestedInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutTicketInput, CreatorEventTicketItemUncheckedCreateWithoutTicketInput> | CreatorEventTicketItemCreateWithoutTicketInput[] | CreatorEventTicketItemUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutTicketInput | CreatorEventTicketItemCreateOrConnectWithoutTicketInput[]
+    upsert?: CreatorEventTicketItemUpsertWithWhereUniqueWithoutTicketInput | CreatorEventTicketItemUpsertWithWhereUniqueWithoutTicketInput[]
+    createMany?: CreatorEventTicketItemCreateManyTicketInputEnvelope
+    set?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    disconnect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    delete?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    update?: CreatorEventTicketItemUpdateWithWhereUniqueWithoutTicketInput | CreatorEventTicketItemUpdateWithWhereUniqueWithoutTicketInput[]
+    updateMany?: CreatorEventTicketItemUpdateManyWithWhereWithoutTicketInput | CreatorEventTicketItemUpdateManyWithWhereWithoutTicketInput[]
+    deleteMany?: CreatorEventTicketItemScalarWhereInput | CreatorEventTicketItemScalarWhereInput[]
+  }
+
   export type CreatorEventTicketPurchaseUncheckedUpdateManyWithoutTicketNestedInput = {
     create?: XOR<CreatorEventTicketPurchaseCreateWithoutTicketInput, CreatorEventTicketPurchaseUncheckedCreateWithoutTicketInput> | CreatorEventTicketPurchaseCreateWithoutTicketInput[] | CreatorEventTicketPurchaseUncheckedCreateWithoutTicketInput[]
     connectOrCreate?: CreatorEventTicketPurchaseCreateOrConnectWithoutTicketInput | CreatorEventTicketPurchaseCreateOrConnectWithoutTicketInput[]
@@ -38224,6 +47257,20 @@ export namespace Prisma {
     deleteMany?: CreatorEventTicketPurchaseScalarWhereInput | CreatorEventTicketPurchaseScalarWhereInput[]
   }
 
+  export type CreatorEventTicketItemUncheckedUpdateManyWithoutTicketNestedInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutTicketInput, CreatorEventTicketItemUncheckedCreateWithoutTicketInput> | CreatorEventTicketItemCreateWithoutTicketInput[] | CreatorEventTicketItemUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutTicketInput | CreatorEventTicketItemCreateOrConnectWithoutTicketInput[]
+    upsert?: CreatorEventTicketItemUpsertWithWhereUniqueWithoutTicketInput | CreatorEventTicketItemUpsertWithWhereUniqueWithoutTicketInput[]
+    createMany?: CreatorEventTicketItemCreateManyTicketInputEnvelope
+    set?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    disconnect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    delete?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    update?: CreatorEventTicketItemUpdateWithWhereUniqueWithoutTicketInput | CreatorEventTicketItemUpdateWithWhereUniqueWithoutTicketInput[]
+    updateMany?: CreatorEventTicketItemUpdateManyWithWhereWithoutTicketInput | CreatorEventTicketItemUpdateManyWithWhereWithoutTicketInput[]
+    deleteMany?: CreatorEventTicketItemScalarWhereInput | CreatorEventTicketItemScalarWhereInput[]
+  }
+
   export type CreatorEventTicketCreateNestedOneWithoutPurchasesInput = {
     create?: XOR<CreatorEventTicketCreateWithoutPurchasesInput, CreatorEventTicketUncheckedCreateWithoutPurchasesInput>
     connectOrCreate?: CreatorEventTicketCreateOrConnectWithoutPurchasesInput
@@ -38236,11 +47283,25 @@ export namespace Prisma {
     connect?: CreatorEventCheckInUserWhereUniqueInput
   }
 
+  export type CreatorEventTicketItemCreateNestedManyWithoutPurchaseInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutPurchaseInput, CreatorEventTicketItemUncheckedCreateWithoutPurchaseInput> | CreatorEventTicketItemCreateWithoutPurchaseInput[] | CreatorEventTicketItemUncheckedCreateWithoutPurchaseInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutPurchaseInput | CreatorEventTicketItemCreateOrConnectWithoutPurchaseInput[]
+    createMany?: CreatorEventTicketItemCreateManyPurchaseInputEnvelope
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+  }
+
   export type CreatorEventCheckInScanCreateNestedManyWithoutTicketPurchaseInput = {
     create?: XOR<CreatorEventCheckInScanCreateWithoutTicketPurchaseInput, CreatorEventCheckInScanUncheckedCreateWithoutTicketPurchaseInput> | CreatorEventCheckInScanCreateWithoutTicketPurchaseInput[] | CreatorEventCheckInScanUncheckedCreateWithoutTicketPurchaseInput[]
     connectOrCreate?: CreatorEventCheckInScanCreateOrConnectWithoutTicketPurchaseInput | CreatorEventCheckInScanCreateOrConnectWithoutTicketPurchaseInput[]
     createMany?: CreatorEventCheckInScanCreateManyTicketPurchaseInputEnvelope
     connect?: CreatorEventCheckInScanWhereUniqueInput | CreatorEventCheckInScanWhereUniqueInput[]
+  }
+
+  export type CreatorEventTicketItemUncheckedCreateNestedManyWithoutPurchaseInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutPurchaseInput, CreatorEventTicketItemUncheckedCreateWithoutPurchaseInput> | CreatorEventTicketItemCreateWithoutPurchaseInput[] | CreatorEventTicketItemUncheckedCreateWithoutPurchaseInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutPurchaseInput | CreatorEventTicketItemCreateOrConnectWithoutPurchaseInput[]
+    createMany?: CreatorEventTicketItemCreateManyPurchaseInputEnvelope
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
   }
 
   export type CreatorEventCheckInScanUncheckedCreateNestedManyWithoutTicketPurchaseInput = {
@@ -38272,6 +47333,20 @@ export namespace Prisma {
     update?: XOR<XOR<CreatorEventCheckInUserUpdateToOneWithWhereWithoutCheckedInPurchasesInput, CreatorEventCheckInUserUpdateWithoutCheckedInPurchasesInput>, CreatorEventCheckInUserUncheckedUpdateWithoutCheckedInPurchasesInput>
   }
 
+  export type CreatorEventTicketItemUpdateManyWithoutPurchaseNestedInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutPurchaseInput, CreatorEventTicketItemUncheckedCreateWithoutPurchaseInput> | CreatorEventTicketItemCreateWithoutPurchaseInput[] | CreatorEventTicketItemUncheckedCreateWithoutPurchaseInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutPurchaseInput | CreatorEventTicketItemCreateOrConnectWithoutPurchaseInput[]
+    upsert?: CreatorEventTicketItemUpsertWithWhereUniqueWithoutPurchaseInput | CreatorEventTicketItemUpsertWithWhereUniqueWithoutPurchaseInput[]
+    createMany?: CreatorEventTicketItemCreateManyPurchaseInputEnvelope
+    set?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    disconnect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    delete?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    update?: CreatorEventTicketItemUpdateWithWhereUniqueWithoutPurchaseInput | CreatorEventTicketItemUpdateWithWhereUniqueWithoutPurchaseInput[]
+    updateMany?: CreatorEventTicketItemUpdateManyWithWhereWithoutPurchaseInput | CreatorEventTicketItemUpdateManyWithWhereWithoutPurchaseInput[]
+    deleteMany?: CreatorEventTicketItemScalarWhereInput | CreatorEventTicketItemScalarWhereInput[]
+  }
+
   export type CreatorEventCheckInScanUpdateManyWithoutTicketPurchaseNestedInput = {
     create?: XOR<CreatorEventCheckInScanCreateWithoutTicketPurchaseInput, CreatorEventCheckInScanUncheckedCreateWithoutTicketPurchaseInput> | CreatorEventCheckInScanCreateWithoutTicketPurchaseInput[] | CreatorEventCheckInScanUncheckedCreateWithoutTicketPurchaseInput[]
     connectOrCreate?: CreatorEventCheckInScanCreateOrConnectWithoutTicketPurchaseInput | CreatorEventCheckInScanCreateOrConnectWithoutTicketPurchaseInput[]
@@ -38286,6 +47361,20 @@ export namespace Prisma {
     deleteMany?: CreatorEventCheckInScanScalarWhereInput | CreatorEventCheckInScanScalarWhereInput[]
   }
 
+  export type CreatorEventTicketItemUncheckedUpdateManyWithoutPurchaseNestedInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutPurchaseInput, CreatorEventTicketItemUncheckedCreateWithoutPurchaseInput> | CreatorEventTicketItemCreateWithoutPurchaseInput[] | CreatorEventTicketItemUncheckedCreateWithoutPurchaseInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutPurchaseInput | CreatorEventTicketItemCreateOrConnectWithoutPurchaseInput[]
+    upsert?: CreatorEventTicketItemUpsertWithWhereUniqueWithoutPurchaseInput | CreatorEventTicketItemUpsertWithWhereUniqueWithoutPurchaseInput[]
+    createMany?: CreatorEventTicketItemCreateManyPurchaseInputEnvelope
+    set?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    disconnect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    delete?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    update?: CreatorEventTicketItemUpdateWithWhereUniqueWithoutPurchaseInput | CreatorEventTicketItemUpdateWithWhereUniqueWithoutPurchaseInput[]
+    updateMany?: CreatorEventTicketItemUpdateManyWithWhereWithoutPurchaseInput | CreatorEventTicketItemUpdateManyWithWhereWithoutPurchaseInput[]
+    deleteMany?: CreatorEventTicketItemScalarWhereInput | CreatorEventTicketItemScalarWhereInput[]
+  }
+
   export type CreatorEventCheckInScanUncheckedUpdateManyWithoutTicketPurchaseNestedInput = {
     create?: XOR<CreatorEventCheckInScanCreateWithoutTicketPurchaseInput, CreatorEventCheckInScanUncheckedCreateWithoutTicketPurchaseInput> | CreatorEventCheckInScanCreateWithoutTicketPurchaseInput[] | CreatorEventCheckInScanUncheckedCreateWithoutTicketPurchaseInput[]
     connectOrCreate?: CreatorEventCheckInScanCreateOrConnectWithoutTicketPurchaseInput | CreatorEventCheckInScanCreateOrConnectWithoutTicketPurchaseInput[]
@@ -38298,6 +47387,50 @@ export namespace Prisma {
     update?: CreatorEventCheckInScanUpdateWithWhereUniqueWithoutTicketPurchaseInput | CreatorEventCheckInScanUpdateWithWhereUniqueWithoutTicketPurchaseInput[]
     updateMany?: CreatorEventCheckInScanUpdateManyWithWhereWithoutTicketPurchaseInput | CreatorEventCheckInScanUpdateManyWithWhereWithoutTicketPurchaseInput[]
     deleteMany?: CreatorEventCheckInScanScalarWhereInput | CreatorEventCheckInScanScalarWhereInput[]
+  }
+
+  export type CreatorEventTicketPurchaseCreateNestedOneWithoutTicketItemsInput = {
+    create?: XOR<CreatorEventTicketPurchaseCreateWithoutTicketItemsInput, CreatorEventTicketPurchaseUncheckedCreateWithoutTicketItemsInput>
+    connectOrCreate?: CreatorEventTicketPurchaseCreateOrConnectWithoutTicketItemsInput
+    connect?: CreatorEventTicketPurchaseWhereUniqueInput
+  }
+
+  export type CreatorEventTicketCreateNestedOneWithoutTicketItemsInput = {
+    create?: XOR<CreatorEventTicketCreateWithoutTicketItemsInput, CreatorEventTicketUncheckedCreateWithoutTicketItemsInput>
+    connectOrCreate?: CreatorEventTicketCreateOrConnectWithoutTicketItemsInput
+    connect?: CreatorEventTicketWhereUniqueInput
+  }
+
+  export type CreatorEventCheckInUserCreateNestedOneWithoutCheckedInTicketItemsInput = {
+    create?: XOR<CreatorEventCheckInUserCreateWithoutCheckedInTicketItemsInput, CreatorEventCheckInUserUncheckedCreateWithoutCheckedInTicketItemsInput>
+    connectOrCreate?: CreatorEventCheckInUserCreateOrConnectWithoutCheckedInTicketItemsInput
+    connect?: CreatorEventCheckInUserWhereUniqueInput
+  }
+
+  export type CreatorEventTicketPurchaseUpdateOneRequiredWithoutTicketItemsNestedInput = {
+    create?: XOR<CreatorEventTicketPurchaseCreateWithoutTicketItemsInput, CreatorEventTicketPurchaseUncheckedCreateWithoutTicketItemsInput>
+    connectOrCreate?: CreatorEventTicketPurchaseCreateOrConnectWithoutTicketItemsInput
+    upsert?: CreatorEventTicketPurchaseUpsertWithoutTicketItemsInput
+    connect?: CreatorEventTicketPurchaseWhereUniqueInput
+    update?: XOR<XOR<CreatorEventTicketPurchaseUpdateToOneWithWhereWithoutTicketItemsInput, CreatorEventTicketPurchaseUpdateWithoutTicketItemsInput>, CreatorEventTicketPurchaseUncheckedUpdateWithoutTicketItemsInput>
+  }
+
+  export type CreatorEventTicketUpdateOneRequiredWithoutTicketItemsNestedInput = {
+    create?: XOR<CreatorEventTicketCreateWithoutTicketItemsInput, CreatorEventTicketUncheckedCreateWithoutTicketItemsInput>
+    connectOrCreate?: CreatorEventTicketCreateOrConnectWithoutTicketItemsInput
+    upsert?: CreatorEventTicketUpsertWithoutTicketItemsInput
+    connect?: CreatorEventTicketWhereUniqueInput
+    update?: XOR<XOR<CreatorEventTicketUpdateToOneWithWhereWithoutTicketItemsInput, CreatorEventTicketUpdateWithoutTicketItemsInput>, CreatorEventTicketUncheckedUpdateWithoutTicketItemsInput>
+  }
+
+  export type CreatorEventCheckInUserUpdateOneWithoutCheckedInTicketItemsNestedInput = {
+    create?: XOR<CreatorEventCheckInUserCreateWithoutCheckedInTicketItemsInput, CreatorEventCheckInUserUncheckedCreateWithoutCheckedInTicketItemsInput>
+    connectOrCreate?: CreatorEventCheckInUserCreateOrConnectWithoutCheckedInTicketItemsInput
+    upsert?: CreatorEventCheckInUserUpsertWithoutCheckedInTicketItemsInput
+    disconnect?: CreatorEventCheckInUserWhereInput | boolean
+    delete?: CreatorEventCheckInUserWhereInput | boolean
+    connect?: CreatorEventCheckInUserWhereUniqueInput
+    update?: XOR<XOR<CreatorEventCheckInUserUpdateToOneWithWhereWithoutCheckedInTicketItemsInput, CreatorEventCheckInUserUpdateWithoutCheckedInTicketItemsInput>, CreatorEventCheckInUserUncheckedUpdateWithoutCheckedInTicketItemsInput>
   }
 
   export type CreatorCreateNestedOneWithoutCheckInUsersInput = {
@@ -38319,6 +47452,13 @@ export namespace Prisma {
     connect?: CreatorEventTicketPurchaseWhereUniqueInput | CreatorEventTicketPurchaseWhereUniqueInput[]
   }
 
+  export type CreatorEventTicketItemCreateNestedManyWithoutCheckedInByUserInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutCheckedInByUserInput, CreatorEventTicketItemUncheckedCreateWithoutCheckedInByUserInput> | CreatorEventTicketItemCreateWithoutCheckedInByUserInput[] | CreatorEventTicketItemUncheckedCreateWithoutCheckedInByUserInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutCheckedInByUserInput | CreatorEventTicketItemCreateOrConnectWithoutCheckedInByUserInput[]
+    createMany?: CreatorEventTicketItemCreateManyCheckedInByUserInputEnvelope
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+  }
+
   export type CreatorEventCheckInScanCreateNestedManyWithoutCheckInUserInput = {
     create?: XOR<CreatorEventCheckInScanCreateWithoutCheckInUserInput, CreatorEventCheckInScanUncheckedCreateWithoutCheckInUserInput> | CreatorEventCheckInScanCreateWithoutCheckInUserInput[] | CreatorEventCheckInScanUncheckedCreateWithoutCheckInUserInput[]
     connectOrCreate?: CreatorEventCheckInScanCreateOrConnectWithoutCheckInUserInput | CreatorEventCheckInScanCreateOrConnectWithoutCheckInUserInput[]
@@ -38338,6 +47478,13 @@ export namespace Prisma {
     connectOrCreate?: CreatorEventTicketPurchaseCreateOrConnectWithoutCheckedInByUserInput | CreatorEventTicketPurchaseCreateOrConnectWithoutCheckedInByUserInput[]
     createMany?: CreatorEventTicketPurchaseCreateManyCheckedInByUserInputEnvelope
     connect?: CreatorEventTicketPurchaseWhereUniqueInput | CreatorEventTicketPurchaseWhereUniqueInput[]
+  }
+
+  export type CreatorEventTicketItemUncheckedCreateNestedManyWithoutCheckedInByUserInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutCheckedInByUserInput, CreatorEventTicketItemUncheckedCreateWithoutCheckedInByUserInput> | CreatorEventTicketItemCreateWithoutCheckedInByUserInput[] | CreatorEventTicketItemUncheckedCreateWithoutCheckedInByUserInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutCheckedInByUserInput | CreatorEventTicketItemCreateOrConnectWithoutCheckedInByUserInput[]
+    createMany?: CreatorEventTicketItemCreateManyCheckedInByUserInputEnvelope
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
   }
 
   export type CreatorEventCheckInScanUncheckedCreateNestedManyWithoutCheckInUserInput = {
@@ -38388,6 +47535,20 @@ export namespace Prisma {
     deleteMany?: CreatorEventTicketPurchaseScalarWhereInput | CreatorEventTicketPurchaseScalarWhereInput[]
   }
 
+  export type CreatorEventTicketItemUpdateManyWithoutCheckedInByUserNestedInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutCheckedInByUserInput, CreatorEventTicketItemUncheckedCreateWithoutCheckedInByUserInput> | CreatorEventTicketItemCreateWithoutCheckedInByUserInput[] | CreatorEventTicketItemUncheckedCreateWithoutCheckedInByUserInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutCheckedInByUserInput | CreatorEventTicketItemCreateOrConnectWithoutCheckedInByUserInput[]
+    upsert?: CreatorEventTicketItemUpsertWithWhereUniqueWithoutCheckedInByUserInput | CreatorEventTicketItemUpsertWithWhereUniqueWithoutCheckedInByUserInput[]
+    createMany?: CreatorEventTicketItemCreateManyCheckedInByUserInputEnvelope
+    set?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    disconnect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    delete?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    update?: CreatorEventTicketItemUpdateWithWhereUniqueWithoutCheckedInByUserInput | CreatorEventTicketItemUpdateWithWhereUniqueWithoutCheckedInByUserInput[]
+    updateMany?: CreatorEventTicketItemUpdateManyWithWhereWithoutCheckedInByUserInput | CreatorEventTicketItemUpdateManyWithWhereWithoutCheckedInByUserInput[]
+    deleteMany?: CreatorEventTicketItemScalarWhereInput | CreatorEventTicketItemScalarWhereInput[]
+  }
+
   export type CreatorEventCheckInScanUpdateManyWithoutCheckInUserNestedInput = {
     create?: XOR<CreatorEventCheckInScanCreateWithoutCheckInUserInput, CreatorEventCheckInScanUncheckedCreateWithoutCheckInUserInput> | CreatorEventCheckInScanCreateWithoutCheckInUserInput[] | CreatorEventCheckInScanUncheckedCreateWithoutCheckInUserInput[]
     connectOrCreate?: CreatorEventCheckInScanCreateOrConnectWithoutCheckInUserInput | CreatorEventCheckInScanCreateOrConnectWithoutCheckInUserInput[]
@@ -38428,6 +47589,20 @@ export namespace Prisma {
     update?: CreatorEventTicketPurchaseUpdateWithWhereUniqueWithoutCheckedInByUserInput | CreatorEventTicketPurchaseUpdateWithWhereUniqueWithoutCheckedInByUserInput[]
     updateMany?: CreatorEventTicketPurchaseUpdateManyWithWhereWithoutCheckedInByUserInput | CreatorEventTicketPurchaseUpdateManyWithWhereWithoutCheckedInByUserInput[]
     deleteMany?: CreatorEventTicketPurchaseScalarWhereInput | CreatorEventTicketPurchaseScalarWhereInput[]
+  }
+
+  export type CreatorEventTicketItemUncheckedUpdateManyWithoutCheckedInByUserNestedInput = {
+    create?: XOR<CreatorEventTicketItemCreateWithoutCheckedInByUserInput, CreatorEventTicketItemUncheckedCreateWithoutCheckedInByUserInput> | CreatorEventTicketItemCreateWithoutCheckedInByUserInput[] | CreatorEventTicketItemUncheckedCreateWithoutCheckedInByUserInput[]
+    connectOrCreate?: CreatorEventTicketItemCreateOrConnectWithoutCheckedInByUserInput | CreatorEventTicketItemCreateOrConnectWithoutCheckedInByUserInput[]
+    upsert?: CreatorEventTicketItemUpsertWithWhereUniqueWithoutCheckedInByUserInput | CreatorEventTicketItemUpsertWithWhereUniqueWithoutCheckedInByUserInput[]
+    createMany?: CreatorEventTicketItemCreateManyCheckedInByUserInputEnvelope
+    set?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    disconnect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    delete?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    connect?: CreatorEventTicketItemWhereUniqueInput | CreatorEventTicketItemWhereUniqueInput[]
+    update?: CreatorEventTicketItemUpdateWithWhereUniqueWithoutCheckedInByUserInput | CreatorEventTicketItemUpdateWithWhereUniqueWithoutCheckedInByUserInput[]
+    updateMany?: CreatorEventTicketItemUpdateManyWithWhereWithoutCheckedInByUserInput | CreatorEventTicketItemUpdateManyWithWhereWithoutCheckedInByUserInput[]
+    deleteMany?: CreatorEventTicketItemScalarWhereInput | CreatorEventTicketItemScalarWhereInput[]
   }
 
   export type CreatorEventCheckInScanUncheckedUpdateManyWithoutCheckInUserNestedInput = {
@@ -38699,6 +47874,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -38719,11 +47899,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -38803,6 +47978,14 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -38833,14 +48016,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -39089,27 +48264,123 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     videos?: CreatorVideoCreateNestedManyWithoutCreatorInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderCreateNestedManyWithoutCreatorInput
     events?: CreatorEventCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorUncheckedCreateWithoutProfileInput = {
     id: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     videos?: CreatorVideoUncheckedCreateNestedManyWithoutCreatorInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderUncheckedCreateNestedManyWithoutCreatorInput
     events?: CreatorEventUncheckedCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestUncheckedCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorCreateOrConnectWithoutProfileInput = {
     where: CreatorWhereUniqueInput
     create: XOR<CreatorCreateWithoutProfileInput, CreatorUncheckedCreateWithoutProfileInput>
+  }
+
+  export type CreatorFollowCreateWithoutFollowerProfileInput = {
+    id: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: CreatorCreateNestedOneWithoutFollowsInput
+  }
+
+  export type CreatorFollowUncheckedCreateWithoutFollowerProfileInput = {
+    id: string
+    creatorId: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorFollowCreateOrConnectWithoutFollowerProfileInput = {
+    where: CreatorFollowWhereUniqueInput
+    create: XOR<CreatorFollowCreateWithoutFollowerProfileInput, CreatorFollowUncheckedCreateWithoutFollowerProfileInput>
+  }
+
+  export type CreatorFollowCreateManyFollowerProfileInputEnvelope = {
+    data: CreatorFollowCreateManyFollowerProfileInput | CreatorFollowCreateManyFollowerProfileInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CreatorEventLikeCreateWithoutLikerProfileInput = {
+    id: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creatorEvent: CreatorEventCreateNestedOneWithoutLikesInput
+  }
+
+  export type CreatorEventLikeUncheckedCreateWithoutLikerProfileInput = {
+    id: string
+    creatorEventId: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorEventLikeCreateOrConnectWithoutLikerProfileInput = {
+    where: CreatorEventLikeWhereUniqueInput
+    create: XOR<CreatorEventLikeCreateWithoutLikerProfileInput, CreatorEventLikeUncheckedCreateWithoutLikerProfileInput>
+  }
+
+  export type CreatorEventLikeCreateManyLikerProfileInputEnvelope = {
+    data: CreatorEventLikeCreateManyLikerProfileInput | CreatorEventLikeCreateManyLikerProfileInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CreatorVideoLikeCreateWithoutLikerProfileInput = {
+    id: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creatorVideo: CreatorVideoCreateNestedOneWithoutLikesInput
+  }
+
+  export type CreatorVideoLikeUncheckedCreateWithoutLikerProfileInput = {
+    id: string
+    creatorVideoId: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorVideoLikeCreateOrConnectWithoutLikerProfileInput = {
+    where: CreatorVideoLikeWhereUniqueInput
+    create: XOR<CreatorVideoLikeCreateWithoutLikerProfileInput, CreatorVideoLikeUncheckedCreateWithoutLikerProfileInput>
+  }
+
+  export type CreatorVideoLikeCreateManyLikerProfileInputEnvelope = {
+    data: CreatorVideoLikeCreateManyLikerProfileInput | CreatorVideoLikeCreateManyLikerProfileInput[]
+    skipDuplicates?: boolean
   }
 
   export type AuthCredentialCreateWithoutProfileInput = {
@@ -39212,22 +48483,124 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     videos?: CreatorVideoUpdateManyWithoutCreatorNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorUncheckedUpdateWithoutProfileInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     videos?: CreatorVideoUncheckedUpdateManyWithoutCreatorNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUncheckedUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUncheckedUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUncheckedUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type CreatorFollowUpsertWithWhereUniqueWithoutFollowerProfileInput = {
+    where: CreatorFollowWhereUniqueInput
+    update: XOR<CreatorFollowUpdateWithoutFollowerProfileInput, CreatorFollowUncheckedUpdateWithoutFollowerProfileInput>
+    create: XOR<CreatorFollowCreateWithoutFollowerProfileInput, CreatorFollowUncheckedCreateWithoutFollowerProfileInput>
+  }
+
+  export type CreatorFollowUpdateWithWhereUniqueWithoutFollowerProfileInput = {
+    where: CreatorFollowWhereUniqueInput
+    data: XOR<CreatorFollowUpdateWithoutFollowerProfileInput, CreatorFollowUncheckedUpdateWithoutFollowerProfileInput>
+  }
+
+  export type CreatorFollowUpdateManyWithWhereWithoutFollowerProfileInput = {
+    where: CreatorFollowScalarWhereInput
+    data: XOR<CreatorFollowUpdateManyMutationInput, CreatorFollowUncheckedUpdateManyWithoutFollowerProfileInput>
+  }
+
+  export type CreatorFollowScalarWhereInput = {
+    AND?: CreatorFollowScalarWhereInput | CreatorFollowScalarWhereInput[]
+    OR?: CreatorFollowScalarWhereInput[]
+    NOT?: CreatorFollowScalarWhereInput | CreatorFollowScalarWhereInput[]
+    id?: StringFilter<"CreatorFollow"> | string
+    creatorId?: StringFilter<"CreatorFollow"> | string
+    followerProfileId?: StringFilter<"CreatorFollow"> | string
+    status?: StringFilter<"CreatorFollow"> | string
+    createdAt?: DateTimeFilter<"CreatorFollow"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorFollow"> | Date | string
+  }
+
+  export type CreatorEventLikeUpsertWithWhereUniqueWithoutLikerProfileInput = {
+    where: CreatorEventLikeWhereUniqueInput
+    update: XOR<CreatorEventLikeUpdateWithoutLikerProfileInput, CreatorEventLikeUncheckedUpdateWithoutLikerProfileInput>
+    create: XOR<CreatorEventLikeCreateWithoutLikerProfileInput, CreatorEventLikeUncheckedCreateWithoutLikerProfileInput>
+  }
+
+  export type CreatorEventLikeUpdateWithWhereUniqueWithoutLikerProfileInput = {
+    where: CreatorEventLikeWhereUniqueInput
+    data: XOR<CreatorEventLikeUpdateWithoutLikerProfileInput, CreatorEventLikeUncheckedUpdateWithoutLikerProfileInput>
+  }
+
+  export type CreatorEventLikeUpdateManyWithWhereWithoutLikerProfileInput = {
+    where: CreatorEventLikeScalarWhereInput
+    data: XOR<CreatorEventLikeUpdateManyMutationInput, CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileInput>
+  }
+
+  export type CreatorEventLikeScalarWhereInput = {
+    AND?: CreatorEventLikeScalarWhereInput | CreatorEventLikeScalarWhereInput[]
+    OR?: CreatorEventLikeScalarWhereInput[]
+    NOT?: CreatorEventLikeScalarWhereInput | CreatorEventLikeScalarWhereInput[]
+    id?: StringFilter<"CreatorEventLike"> | string
+    creatorEventId?: StringFilter<"CreatorEventLike"> | string
+    likerProfileId?: StringNullableFilter<"CreatorEventLike"> | string | null
+    status?: StringFilter<"CreatorEventLike"> | string
+    createdAt?: DateTimeFilter<"CreatorEventLike"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorEventLike"> | Date | string
+  }
+
+  export type CreatorVideoLikeUpsertWithWhereUniqueWithoutLikerProfileInput = {
+    where: CreatorVideoLikeWhereUniqueInput
+    update: XOR<CreatorVideoLikeUpdateWithoutLikerProfileInput, CreatorVideoLikeUncheckedUpdateWithoutLikerProfileInput>
+    create: XOR<CreatorVideoLikeCreateWithoutLikerProfileInput, CreatorVideoLikeUncheckedCreateWithoutLikerProfileInput>
+  }
+
+  export type CreatorVideoLikeUpdateWithWhereUniqueWithoutLikerProfileInput = {
+    where: CreatorVideoLikeWhereUniqueInput
+    data: XOR<CreatorVideoLikeUpdateWithoutLikerProfileInput, CreatorVideoLikeUncheckedUpdateWithoutLikerProfileInput>
+  }
+
+  export type CreatorVideoLikeUpdateManyWithWhereWithoutLikerProfileInput = {
+    where: CreatorVideoLikeScalarWhereInput
+    data: XOR<CreatorVideoLikeUpdateManyMutationInput, CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileInput>
+  }
+
+  export type CreatorVideoLikeScalarWhereInput = {
+    AND?: CreatorVideoLikeScalarWhereInput | CreatorVideoLikeScalarWhereInput[]
+    OR?: CreatorVideoLikeScalarWhereInput[]
+    NOT?: CreatorVideoLikeScalarWhereInput | CreatorVideoLikeScalarWhereInput[]
+    id?: StringFilter<"CreatorVideoLike"> | string
+    creatorVideoId?: StringFilter<"CreatorVideoLike"> | string
+    likerProfileId?: StringNullableFilter<"CreatorVideoLike"> | string | null
+    status?: StringFilter<"CreatorVideoLike"> | string
+    createdAt?: DateTimeFilter<"CreatorVideoLike"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorVideoLike"> | Date | string
   }
 
   export type AuthCredentialUpsertWithoutProfileInput = {
@@ -39322,8 +48695,18 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     avatarUrl?: string | null
+    creatorName?: string | null
     bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: string | null
     addressLat?: number | null
     addressLon?: number | null
@@ -39339,6 +48722,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     creator?: CreatorCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
     session?: SessionCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
   }
@@ -39348,8 +48734,18 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     avatarUrl?: string | null
+    creatorName?: string | null
     bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: string | null
     addressLat?: number | null
     addressLon?: number | null
@@ -39365,6 +48761,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     creator?: CreatorUncheckedCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
     session?: SessionUncheckedCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
   }
@@ -39390,8 +48789,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -39407,6 +48816,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
     session?: SessionUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
   }
@@ -39416,8 +48828,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -39433,6 +48855,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUncheckedUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
     session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
   }
@@ -39442,8 +48867,18 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     avatarUrl?: string | null
+    creatorName?: string | null
     bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: string | null
     addressLat?: number | null
     addressLon?: number | null
@@ -39458,6 +48893,9 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
     credential?: AuthCredentialCreateNestedOneWithoutProfileInput
     session?: SessionCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
@@ -39468,8 +48906,18 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     avatarUrl?: string | null
+    creatorName?: string | null
     bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: string | null
     addressLat?: number | null
     addressLon?: number | null
@@ -39484,6 +48932,9 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
     credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
     session?: SessionUncheckedCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
@@ -39512,6 +48963,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -39521,7 +48974,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     folder: CreatorVideoFolderCreateNestedOneWithoutVideosInput
@@ -39550,6 +49002,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -39559,7 +49013,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     views?: CreatorVideoViewUncheckedCreateNestedManyWithoutCreatorVideoInput
@@ -39711,10 +49164,12 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     restrictedLocations?: CreatorEventLocationRestrictionCreateNestedManyWithoutEventInput
     tickets?: CreatorEventTicketCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutEventInput
     checkInScans?: CreatorEventCheckInScanCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutEventInput
@@ -39773,10 +49228,12 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedCreateNestedManyWithoutEventInput
     tickets?: CreatorEventTicketUncheckedCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeUncheckedCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutEventInput
     checkInScans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutEventInput
@@ -39810,6 +49267,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     event: CreatorEventCreateNestedOneWithoutCheckInUsersInput
     checkedInPurchases?: CreatorEventTicketPurchaseCreateNestedManyWithoutCheckedInByUserInput
+    checkedInTicketItems?: CreatorEventTicketItemCreateNestedManyWithoutCheckedInByUserInput
     scans?: CreatorEventCheckInScanCreateNestedManyWithoutCheckInUserInput
     cameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutOperatorUserInput
   }
@@ -39832,6 +49290,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     checkedInPurchases?: CreatorEventTicketPurchaseUncheckedCreateNestedManyWithoutCheckedInByUserInput
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutCheckedInByUserInput
     scans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutCheckInUserInput
     cameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutOperatorUserInput
   }
@@ -39843,6 +49302,108 @@ export namespace Prisma {
 
   export type CreatorEventCheckInUserCreateManyCreatorInputEnvelope = {
     data: CreatorEventCheckInUserCreateManyCreatorInput | CreatorEventCheckInUserCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CreatorPayoutAccountCreateWithoutCreatorInput = {
+    id: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    accountType: string
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payoutRequests?: CreatorPayoutRequestCreateNestedManyWithoutPayoutAccountInput
+  }
+
+  export type CreatorPayoutAccountUncheckedCreateWithoutCreatorInput = {
+    id: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    accountType: string
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payoutRequests?: CreatorPayoutRequestUncheckedCreateNestedManyWithoutPayoutAccountInput
+  }
+
+  export type CreatorPayoutAccountCreateOrConnectWithoutCreatorInput = {
+    where: CreatorPayoutAccountWhereUniqueInput
+    create: XOR<CreatorPayoutAccountCreateWithoutCreatorInput, CreatorPayoutAccountUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type CreatorPayoutAccountCreateManyCreatorInputEnvelope = {
+    data: CreatorPayoutAccountCreateManyCreatorInput | CreatorPayoutAccountCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CreatorPayoutRequestCreateWithoutCreatorInput = {
+    id: string
+    amount: number
+    currency?: string
+    status?: string
+    note?: string | null
+    transactionId?: string | null
+    requestedAt?: Date | string
+    processedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payoutAccount?: CreatorPayoutAccountCreateNestedOneWithoutPayoutRequestsInput
+  }
+
+  export type CreatorPayoutRequestUncheckedCreateWithoutCreatorInput = {
+    id: string
+    payoutAccountId?: string | null
+    amount: number
+    currency?: string
+    status?: string
+    note?: string | null
+    transactionId?: string | null
+    requestedAt?: Date | string
+    processedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorPayoutRequestCreateOrConnectWithoutCreatorInput = {
+    where: CreatorPayoutRequestWhereUniqueInput
+    create: XOR<CreatorPayoutRequestCreateWithoutCreatorInput, CreatorPayoutRequestUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type CreatorPayoutRequestCreateManyCreatorInputEnvelope = {
+    data: CreatorPayoutRequestCreateManyCreatorInput | CreatorPayoutRequestCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CreatorFollowCreateWithoutCreatorInput = {
+    id: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    followerProfile: ProfileCreateNestedOneWithoutCreatorFollowsInput
+  }
+
+  export type CreatorFollowUncheckedCreateWithoutCreatorInput = {
+    id: string
+    followerProfileId: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorFollowCreateOrConnectWithoutCreatorInput = {
+    where: CreatorFollowWhereUniqueInput
+    create: XOR<CreatorFollowCreateWithoutCreatorInput, CreatorFollowUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type CreatorFollowCreateManyCreatorInputEnvelope = {
+    data: CreatorFollowCreateManyCreatorInput | CreatorFollowCreateManyCreatorInput[]
     skipDuplicates?: boolean
   }
 
@@ -39862,8 +49423,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -39878,6 +49449,9 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
     credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
     session?: SessionUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
@@ -39888,8 +49462,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -39904,6 +49488,9 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
     credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
     session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
@@ -39948,6 +49535,8 @@ export namespace Prisma {
     rent24Price?: IntNullableFilter<"CreatorVideo"> | number | null
     rent48Price?: IntNullableFilter<"CreatorVideo"> | number | null
     purchasePrice?: IntNullableFilter<"CreatorVideo"> | number | null
+    revenue?: IntFilter<"CreatorVideo"> | number
+    platformFee?: IntFilter<"CreatorVideo"> | number
     tags?: StringNullableListFilter<"CreatorVideo">
     packageName?: StringNullableFilter<"CreatorVideo"> | string | null
     episodeIndex?: IntNullableFilter<"CreatorVideo"> | number | null
@@ -39957,7 +49546,6 @@ export namespace Prisma {
     viewsCount?: IntFilter<"CreatorVideo"> | number
     likesCount?: IntFilter<"CreatorVideo"> | number
     commentsCount?: IntFilter<"CreatorVideo"> | number
-    revenue?: IntFilter<"CreatorVideo"> | number
     createdAt?: DateTimeFilter<"CreatorVideo"> | Date | string
     updatedAt?: DateTimeFilter<"CreatorVideo"> | Date | string
   }
@@ -40082,6 +49670,7 @@ export namespace Prisma {
     currentViewersCount?: IntFilter<"CreatorEvent"> | number
     venueParticipantCount?: IntFilter<"CreatorEvent"> | number
     revenue?: IntFilter<"CreatorEvent"> | number
+    platformFee?: IntFilter<"CreatorEvent"> | number
     createdAt?: DateTimeFilter<"CreatorEvent"> | Date | string
     updatedAt?: DateTimeFilter<"CreatorEvent"> | Date | string
   }
@@ -40125,15 +49714,693 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CreatorEventCheckInUser"> | Date | string
   }
 
+  export type CreatorPayoutAccountUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: CreatorPayoutAccountWhereUniqueInput
+    update: XOR<CreatorPayoutAccountUpdateWithoutCreatorInput, CreatorPayoutAccountUncheckedUpdateWithoutCreatorInput>
+    create: XOR<CreatorPayoutAccountCreateWithoutCreatorInput, CreatorPayoutAccountUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type CreatorPayoutAccountUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: CreatorPayoutAccountWhereUniqueInput
+    data: XOR<CreatorPayoutAccountUpdateWithoutCreatorInput, CreatorPayoutAccountUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type CreatorPayoutAccountUpdateManyWithWhereWithoutCreatorInput = {
+    where: CreatorPayoutAccountScalarWhereInput
+    data: XOR<CreatorPayoutAccountUpdateManyMutationInput, CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type CreatorPayoutAccountScalarWhereInput = {
+    AND?: CreatorPayoutAccountScalarWhereInput | CreatorPayoutAccountScalarWhereInput[]
+    OR?: CreatorPayoutAccountScalarWhereInput[]
+    NOT?: CreatorPayoutAccountScalarWhereInput | CreatorPayoutAccountScalarWhereInput[]
+    id?: StringFilter<"CreatorPayoutAccount"> | string
+    creatorId?: StringFilter<"CreatorPayoutAccount"> | string
+    bankName?: StringFilter<"CreatorPayoutAccount"> | string
+    accountNumber?: StringFilter<"CreatorPayoutAccount"> | string
+    accountName?: StringFilter<"CreatorPayoutAccount"> | string
+    accountType?: StringFilter<"CreatorPayoutAccount"> | string
+    isPrimary?: BoolFilter<"CreatorPayoutAccount"> | boolean
+    verified?: BoolFilter<"CreatorPayoutAccount"> | boolean
+    verifiedAt?: DateTimeNullableFilter<"CreatorPayoutAccount"> | Date | string | null
+    createdAt?: DateTimeFilter<"CreatorPayoutAccount"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorPayoutAccount"> | Date | string
+  }
+
+  export type CreatorPayoutRequestUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: CreatorPayoutRequestWhereUniqueInput
+    update: XOR<CreatorPayoutRequestUpdateWithoutCreatorInput, CreatorPayoutRequestUncheckedUpdateWithoutCreatorInput>
+    create: XOR<CreatorPayoutRequestCreateWithoutCreatorInput, CreatorPayoutRequestUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type CreatorPayoutRequestUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: CreatorPayoutRequestWhereUniqueInput
+    data: XOR<CreatorPayoutRequestUpdateWithoutCreatorInput, CreatorPayoutRequestUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type CreatorPayoutRequestUpdateManyWithWhereWithoutCreatorInput = {
+    where: CreatorPayoutRequestScalarWhereInput
+    data: XOR<CreatorPayoutRequestUpdateManyMutationInput, CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type CreatorPayoutRequestScalarWhereInput = {
+    AND?: CreatorPayoutRequestScalarWhereInput | CreatorPayoutRequestScalarWhereInput[]
+    OR?: CreatorPayoutRequestScalarWhereInput[]
+    NOT?: CreatorPayoutRequestScalarWhereInput | CreatorPayoutRequestScalarWhereInput[]
+    id?: StringFilter<"CreatorPayoutRequest"> | string
+    creatorId?: StringFilter<"CreatorPayoutRequest"> | string
+    payoutAccountId?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    amount?: IntFilter<"CreatorPayoutRequest"> | number
+    currency?: StringFilter<"CreatorPayoutRequest"> | string
+    status?: StringFilter<"CreatorPayoutRequest"> | string
+    note?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    transactionId?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    requestedAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
+    processedAt?: DateTimeNullableFilter<"CreatorPayoutRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
+  }
+
+  export type CreatorFollowUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: CreatorFollowWhereUniqueInput
+    update: XOR<CreatorFollowUpdateWithoutCreatorInput, CreatorFollowUncheckedUpdateWithoutCreatorInput>
+    create: XOR<CreatorFollowCreateWithoutCreatorInput, CreatorFollowUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type CreatorFollowUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: CreatorFollowWhereUniqueInput
+    data: XOR<CreatorFollowUpdateWithoutCreatorInput, CreatorFollowUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type CreatorFollowUpdateManyWithWhereWithoutCreatorInput = {
+    where: CreatorFollowScalarWhereInput
+    data: XOR<CreatorFollowUpdateManyMutationInput, CreatorFollowUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type CreatorCreateWithoutFollowsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
+    profile: ProfileCreateNestedOneWithoutCreatorInput
+    videos?: CreatorVideoCreateNestedManyWithoutCreatorInput
+    videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutCreatorInput
+    folders?: CreatorVideoFolderCreateNestedManyWithoutCreatorInput
+    events?: CreatorEventCreateNestedManyWithoutCreatorInput
+    checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestCreateNestedManyWithoutCreatorInput
+  }
+
+  export type CreatorUncheckedCreateWithoutFollowsInput = {
+    id: string
+    profileId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
+    videos?: CreatorVideoUncheckedCreateNestedManyWithoutCreatorInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutCreatorInput
+    folders?: CreatorVideoFolderUncheckedCreateNestedManyWithoutCreatorInput
+    events?: CreatorEventUncheckedCreateNestedManyWithoutCreatorInput
+    checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestUncheckedCreateNestedManyWithoutCreatorInput
+  }
+
+  export type CreatorCreateOrConnectWithoutFollowsInput = {
+    where: CreatorWhereUniqueInput
+    create: XOR<CreatorCreateWithoutFollowsInput, CreatorUncheckedCreateWithoutFollowsInput>
+  }
+
+  export type ProfileCreateWithoutCreatorFollowsInput = {
+    id: string
+    email: string
+    role?: $Enums.Role
+    fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    avatarUrl?: string | null
+    creatorName?: string | null
+    bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
+    addressFull?: string | null
+    addressLat?: number | null
+    addressLon?: number | null
+    addressType?: string | null
+    addressCountry?: string | null
+    addressState?: string | null
+    addressName?: string | null
+    age?: number | null
+    sex?: string | null
+    emailVerified?: boolean
+    hasPassword?: boolean
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator?: CreatorCreateNestedOneWithoutProfileInput
+    eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
+    credential?: AuthCredentialCreateNestedOneWithoutProfileInput
+    session?: SessionCreateNestedManyWithoutProfileInput
+    videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
+  }
+
+  export type ProfileUncheckedCreateWithoutCreatorFollowsInput = {
+    id: string
+    email: string
+    role?: $Enums.Role
+    fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    avatarUrl?: string | null
+    creatorName?: string | null
+    bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
+    addressFull?: string | null
+    addressLat?: number | null
+    addressLon?: number | null
+    addressType?: string | null
+    addressCountry?: string | null
+    addressState?: string | null
+    addressName?: string | null
+    age?: number | null
+    sex?: string | null
+    emailVerified?: boolean
+    hasPassword?: boolean
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator?: CreatorUncheckedCreateNestedOneWithoutProfileInput
+    eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
+    session?: SessionUncheckedCreateNestedManyWithoutProfileInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
+  }
+
+  export type ProfileCreateOrConnectWithoutCreatorFollowsInput = {
+    where: ProfileWhereUniqueInput
+    create: XOR<ProfileCreateWithoutCreatorFollowsInput, ProfileUncheckedCreateWithoutCreatorFollowsInput>
+  }
+
+  export type CreatorUpsertWithoutFollowsInput = {
+    update: XOR<CreatorUpdateWithoutFollowsInput, CreatorUncheckedUpdateWithoutFollowsInput>
+    create: XOR<CreatorCreateWithoutFollowsInput, CreatorUncheckedCreateWithoutFollowsInput>
+    where?: CreatorWhereInput
+  }
+
+  export type CreatorUpdateToOneWithWhereWithoutFollowsInput = {
+    where?: CreatorWhereInput
+    data: XOR<CreatorUpdateWithoutFollowsInput, CreatorUncheckedUpdateWithoutFollowsInput>
+  }
+
+  export type CreatorUpdateWithoutFollowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
+    profile?: ProfileUpdateOneRequiredWithoutCreatorNestedInput
+    videos?: CreatorVideoUpdateManyWithoutCreatorNestedInput
+    videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutCreatorNestedInput
+    folders?: CreatorVideoFolderUpdateManyWithoutCreatorNestedInput
+    events?: CreatorEventUpdateManyWithoutCreatorNestedInput
+    checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type CreatorUncheckedUpdateWithoutFollowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    profileId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
+    videos?: CreatorVideoUncheckedUpdateManyWithoutCreatorNestedInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutCreatorNestedInput
+    folders?: CreatorVideoFolderUncheckedUpdateManyWithoutCreatorNestedInput
+    events?: CreatorEventUncheckedUpdateManyWithoutCreatorNestedInput
+    checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type ProfileUpsertWithoutCreatorFollowsInput = {
+    update: XOR<ProfileUpdateWithoutCreatorFollowsInput, ProfileUncheckedUpdateWithoutCreatorFollowsInput>
+    create: XOR<ProfileCreateWithoutCreatorFollowsInput, ProfileUncheckedCreateWithoutCreatorFollowsInput>
+    where?: ProfileWhereInput
+  }
+
+  export type ProfileUpdateToOneWithWhereWithoutCreatorFollowsInput = {
+    where?: ProfileWhereInput
+    data: XOR<ProfileUpdateWithoutCreatorFollowsInput, ProfileUncheckedUpdateWithoutCreatorFollowsInput>
+  }
+
+  export type ProfileUpdateWithoutCreatorFollowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
+    addressFull?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressType?: NullableStringFieldUpdateOperationsInput | string | null
+    addressCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    addressState?: NullableStringFieldUpdateOperationsInput | string | null
+    addressName?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    sex?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    hasPassword?: BoolFieldUpdateOperationsInput | boolean
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneWithoutProfileNestedInput
+    eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
+    credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
+    session?: SessionUpdateManyWithoutProfileNestedInput
+    videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
+  }
+
+  export type ProfileUncheckedUpdateWithoutCreatorFollowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
+    addressFull?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressType?: NullableStringFieldUpdateOperationsInput | string | null
+    addressCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    addressState?: NullableStringFieldUpdateOperationsInput | string | null
+    addressName?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    sex?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    hasPassword?: BoolFieldUpdateOperationsInput | boolean
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUncheckedUpdateOneWithoutProfileNestedInput
+    eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
+    session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
+  }
+
+  export type CreatorCreateWithoutPayoutAccountsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
+    profile: ProfileCreateNestedOneWithoutCreatorInput
+    videos?: CreatorVideoCreateNestedManyWithoutCreatorInput
+    videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutCreatorInput
+    folders?: CreatorVideoFolderCreateNestedManyWithoutCreatorInput
+    events?: CreatorEventCreateNestedManyWithoutCreatorInput
+    checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowCreateNestedManyWithoutCreatorInput
+  }
+
+  export type CreatorUncheckedCreateWithoutPayoutAccountsInput = {
+    id: string
+    profileId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
+    videos?: CreatorVideoUncheckedCreateNestedManyWithoutCreatorInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutCreatorInput
+    folders?: CreatorVideoFolderUncheckedCreateNestedManyWithoutCreatorInput
+    events?: CreatorEventUncheckedCreateNestedManyWithoutCreatorInput
+    checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestUncheckedCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowUncheckedCreateNestedManyWithoutCreatorInput
+  }
+
+  export type CreatorCreateOrConnectWithoutPayoutAccountsInput = {
+    where: CreatorWhereUniqueInput
+    create: XOR<CreatorCreateWithoutPayoutAccountsInput, CreatorUncheckedCreateWithoutPayoutAccountsInput>
+  }
+
+  export type CreatorPayoutRequestCreateWithoutPayoutAccountInput = {
+    id: string
+    amount: number
+    currency?: string
+    status?: string
+    note?: string | null
+    transactionId?: string | null
+    requestedAt?: Date | string
+    processedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: CreatorCreateNestedOneWithoutPayoutRequestsInput
+  }
+
+  export type CreatorPayoutRequestUncheckedCreateWithoutPayoutAccountInput = {
+    id: string
+    creatorId: string
+    amount: number
+    currency?: string
+    status?: string
+    note?: string | null
+    transactionId?: string | null
+    requestedAt?: Date | string
+    processedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorPayoutRequestCreateOrConnectWithoutPayoutAccountInput = {
+    where: CreatorPayoutRequestWhereUniqueInput
+    create: XOR<CreatorPayoutRequestCreateWithoutPayoutAccountInput, CreatorPayoutRequestUncheckedCreateWithoutPayoutAccountInput>
+  }
+
+  export type CreatorPayoutRequestCreateManyPayoutAccountInputEnvelope = {
+    data: CreatorPayoutRequestCreateManyPayoutAccountInput | CreatorPayoutRequestCreateManyPayoutAccountInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CreatorUpsertWithoutPayoutAccountsInput = {
+    update: XOR<CreatorUpdateWithoutPayoutAccountsInput, CreatorUncheckedUpdateWithoutPayoutAccountsInput>
+    create: XOR<CreatorCreateWithoutPayoutAccountsInput, CreatorUncheckedCreateWithoutPayoutAccountsInput>
+    where?: CreatorWhereInput
+  }
+
+  export type CreatorUpdateToOneWithWhereWithoutPayoutAccountsInput = {
+    where?: CreatorWhereInput
+    data: XOR<CreatorUpdateWithoutPayoutAccountsInput, CreatorUncheckedUpdateWithoutPayoutAccountsInput>
+  }
+
+  export type CreatorUpdateWithoutPayoutAccountsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
+    profile?: ProfileUpdateOneRequiredWithoutCreatorNestedInput
+    videos?: CreatorVideoUpdateManyWithoutCreatorNestedInput
+    videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutCreatorNestedInput
+    folders?: CreatorVideoFolderUpdateManyWithoutCreatorNestedInput
+    events?: CreatorEventUpdateManyWithoutCreatorNestedInput
+    checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type CreatorUncheckedUpdateWithoutPayoutAccountsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    profileId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
+    videos?: CreatorVideoUncheckedUpdateManyWithoutCreatorNestedInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutCreatorNestedInput
+    folders?: CreatorVideoFolderUncheckedUpdateManyWithoutCreatorNestedInput
+    events?: CreatorEventUncheckedUpdateManyWithoutCreatorNestedInput
+    checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUncheckedUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type CreatorPayoutRequestUpsertWithWhereUniqueWithoutPayoutAccountInput = {
+    where: CreatorPayoutRequestWhereUniqueInput
+    update: XOR<CreatorPayoutRequestUpdateWithoutPayoutAccountInput, CreatorPayoutRequestUncheckedUpdateWithoutPayoutAccountInput>
+    create: XOR<CreatorPayoutRequestCreateWithoutPayoutAccountInput, CreatorPayoutRequestUncheckedCreateWithoutPayoutAccountInput>
+  }
+
+  export type CreatorPayoutRequestUpdateWithWhereUniqueWithoutPayoutAccountInput = {
+    where: CreatorPayoutRequestWhereUniqueInput
+    data: XOR<CreatorPayoutRequestUpdateWithoutPayoutAccountInput, CreatorPayoutRequestUncheckedUpdateWithoutPayoutAccountInput>
+  }
+
+  export type CreatorPayoutRequestUpdateManyWithWhereWithoutPayoutAccountInput = {
+    where: CreatorPayoutRequestScalarWhereInput
+    data: XOR<CreatorPayoutRequestUpdateManyMutationInput, CreatorPayoutRequestUncheckedUpdateManyWithoutPayoutAccountInput>
+  }
+
+  export type CreatorCreateWithoutPayoutRequestsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
+    profile: ProfileCreateNestedOneWithoutCreatorInput
+    videos?: CreatorVideoCreateNestedManyWithoutCreatorInput
+    videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutCreatorInput
+    folders?: CreatorVideoFolderCreateNestedManyWithoutCreatorInput
+    events?: CreatorEventCreateNestedManyWithoutCreatorInput
+    checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowCreateNestedManyWithoutCreatorInput
+  }
+
+  export type CreatorUncheckedCreateWithoutPayoutRequestsInput = {
+    id: string
+    profileId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
+    videos?: CreatorVideoUncheckedCreateNestedManyWithoutCreatorInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutCreatorInput
+    folders?: CreatorVideoFolderUncheckedCreateNestedManyWithoutCreatorInput
+    events?: CreatorEventUncheckedCreateNestedManyWithoutCreatorInput
+    checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowUncheckedCreateNestedManyWithoutCreatorInput
+  }
+
+  export type CreatorCreateOrConnectWithoutPayoutRequestsInput = {
+    where: CreatorWhereUniqueInput
+    create: XOR<CreatorCreateWithoutPayoutRequestsInput, CreatorUncheckedCreateWithoutPayoutRequestsInput>
+  }
+
+  export type CreatorPayoutAccountCreateWithoutPayoutRequestsInput = {
+    id: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    accountType: string
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: CreatorCreateNestedOneWithoutPayoutAccountsInput
+  }
+
+  export type CreatorPayoutAccountUncheckedCreateWithoutPayoutRequestsInput = {
+    id: string
+    creatorId: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    accountType: string
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorPayoutAccountCreateOrConnectWithoutPayoutRequestsInput = {
+    where: CreatorPayoutAccountWhereUniqueInput
+    create: XOR<CreatorPayoutAccountCreateWithoutPayoutRequestsInput, CreatorPayoutAccountUncheckedCreateWithoutPayoutRequestsInput>
+  }
+
+  export type CreatorUpsertWithoutPayoutRequestsInput = {
+    update: XOR<CreatorUpdateWithoutPayoutRequestsInput, CreatorUncheckedUpdateWithoutPayoutRequestsInput>
+    create: XOR<CreatorCreateWithoutPayoutRequestsInput, CreatorUncheckedCreateWithoutPayoutRequestsInput>
+    where?: CreatorWhereInput
+  }
+
+  export type CreatorUpdateToOneWithWhereWithoutPayoutRequestsInput = {
+    where?: CreatorWhereInput
+    data: XOR<CreatorUpdateWithoutPayoutRequestsInput, CreatorUncheckedUpdateWithoutPayoutRequestsInput>
+  }
+
+  export type CreatorUpdateWithoutPayoutRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
+    profile?: ProfileUpdateOneRequiredWithoutCreatorNestedInput
+    videos?: CreatorVideoUpdateManyWithoutCreatorNestedInput
+    videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutCreatorNestedInput
+    folders?: CreatorVideoFolderUpdateManyWithoutCreatorNestedInput
+    events?: CreatorEventUpdateManyWithoutCreatorNestedInput
+    checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type CreatorUncheckedUpdateWithoutPayoutRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    profileId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
+    videos?: CreatorVideoUncheckedUpdateManyWithoutCreatorNestedInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutCreatorNestedInput
+    folders?: CreatorVideoFolderUncheckedUpdateManyWithoutCreatorNestedInput
+    events?: CreatorEventUncheckedUpdateManyWithoutCreatorNestedInput
+    checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUncheckedUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type CreatorPayoutAccountUpsertWithoutPayoutRequestsInput = {
+    update: XOR<CreatorPayoutAccountUpdateWithoutPayoutRequestsInput, CreatorPayoutAccountUncheckedUpdateWithoutPayoutRequestsInput>
+    create: XOR<CreatorPayoutAccountCreateWithoutPayoutRequestsInput, CreatorPayoutAccountUncheckedCreateWithoutPayoutRequestsInput>
+    where?: CreatorPayoutAccountWhereInput
+  }
+
+  export type CreatorPayoutAccountUpdateToOneWithWhereWithoutPayoutRequestsInput = {
+    where?: CreatorPayoutAccountWhereInput
+    data: XOR<CreatorPayoutAccountUpdateWithoutPayoutRequestsInput, CreatorPayoutAccountUncheckedUpdateWithoutPayoutRequestsInput>
+  }
+
+  export type CreatorPayoutAccountUpdateWithoutPayoutRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    accountType?: StringFieldUpdateOperationsInput | string
+    isPrimary?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneRequiredWithoutPayoutAccountsNestedInput
+  }
+
+  export type CreatorPayoutAccountUncheckedUpdateWithoutPayoutRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    accountType?: StringFieldUpdateOperationsInput | string
+    isPrimary?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CreatorCreateWithoutFoldersInput = {
     id: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     profile: ProfileCreateNestedOneWithoutCreatorInput
     videos?: CreatorVideoCreateNestedManyWithoutCreatorInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutCreatorInput
     events?: CreatorEventCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorUncheckedCreateWithoutFoldersInput = {
@@ -40141,10 +50408,19 @@ export namespace Prisma {
     profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     videos?: CreatorVideoUncheckedCreateNestedManyWithoutCreatorInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutCreatorInput
     events?: CreatorEventUncheckedCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestUncheckedCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorCreateOrConnectWithoutFoldersInput = {
@@ -40170,6 +50446,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -40179,7 +50457,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutVideosInput
@@ -40208,6 +50485,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -40217,7 +50496,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     views?: CreatorVideoViewUncheckedCreateNestedManyWithoutCreatorVideoInput
@@ -40251,11 +50529,20 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     profile?: ProfileUpdateOneRequiredWithoutCreatorNestedInput
     videos?: CreatorVideoUpdateManyWithoutCreatorNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorUncheckedUpdateWithoutFoldersInput = {
@@ -40263,10 +50550,19 @@ export namespace Prisma {
     profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     videos?: CreatorVideoUncheckedUpdateManyWithoutCreatorNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUncheckedUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorVideoUpsertWithWhereUniqueWithoutFolderInput = {
@@ -40289,11 +50585,20 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     profile: ProfileCreateNestedOneWithoutCreatorInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderCreateNestedManyWithoutCreatorInput
     events?: CreatorEventCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorUncheckedCreateWithoutVideosInput = {
@@ -40301,10 +50606,19 @@ export namespace Prisma {
     profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderUncheckedCreateNestedManyWithoutCreatorInput
     events?: CreatorEventUncheckedCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestUncheckedCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorCreateOrConnectWithoutVideosInput = {
@@ -40365,14 +50679,18 @@ export namespace Prisma {
 
   export type CreatorVideoLikeCreateWithoutCreatorVideoInput = {
     id: string
-    likerProfileId?: string | null
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    likerProfile?: ProfileCreateNestedOneWithoutVideoLikesInput
   }
 
   export type CreatorVideoLikeUncheckedCreateWithoutCreatorVideoInput = {
     id: string
     likerProfileId?: string | null
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type CreatorVideoLikeCreateOrConnectWithoutCreatorVideoInput = {
@@ -40470,11 +50788,20 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     profile?: ProfileUpdateOneRequiredWithoutCreatorNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorUncheckedUpdateWithoutVideosInput = {
@@ -40482,10 +50809,19 @@ export namespace Prisma {
     profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUncheckedUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUncheckedUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorVideoFolderUpsertWithoutVideosInput = {
@@ -40565,16 +50901,6 @@ export namespace Prisma {
     data: XOR<CreatorVideoLikeUpdateManyMutationInput, CreatorVideoLikeUncheckedUpdateManyWithoutCreatorVideoInput>
   }
 
-  export type CreatorVideoLikeScalarWhereInput = {
-    AND?: CreatorVideoLikeScalarWhereInput | CreatorVideoLikeScalarWhereInput[]
-    OR?: CreatorVideoLikeScalarWhereInput[]
-    NOT?: CreatorVideoLikeScalarWhereInput | CreatorVideoLikeScalarWhereInput[]
-    id?: StringFilter<"CreatorVideoLike"> | string
-    creatorVideoId?: StringFilter<"CreatorVideoLike"> | string
-    likerProfileId?: StringNullableFilter<"CreatorVideoLike"> | string | null
-    createdAt?: DateTimeFilter<"CreatorVideoLike"> | Date | string
-  }
-
   export type CreatorVideoCommentUpsertWithWhereUniqueWithoutCreatorVideoInput = {
     where: CreatorVideoCommentWhereUniqueInput
     update: XOR<CreatorVideoCommentUpdateWithoutCreatorVideoInput, CreatorVideoCommentUncheckedUpdateWithoutCreatorVideoInput>
@@ -40622,11 +50948,20 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     profile: ProfileCreateNestedOneWithoutCreatorInput
     videos?: CreatorVideoCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderCreateNestedManyWithoutCreatorInput
     events?: CreatorEventCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorUncheckedCreateWithoutVideoPurchasesInput = {
@@ -40634,10 +50969,19 @@ export namespace Prisma {
     profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     videos?: CreatorVideoUncheckedCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderUncheckedCreateNestedManyWithoutCreatorInput
     events?: CreatorEventUncheckedCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestUncheckedCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorCreateOrConnectWithoutVideoPurchasesInput = {
@@ -40663,6 +51007,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -40672,7 +51018,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutVideosInput
@@ -40702,6 +51047,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -40711,7 +51058,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     views?: CreatorVideoViewUncheckedCreateNestedManyWithoutCreatorVideoInput
@@ -40729,8 +51075,18 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     avatarUrl?: string | null
+    creatorName?: string | null
     bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: string | null
     addressLat?: number | null
     addressLon?: number | null
@@ -40746,6 +51102,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     creator?: CreatorCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
     credential?: AuthCredentialCreateNestedOneWithoutProfileInput
     session?: SessionCreateNestedManyWithoutProfileInput
   }
@@ -40755,8 +51114,18 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     avatarUrl?: string | null
+    creatorName?: string | null
     bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: string | null
     addressLat?: number | null
     addressLon?: number | null
@@ -40772,6 +51141,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     creator?: CreatorUncheckedCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
     credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
     session?: SessionUncheckedCreateNestedManyWithoutProfileInput
   }
@@ -40796,11 +51168,20 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     profile?: ProfileUpdateOneRequiredWithoutCreatorNestedInput
     videos?: CreatorVideoUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorUncheckedUpdateWithoutVideoPurchasesInput = {
@@ -40808,10 +51189,19 @@ export namespace Prisma {
     profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     videos?: CreatorVideoUncheckedUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUncheckedUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUncheckedUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorVideoUpsertWithoutPurchasesInput = {
@@ -40843,6 +51233,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -40852,7 +51244,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutVideosNestedInput
@@ -40882,6 +51273,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -40891,7 +51284,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     views?: CreatorVideoViewUncheckedUpdateManyWithoutCreatorVideoNestedInput
@@ -40915,8 +51307,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -40932,6 +51334,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
     credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
     session?: SessionUpdateManyWithoutProfileNestedInput
   }
@@ -40941,8 +51346,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -40958,6 +51373,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUncheckedUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
     credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
     session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
   }
@@ -40980,6 +51398,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -40989,7 +51409,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutVideosInput
@@ -41019,6 +51438,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -41028,7 +51449,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     likes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutCreatorVideoInput
@@ -41070,6 +51490,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -41079,7 +51501,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutVideosNestedInput
@@ -41109,6 +51530,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -41118,7 +51541,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     likes?: CreatorVideoLikeUncheckedUpdateManyWithoutCreatorVideoNestedInput
@@ -41144,6 +51566,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -41153,7 +51577,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutVideosInput
@@ -41183,6 +51606,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -41192,7 +51617,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     views?: CreatorVideoViewUncheckedCreateNestedManyWithoutCreatorVideoInput
@@ -41203,6 +51627,89 @@ export namespace Prisma {
   export type CreatorVideoCreateOrConnectWithoutLikesInput = {
     where: CreatorVideoWhereUniqueInput
     create: XOR<CreatorVideoCreateWithoutLikesInput, CreatorVideoUncheckedCreateWithoutLikesInput>
+  }
+
+  export type ProfileCreateWithoutVideoLikesInput = {
+    id: string
+    email: string
+    role?: $Enums.Role
+    fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    avatarUrl?: string | null
+    creatorName?: string | null
+    bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
+    addressFull?: string | null
+    addressLat?: number | null
+    addressLon?: number | null
+    addressType?: string | null
+    addressCountry?: string | null
+    addressState?: string | null
+    addressName?: string | null
+    age?: number | null
+    sex?: string | null
+    emailVerified?: boolean
+    hasPassword?: boolean
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator?: CreatorCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
+    credential?: AuthCredentialCreateNestedOneWithoutProfileInput
+    session?: SessionCreateNestedManyWithoutProfileInput
+    videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
+  }
+
+  export type ProfileUncheckedCreateWithoutVideoLikesInput = {
+    id: string
+    email: string
+    role?: $Enums.Role
+    fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    avatarUrl?: string | null
+    creatorName?: string | null
+    bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
+    addressFull?: string | null
+    addressLat?: number | null
+    addressLon?: number | null
+    addressType?: string | null
+    addressCountry?: string | null
+    addressState?: string | null
+    addressName?: string | null
+    age?: number | null
+    sex?: string | null
+    emailVerified?: boolean
+    hasPassword?: boolean
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator?: CreatorUncheckedCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
+    session?: SessionUncheckedCreateNestedManyWithoutProfileInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
+  }
+
+  export type ProfileCreateOrConnectWithoutVideoLikesInput = {
+    where: ProfileWhereUniqueInput
+    create: XOR<ProfileCreateWithoutVideoLikesInput, ProfileUncheckedCreateWithoutVideoLikesInput>
   }
 
   export type CreatorVideoUpsertWithoutLikesInput = {
@@ -41234,6 +51741,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -41243,7 +51752,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutVideosNestedInput
@@ -41273,6 +51781,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -41282,12 +51792,544 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     views?: CreatorVideoViewUncheckedUpdateManyWithoutCreatorVideoNestedInput
     comments?: CreatorVideoCommentUncheckedUpdateManyWithoutCreatorVideoNestedInput
     purchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutCreatorVideoNestedInput
+  }
+
+  export type ProfileUpsertWithoutVideoLikesInput = {
+    update: XOR<ProfileUpdateWithoutVideoLikesInput, ProfileUncheckedUpdateWithoutVideoLikesInput>
+    create: XOR<ProfileCreateWithoutVideoLikesInput, ProfileUncheckedCreateWithoutVideoLikesInput>
+    where?: ProfileWhereInput
+  }
+
+  export type ProfileUpdateToOneWithWhereWithoutVideoLikesInput = {
+    where?: ProfileWhereInput
+    data: XOR<ProfileUpdateWithoutVideoLikesInput, ProfileUncheckedUpdateWithoutVideoLikesInput>
+  }
+
+  export type ProfileUpdateWithoutVideoLikesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
+    addressFull?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressType?: NullableStringFieldUpdateOperationsInput | string | null
+    addressCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    addressState?: NullableStringFieldUpdateOperationsInput | string | null
+    addressName?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    sex?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    hasPassword?: BoolFieldUpdateOperationsInput | boolean
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
+    credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
+    session?: SessionUpdateManyWithoutProfileNestedInput
+    videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
+  }
+
+  export type ProfileUncheckedUpdateWithoutVideoLikesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
+    addressFull?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressType?: NullableStringFieldUpdateOperationsInput | string | null
+    addressCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    addressState?: NullableStringFieldUpdateOperationsInput | string | null
+    addressName?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    sex?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    hasPassword?: BoolFieldUpdateOperationsInput | boolean
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUncheckedUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
+    session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
+  }
+
+  export type CreatorEventCreateWithoutLikesInput = {
+    id: string
+    title: string
+    description?: string | null
+    category?: string
+    status?: $Enums.CreatorEventStatus
+    isPrivate?: boolean
+    isPaid?: boolean
+    requireTicket?: boolean
+    enableDonations?: boolean
+    enableLocationRestriction?: boolean
+    locationRestrictionType?: $Enums.CreatorEventLocationRestrictionMode
+    address?: string | null
+    locationName?: string | null
+    locationCountry?: string | null
+    locationState?: string | null
+    locationType?: $Enums.CreatorEventLocationType | null
+    locationLat?: number | null
+    locationLon?: number | null
+    locationFullAddress?: string | null
+    thumbnailUrl?: string | null
+    thumbnailFileId?: string | null
+    thumbnailVideoUrl?: string | null
+    thumbnailVideoFileId?: string | null
+    recordedVideoUrl?: string | null
+    recordedVideoFileId?: string | null
+    streamKey?: string | null
+    rtmpUrl?: string | null
+    ingressId?: string | null
+    livekitRoomName?: string | null
+    recordingEnabled?: boolean
+    recordingStatus?: $Enums.CreatorEventRecordingStatus
+    recordingAssetId?: string | null
+    recordingUrl?: string | null
+    recordingFileId?: string | null
+    recordingStartedAt?: Date | string | null
+    recordingEndedAt?: Date | string | null
+    hasRecordedVideo?: boolean
+    timezone?: string
+    scheduledAt?: Date | string | null
+    startedAt?: Date | string | null
+    endedAt?: Date | string | null
+    durationMinutes?: number
+    maxViewers?: number | null
+    estimatedUsers?: number | null
+    tags?: CreatorEventCreatetagsInput | string[]
+    viewsCount?: number
+    likesCount?: number
+    commentsCount?: number
+    peakViewersCount?: number
+    currentViewersCount?: number
+    venueParticipantCount?: number
+    revenue?: number
+    platformFee?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: CreatorCreateNestedOneWithoutEventsInput
+    restrictedLocations?: CreatorEventLocationRestrictionCreateNestedManyWithoutEventInput
+    tickets?: CreatorEventTicketCreateNestedManyWithoutEventInput
+    checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutEventInput
+    checkInScans?: CreatorEventCheckInScanCreateNestedManyWithoutEventInput
+    CheckInCameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutEventInput
+  }
+
+  export type CreatorEventUncheckedCreateWithoutLikesInput = {
+    id: string
+    creatorId: string
+    title: string
+    description?: string | null
+    category?: string
+    status?: $Enums.CreatorEventStatus
+    isPrivate?: boolean
+    isPaid?: boolean
+    requireTicket?: boolean
+    enableDonations?: boolean
+    enableLocationRestriction?: boolean
+    locationRestrictionType?: $Enums.CreatorEventLocationRestrictionMode
+    address?: string | null
+    locationName?: string | null
+    locationCountry?: string | null
+    locationState?: string | null
+    locationType?: $Enums.CreatorEventLocationType | null
+    locationLat?: number | null
+    locationLon?: number | null
+    locationFullAddress?: string | null
+    thumbnailUrl?: string | null
+    thumbnailFileId?: string | null
+    thumbnailVideoUrl?: string | null
+    thumbnailVideoFileId?: string | null
+    recordedVideoUrl?: string | null
+    recordedVideoFileId?: string | null
+    streamKey?: string | null
+    rtmpUrl?: string | null
+    ingressId?: string | null
+    livekitRoomName?: string | null
+    recordingEnabled?: boolean
+    recordingStatus?: $Enums.CreatorEventRecordingStatus
+    recordingAssetId?: string | null
+    recordingUrl?: string | null
+    recordingFileId?: string | null
+    recordingStartedAt?: Date | string | null
+    recordingEndedAt?: Date | string | null
+    hasRecordedVideo?: boolean
+    timezone?: string
+    scheduledAt?: Date | string | null
+    startedAt?: Date | string | null
+    endedAt?: Date | string | null
+    durationMinutes?: number
+    maxViewers?: number | null
+    estimatedUsers?: number | null
+    tags?: CreatorEventCreatetagsInput | string[]
+    viewsCount?: number
+    likesCount?: number
+    commentsCount?: number
+    peakViewersCount?: number
+    currentViewersCount?: number
+    venueParticipantCount?: number
+    revenue?: number
+    platformFee?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    restrictedLocations?: CreatorEventLocationRestrictionUncheckedCreateNestedManyWithoutEventInput
+    tickets?: CreatorEventTicketUncheckedCreateNestedManyWithoutEventInput
+    checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutEventInput
+    checkInScans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutEventInput
+    CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutEventInput
+  }
+
+  export type CreatorEventCreateOrConnectWithoutLikesInput = {
+    where: CreatorEventWhereUniqueInput
+    create: XOR<CreatorEventCreateWithoutLikesInput, CreatorEventUncheckedCreateWithoutLikesInput>
+  }
+
+  export type ProfileCreateWithoutEventLikesInput = {
+    id: string
+    email: string
+    role?: $Enums.Role
+    fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    avatarUrl?: string | null
+    creatorName?: string | null
+    bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
+    addressFull?: string | null
+    addressLat?: number | null
+    addressLon?: number | null
+    addressType?: string | null
+    addressCountry?: string | null
+    addressState?: string | null
+    addressName?: string | null
+    age?: number | null
+    sex?: string | null
+    emailVerified?: boolean
+    hasPassword?: boolean
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator?: CreatorCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
+    videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
+    credential?: AuthCredentialCreateNestedOneWithoutProfileInput
+    session?: SessionCreateNestedManyWithoutProfileInput
+    videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
+  }
+
+  export type ProfileUncheckedCreateWithoutEventLikesInput = {
+    id: string
+    email: string
+    role?: $Enums.Role
+    fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    avatarUrl?: string | null
+    creatorName?: string | null
+    bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
+    addressFull?: string | null
+    addressLat?: number | null
+    addressLon?: number | null
+    addressType?: string | null
+    addressCountry?: string | null
+    addressState?: string | null
+    addressName?: string | null
+    age?: number | null
+    sex?: string | null
+    emailVerified?: boolean
+    hasPassword?: boolean
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator?: CreatorUncheckedCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
+    videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
+    session?: SessionUncheckedCreateNestedManyWithoutProfileInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
+  }
+
+  export type ProfileCreateOrConnectWithoutEventLikesInput = {
+    where: ProfileWhereUniqueInput
+    create: XOR<ProfileCreateWithoutEventLikesInput, ProfileUncheckedCreateWithoutEventLikesInput>
+  }
+
+  export type CreatorEventUpsertWithoutLikesInput = {
+    update: XOR<CreatorEventUpdateWithoutLikesInput, CreatorEventUncheckedUpdateWithoutLikesInput>
+    create: XOR<CreatorEventCreateWithoutLikesInput, CreatorEventUncheckedCreateWithoutLikesInput>
+    where?: CreatorEventWhereInput
+  }
+
+  export type CreatorEventUpdateToOneWithWhereWithoutLikesInput = {
+    where?: CreatorEventWhereInput
+    data: XOR<CreatorEventUpdateWithoutLikesInput, CreatorEventUncheckedUpdateWithoutLikesInput>
+  }
+
+  export type CreatorEventUpdateWithoutLikesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    status?: EnumCreatorEventStatusFieldUpdateOperationsInput | $Enums.CreatorEventStatus
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    isPaid?: BoolFieldUpdateOperationsInput | boolean
+    requireTicket?: BoolFieldUpdateOperationsInput | boolean
+    enableDonations?: BoolFieldUpdateOperationsInput | boolean
+    enableLocationRestriction?: BoolFieldUpdateOperationsInput | boolean
+    locationRestrictionType?: EnumCreatorEventLocationRestrictionModeFieldUpdateOperationsInput | $Enums.CreatorEventLocationRestrictionMode
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    locationName?: NullableStringFieldUpdateOperationsInput | string | null
+    locationCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    locationState?: NullableStringFieldUpdateOperationsInput | string | null
+    locationType?: NullableEnumCreatorEventLocationTypeFieldUpdateOperationsInput | $Enums.CreatorEventLocationType | null
+    locationLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    locationLon?: NullableFloatFieldUpdateOperationsInput | number | null
+    locationFullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailVideoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailVideoFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    recordedVideoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordedVideoFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    streamKey?: NullableStringFieldUpdateOperationsInput | string | null
+    rtmpUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ingressId?: NullableStringFieldUpdateOperationsInput | string | null
+    livekitRoomName?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
+    recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
+    recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationMinutes?: IntFieldUpdateOperationsInput | number
+    maxViewers?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedUsers?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: CreatorEventUpdatetagsInput | string[]
+    viewsCount?: IntFieldUpdateOperationsInput | number
+    likesCount?: IntFieldUpdateOperationsInput | number
+    commentsCount?: IntFieldUpdateOperationsInput | number
+    peakViewersCount?: IntFieldUpdateOperationsInput | number
+    currentViewersCount?: IntFieldUpdateOperationsInput | number
+    venueParticipantCount?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneRequiredWithoutEventsNestedInput
+    restrictedLocations?: CreatorEventLocationRestrictionUpdateManyWithoutEventNestedInput
+    tickets?: CreatorEventTicketUpdateManyWithoutEventNestedInput
+    checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutEventNestedInput
+    checkInScans?: CreatorEventCheckInScanUpdateManyWithoutEventNestedInput
+    CheckInCameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutEventNestedInput
+  }
+
+  export type CreatorEventUncheckedUpdateWithoutLikesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    status?: EnumCreatorEventStatusFieldUpdateOperationsInput | $Enums.CreatorEventStatus
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    isPaid?: BoolFieldUpdateOperationsInput | boolean
+    requireTicket?: BoolFieldUpdateOperationsInput | boolean
+    enableDonations?: BoolFieldUpdateOperationsInput | boolean
+    enableLocationRestriction?: BoolFieldUpdateOperationsInput | boolean
+    locationRestrictionType?: EnumCreatorEventLocationRestrictionModeFieldUpdateOperationsInput | $Enums.CreatorEventLocationRestrictionMode
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    locationName?: NullableStringFieldUpdateOperationsInput | string | null
+    locationCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    locationState?: NullableStringFieldUpdateOperationsInput | string | null
+    locationType?: NullableEnumCreatorEventLocationTypeFieldUpdateOperationsInput | $Enums.CreatorEventLocationType | null
+    locationLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    locationLon?: NullableFloatFieldUpdateOperationsInput | number | null
+    locationFullAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailVideoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailVideoFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    recordedVideoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordedVideoFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    streamKey?: NullableStringFieldUpdateOperationsInput | string | null
+    rtmpUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ingressId?: NullableStringFieldUpdateOperationsInput | string | null
+    livekitRoomName?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
+    recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
+    recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
+    timezone?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationMinutes?: IntFieldUpdateOperationsInput | number
+    maxViewers?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedUsers?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: CreatorEventUpdatetagsInput | string[]
+    viewsCount?: IntFieldUpdateOperationsInput | number
+    likesCount?: IntFieldUpdateOperationsInput | number
+    commentsCount?: IntFieldUpdateOperationsInput | number
+    peakViewersCount?: IntFieldUpdateOperationsInput | number
+    currentViewersCount?: IntFieldUpdateOperationsInput | number
+    venueParticipantCount?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    restrictedLocations?: CreatorEventLocationRestrictionUncheckedUpdateManyWithoutEventNestedInput
+    tickets?: CreatorEventTicketUncheckedUpdateManyWithoutEventNestedInput
+    checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutEventNestedInput
+    checkInScans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutEventNestedInput
+    CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutEventNestedInput
+  }
+
+  export type ProfileUpsertWithoutEventLikesInput = {
+    update: XOR<ProfileUpdateWithoutEventLikesInput, ProfileUncheckedUpdateWithoutEventLikesInput>
+    create: XOR<ProfileCreateWithoutEventLikesInput, ProfileUncheckedCreateWithoutEventLikesInput>
+    where?: ProfileWhereInput
+  }
+
+  export type ProfileUpdateToOneWithWhereWithoutEventLikesInput = {
+    where?: ProfileWhereInput
+    data: XOR<ProfileUpdateWithoutEventLikesInput, ProfileUncheckedUpdateWithoutEventLikesInput>
+  }
+
+  export type ProfileUpdateWithoutEventLikesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
+    addressFull?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressType?: NullableStringFieldUpdateOperationsInput | string | null
+    addressCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    addressState?: NullableStringFieldUpdateOperationsInput | string | null
+    addressName?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    sex?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    hasPassword?: BoolFieldUpdateOperationsInput | boolean
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
+    credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
+    session?: SessionUpdateManyWithoutProfileNestedInput
+    videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
+  }
+
+  export type ProfileUncheckedUpdateWithoutEventLikesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
+    addressFull?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressType?: NullableStringFieldUpdateOperationsInput | string | null
+    addressCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    addressState?: NullableStringFieldUpdateOperationsInput | string | null
+    addressName?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    sex?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    hasPassword?: BoolFieldUpdateOperationsInput | boolean
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUncheckedUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
+    session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
   }
 
   export type CreatorVideoCreateWithoutCommentsInput = {
@@ -41308,6 +52350,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -41317,7 +52361,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutVideosInput
@@ -41347,6 +52390,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -41356,7 +52401,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     views?: CreatorVideoViewUncheckedCreateNestedManyWithoutCreatorVideoInput
@@ -41398,6 +52442,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -41407,7 +52453,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutVideosNestedInput
@@ -41437,6 +52482,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -41446,7 +52493,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     views?: CreatorVideoViewUncheckedUpdateManyWithoutCreatorVideoNestedInput
@@ -41458,11 +52504,20 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     profile: ProfileCreateNestedOneWithoutCreatorInput
     videos?: CreatorVideoCreateNestedManyWithoutCreatorInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorUncheckedCreateWithoutEventsInput = {
@@ -41470,10 +52525,19 @@ export namespace Prisma {
     profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     videos?: CreatorVideoUncheckedCreateNestedManyWithoutCreatorInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderUncheckedCreateNestedManyWithoutCreatorInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestUncheckedCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorCreateOrConnectWithoutEventsInput = {
@@ -41523,12 +52587,14 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
     status?: $Enums.CreatorEventTicketStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     purchases?: CreatorEventTicketPurchaseCreateNestedManyWithoutTicketInput
+    ticketItems?: CreatorEventTicketItemCreateNestedManyWithoutTicketInput
   }
 
   export type CreatorEventTicketUncheckedCreateWithoutEventInput = {
@@ -41539,12 +52605,14 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
     status?: $Enums.CreatorEventTicketStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     purchases?: CreatorEventTicketPurchaseUncheckedCreateNestedManyWithoutTicketInput
+    ticketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutTicketInput
   }
 
   export type CreatorEventTicketCreateOrConnectWithoutEventInput = {
@@ -41554,6 +52622,32 @@ export namespace Prisma {
 
   export type CreatorEventTicketCreateManyEventInputEnvelope = {
     data: CreatorEventTicketCreateManyEventInput | CreatorEventTicketCreateManyEventInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CreatorEventLikeCreateWithoutCreatorEventInput = {
+    id: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    likerProfile?: ProfileCreateNestedOneWithoutEventLikesInput
+  }
+
+  export type CreatorEventLikeUncheckedCreateWithoutCreatorEventInput = {
+    id: string
+    likerProfileId?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorEventLikeCreateOrConnectWithoutCreatorEventInput = {
+    where: CreatorEventLikeWhereUniqueInput
+    create: XOR<CreatorEventLikeCreateWithoutCreatorEventInput, CreatorEventLikeUncheckedCreateWithoutCreatorEventInput>
+  }
+
+  export type CreatorEventLikeCreateManyCreatorEventInputEnvelope = {
+    data: CreatorEventLikeCreateManyCreatorEventInput | CreatorEventLikeCreateManyCreatorEventInput[]
     skipDuplicates?: boolean
   }
 
@@ -41575,6 +52669,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutCheckInUsersInput
     checkedInPurchases?: CreatorEventTicketPurchaseCreateNestedManyWithoutCheckedInByUserInput
+    checkedInTicketItems?: CreatorEventTicketItemCreateNestedManyWithoutCheckedInByUserInput
     scans?: CreatorEventCheckInScanCreateNestedManyWithoutCheckInUserInput
     cameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutOperatorUserInput
   }
@@ -41597,6 +52692,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     checkedInPurchases?: CreatorEventTicketPurchaseUncheckedCreateNestedManyWithoutCheckedInByUserInput
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutCheckedInByUserInput
     scans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutCheckInUserInput
     cameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutOperatorUserInput
   }
@@ -41710,11 +52806,20 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     profile?: ProfileUpdateOneRequiredWithoutCreatorNestedInput
     videos?: CreatorVideoUpdateManyWithoutCreatorNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorUncheckedUpdateWithoutEventsInput = {
@@ -41722,10 +52827,19 @@ export namespace Prisma {
     profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     videos?: CreatorVideoUncheckedUpdateManyWithoutCreatorNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUncheckedUpdateManyWithoutCreatorNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorEventLocationRestrictionUpsertWithWhereUniqueWithoutEventInput = {
@@ -41788,11 +52902,28 @@ export namespace Prisma {
     quantity?: IntFilter<"CreatorEventTicket"> | number
     soldCount?: IntFilter<"CreatorEventTicket"> | number
     revenue?: IntFilter<"CreatorEventTicket"> | number
+    platformFee?: IntFilter<"CreatorEventTicket"> | number
     description?: StringNullableFilter<"CreatorEventTicket"> | string | null
     benefits?: StringNullableListFilter<"CreatorEventTicket">
     status?: EnumCreatorEventTicketStatusFilter<"CreatorEventTicket"> | $Enums.CreatorEventTicketStatus
     createdAt?: DateTimeFilter<"CreatorEventTicket"> | Date | string
     updatedAt?: DateTimeFilter<"CreatorEventTicket"> | Date | string
+  }
+
+  export type CreatorEventLikeUpsertWithWhereUniqueWithoutCreatorEventInput = {
+    where: CreatorEventLikeWhereUniqueInput
+    update: XOR<CreatorEventLikeUpdateWithoutCreatorEventInput, CreatorEventLikeUncheckedUpdateWithoutCreatorEventInput>
+    create: XOR<CreatorEventLikeCreateWithoutCreatorEventInput, CreatorEventLikeUncheckedCreateWithoutCreatorEventInput>
+  }
+
+  export type CreatorEventLikeUpdateWithWhereUniqueWithoutCreatorEventInput = {
+    where: CreatorEventLikeWhereUniqueInput
+    data: XOR<CreatorEventLikeUpdateWithoutCreatorEventInput, CreatorEventLikeUncheckedUpdateWithoutCreatorEventInput>
+  }
+
+  export type CreatorEventLikeUpdateManyWithWhereWithoutCreatorEventInput = {
+    where: CreatorEventLikeScalarWhereInput
+    data: XOR<CreatorEventLikeUpdateManyMutationInput, CreatorEventLikeUncheckedUpdateManyWithoutCreatorEventInput>
   }
 
   export type CreatorEventCheckInUserUpsertWithWhereUniqueWithoutEventInput = {
@@ -41934,10 +53065,12 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutEventsInput
     tickets?: CreatorEventTicketCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutEventInput
     checkInScans?: CreatorEventCheckInScanCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutEventInput
@@ -41997,9 +53130,11 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     tickets?: CreatorEventTicketUncheckedCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeUncheckedCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutEventInput
     checkInScans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutEventInput
@@ -42074,10 +53209,12 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutEventsNestedInput
     tickets?: CreatorEventTicketUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutEventNestedInput
     checkInScans?: CreatorEventCheckInScanUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutEventNestedInput
@@ -42137,9 +53274,11 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tickets?: CreatorEventTicketUncheckedUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUncheckedUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutEventNestedInput
     checkInScans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutEventNestedInput
@@ -42198,10 +53337,12 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutEventsInput
     restrictedLocations?: CreatorEventLocationRestrictionCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutEventInput
     checkInScans?: CreatorEventCheckInScanCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutEventInput
@@ -42261,9 +53402,11 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeUncheckedCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutEventInput
     checkInScans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutEventInput
@@ -42289,6 +53432,7 @@ export namespace Prisma {
     refundedAt?: Date | string | null
     checkedInAt?: Date | string | null
     checkedInByUser?: CreatorEventCheckInUserCreateNestedOneWithoutCheckedInPurchasesInput
+    ticketItems?: CreatorEventTicketItemCreateNestedManyWithoutPurchaseInput
     scans?: CreatorEventCheckInScanCreateNestedManyWithoutTicketPurchaseInput
   }
 
@@ -42307,6 +53451,7 @@ export namespace Prisma {
     refundedAt?: Date | string | null
     checkedInAt?: Date | string | null
     checkedInByUserId?: string | null
+    ticketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutPurchaseInput
     scans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutTicketPurchaseInput
   }
 
@@ -42317,6 +53462,38 @@ export namespace Prisma {
 
   export type CreatorEventTicketPurchaseCreateManyTicketInputEnvelope = {
     data: CreatorEventTicketPurchaseCreateManyTicketInput | CreatorEventTicketPurchaseCreateManyTicketInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CreatorEventTicketItemCreateWithoutTicketInput = {
+    id: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    purchase: CreatorEventTicketPurchaseCreateNestedOneWithoutTicketItemsInput
+    checkedInByUser?: CreatorEventCheckInUserCreateNestedOneWithoutCheckedInTicketItemsInput
+  }
+
+  export type CreatorEventTicketItemUncheckedCreateWithoutTicketInput = {
+    id: string
+    purchaseId: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    checkedInByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorEventTicketItemCreateOrConnectWithoutTicketInput = {
+    where: CreatorEventTicketItemWhereUniqueInput
+    create: XOR<CreatorEventTicketItemCreateWithoutTicketInput, CreatorEventTicketItemUncheckedCreateWithoutTicketInput>
+  }
+
+  export type CreatorEventTicketItemCreateManyTicketInputEnvelope = {
+    data: CreatorEventTicketItemCreateManyTicketInput | CreatorEventTicketItemCreateManyTicketInput[]
     skipDuplicates?: boolean
   }
 
@@ -42384,10 +53561,12 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutEventsNestedInput
     restrictedLocations?: CreatorEventLocationRestrictionUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutEventNestedInput
     checkInScans?: CreatorEventCheckInScanUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutEventNestedInput
@@ -42447,9 +53626,11 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUncheckedUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutEventNestedInput
     checkInScans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutEventNestedInput
@@ -42492,6 +53673,37 @@ export namespace Prisma {
     checkedInByUserId?: StringNullableFilter<"CreatorEventTicketPurchase"> | string | null
   }
 
+  export type CreatorEventTicketItemUpsertWithWhereUniqueWithoutTicketInput = {
+    where: CreatorEventTicketItemWhereUniqueInput
+    update: XOR<CreatorEventTicketItemUpdateWithoutTicketInput, CreatorEventTicketItemUncheckedUpdateWithoutTicketInput>
+    create: XOR<CreatorEventTicketItemCreateWithoutTicketInput, CreatorEventTicketItemUncheckedCreateWithoutTicketInput>
+  }
+
+  export type CreatorEventTicketItemUpdateWithWhereUniqueWithoutTicketInput = {
+    where: CreatorEventTicketItemWhereUniqueInput
+    data: XOR<CreatorEventTicketItemUpdateWithoutTicketInput, CreatorEventTicketItemUncheckedUpdateWithoutTicketInput>
+  }
+
+  export type CreatorEventTicketItemUpdateManyWithWhereWithoutTicketInput = {
+    where: CreatorEventTicketItemScalarWhereInput
+    data: XOR<CreatorEventTicketItemUpdateManyMutationInput, CreatorEventTicketItemUncheckedUpdateManyWithoutTicketInput>
+  }
+
+  export type CreatorEventTicketItemScalarWhereInput = {
+    AND?: CreatorEventTicketItemScalarWhereInput | CreatorEventTicketItemScalarWhereInput[]
+    OR?: CreatorEventTicketItemScalarWhereInput[]
+    NOT?: CreatorEventTicketItemScalarWhereInput | CreatorEventTicketItemScalarWhereInput[]
+    id?: StringFilter<"CreatorEventTicketItem"> | string
+    purchaseId?: StringFilter<"CreatorEventTicketItem"> | string
+    ticketId?: StringFilter<"CreatorEventTicketItem"> | string
+    ticketCode?: StringFilter<"CreatorEventTicketItem"> | string
+    quantity?: IntFilter<"CreatorEventTicketItem"> | number
+    checkedInAt?: DateTimeNullableFilter<"CreatorEventTicketItem"> | Date | string | null
+    checkedInByUserId?: StringNullableFilter<"CreatorEventTicketItem"> | string | null
+    createdAt?: DateTimeFilter<"CreatorEventTicketItem"> | Date | string
+    updatedAt?: DateTimeFilter<"CreatorEventTicketItem"> | Date | string
+  }
+
   export type CreatorEventTicketCreateWithoutPurchasesInput = {
     id: string
     ticketType: string
@@ -42500,12 +53712,14 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
     status?: $Enums.CreatorEventTicketStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     event: CreatorEventCreateNestedOneWithoutTicketsInput
+    ticketItems?: CreatorEventTicketItemCreateNestedManyWithoutTicketInput
   }
 
   export type CreatorEventTicketUncheckedCreateWithoutPurchasesInput = {
@@ -42517,11 +53731,13 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
     status?: $Enums.CreatorEventTicketStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    ticketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutTicketInput
   }
 
   export type CreatorEventTicketCreateOrConnectWithoutPurchasesInput = {
@@ -42547,6 +53763,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutCheckInUsersInput
     event: CreatorEventCreateNestedOneWithoutCheckInUsersInput
+    checkedInTicketItems?: CreatorEventTicketItemCreateNestedManyWithoutCheckedInByUserInput
     scans?: CreatorEventCheckInScanCreateNestedManyWithoutCheckInUserInput
     cameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutOperatorUserInput
   }
@@ -42569,6 +53786,7 @@ export namespace Prisma {
     lastScanAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutCheckedInByUserInput
     scans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutCheckInUserInput
     cameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutOperatorUserInput
   }
@@ -42576,6 +53794,38 @@ export namespace Prisma {
   export type CreatorEventCheckInUserCreateOrConnectWithoutCheckedInPurchasesInput = {
     where: CreatorEventCheckInUserWhereUniqueInput
     create: XOR<CreatorEventCheckInUserCreateWithoutCheckedInPurchasesInput, CreatorEventCheckInUserUncheckedCreateWithoutCheckedInPurchasesInput>
+  }
+
+  export type CreatorEventTicketItemCreateWithoutPurchaseInput = {
+    id: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ticket: CreatorEventTicketCreateNestedOneWithoutTicketItemsInput
+    checkedInByUser?: CreatorEventCheckInUserCreateNestedOneWithoutCheckedInTicketItemsInput
+  }
+
+  export type CreatorEventTicketItemUncheckedCreateWithoutPurchaseInput = {
+    id: string
+    ticketId: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    checkedInByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorEventTicketItemCreateOrConnectWithoutPurchaseInput = {
+    where: CreatorEventTicketItemWhereUniqueInput
+    create: XOR<CreatorEventTicketItemCreateWithoutPurchaseInput, CreatorEventTicketItemUncheckedCreateWithoutPurchaseInput>
+  }
+
+  export type CreatorEventTicketItemCreateManyPurchaseInputEnvelope = {
+    data: CreatorEventTicketItemCreateManyPurchaseInput | CreatorEventTicketItemCreateManyPurchaseInput[]
+    skipDuplicates?: boolean
   }
 
   export type CreatorEventCheckInScanCreateWithoutTicketPurchaseInput = {
@@ -42633,12 +53883,14 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
     status?: EnumCreatorEventTicketStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     event?: CreatorEventUpdateOneRequiredWithoutTicketsNestedInput
+    ticketItems?: CreatorEventTicketItemUpdateManyWithoutTicketNestedInput
   }
 
   export type CreatorEventTicketUncheckedUpdateWithoutPurchasesInput = {
@@ -42650,11 +53902,13 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
     status?: EnumCreatorEventTicketStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutTicketNestedInput
   }
 
   export type CreatorEventCheckInUserUpsertWithoutCheckedInPurchasesInput = {
@@ -42686,6 +53940,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutCheckInUsersNestedInput
     event?: CreatorEventUpdateOneRequiredWithoutCheckInUsersNestedInput
+    checkedInTicketItems?: CreatorEventTicketItemUpdateManyWithoutCheckedInByUserNestedInput
     scans?: CreatorEventCheckInScanUpdateManyWithoutCheckInUserNestedInput
     cameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutOperatorUserNestedInput
   }
@@ -42708,8 +53963,25 @@ export namespace Prisma {
     lastScanAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutCheckedInByUserNestedInput
     scans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutCheckInUserNestedInput
     cameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutOperatorUserNestedInput
+  }
+
+  export type CreatorEventTicketItemUpsertWithWhereUniqueWithoutPurchaseInput = {
+    where: CreatorEventTicketItemWhereUniqueInput
+    update: XOR<CreatorEventTicketItemUpdateWithoutPurchaseInput, CreatorEventTicketItemUncheckedUpdateWithoutPurchaseInput>
+    create: XOR<CreatorEventTicketItemCreateWithoutPurchaseInput, CreatorEventTicketItemUncheckedCreateWithoutPurchaseInput>
+  }
+
+  export type CreatorEventTicketItemUpdateWithWhereUniqueWithoutPurchaseInput = {
+    where: CreatorEventTicketItemWhereUniqueInput
+    data: XOR<CreatorEventTicketItemUpdateWithoutPurchaseInput, CreatorEventTicketItemUncheckedUpdateWithoutPurchaseInput>
+  }
+
+  export type CreatorEventTicketItemUpdateManyWithWhereWithoutPurchaseInput = {
+    where: CreatorEventTicketItemScalarWhereInput
+    data: XOR<CreatorEventTicketItemUpdateManyMutationInput, CreatorEventTicketItemUncheckedUpdateManyWithoutPurchaseInput>
   }
 
   export type CreatorEventCheckInScanUpsertWithWhereUniqueWithoutTicketPurchaseInput = {
@@ -42728,15 +54000,312 @@ export namespace Prisma {
     data: XOR<CreatorEventCheckInScanUpdateManyMutationInput, CreatorEventCheckInScanUncheckedUpdateManyWithoutTicketPurchaseInput>
   }
 
+  export type CreatorEventTicketPurchaseCreateWithoutTicketItemsInput = {
+    id: string
+    buyerName: string
+    buyerEmail: string
+    buyerPhone?: string | null
+    quantity?: number
+    amount: number
+    currency?: string
+    status?: $Enums.CreatorEventTicketPurchaseStatus
+    transactionId: string
+    ticketCode: string
+    purchasedAt?: Date | string
+    refundedAt?: Date | string | null
+    checkedInAt?: Date | string | null
+    ticket: CreatorEventTicketCreateNestedOneWithoutPurchasesInput
+    checkedInByUser?: CreatorEventCheckInUserCreateNestedOneWithoutCheckedInPurchasesInput
+    scans?: CreatorEventCheckInScanCreateNestedManyWithoutTicketPurchaseInput
+  }
+
+  export type CreatorEventTicketPurchaseUncheckedCreateWithoutTicketItemsInput = {
+    id: string
+    ticketId: string
+    buyerName: string
+    buyerEmail: string
+    buyerPhone?: string | null
+    quantity?: number
+    amount: number
+    currency?: string
+    status?: $Enums.CreatorEventTicketPurchaseStatus
+    transactionId: string
+    ticketCode: string
+    purchasedAt?: Date | string
+    refundedAt?: Date | string | null
+    checkedInAt?: Date | string | null
+    checkedInByUserId?: string | null
+    scans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutTicketPurchaseInput
+  }
+
+  export type CreatorEventTicketPurchaseCreateOrConnectWithoutTicketItemsInput = {
+    where: CreatorEventTicketPurchaseWhereUniqueInput
+    create: XOR<CreatorEventTicketPurchaseCreateWithoutTicketItemsInput, CreatorEventTicketPurchaseUncheckedCreateWithoutTicketItemsInput>
+  }
+
+  export type CreatorEventTicketCreateWithoutTicketItemsInput = {
+    id: string
+    ticketType: string
+    access?: $Enums.CreatorEventTicketAccessType
+    price?: number
+    quantity?: number
+    soldCount?: number
+    revenue?: number
+    platformFee?: number
+    description?: string | null
+    benefits?: CreatorEventTicketCreatebenefitsInput | string[]
+    status?: $Enums.CreatorEventTicketStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    event: CreatorEventCreateNestedOneWithoutTicketsInput
+    purchases?: CreatorEventTicketPurchaseCreateNestedManyWithoutTicketInput
+  }
+
+  export type CreatorEventTicketUncheckedCreateWithoutTicketItemsInput = {
+    id: string
+    eventId: string
+    ticketType: string
+    access?: $Enums.CreatorEventTicketAccessType
+    price?: number
+    quantity?: number
+    soldCount?: number
+    revenue?: number
+    platformFee?: number
+    description?: string | null
+    benefits?: CreatorEventTicketCreatebenefitsInput | string[]
+    status?: $Enums.CreatorEventTicketStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    purchases?: CreatorEventTicketPurchaseUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type CreatorEventTicketCreateOrConnectWithoutTicketItemsInput = {
+    where: CreatorEventTicketWhereUniqueInput
+    create: XOR<CreatorEventTicketCreateWithoutTicketItemsInput, CreatorEventTicketUncheckedCreateWithoutTicketItemsInput>
+  }
+
+  export type CreatorEventCheckInUserCreateWithoutCheckedInTicketItemsInput = {
+    id: string
+    fullName: string
+    email: string
+    username: string
+    passwordHash: string
+    tempPasswordHash?: string | null
+    gateName: string
+    status?: $Enums.CreatorEventCheckInUserStatus
+    mustChangePassword?: boolean
+    scansToday?: number
+    totalScans?: number
+    lastLoginAt?: Date | string | null
+    lastScanAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: CreatorCreateNestedOneWithoutCheckInUsersInput
+    event: CreatorEventCreateNestedOneWithoutCheckInUsersInput
+    checkedInPurchases?: CreatorEventTicketPurchaseCreateNestedManyWithoutCheckedInByUserInput
+    scans?: CreatorEventCheckInScanCreateNestedManyWithoutCheckInUserInput
+    cameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutOperatorUserInput
+  }
+
+  export type CreatorEventCheckInUserUncheckedCreateWithoutCheckedInTicketItemsInput = {
+    id: string
+    creatorId: string
+    eventId: string
+    fullName: string
+    email: string
+    username: string
+    passwordHash: string
+    tempPasswordHash?: string | null
+    gateName: string
+    status?: $Enums.CreatorEventCheckInUserStatus
+    mustChangePassword?: boolean
+    scansToday?: number
+    totalScans?: number
+    lastLoginAt?: Date | string | null
+    lastScanAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checkedInPurchases?: CreatorEventTicketPurchaseUncheckedCreateNestedManyWithoutCheckedInByUserInput
+    scans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutCheckInUserInput
+    cameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutOperatorUserInput
+  }
+
+  export type CreatorEventCheckInUserCreateOrConnectWithoutCheckedInTicketItemsInput = {
+    where: CreatorEventCheckInUserWhereUniqueInput
+    create: XOR<CreatorEventCheckInUserCreateWithoutCheckedInTicketItemsInput, CreatorEventCheckInUserUncheckedCreateWithoutCheckedInTicketItemsInput>
+  }
+
+  export type CreatorEventTicketPurchaseUpsertWithoutTicketItemsInput = {
+    update: XOR<CreatorEventTicketPurchaseUpdateWithoutTicketItemsInput, CreatorEventTicketPurchaseUncheckedUpdateWithoutTicketItemsInput>
+    create: XOR<CreatorEventTicketPurchaseCreateWithoutTicketItemsInput, CreatorEventTicketPurchaseUncheckedCreateWithoutTicketItemsInput>
+    where?: CreatorEventTicketPurchaseWhereInput
+  }
+
+  export type CreatorEventTicketPurchaseUpdateToOneWithWhereWithoutTicketItemsInput = {
+    where?: CreatorEventTicketPurchaseWhereInput
+    data: XOR<CreatorEventTicketPurchaseUpdateWithoutTicketItemsInput, CreatorEventTicketPurchaseUncheckedUpdateWithoutTicketItemsInput>
+  }
+
+  export type CreatorEventTicketPurchaseUpdateWithoutTicketItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerName?: StringFieldUpdateOperationsInput | string
+    buyerEmail?: StringFieldUpdateOperationsInput | string
+    buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
+    transactionId?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refundedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ticket?: CreatorEventTicketUpdateOneRequiredWithoutPurchasesNestedInput
+    checkedInByUser?: CreatorEventCheckInUserUpdateOneWithoutCheckedInPurchasesNestedInput
+    scans?: CreatorEventCheckInScanUpdateManyWithoutTicketPurchaseNestedInput
+  }
+
+  export type CreatorEventTicketPurchaseUncheckedUpdateWithoutTicketItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    buyerName?: StringFieldUpdateOperationsInput | string
+    buyerEmail?: StringFieldUpdateOperationsInput | string
+    buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
+    transactionId?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refundedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    scans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutTicketPurchaseNestedInput
+  }
+
+  export type CreatorEventTicketUpsertWithoutTicketItemsInput = {
+    update: XOR<CreatorEventTicketUpdateWithoutTicketItemsInput, CreatorEventTicketUncheckedUpdateWithoutTicketItemsInput>
+    create: XOR<CreatorEventTicketCreateWithoutTicketItemsInput, CreatorEventTicketUncheckedCreateWithoutTicketItemsInput>
+    where?: CreatorEventTicketWhereInput
+  }
+
+  export type CreatorEventTicketUpdateToOneWithWhereWithoutTicketItemsInput = {
+    where?: CreatorEventTicketWhereInput
+    data: XOR<CreatorEventTicketUpdateWithoutTicketItemsInput, CreatorEventTicketUncheckedUpdateWithoutTicketItemsInput>
+  }
+
+  export type CreatorEventTicketUpdateWithoutTicketItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketType?: StringFieldUpdateOperationsInput | string
+    access?: EnumCreatorEventTicketAccessTypeFieldUpdateOperationsInput | $Enums.CreatorEventTicketAccessType
+    price?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    soldCount?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
+    status?: EnumCreatorEventTicketStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    event?: CreatorEventUpdateOneRequiredWithoutTicketsNestedInput
+    purchases?: CreatorEventTicketPurchaseUpdateManyWithoutTicketNestedInput
+  }
+
+  export type CreatorEventTicketUncheckedUpdateWithoutTicketItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    ticketType?: StringFieldUpdateOperationsInput | string
+    access?: EnumCreatorEventTicketAccessTypeFieldUpdateOperationsInput | $Enums.CreatorEventTicketAccessType
+    price?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    soldCount?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
+    status?: EnumCreatorEventTicketStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchases?: CreatorEventTicketPurchaseUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type CreatorEventCheckInUserUpsertWithoutCheckedInTicketItemsInput = {
+    update: XOR<CreatorEventCheckInUserUpdateWithoutCheckedInTicketItemsInput, CreatorEventCheckInUserUncheckedUpdateWithoutCheckedInTicketItemsInput>
+    create: XOR<CreatorEventCheckInUserCreateWithoutCheckedInTicketItemsInput, CreatorEventCheckInUserUncheckedCreateWithoutCheckedInTicketItemsInput>
+    where?: CreatorEventCheckInUserWhereInput
+  }
+
+  export type CreatorEventCheckInUserUpdateToOneWithWhereWithoutCheckedInTicketItemsInput = {
+    where?: CreatorEventCheckInUserWhereInput
+    data: XOR<CreatorEventCheckInUserUpdateWithoutCheckedInTicketItemsInput, CreatorEventCheckInUserUncheckedUpdateWithoutCheckedInTicketItemsInput>
+  }
+
+  export type CreatorEventCheckInUserUpdateWithoutCheckedInTicketItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    tempPasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    gateName?: StringFieldUpdateOperationsInput | string
+    status?: EnumCreatorEventCheckInUserStatusFieldUpdateOperationsInput | $Enums.CreatorEventCheckInUserStatus
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    scansToday?: IntFieldUpdateOperationsInput | number
+    totalScans?: IntFieldUpdateOperationsInput | number
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastScanAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneRequiredWithoutCheckInUsersNestedInput
+    event?: CreatorEventUpdateOneRequiredWithoutCheckInUsersNestedInput
+    checkedInPurchases?: CreatorEventTicketPurchaseUpdateManyWithoutCheckedInByUserNestedInput
+    scans?: CreatorEventCheckInScanUpdateManyWithoutCheckInUserNestedInput
+    cameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutOperatorUserNestedInput
+  }
+
+  export type CreatorEventCheckInUserUncheckedUpdateWithoutCheckedInTicketItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    tempPasswordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    gateName?: StringFieldUpdateOperationsInput | string
+    status?: EnumCreatorEventCheckInUserStatusFieldUpdateOperationsInput | $Enums.CreatorEventCheckInUserStatus
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    scansToday?: IntFieldUpdateOperationsInput | number
+    totalScans?: IntFieldUpdateOperationsInput | number
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastScanAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkedInPurchases?: CreatorEventTicketPurchaseUncheckedUpdateManyWithoutCheckedInByUserNestedInput
+    scans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutCheckInUserNestedInput
+    cameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutOperatorUserNestedInput
+  }
+
   export type CreatorCreateWithoutCheckInUsersInput = {
     id: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     profile: ProfileCreateNestedOneWithoutCreatorInput
     videos?: CreatorVideoCreateNestedManyWithoutCreatorInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderCreateNestedManyWithoutCreatorInput
     events?: CreatorEventCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorUncheckedCreateWithoutCheckInUsersInput = {
@@ -42744,10 +54313,19 @@ export namespace Prisma {
     profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    status?: string
+    videoPayoutPercent?: number
+    eventStreamPayout?: number
+    eventVenuePayout?: number
+    followersCount?: number
+    followingCount?: number
     videos?: CreatorVideoUncheckedCreateNestedManyWithoutCreatorInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutCreatorInput
     folders?: CreatorVideoFolderUncheckedCreateNestedManyWithoutCreatorInput
     events?: CreatorEventUncheckedCreateNestedManyWithoutCreatorInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedCreateNestedManyWithoutCreatorInput
+    payoutRequests?: CreatorPayoutRequestUncheckedCreateNestedManyWithoutCreatorInput
+    follows?: CreatorFollowUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type CreatorCreateOrConnectWithoutCheckInUsersInput = {
@@ -42808,11 +54386,13 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutEventsInput
     restrictedLocations?: CreatorEventLocationRestrictionCreateNestedManyWithoutEventInput
     tickets?: CreatorEventTicketCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeCreateNestedManyWithoutCreatorEventInput
     checkInScans?: CreatorEventCheckInScanCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutEventInput
   }
@@ -42871,10 +54451,12 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedCreateNestedManyWithoutEventInput
     tickets?: CreatorEventTicketUncheckedCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeUncheckedCreateNestedManyWithoutCreatorEventInput
     checkInScans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutEventInput
   }
@@ -42899,6 +54481,7 @@ export namespace Prisma {
     refundedAt?: Date | string | null
     checkedInAt?: Date | string | null
     ticket: CreatorEventTicketCreateNestedOneWithoutPurchasesInput
+    ticketItems?: CreatorEventTicketItemCreateNestedManyWithoutPurchaseInput
     scans?: CreatorEventCheckInScanCreateNestedManyWithoutTicketPurchaseInput
   }
 
@@ -42917,6 +54500,7 @@ export namespace Prisma {
     purchasedAt?: Date | string
     refundedAt?: Date | string | null
     checkedInAt?: Date | string | null
+    ticketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutPurchaseInput
     scans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutTicketPurchaseInput
   }
 
@@ -42927,6 +54511,38 @@ export namespace Prisma {
 
   export type CreatorEventTicketPurchaseCreateManyCheckedInByUserInputEnvelope = {
     data: CreatorEventTicketPurchaseCreateManyCheckedInByUserInput | CreatorEventTicketPurchaseCreateManyCheckedInByUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CreatorEventTicketItemCreateWithoutCheckedInByUserInput = {
+    id: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    purchase: CreatorEventTicketPurchaseCreateNestedOneWithoutTicketItemsInput
+    ticket: CreatorEventTicketCreateNestedOneWithoutTicketItemsInput
+  }
+
+  export type CreatorEventTicketItemUncheckedCreateWithoutCheckedInByUserInput = {
+    id: string
+    purchaseId: string
+    ticketId: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorEventTicketItemCreateOrConnectWithoutCheckedInByUserInput = {
+    where: CreatorEventTicketItemWhereUniqueInput
+    create: XOR<CreatorEventTicketItemCreateWithoutCheckedInByUserInput, CreatorEventTicketItemUncheckedCreateWithoutCheckedInByUserInput>
+  }
+
+  export type CreatorEventTicketItemCreateManyCheckedInByUserInputEnvelope = {
+    data: CreatorEventTicketItemCreateManyCheckedInByUserInput | CreatorEventTicketItemCreateManyCheckedInByUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -43029,11 +54645,20 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     profile?: ProfileUpdateOneRequiredWithoutCreatorNestedInput
     videos?: CreatorVideoUpdateManyWithoutCreatorNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorUncheckedUpdateWithoutCheckInUsersInput = {
@@ -43041,10 +54666,19 @@ export namespace Prisma {
     profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    videoPayoutPercent?: IntFieldUpdateOperationsInput | number
+    eventStreamPayout?: IntFieldUpdateOperationsInput | number
+    eventVenuePayout?: IntFieldUpdateOperationsInput | number
+    followersCount?: IntFieldUpdateOperationsInput | number
+    followingCount?: IntFieldUpdateOperationsInput | number
     videos?: CreatorVideoUncheckedUpdateManyWithoutCreatorNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutCreatorNestedInput
     folders?: CreatorVideoFolderUncheckedUpdateManyWithoutCreatorNestedInput
     events?: CreatorEventUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutAccounts?: CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorNestedInput
+    payoutRequests?: CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorNestedInput
+    follows?: CreatorFollowUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type CreatorEventUpsertWithoutCheckInUsersInput = {
@@ -43111,11 +54745,13 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutEventsNestedInput
     restrictedLocations?: CreatorEventLocationRestrictionUpdateManyWithoutEventNestedInput
     tickets?: CreatorEventTicketUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUpdateManyWithoutCreatorEventNestedInput
     checkInScans?: CreatorEventCheckInScanUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutEventNestedInput
   }
@@ -43174,10 +54810,12 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedUpdateManyWithoutEventNestedInput
     tickets?: CreatorEventTicketUncheckedUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUncheckedUpdateManyWithoutCreatorEventNestedInput
     checkInScans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutEventNestedInput
   }
@@ -43196,6 +54834,22 @@ export namespace Prisma {
   export type CreatorEventTicketPurchaseUpdateManyWithWhereWithoutCheckedInByUserInput = {
     where: CreatorEventTicketPurchaseScalarWhereInput
     data: XOR<CreatorEventTicketPurchaseUpdateManyMutationInput, CreatorEventTicketPurchaseUncheckedUpdateManyWithoutCheckedInByUserInput>
+  }
+
+  export type CreatorEventTicketItemUpsertWithWhereUniqueWithoutCheckedInByUserInput = {
+    where: CreatorEventTicketItemWhereUniqueInput
+    update: XOR<CreatorEventTicketItemUpdateWithoutCheckedInByUserInput, CreatorEventTicketItemUncheckedUpdateWithoutCheckedInByUserInput>
+    create: XOR<CreatorEventTicketItemCreateWithoutCheckedInByUserInput, CreatorEventTicketItemUncheckedCreateWithoutCheckedInByUserInput>
+  }
+
+  export type CreatorEventTicketItemUpdateWithWhereUniqueWithoutCheckedInByUserInput = {
+    where: CreatorEventTicketItemWhereUniqueInput
+    data: XOR<CreatorEventTicketItemUpdateWithoutCheckedInByUserInput, CreatorEventTicketItemUncheckedUpdateWithoutCheckedInByUserInput>
+  }
+
+  export type CreatorEventTicketItemUpdateManyWithWhereWithoutCheckedInByUserInput = {
+    where: CreatorEventTicketItemScalarWhereInput
+    data: XOR<CreatorEventTicketItemUpdateManyMutationInput, CreatorEventTicketItemUncheckedUpdateManyWithoutCheckedInByUserInput>
   }
 
   export type CreatorEventCheckInScanUpsertWithWhereUniqueWithoutCheckInUserInput = {
@@ -43283,11 +54937,13 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutEventsInput
     restrictedLocations?: CreatorEventLocationRestrictionCreateNestedManyWithoutEventInput
     tickets?: CreatorEventTicketCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutEventInput
     checkInScans?: CreatorEventCheckInScanCreateNestedManyWithoutEventInput
   }
@@ -43346,10 +55002,12 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedCreateNestedManyWithoutEventInput
     tickets?: CreatorEventTicketUncheckedCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeUncheckedCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutEventInput
     checkInScans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutEventInput
   }
@@ -43378,6 +55036,7 @@ export namespace Prisma {
     creator: CreatorCreateNestedOneWithoutCheckInUsersInput
     event: CreatorEventCreateNestedOneWithoutCheckInUsersInput
     checkedInPurchases?: CreatorEventTicketPurchaseCreateNestedManyWithoutCheckedInByUserInput
+    checkedInTicketItems?: CreatorEventTicketItemCreateNestedManyWithoutCheckedInByUserInput
     scans?: CreatorEventCheckInScanCreateNestedManyWithoutCheckInUserInput
   }
 
@@ -43400,6 +55059,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     checkedInPurchases?: CreatorEventTicketPurchaseUncheckedCreateNestedManyWithoutCheckedInByUserInput
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutCheckedInByUserInput
     scans?: CreatorEventCheckInScanUncheckedCreateNestedManyWithoutCheckInUserInput
   }
 
@@ -43526,11 +55186,13 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutEventsNestedInput
     restrictedLocations?: CreatorEventLocationRestrictionUpdateManyWithoutEventNestedInput
     tickets?: CreatorEventTicketUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutEventNestedInput
     checkInScans?: CreatorEventCheckInScanUpdateManyWithoutEventNestedInput
   }
@@ -43589,10 +55251,12 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedUpdateManyWithoutEventNestedInput
     tickets?: CreatorEventTicketUncheckedUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUncheckedUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutEventNestedInput
     checkInScans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutEventNestedInput
   }
@@ -43627,6 +55291,7 @@ export namespace Prisma {
     creator?: CreatorUpdateOneRequiredWithoutCheckInUsersNestedInput
     event?: CreatorEventUpdateOneRequiredWithoutCheckInUsersNestedInput
     checkedInPurchases?: CreatorEventTicketPurchaseUpdateManyWithoutCheckedInByUserNestedInput
+    checkedInTicketItems?: CreatorEventTicketItemUpdateManyWithoutCheckedInByUserNestedInput
     scans?: CreatorEventCheckInScanUpdateManyWithoutCheckInUserNestedInput
   }
 
@@ -43649,6 +55314,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     checkedInPurchases?: CreatorEventTicketPurchaseUncheckedUpdateManyWithoutCheckedInByUserNestedInput
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutCheckedInByUserNestedInput
     scans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutCheckInUserNestedInput
   }
 
@@ -43946,11 +55612,13 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     creator: CreatorCreateNestedOneWithoutEventsInput
     restrictedLocations?: CreatorEventLocationRestrictionCreateNestedManyWithoutEventInput
     tickets?: CreatorEventTicketCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutEventInput
   }
@@ -44009,10 +55677,12 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedCreateNestedManyWithoutEventInput
     tickets?: CreatorEventTicketUncheckedCreateNestedManyWithoutEventInput
+    likes?: CreatorEventLikeUncheckedCreateNestedManyWithoutCreatorEventInput
     checkInUsers?: CreatorEventCheckInUserUncheckedCreateNestedManyWithoutEventInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutEventInput
   }
@@ -44041,6 +55711,7 @@ export namespace Prisma {
     creator: CreatorCreateNestedOneWithoutCheckInUsersInput
     event: CreatorEventCreateNestedOneWithoutCheckInUsersInput
     checkedInPurchases?: CreatorEventTicketPurchaseCreateNestedManyWithoutCheckedInByUserInput
+    checkedInTicketItems?: CreatorEventTicketItemCreateNestedManyWithoutCheckedInByUserInput
     cameraSessions?: CreatorEventCheckInCameraSessionCreateNestedManyWithoutOperatorUserInput
   }
 
@@ -44063,6 +55734,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     checkedInPurchases?: CreatorEventTicketPurchaseUncheckedCreateNestedManyWithoutCheckedInByUserInput
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutCheckedInByUserInput
     cameraSessions?: CreatorEventCheckInCameraSessionUncheckedCreateNestedManyWithoutOperatorUserInput
   }
 
@@ -44087,6 +55759,7 @@ export namespace Prisma {
     checkedInAt?: Date | string | null
     ticket: CreatorEventTicketCreateNestedOneWithoutPurchasesInput
     checkedInByUser?: CreatorEventCheckInUserCreateNestedOneWithoutCheckedInPurchasesInput
+    ticketItems?: CreatorEventTicketItemCreateNestedManyWithoutPurchaseInput
   }
 
   export type CreatorEventTicketPurchaseUncheckedCreateWithoutScansInput = {
@@ -44105,6 +55778,7 @@ export namespace Prisma {
     refundedAt?: Date | string | null
     checkedInAt?: Date | string | null
     checkedInByUserId?: string | null
+    ticketItems?: CreatorEventTicketItemUncheckedCreateNestedManyWithoutPurchaseInput
   }
 
   export type CreatorEventTicketPurchaseCreateOrConnectWithoutScansInput = {
@@ -44176,11 +55850,13 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutEventsNestedInput
     restrictedLocations?: CreatorEventLocationRestrictionUpdateManyWithoutEventNestedInput
     tickets?: CreatorEventTicketUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutEventNestedInput
   }
@@ -44239,10 +55915,12 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedUpdateManyWithoutEventNestedInput
     tickets?: CreatorEventTicketUncheckedUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUncheckedUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutEventNestedInput
   }
@@ -44277,6 +55955,7 @@ export namespace Prisma {
     creator?: CreatorUpdateOneRequiredWithoutCheckInUsersNestedInput
     event?: CreatorEventUpdateOneRequiredWithoutCheckInUsersNestedInput
     checkedInPurchases?: CreatorEventTicketPurchaseUpdateManyWithoutCheckedInByUserNestedInput
+    checkedInTicketItems?: CreatorEventTicketItemUpdateManyWithoutCheckedInByUserNestedInput
     cameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutOperatorUserNestedInput
   }
 
@@ -44299,6 +55978,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     checkedInPurchases?: CreatorEventTicketPurchaseUncheckedUpdateManyWithoutCheckedInByUserNestedInput
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutCheckedInByUserNestedInput
     cameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutOperatorUserNestedInput
   }
 
@@ -44329,6 +56009,7 @@ export namespace Prisma {
     checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ticket?: CreatorEventTicketUpdateOneRequiredWithoutPurchasesNestedInput
     checkedInByUser?: CreatorEventCheckInUserUpdateOneWithoutCheckedInPurchasesNestedInput
+    ticketItems?: CreatorEventTicketItemUpdateManyWithoutPurchaseNestedInput
   }
 
   export type CreatorEventTicketPurchaseUncheckedUpdateWithoutScansInput = {
@@ -44347,6 +56028,7 @@ export namespace Prisma {
     refundedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutPurchaseNestedInput
   }
 
   export type ProfileCreateWithoutSessionInput = {
@@ -44354,8 +56036,18 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     avatarUrl?: string | null
+    creatorName?: string | null
     bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: string | null
     addressLat?: number | null
     addressLon?: number | null
@@ -44371,6 +56063,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     creator?: CreatorCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
     credential?: AuthCredentialCreateNestedOneWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
   }
@@ -44380,8 +56075,18 @@ export namespace Prisma {
     email: string
     role?: $Enums.Role
     fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     avatarUrl?: string | null
+    creatorName?: string | null
     bio?: string | null
+    website?: string | null
+    location?: string | null
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
     addressFull?: string | null
     addressLat?: number | null
     addressLon?: number | null
@@ -44397,6 +56102,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     creator?: CreatorUncheckedCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
     credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
   }
@@ -44422,8 +56130,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -44439,6 +56157,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
     credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
   }
@@ -44448,8 +56169,18 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
     addressFull?: NullableStringFieldUpdateOperationsInput | string | null
     addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
     addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -44465,8 +56196,35 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUncheckedUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
     credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
+  }
+
+  export type CreatorFollowCreateManyFollowerProfileInput = {
+    id: string
+    creatorId: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorEventLikeCreateManyLikerProfileInput = {
+    id: string
+    creatorEventId: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorVideoLikeCreateManyLikerProfileInput = {
+    id: string
+    creatorVideoId: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type SessionCreateManyProfileInput = {
@@ -44491,6 +56249,78 @@ export namespace Prisma {
     accessExpiresAt?: Date | string | null
     purchasedAt?: Date | string
     completedAt?: Date | string | null
+  }
+
+  export type CreatorFollowUpdateWithoutFollowerProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneRequiredWithoutFollowsNestedInput
+  }
+
+  export type CreatorFollowUncheckedUpdateWithoutFollowerProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorFollowUncheckedUpdateManyWithoutFollowerProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventLikeUpdateWithoutLikerProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorEvent?: CreatorEventUpdateOneRequiredWithoutLikesNestedInput
+  }
+
+  export type CreatorEventLikeUncheckedUpdateWithoutLikerProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorEventId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorEventId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorVideoLikeUpdateWithoutLikerProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorVideo?: CreatorVideoUpdateOneRequiredWithoutLikesNestedInput
+  }
+
+  export type CreatorVideoLikeUncheckedUpdateWithoutLikerProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorVideoId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorVideoId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SessionUpdateWithoutProfileInput = {
@@ -44584,6 +56414,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -44593,7 +56425,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -44680,6 +56511,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -44703,6 +56535,41 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type CreatorPayoutAccountCreateManyCreatorInput = {
+    id: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    accountType: string
+    isPrimary?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorPayoutRequestCreateManyCreatorInput = {
+    id: string
+    payoutAccountId?: string | null
+    amount: number
+    currency?: string
+    status?: string
+    note?: string | null
+    transactionId?: string | null
+    requestedAt?: Date | string
+    processedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorFollowCreateManyCreatorInput = {
+    id: string
+    followerProfileId: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CreatorVideoUpdateWithoutCreatorInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -44721,6 +56588,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -44730,7 +56599,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     folder?: CreatorVideoFolderUpdateOneRequiredWithoutVideosNestedInput
@@ -44759,6 +56627,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -44768,7 +56638,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     views?: CreatorVideoViewUncheckedUpdateManyWithoutCreatorVideoNestedInput
@@ -44796,6 +56665,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -44805,7 +56676,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -44952,10 +56822,12 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUpdateManyWithoutEventNestedInput
     tickets?: CreatorEventTicketUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUpdateManyWithoutEventNestedInput
     checkInScans?: CreatorEventCheckInScanUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutEventNestedInput
@@ -45014,10 +56886,12 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restrictedLocations?: CreatorEventLocationRestrictionUncheckedUpdateManyWithoutEventNestedInput
     tickets?: CreatorEventTicketUncheckedUpdateManyWithoutEventNestedInput
+    likes?: CreatorEventLikeUncheckedUpdateManyWithoutCreatorEventNestedInput
     checkInUsers?: CreatorEventCheckInUserUncheckedUpdateManyWithoutEventNestedInput
     checkInScans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutEventNestedInput
     CheckInCameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutEventNestedInput
@@ -45076,6 +56950,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -45098,6 +56973,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     event?: CreatorEventUpdateOneRequiredWithoutCheckInUsersNestedInput
     checkedInPurchases?: CreatorEventTicketPurchaseUpdateManyWithoutCheckedInByUserNestedInput
+    checkedInTicketItems?: CreatorEventTicketItemUpdateManyWithoutCheckedInByUserNestedInput
     scans?: CreatorEventCheckInScanUpdateManyWithoutCheckInUserNestedInput
     cameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutOperatorUserNestedInput
   }
@@ -45120,6 +56996,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     checkedInPurchases?: CreatorEventTicketPurchaseUncheckedUpdateManyWithoutCheckedInByUserNestedInput
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutCheckedInByUserNestedInput
     scans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutCheckInUserNestedInput
     cameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutOperatorUserNestedInput
   }
@@ -45143,6 +57020,169 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CreatorPayoutAccountUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    accountType?: StringFieldUpdateOperationsInput | string
+    isPrimary?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payoutRequests?: CreatorPayoutRequestUpdateManyWithoutPayoutAccountNestedInput
+  }
+
+  export type CreatorPayoutAccountUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    accountType?: StringFieldUpdateOperationsInput | string
+    isPrimary?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payoutRequests?: CreatorPayoutRequestUncheckedUpdateManyWithoutPayoutAccountNestedInput
+  }
+
+  export type CreatorPayoutAccountUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    accountType?: StringFieldUpdateOperationsInput | string
+    isPrimary?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorPayoutRequestUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payoutAccount?: CreatorPayoutAccountUpdateOneWithoutPayoutRequestsNestedInput
+  }
+
+  export type CreatorPayoutRequestUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    payoutAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorPayoutRequestUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    payoutAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorFollowUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    followerProfile?: ProfileUpdateOneRequiredWithoutCreatorFollowsNestedInput
+  }
+
+  export type CreatorFollowUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    followerProfileId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorFollowUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    followerProfileId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorPayoutRequestCreateManyPayoutAccountInput = {
+    id: string
+    creatorId: string
+    amount: number
+    currency?: string
+    status?: string
+    note?: string | null
+    transactionId?: string | null
+    requestedAt?: Date | string
+    processedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorPayoutRequestUpdateWithoutPayoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneRequiredWithoutPayoutRequestsNestedInput
+  }
+
+  export type CreatorPayoutRequestUncheckedUpdateWithoutPayoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorPayoutRequestUncheckedUpdateManyWithoutPayoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CreatorVideoCreateManyFolderInput = {
     id: string
     creatorId: string
@@ -45162,6 +57202,8 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    revenue?: number
+    platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
     packageName?: string | null
     episodeIndex?: number | null
@@ -45171,7 +57213,6 @@ export namespace Prisma {
     viewsCount?: number
     likesCount?: number
     commentsCount?: number
-    revenue?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -45194,6 +57235,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -45203,7 +57246,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutVideosNestedInput
@@ -45232,6 +57274,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -45241,7 +57285,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     views?: CreatorVideoViewUncheckedUpdateManyWithoutCreatorVideoNestedInput
@@ -45269,6 +57312,8 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
     packageName?: NullableStringFieldUpdateOperationsInput | string | null
     episodeIndex?: NullableIntFieldUpdateOperationsInput | number | null
@@ -45278,7 +57323,6 @@ export namespace Prisma {
     viewsCount?: IntFieldUpdateOperationsInput | number
     likesCount?: IntFieldUpdateOperationsInput | number
     commentsCount?: IntFieldUpdateOperationsInput | number
-    revenue?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -45292,7 +57336,9 @@ export namespace Prisma {
   export type CreatorVideoLikeCreateManyCreatorVideoInput = {
     id: string
     likerProfileId?: string | null
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type CreatorVideoCommentCreateManyCreatorVideoInput = {
@@ -45340,20 +57386,26 @@ export namespace Prisma {
 
   export type CreatorVideoLikeUpdateWithoutCreatorVideoInput = {
     id?: StringFieldUpdateOperationsInput | string
-    likerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likerProfile?: ProfileUpdateOneWithoutVideoLikesNestedInput
   }
 
   export type CreatorVideoLikeUncheckedUpdateWithoutCreatorVideoInput = {
     id?: StringFieldUpdateOperationsInput | string
     likerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CreatorVideoLikeUncheckedUpdateManyWithoutCreatorVideoInput = {
     id?: StringFieldUpdateOperationsInput | string
     likerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CreatorVideoCommentUpdateWithoutCreatorVideoInput = {
@@ -45451,9 +57503,18 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
     status?: $Enums.CreatorEventTicketStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CreatorEventLikeCreateManyCreatorEventInput = {
+    id: string
+    likerProfileId?: string | null
+    status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -45551,12 +57612,14 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
     status?: EnumCreatorEventTicketStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     purchases?: CreatorEventTicketPurchaseUpdateManyWithoutTicketNestedInput
+    ticketItems?: CreatorEventTicketItemUpdateManyWithoutTicketNestedInput
   }
 
   export type CreatorEventTicketUncheckedUpdateWithoutEventInput = {
@@ -45567,12 +57630,14 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
     status?: EnumCreatorEventTicketStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     purchases?: CreatorEventTicketPurchaseUncheckedUpdateManyWithoutTicketNestedInput
+    ticketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutTicketNestedInput
   }
 
   export type CreatorEventTicketUncheckedUpdateManyWithoutEventInput = {
@@ -45583,9 +57648,34 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
     status?: EnumCreatorEventTicketStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventLikeUpdateWithoutCreatorEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likerProfile?: ProfileUpdateOneWithoutEventLikesNestedInput
+  }
+
+  export type CreatorEventLikeUncheckedUpdateWithoutCreatorEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    likerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventLikeUncheckedUpdateManyWithoutCreatorEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    likerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -45608,6 +57698,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: CreatorUpdateOneRequiredWithoutCheckInUsersNestedInput
     checkedInPurchases?: CreatorEventTicketPurchaseUpdateManyWithoutCheckedInByUserNestedInput
+    checkedInTicketItems?: CreatorEventTicketItemUpdateManyWithoutCheckedInByUserNestedInput
     scans?: CreatorEventCheckInScanUpdateManyWithoutCheckInUserNestedInput
     cameraSessions?: CreatorEventCheckInCameraSessionUpdateManyWithoutOperatorUserNestedInput
   }
@@ -45630,6 +57721,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     checkedInPurchases?: CreatorEventTicketPurchaseUncheckedUpdateManyWithoutCheckedInByUserNestedInput
+    checkedInTicketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutCheckedInByUserNestedInput
     scans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutCheckInUserNestedInput
     cameraSessions?: CreatorEventCheckInCameraSessionUncheckedUpdateManyWithoutOperatorUserNestedInput
   }
@@ -45764,6 +57856,17 @@ export namespace Prisma {
     checkedInByUserId?: string | null
   }
 
+  export type CreatorEventTicketItemCreateManyTicketInput = {
+    id: string
+    purchaseId: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    checkedInByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CreatorEventTicketPurchaseUpdateWithoutTicketInput = {
     id?: StringFieldUpdateOperationsInput | string
     buyerName?: StringFieldUpdateOperationsInput | string
@@ -45779,6 +57882,7 @@ export namespace Prisma {
     refundedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checkedInByUser?: CreatorEventCheckInUserUpdateOneWithoutCheckedInPurchasesNestedInput
+    ticketItems?: CreatorEventTicketItemUpdateManyWithoutPurchaseNestedInput
     scans?: CreatorEventCheckInScanUpdateManyWithoutTicketPurchaseNestedInput
   }
 
@@ -45797,6 +57901,7 @@ export namespace Prisma {
     refundedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutPurchaseNestedInput
     scans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutTicketPurchaseNestedInput
   }
 
@@ -45817,6 +57922,50 @@ export namespace Prisma {
     checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type CreatorEventTicketItemUpdateWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchase?: CreatorEventTicketPurchaseUpdateOneRequiredWithoutTicketItemsNestedInput
+    checkedInByUser?: CreatorEventCheckInUserUpdateOneWithoutCheckedInTicketItemsNestedInput
+  }
+
+  export type CreatorEventTicketItemUncheckedUpdateWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purchaseId?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventTicketItemUncheckedUpdateManyWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purchaseId?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventTicketItemCreateManyPurchaseInput = {
+    id: string
+    ticketId: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    checkedInByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CreatorEventCheckInScanCreateManyTicketPurchaseInput = {
     id: string
     eventId: string
@@ -45828,6 +57977,39 @@ export namespace Prisma {
     status?: $Enums.CreatorEventCheckInScanStatus
     notes?: string | null
     scannedAt?: Date | string
+  }
+
+  export type CreatorEventTicketItemUpdateWithoutPurchaseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticket?: CreatorEventTicketUpdateOneRequiredWithoutTicketItemsNestedInput
+    checkedInByUser?: CreatorEventCheckInUserUpdateOneWithoutCheckedInTicketItemsNestedInput
+  }
+
+  export type CreatorEventTicketItemUncheckedUpdateWithoutPurchaseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventTicketItemUncheckedUpdateManyWithoutPurchaseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedInByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CreatorEventCheckInScanUpdateWithoutTicketPurchaseInput = {
@@ -45886,6 +58068,17 @@ export namespace Prisma {
     checkedInAt?: Date | string | null
   }
 
+  export type CreatorEventTicketItemCreateManyCheckedInByUserInput = {
+    id: string
+    purchaseId: string
+    ticketId: string
+    ticketCode: string
+    quantity?: number
+    checkedInAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CreatorEventCheckInScanCreateManyCheckInUserInput = {
     id: string
     eventId: string
@@ -45931,6 +58124,7 @@ export namespace Prisma {
     refundedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ticket?: CreatorEventTicketUpdateOneRequiredWithoutPurchasesNestedInput
+    ticketItems?: CreatorEventTicketItemUpdateManyWithoutPurchaseNestedInput
     scans?: CreatorEventCheckInScanUpdateManyWithoutTicketPurchaseNestedInput
   }
 
@@ -45949,6 +58143,7 @@ export namespace Prisma {
     purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refundedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ticketItems?: CreatorEventTicketItemUncheckedUpdateManyWithoutPurchaseNestedInput
     scans?: CreatorEventCheckInScanUncheckedUpdateManyWithoutTicketPurchaseNestedInput
   }
 
@@ -45967,6 +58162,39 @@ export namespace Prisma {
     purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refundedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CreatorEventTicketItemUpdateWithoutCheckedInByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchase?: CreatorEventTicketPurchaseUpdateOneRequiredWithoutTicketItemsNestedInput
+    ticket?: CreatorEventTicketUpdateOneRequiredWithoutTicketItemsNestedInput
+  }
+
+  export type CreatorEventTicketItemUncheckedUpdateWithoutCheckedInByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purchaseId?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorEventTicketItemUncheckedUpdateManyWithoutCheckedInByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purchaseId?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    ticketCode?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    checkedInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CreatorEventCheckInScanUpdateWithoutCheckInUserInput = {

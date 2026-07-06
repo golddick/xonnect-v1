@@ -9,6 +9,7 @@ import VideoViewPanel from "@/components/common_component/video-view-panel"
 import WatchAccessOverlay from "@/components/tv/watch/watch-access-overlay"
 import WatchChatPanel from "@/components/tv/watch/watch-chat-panel"
 import WatchPartsPanel from "@/components/tv/watch/watch-parts-panel"
+import { FollowButton, LikeButton } from "@/components/tv/follow-like-buttons"
 import { type WatchFolder, type WatchPart } from "@/lib/tv/watch-folder"
 
 type WatchContentKind = "event" | "folder"
@@ -113,6 +114,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const [chatVisible, setChatVisible] = useState(true)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(cloneDemoChatMessages)
   const [chatDraft, setChatDraft] = useState("")
+  const [eventLikesCount, setEventLikesCount] = useState(0)
+  const [eventIsLiked, setEventIsLiked] = useState(false)
+  const [creatorIsFollowed, setCreatorIsFollowed] = useState(false)
 
   useEffect(() => {
     setAccessCode(codeParam)
@@ -180,6 +184,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
         if (kind === "event" && data?.kind === "event" && data?.event) {
           setEventData(data.event)
+          setEventLikesCount(data.event.likesCount ?? 0)
+          setEventIsLiked(data.event.isLiked ?? false)
+          setCreatorIsFollowed(data.event.creator?.isFollowing ?? false)
           setFolderData(null)
           if (submittedAccessCode) {
             setMessage(
@@ -195,6 +202,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           const nextFolder = data.folder
           setEventData(null)
           setFolderData(nextFolder)
+          setCreatorIsFollowed(nextFolder.creator?.isFollowing ?? false)
 
           if (nextFolder?.parts?.length) {
             const matchedIndex = partParam
@@ -550,9 +558,27 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
                     <Radio className="h-5 w-5" />
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="text-sm text-muted-foreground">Hosted by</p>
                     <p className="font-semibold truncate">{eventData.creator?.name || "Xonnect Creator"}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FollowButton
+                      creatorId={eventData.creator?.id}
+                      isFollowing={creatorIsFollowed}
+                      isSelf={eventData.creator?.isSelf ?? false}
+                      onFollowChange={() => setCreatorIsFollowed(!creatorIsFollowed)}
+                    />
+                    <LikeButton
+                      kind="event"
+                      itemId={eventData.id}
+                      isLiked={eventIsLiked}
+                      count={eventLikesCount}
+                      onLikeChange={(count) => {
+                        setEventIsLiked(!eventIsLiked)
+                        setEventLikesCount(count)
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -714,6 +740,26 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 setPreviewExpiredPartId(null)
               }}
             />
+
+            <div className="rounded-2xl border border-border bg-muted/20 p-5 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600/15 text-blue-500">
+                  <Play className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm text-muted-foreground">By</p>
+                  <p className="font-semibold truncate">{watchFolder.creator?.name || "Xonnect Creator"}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FollowButton
+                    creatorId={watchFolder.creator?.id || ""}
+                    isFollowing={creatorIsFollowed}
+                    isSelf={watchFolder.creator?.isSelf ?? false}
+                    onFollowChange={() => setCreatorIsFollowed(!creatorIsFollowed)}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>

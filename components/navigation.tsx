@@ -62,7 +62,7 @@ const Navigation = () => {
               Guidelines
             </Link>
             <Link href="/tutorial" className="text-gray-300 hover:text-white transition-colors">
-              Tutorial
+              Tutorial 
             </Link>
             <Link href="/manual" className="text-gray-300 hover:text-white transition-colors">
               Manual

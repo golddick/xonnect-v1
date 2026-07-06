@@ -37,26 +37,19 @@ export function getPlatformVideoPercentageFromEnv() {
   return Number.isFinite(parsed) ? parsed : 10
 }
 
-export async function getPlatformVideoFeePercentage() {
-  const fromEnv = getPlatformVideoPercentageFromEnv()
-  if (fromEnv !== null) return fromEnv
-
-  const setting = await db.superAdminSetting.findUnique({
-    where: {
-      section: SuperAdminSettingSection.REVENUE,
+export async function getCreatorVideoFeePercentage(creatorId: string) {
+  const creator = await db.creator.findUnique({
+    where: { id: creatorId },
+    select: {
+      videoPayoutPercent: true,
     },
   })
 
-  return normalizeRevenueSettings(
-    setting
-      ? {
-          platformFeePercentage: setting.platformFeePercentage,
-          enterpriseFeePercentage: setting.enterpriseFeePercentage,
-          minimumPayoutAmount: setting.minimumPayoutAmount,
-          payoutProcessingDays: setting.payoutProcessingDays,
-        }
-      : null
-  ).platformFeePercentage
+  if (!creator) {
+    throw new Error("Creator not found")
+  }
+
+  return Math.max(Math.round(creator.videoPayoutPercent), 0)
 }
 
 export function createVideoAccessCode(videoId: string, reference: string) {
@@ -142,7 +135,7 @@ export async function completeVideoPurchase(args: {
     return { alreadyCompleted: true }
   }
 
-  const feePercentage = await getPlatformVideoFeePercentage()
+  const feePercentage = await getCreatorVideoFeePercentage(args.creatorId)
   const revenueSplit = calculateVideoRevenueSplit(args.amount, feePercentage)
   const accessExpiresAt = getVideoAccessExpiry(args.purchaseType)
   const video = await db.creatorVideo.findUnique({
@@ -151,6 +144,7 @@ export async function completeVideoPurchase(args: {
       id: true,
       creatorId: true,
       revenue: true,
+      platformFee: true,
     },
   })
 
@@ -184,6 +178,7 @@ export async function completeVideoPurchase(args: {
       where: { id: args.creatorVideoId },
       data: {
         revenue: { increment: revenueSplit.creatorRevenueAmount },
+        platformFee: { increment: revenueSplit.platformFeeAmount },
       },
     })
   })

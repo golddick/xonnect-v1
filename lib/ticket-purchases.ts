@@ -1,9 +1,8 @@
 import { dropid } from "dropid"
 
 import { prisma } from "@/lib/db/prisma"
-import { SuperAdminSettingSection } from "@/lib/generated/prisma"
-import { normalizeRevenueSettings } from "@/lib/superadmin-settings"
-import { createPurchaseTicketCode } from "@/lib/paystack"
+import { CreatorEventTicketAccessType } from "@/lib/generated/prisma"
+import { createPurchaseTicketCode, createTicketItemCode } from "@/lib/paystack"
 import { sendTicketConfirmationEmail } from "@/lib/auth/notifications"
 
 const db = prisma as any
@@ -27,39 +26,36 @@ export function calculateRevenueSplit(amount: number, platformFeePercentage: num
   }
 }
 
-export function getPlatformVenuePercentageFromEnv() {
-  const raw = process.env.PLATFORM_VENUE_PERCENT
-
-  if (!raw) return null
-
-  const parsed = Number(raw)
-  return Number.isFinite(parsed) ? parsed : 5
-}
-
-export async function getPlatformFeePercentage() {
-  const setting = await db.superAdminSetting.findUnique({
-    where: {
-      section: SuperAdminSettingSection.REVENUE,
+export async function getCreatorTicketFeePercentage(ticketId: string) {
+  const ticket = await db.creatorEventTicket.findUnique({
+    where: { id: ticketId },
+    select: {
+      access: true,
+      event: {
+        select: {
+          creator: {
+            select: {
+              eventStreamPayout: true,
+              eventVenuePayout: true,
+            },
+          },
+        },
+      },
     },
   })
 
-  return normalizeRevenueSettings(
-    setting
-      ? {
-          platformFeePercentage: setting.platformFeePercentage,
-          enterpriseFeePercentage: setting.enterpriseFeePercentage,
-          minimumPayoutAmount: setting.minimumPayoutAmount,
-          payoutProcessingDays: setting.payoutProcessingDays,
-        }
-      : null
-  ).platformFeePercentage
-}
+  if (!ticket) {
+    throw new Error("Ticket not found")
+  }
 
-export async function getPlatformVenueFeePercentage() {
-  const fromEnv = getPlatformVenuePercentageFromEnv()
-  if (fromEnv !== null) return fromEnv
+  const creator = ticket.event?.creator
+  if (!creator) {
+    throw new Error("Creator not found for ticket")
+  }
 
-  return getPlatformFeePercentage()
+  return ticket.access === CreatorEventTicketAccessType.VENUE
+    ? creator.eventVenuePayout
+    : creator.eventStreamPayout
 }
 
 export async function completePurchase(args: {
@@ -91,6 +87,18 @@ export async function completePurchase(args: {
       soldCount: true,
       status: true,
       access: true,
+      eventId: true,
+      platformFee: true,
+      event: {
+        select: {
+          creator: {
+            select: {
+              eventStreamPayout: true,
+              eventVenuePayout: true,
+            },
+          },
+        },
+      },
     },
   })
 
@@ -98,8 +106,12 @@ export async function completePurchase(args: {
     throw new Error("Ticket not found")
   }
 
-  const feePercentage =
-    ticket.access === "VENUE" ? await getPlatformVenueFeePercentage() : await getPlatformFeePercentage()
+  const feePercentage = ticket.event?.creator
+    ? ticket.access === CreatorEventTicketAccessType.VENUE
+      ? ticket.event.creator.eventVenuePayout
+      : ticket.event.creator.eventStreamPayout
+    : 0
+
   const revenueSplit = calculateRevenueSplit(args.amount, feePercentage)
   const ticketCode = createPurchaseTicketCode(args.ticketId, args.reference)
 
@@ -131,11 +143,27 @@ export async function completePurchase(args: {
       },
     })
 
+    const ticketItems = [] as { ticketCode: string }[]
+    for (let index = 0; index < purchaseQuantity; index += 1) {
+      const ticketItemCode = createTicketItemCode(args.ticketId, args.reference, index)
+      ticketItems.push({ ticketCode: ticketItemCode })
+      await tx.creatorEventTicketItem.create({
+        data: {
+          id: dropid("ticketItem"),
+          purchaseId: args.purchaseId,
+          ticketId: args.ticketId,
+          ticketCode: ticketItemCode,
+          quantity: 1,
+        },
+      })
+    }
+
     await tx.creatorEventTicket.update({
       where: { id: args.ticketId },
       data: {
         soldCount: { increment: purchaseQuantity },
         revenue: { increment: revenueSplit.amount },
+        platformFee: { increment: revenueSplit.platformFeeAmount },
         ...(shouldMarkSoldOut ? { status: "SOLD_OUT" } : {}),
       },
     })
@@ -144,6 +172,7 @@ export async function completePurchase(args: {
       where: { id: args.eventId },
       data: {
         revenue: { increment: revenueSplit.creatorRevenueAmount },
+        platformFee: { increment: revenueSplit.platformFeeAmount },
       },
     })
   })
@@ -164,8 +193,13 @@ export async function completePurchase(args: {
           },
         },
       },
+      ticketItems: {
+        select: {
+          ticketCode: true,
+        },
+      },
     },
-  }) 
+  })
 
   if (completedPurchase) {
     sendTicketConfirmationEmail({
@@ -186,6 +220,7 @@ export async function completePurchase(args: {
       amount: completedPurchase.amount,
       ticketCode: completedPurchase.ticketCode,
       purchaseId: completedPurchase.id,
+      ticketItemCodes: (completedPurchase.ticketItems as Array<{ ticketCode: string }>).map((item) => item.ticketCode),
     }).catch((error) => {
       console.error("Failed to send ticket confirmation email:", error)
     })
@@ -197,6 +232,9 @@ export async function completePurchase(args: {
     platformFeeAmount: revenueSplit.platformFeeAmount,
     creatorRevenueAmount: revenueSplit.creatorRevenueAmount,
     ticketCode,
+    ticketItemCodes: Array.from({ length: purchaseQuantity }, (_, index) =>
+      createTicketItemCode(args.ticketId, args.reference, index)
+    ),
   }
 }
 

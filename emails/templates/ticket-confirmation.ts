@@ -10,7 +10,8 @@ type TicketConfirmationTemplateInput = {
   quantity: number
   amount: number
   ticketCode: string
-  qrImageDataUrl?: string | null
+  ticketCodes?: string[]
+  qrImageDataUrls?: string[]
   documentUrl?: string | null
 }
 
@@ -55,6 +56,11 @@ function buildDetailsRows(input: TicketConfirmationTemplateInput) {
       <tr>
         <td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Ticket code:</strong> ${input.ticketCode}</td>
       </tr>
+      ${input.ticketCodes && input.ticketCodes.length > 1 ? `
+      <tr>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Ticket codes:</strong> ${input.ticketCodes.join(", ")}</td>
+      </tr>
+      ` : ""}
       ${
         formatDate(input.eventDate)
           ? `<tr><td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Date:</strong> ${formatDate(input.eventDate)}</td></tr>`
@@ -78,13 +84,17 @@ export function ticketConfirmationTemplate(input: TicketConfirmationTemplateInpu
       : `Hi ${name}, your streaming ticket for ${input.eventTitle} has been confirmed.`
 
   const qrBlock =
-    input.access === "VENUE" && input.qrImageDataUrl
-      ? `
+    input.access === "VENUE" && input.qrImageDataUrls && input.qrImageDataUrls.length > 0
+      ? input.qrImageDataUrls
+          .map(
+            (qrImageDataUrl) => `
         <div style="margin:24px 0 8px;padding:18px;border:1px solid #e5e7eb;border-radius:18px;background:#fafafa;text-align:center;">
-          <img src="${input.qrImageDataUrl}" alt="Venue ticket QR code" style="display:block;margin:0 auto;width:240px;max-width:100%;height:auto;" />
+          <img src="${qrImageDataUrl}" alt="Venue ticket QR code" style="display:block;margin:0 auto;width:240px;max-width:100%;height:auto;" />
           <p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#6b7280;">Present this QR code at the venue gate. It includes the platform logo for quick identification.</p>
         </div>
       `
+          )
+          .join("")
       : `
         <div style="margin:24px 0 8px;padding:18px;border:1px solid #e5e7eb;border-radius:18px;background:#fafafa;text-align:center;">
           <div style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#6b7280;font-weight:700;">Ticket code</div>

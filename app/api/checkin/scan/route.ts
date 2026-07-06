@@ -22,7 +22,24 @@ export async function POST(request: Request) {
     }
 
     const parsed = parseCheckInPayload(rawCode)
-    const purchase = await db.creatorEventTicketPurchase.findFirst({
+    const ticketItem = await db.creatorEventTicketItem.findFirst({
+      where: {
+        ticketCode: parsed.ticketCode,
+        ticket: {
+          eventId: checkInUser.event.id,
+          access: "VENUE",
+        },
+      },
+      include: {
+        purchase: {
+          include: {
+            ticket: true,
+          },
+        },
+      },
+    })
+
+    const purchase = ticketItem?.purchase ?? (await db.creatorEventTicketPurchase.findFirst({
       where: {
         OR: [
           { ticketCode: parsed.ticketCode },
@@ -36,7 +53,7 @@ export async function POST(request: Request) {
       include: {
         ticket: true,
       },
-    })
+    }))
 
     if (!purchase) {
       await db.creatorEventCheckInScan.create({
@@ -56,7 +73,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ status: "invalid", message: "Ticket not found" }, { status: 404 })
     }
 
-    if (purchase.checkedInAt) {
+    const checkedInItem = ticketItem?.checkedInAt ? ticketItem : null
+    const duplicateTarget = checkedInItem ?? (purchase.quantity === 1 && purchase.checkedInAt ? purchase : null)
+
+    if (duplicateTarget) {
       await db.creatorEventCheckInScan.create({
         data: {
           id: dropid("checkInScan"),
@@ -66,9 +86,9 @@ export async function POST(request: Request) {
           attendeeEmail: purchase.buyerEmail,
           attendeeName: purchase.buyerName,
           gateName: checkInUser.gateName,
-          scannedCode: purchase.ticketCode,
+          scannedCode: ticketItem?.ticketCode ?? purchase.ticketCode,
           status: "DUPLICATE",
-          notes: "Ticket already checked in",
+          notes: ticketItem ? "Ticket already checked in" : "Purchase already checked in",
         },
       })
 
@@ -77,7 +97,7 @@ export async function POST(request: Request) {
           status: "already",
           message: "Ticket already checked in",
           attendeeName: purchase.buyerName,
-          ticketCode: purchase.ticketCode,
+          ticketCode: ticketItem?.ticketCode ?? purchase.ticketCode,
         },
         { status: 200 }
       )
@@ -86,23 +106,34 @@ export async function POST(request: Request) {
     const now = new Date()
 
     await db.$transaction(async (tx: any) => {
-      await tx.creatorEventTicketPurchase.update({
-        where: { id: purchase.id },
-        data: {
-          checkedInAt: now,
-          checkedInByUserId: checkInUser.id,
-        },
-      })
+      if (ticketItem) {
+        await tx.creatorEventTicketItem.update({
+          where: { id: ticketItem.id },
+          data: {
+            checkedInAt: now,
+            checkedInByUserId: checkInUser.id,
+          },
+        })
+      } else {
+        await tx.creatorEventTicketPurchase.update({
+          where: { id: purchase.id },
+          data: {
+            checkedInAt: now,
+            checkedInByUserId: checkInUser.id,
+          },
+        })
+      }
 
       await tx.creatorEventCheckInScan.create({
         data: {
+          id: dropid("checkInScan"),
           eventId: checkInUser.event.id,
           checkInUserId: checkInUser.id,
           ticketPurchaseId: purchase.id,
           attendeeEmail: purchase.buyerEmail,
           attendeeName: purchase.buyerName,
           gateName: checkInUser.gateName,
-          scannedCode: purchase.ticketCode,
+          scannedCode: ticketItem?.ticketCode ?? purchase.ticketCode,
           status: "SUCCESS",
           notes: purchase.ticket.ticketType,
         },

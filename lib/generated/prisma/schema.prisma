@@ -83,14 +83,28 @@ enum CreatorEventRecordingStatus {
 }
 
 model Profile {
-  id        String  @id
-  email     String  @unique
-  role      Role    @default(USER)
-  fullName  String? @map("full_name")
-  avatarUrl String? @map("avatar_url")
-  bio       String?
+  id                String  @id
+  email             String  @unique
+  role              Role    @default(USER)
+  fullName          String? @map("full_name")
+  firstName         String? @map("first_name")
+  lastName          String? @map("last_name")
+  avatarUrl         String? @map("avatar_url")
+  creatorName       String? @map("creator_name")
+  bio               String?
+  website           String? @map("website")
+  location          String? @map("location")
+  profileVisibility String  @default("public") @map("profile_visibility")
+  showEmail         Boolean @default(false) @map("show_email")
+  showLocation      Boolean @default(true) @map("show_location")
+  allowMessages     Boolean @default(true) @map("allow_messages")
+  showOnlineStatus  Boolean @default(true) @map("show_online_status")
 
   creator Creator?
+
+  creatorFollows CreatorFollow[]    @relation("CreatorFollowFollower")
+  eventLikes     CreatorEventLike[] @relation("CreatorEventLikeLiker")
+  videoLikes     CreatorVideoLike[] @relation("CreatorVideoLikeLiker")
 
   addressFull    String? @map("address_full")
   addressLat     Float?  @map("address_lat")
@@ -170,14 +184,90 @@ model Creator {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  status    String   @default("active")
+
+  videoPayoutPercent Int @default(70) @map("video_payout_percents")
+  eventStreamPayout  Int @default(70) @map("event_stream_payout_percents")
+  eventVenuePayout   Int @default(70) @map("event_venue_payout_percents")
+  followersCount     Int @default(0) @map("followers_count")
+  followingCount     Int @default(0) @map("following_count")
 
   videos         CreatorVideo[]
   videoPurchases CreatorVideoPurchase[]
   folders        CreatorVideoFolder[]
   events         CreatorEvent[]
   checkInUsers   CreatorEventCheckInUser[]
+  payoutAccounts CreatorPayoutAccount[]
+  payoutRequests CreatorPayoutRequest[]
+  follows        CreatorFollow[]
 
   @@map("creators")
+}
+
+model CreatorFollow {
+  id String @id
+
+  creatorId String  @map("creator_id")
+  creator   Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  followerProfileId String  @map("follower_profile_id")
+  followerProfile   Profile @relation("CreatorFollowFollower", fields: [followerProfileId], references: [id], onDelete: Cascade)
+
+  status String @default("active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([followerProfileId, creatorId])
+  @@index([creatorId])
+  @@index([followerProfileId])
+  @@map("creator_follows")
+}
+
+model CreatorPayoutAccount {
+  id        String  @id
+  creatorId String  @map("creator_id")
+  creator   Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  bankName      String    @map("bank_name")
+  accountNumber String    @map("account_number")
+  accountName   String    @map("account_name")
+  accountType   String    @map("account_type")
+  isPrimary     Boolean   @default(false) @map("is_primary")
+  verified      Boolean   @default(false)
+  verifiedAt    DateTime? @map("verified_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  payoutRequests CreatorPayoutRequest[]
+
+  @@index([creatorId])
+  @@index([bankName])
+  @@map("creator_payout_accounts")
+}
+
+model CreatorPayoutRequest {
+  id              String                @id
+  creatorId       String                @map("creator_id")
+  creator         Creator               @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  payoutAccountId String?               @map("payout_account_id")
+  payoutAccount   CreatorPayoutAccount? @relation(fields: [payoutAccountId], references: [id], onDelete: SetNull)
+
+  amount        Int
+  currency      String  @default("NGN")
+  status        String  @default("pending")
+  note          String?
+  transactionId String? @map("transaction_id")
+
+  requestedAt DateTime  @default(now()) @map("requested_at")
+  processedAt DateTime? @map("processed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([creatorId])
+  @@index([status])
+  @@map("creator_payout_requests")
 }
 
 model CreatorVideoFolder {
@@ -222,7 +312,7 @@ model CreatorVideo {
   isPremium        Boolean @default(false) @map("is_premium")
   monetizationType String  @default("free") @map("monetization_type")
 
-  status      String    @default("processing")
+  status      String    @default("published")
   publishNow  Boolean   @default(true) @map("publish_now")
   scheduledAt DateTime? @map("scheduled_at")
 
@@ -231,6 +321,8 @@ model CreatorVideo {
   rent24Price   Int? @map("rent24_price")
   rent48Price   Int? @map("rent48_price")
   purchasePrice Int? @map("purchase_price")
+  revenue       Int  @default(0) @map("revenue_share")
+  platformFee   Int  @default(0) @map("platform_fee")
 
   // used by current UI for series support
   tags         String[] @default([])
@@ -255,7 +347,6 @@ model CreatorVideo {
   viewsCount    Int @default(0) @map("views_count")
   likesCount    Int @default(0) @map("likes_count")
   commentsCount Int @default(0) @map("comments_count")
-  revenue       Int @default(0) // revenue in cents
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -316,12 +407,37 @@ model CreatorVideoLike {
   creatorVideoId String       @map("creator_video_id")
   creatorVideo   CreatorVideo @relation(fields: [creatorVideoId], references: [id], onDelete: Cascade)
 
-  likerProfileId String? @map("liker_profile_id")
+  likerProfileId String?  @map("liker_profile_id")
+  likerProfile   Profile? @relation("CreatorVideoLikeLiker", fields: [likerProfileId], references: [id], onDelete: SetNull)
+
+  status String @default("active")
 
   createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@unique([creatorVideoId, likerProfileId])
   @@index([creatorVideoId])
+  @@index([likerProfileId])
   @@map("creator_video_likes")
+}
+
+model CreatorEventLike {
+  id             String       @id
+  creatorEventId String       @map("creator_event_id")
+  creatorEvent   CreatorEvent @relation(fields: [creatorEventId], references: [id], onDelete: Cascade)
+
+  likerProfileId String?  @map("liker_profile_id")
+  likerProfile   Profile? @relation("CreatorEventLikeLiker", fields: [likerProfileId], references: [id], onDelete: SetNull)
+
+  status String @default("active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([creatorEventId, likerProfileId])
+  @@index([creatorEventId])
+  @@index([likerProfileId])
+  @@map("creator_event_likes")
 }
 
 model CreatorVideoComment {
@@ -403,9 +519,11 @@ model CreatorEvent {
   currentViewersCount   Int @default(0) @map("current_viewers_count")
   venueParticipantCount Int @default(0) @map("venue_participant_count")
   revenue               Int @default(0)
+  platformFee           Int @default(0) @map("platform_fee")
 
   restrictedLocations   CreatorEventLocationRestriction[]
   tickets               CreatorEventTicket[]
+  likes                 CreatorEventLike[]
   checkInUsers          CreatorEventCheckInUser[]
   checkInScans          CreatorEventCheckInScan[]
   CheckInCameraSessions CreatorEventCheckInCameraSession[]
@@ -449,11 +567,13 @@ model CreatorEventTicket {
   quantity    Int                          @default(0)
   soldCount   Int                          @default(0) @map("sold_count")
   revenue     Int                          @default(0)
+  platformFee Int                          @default(0) @map("platform_fee")
   description String?
   benefits    String[]                     @default([])
   status      CreatorEventTicketStatus     @default(ACTIVE)
 
-  purchases CreatorEventTicketPurchase[]
+  purchases   CreatorEventTicketPurchase[]
+  ticketItems CreatorEventTicketItem[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -486,12 +606,36 @@ model CreatorEventTicketPurchase {
   checkedInByUserId String?                  @map("checked_in_by_user_id")
   checkedInByUser   CreatorEventCheckInUser? @relation(fields: [checkedInByUserId], references: [id], onDelete: SetNull)
 
-  scans CreatorEventCheckInScan[]
+  ticketItems CreatorEventTicketItem[]
+  scans       CreatorEventCheckInScan[]
 
   @@index([ticketId])
   @@index([buyerEmail])
   @@index([status])
   @@map("creator_event_ticket_purchases")
+}
+
+model CreatorEventTicketItem {
+  id         String                     @id
+  purchaseId String                     @map("purchase_id")
+  purchase   CreatorEventTicketPurchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+
+  ticketId String             @map("ticket_id")
+  ticket   CreatorEventTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  ticketCode String @unique @map("ticket_code")
+  quantity   Int    @default(1)
+
+  checkedInAt       DateTime?                @map("checked_in_at")
+  checkedInByUserId String?                  @map("checked_in_by_user_id")
+  checkedInByUser   CreatorEventCheckInUser? @relation(fields: [checkedInByUserId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([purchaseId])
+  @@index([ticketId])
+  @@map("creator_event_ticket_items")
 }
 
 model CreatorEventCheckInUser {
@@ -516,9 +660,10 @@ model CreatorEventCheckInUser {
   lastLoginAt DateTime? @map("last_login_at")
   lastScanAt  DateTime? @map("last_scan_at")
 
-  checkedInPurchases CreatorEventTicketPurchase[]
-  scans              CreatorEventCheckInScan[]
-  cameraSessions     CreatorEventCheckInCameraSession[]
+  checkedInPurchases   CreatorEventTicketPurchase[]
+  checkedInTicketItems CreatorEventTicketItem[]
+  scans                CreatorEventCheckInScan[]
+  cameraSessions       CreatorEventCheckInCameraSession[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

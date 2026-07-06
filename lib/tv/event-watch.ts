@@ -40,6 +40,7 @@ export type EventWatchData = {
     name: string
     avatarUrl: string | null
     avatarInitials: string
+    isSelf: boolean
   }
   tickets: EventWatchTicket[]
   access: {
@@ -112,15 +113,18 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
       maxViewers: true,
       currentViewersCount: true,
       peakViewersCount: true,
-      livekitRoomName: true,
+      likesCount: true,
       creator: {
         select: {
+          profileId: true,
           profile: {
             select: {
               fullName: true,
               avatarUrl: true,
             },
           },
+          followersCount: true,
+          followingCount: true,
         },
       },
       tickets: {
@@ -206,6 +210,31 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
 
   const creatorName = event.creator.profile.fullName?.trim() || "Xonnect Creator"
   const creatorAvatarUrl = event.creator.profile.avatarUrl ?? null
+  const profileId = session?.user?.profileId ?? null
+
+  const isFollowingCreator = Boolean(
+    profileId &&
+      (await db.creatorFollow.findFirst({
+        where: {
+          creatorId: event.creatorId,
+          followerProfileId: profileId,
+          status: "active",
+        },
+        select: { id: true },
+      }))
+  )
+
+  const isLikedEvent = Boolean(
+    profileId &&
+      (await db.creatorEventLike.findFirst({
+        where: {
+          creatorEventId: event.id,
+          likerProfileId: profileId,
+          status: "active",
+        },
+        select: { id: true },
+      }))
+  )
 
   return {
     event: {
@@ -224,15 +253,19 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
       maxViewers: event.maxViewers,
       currentViewersCount: event.currentViewersCount,
       peakViewersCount: event.peakViewersCount,
-      livekitRoomName: event.livekitRoomName,
-      livekitWsUrl: process.env.NEXT_PUBLIC_LIVEKIT_WS_URL ?? null,
+      likesCount: event.likesCount ?? 0,
       creator: {
         id: event.creatorId,
         name: creatorName,
         avatarUrl: creatorAvatarUrl,
         avatarInitials: toInitials(creatorName),
+        isSelf: Boolean(profileId && event.creator.profileId === profileId),
+        followersCount: event.creator.followersCount ?? 0,
+        followingCount: event.creator.followingCount ?? 0,
+        isFollowing: isFollowingCreator,
       },
       tickets: streamTickets,
+      isLiked: isLikedEvent,
       access: {
         locked: premium && !accessGranted,
         accessCodeProvided: Boolean(accessCode),

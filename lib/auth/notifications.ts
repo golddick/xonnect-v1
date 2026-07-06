@@ -1,5 +1,6 @@
 import { sendEmail } from "@/lib/auth/dropaphi-client"
 import { checkinCredentialsTemplate } from "@/emails/templates/checkin-credentials"
+import { eventLiveNotificationTemplate } from "@/emails/templates/event-live-notification"
 import { securityAlertTemplate } from "@/emails/templates/security-alert"
 import { privilegedLoginTemplate } from "@/emails/templates/privileged-login"
 import { otpSuccessTemplate } from "@/emails/templates/otp"
@@ -43,6 +44,7 @@ type TicketConfirmationContext = {
   quantity: number
   amount: number
   ticketCode: string
+  ticketItemCodes?: string[]
   purchaseId: string
 }
 
@@ -137,21 +139,26 @@ export async function sendSystemLoginAuditEmail(
 
 export async function sendTicketConfirmationEmail(context: TicketConfirmationContext) {
   const documentUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/tickets/document/${context.ticketCode}`
-  let qrImageDataUrl: string | null = null
+  const ticketCodes = context.ticketItemCodes?.length ? context.ticketItemCodes : [context.ticketCode]
+  const qrImageDataUrls: string[] = []
 
   if (context.access === "VENUE") {
     try {
-      qrImageDataUrl = await createTicketQrDataUrl(
-        buildTicketPayload({
-          eventId: context.eventId,
-          ticketId: context.ticketId,
-          purchaseId: context.purchaseId,
-          ticketCode: context.ticketCode,
-          quantity: context.quantity,
-        })
-      )
+      for (const ticketCode of ticketCodes) {
+        const qrImageDataUrl = await createTicketQrDataUrl(
+          buildTicketPayload({
+            eventId: context.eventId,
+            ticketId: context.ticketId,
+            purchaseId: context.purchaseId,
+            ticketCode,
+            quantity: 1,
+          })
+        )
+
+        qrImageDataUrls.push(qrImageDataUrl)
+      }
     } catch (error) {
-      console.error("Failed to build venue QR ticket image:", error)
+      console.error("Failed to build venue QR ticket images:", error)
     }
   }
 
@@ -168,11 +175,46 @@ export async function sendTicketConfirmationEmail(context: TicketConfirmationCon
       location: context.location ?? null,
       ticketType: context.ticketType,
       access: context.access,
-      quantity: context.quantity, 
+      quantity: context.quantity,
       amount: context.amount,
       ticketCode: context.ticketCode,
-      qrImageDataUrl,
+      ticketCodes,
+      qrImageDataUrls: qrImageDataUrls.length ? qrImageDataUrls : undefined,
       documentUrl,
+    }),
+    fromName: DEFAULT_FROM_NAME,
+    fromEmail: DEFAULT_FROM_EMAIL,
+  })
+}
+
+export type EventLiveNotificationContext = {
+  email: string
+  fullName?: string | null
+  eventId: string
+  eventTitle: string
+  eventScheduledAt?: string | null
+  location?: string | null
+  watchUrl: string
+  ticketCode?: string
+  isTicketHolder?: boolean
+}
+
+export async function sendEventLiveNotificationEmail(context: EventLiveNotificationContext) {
+  const subject = context.isTicketHolder
+    ? `Your ticketed event ${context.eventTitle} is live now`
+    : `${context.eventTitle} is live now`
+
+  await sendEmail({
+    to: context.email,
+    subject,
+    html: eventLiveNotificationTemplate({
+      fullName: context.fullName,
+      eventTitle: context.eventTitle,
+      eventDate: context.eventScheduledAt ?? null,
+      location: context.location ?? null,
+      watchUrl: context.watchUrl,
+      ticketCode: context.ticketCode,
+      isTicketHolder: context.isTicketHolder ?? false,
     }),
     fromName: DEFAULT_FROM_NAME,
     fromEmail: DEFAULT_FROM_EMAIL,

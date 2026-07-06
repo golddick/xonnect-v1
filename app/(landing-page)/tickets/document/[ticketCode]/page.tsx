@@ -4,6 +4,7 @@ import { CalendarDays, CircleDollarSign, MapPin, Ticket, Users } from "lucide-re
 
 import { prisma } from "@/lib/db/prisma"
 import { buildTicketPayload, createTicketQrDataUrl } from "@/lib/ticket-media"
+import { TicketDownloadButton } from "@/components/ticket-download-button"
 
 const db = prisma as any
 
@@ -91,7 +92,16 @@ export default async function TicketDocumentPage({
           <Link href="/tickets" className="text-sm text-muted-foreground hover:text-foreground">
             Back to tickets
           </Link>
-          <span className="text-sm text-muted-foreground">Ticket document</span>
+          <TicketDownloadButton
+            ticketCode={purchase.ticketCode}
+            eventTitle={event.title}
+            location={location}
+            date={formatDate(event.scheduledAt)}
+            quantity={purchase.quantity}
+            total={formatCurrency(purchase.amount)}
+            ticketType={purchase.ticket.ticketType}
+            qrImageDataUrl={qrImageDataUrl}
+          />
         </div>
 
         <section className="overflow-hidden rounded-lg border border-border bg-card">
