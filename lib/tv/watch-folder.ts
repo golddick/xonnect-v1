@@ -40,9 +40,14 @@ export type WatchFolder = {
   uploadDate: Date
   description: string | null
   creator: {
+    id: string
     name: string
     avatarUrl: string | null
     avatarInitials: string
+    followersCount: number
+    followingCount: number
+    isFollowing: boolean
+    isSelf: boolean
   }
   parts: WatchPart[]
   access: {
@@ -103,12 +108,15 @@ export async function loadWatchFolderData(
       creatorId: true,
       creator: {
         select: {
+          profileId: true,
           profile: {
             select: {
               fullName: true,
               avatarUrl: true,
             },
           },
+          followersCount: true,
+          followingCount: true,
         },
       },
     },
@@ -237,6 +245,18 @@ export async function loadWatchFolderData(
   const publicParts = parts.filter((part) => !part.isLocked)
   const creatorName = folder.creator.profile.fullName?.trim() || "Xonnect Creator"
 
+  const isFollowingCreator = Boolean(
+    profileId &&
+      (await prisma.creatorFollow.findFirst({
+        where: {
+          creatorId: folder.creatorId,
+          followerProfileId: profileId,
+          status: "active",
+        },
+        select: { id: true },
+      }))
+  )
+
   return {
     folder: {
       id: folder.id,
@@ -247,9 +267,14 @@ export async function loadWatchFolderData(
       uploadDate: folder.createdAt,
       description: null,
       creator: {
+        id: folder.creatorId,
         name: creatorName,
         avatarUrl: folder.creator.profile.avatarUrl ?? null,
         avatarInitials: toInitials(creatorName),
+        followersCount: folder.creator.followersCount ?? 0,
+        followingCount: folder.creator.followingCount ?? 0,
+        isFollowing: isFollowingCreator,
+        isSelf: Boolean(profileId && folder.creator.profileId === profileId),
       },
       parts,
       access: {

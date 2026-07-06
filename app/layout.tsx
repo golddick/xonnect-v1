@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
+import { SessionProvider } from "next-auth/react"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
@@ -27,7 +28,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SessionProvider>{children}</SessionProvider>
         </ThemeProvider>
       </body>
     </html>

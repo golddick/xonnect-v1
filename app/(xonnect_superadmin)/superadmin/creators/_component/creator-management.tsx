@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { motion } from "framer-motion"
 import {
   Search,
@@ -23,92 +23,139 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import SuperAdminSidebar from "../../_component/superadmin-sidebar"
 import { toast } from "sonner"
+import EmailModal from "@/components/common_component/EmailModal"
+
+interface CreatorProfile {
+  id: string
+  email: string
+  fullName?: string | null
+  avatarUrl?: string | null
+}
+
+interface CreatorItem {
+  id: string
+  profileId: string
+  status: string
+  videoPayoutPercent: number
+  eventStreamPayout: number
+  eventVenuePayout: number
+  followersCount: number
+  followingCount: number
+  profile: CreatorProfile
+  totalRevenue: number
+  platformRevenue: number
+  createdAt: string
+  updatedAt: string
+  name: string
+  email: string
+  phone?: string
+  agreementStatus: string
+  joinDate?: string
+  lastActive?: string
+  avatar?: string
+  category?: string
+  verificationLevel?: string
+  videos?: number
+  events?: number
+}
+
+interface CreatorStats {
+  totalCreators: number
+  activeCreators: number
+  platformRevenue: number
+  creatorRevenue: number
+}
+
+const emailTemplates = [
+  {
+    label: "Suspension Notice",
+    subject: "Your Xonnect creator account has been suspended",
+    body:
+      "Hello,\n\nYour creator account has been suspended due to a policy violation. Please contact support if you believe this is a mistake.\n\nBest regards,\nXonnect Team",
+  },
+  {
+    label: "Platform Update",
+    subject: "Update from Xonnect for creators",
+    body:
+      "Hello,\n\nWe are updating our platform policies and payout information. Please log in to your creator dashboard for more details.\n\nBest regards,\nXonnect Team",
+  },
+]
 
 const CreatorManagement = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
-  const [selectedCreator, setSelectedCreator] = useState<any>(null)
-
-  const creators = [
-    {
-      id: 1,
-      name: "Alex Rodriguez",
-      email: "alex@example.com",
-      phone: "+1 (555) 123-4567",
-      status: "active",
-      agreementStatus: "signed",
-      joinDate: "2024-01-15",
-      totalRevenue: "$45,230",
-      followers: 12500,
-      videos: 89,
-      events: 23,
-      lastActive: "2 hours ago",
-      avatar: "/creator-profile-photo.png",
-      category: "Gaming",
-      verificationLevel: "verified",
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      email: "sarah@example.com",
-      phone: "+1 (555) 234-5678",
-      status: "active",
-      agreementStatus: "signed",
-      joinDate: "2024-01-20",
-      totalRevenue: "$38,920",
-      followers: 9800,
-      videos: 67,
-      events: 18,
-      lastActive: "1 day ago",
-      avatar: "/music-producer-avatar.png",
-      category: "Music",
-      verificationLevel: "verified",
-    },
-    {
-      id: 3,
-      name: "Marcus Chen",
-      email: "marcus@example.com",
-      phone: "+1 (555) 345-6789",
-      status: "pending",
-      agreementStatus: "pending",
-      joinDate: "2024-02-01",
-      totalRevenue: "$0",
-      followers: 0,
-      videos: 0,
-      events: 0,
-      lastActive: "5 minutes ago",
-      avatar: "/user-avatar-1.png",
-      category: "Tech",
-      verificationLevel: "unverified",
-    },
-    {
-      id: 4,
-      name: "Elena Rodriguez",
-      email: "elena@example.com",
-      phone: "+1 (555) 456-7890",
-      status: "suspended",
-      agreementStatus: "signed",
-      joinDate: "2023-12-10",
-      totalRevenue: "$12,450",
-      followers: 3200,
-      videos: 34,
-      events: 8,
-      lastActive: "1 week ago",
-      avatar: "/ai-avatar.png",
-      category: "Art",
-      verificationLevel: "verified",
-    },
-  ]
-
-  const filteredCreators = creators.filter((creator) => {
-    const matchesSearch =
-      creator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      creator.email.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesFilter = filterStatus === "all" || creator.status === filterStatus
-    return matchesSearch && matchesFilter
+  const [creators, setCreators] = useState<CreatorItem[]>([])
+  const [stats, setStats] = useState<CreatorStats>({
+    totalCreators: 0,
+    activeCreators: 0,
+    platformRevenue: 0,
+    creatorRevenue: 0,
   })
+  const [selectedCreator, setSelectedCreator] = useState<CreatorItem | null>(null)
+  const [selectedCreatorDetails, setSelectedCreatorDetails] = useState({
+    videoPayoutPercent: 70,
+    eventStreamPayout: 70,
+    eventVenuePayout: 70,
+  })
+  const [showEmailModal, setShowEmailModal] = useState(false)
+  const [isBulkEmail, setIsBulkEmail] = useState(false)
+  const [emailContent, setEmailContent] = useState({
+    subject: "Creator account update from Xonnect",
+    body: "Hello creators,\n\nThis is a message from the Xonnect platform.\n\nBest regards,\nXonnect Team",
+  })
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+
+  useEffect(() => {
+    fetchCreators()
+  }, [])
+
+  const fetchCreators = async () => {
+    setIsLoading(true)
+
+    try {
+      const res = await fetch("/api/superadmin/creators")
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Failed to fetch creators")
+      }
+
+      setCreators(
+        data.creators.map((creator: CreatorItem) => ({
+          ...creator,
+          name: creator.profile.fullName || creator.profile.email,
+          email: creator.profile.email,
+          avatar: creator.profile.avatarUrl || "/placeholder.svg",
+          agreementStatus: creator.status === "pending" ? "pending" : "signed",
+          joinDate: new Date(creator.createdAt).toLocaleDateString(),
+          lastActive: creator.updatedAt ? new Date(creator.updatedAt).toLocaleDateString() : "N/A",
+          category: "Creator",
+          videos: 0,
+          events: 0,
+        }))
+      )
+      setStats(data.stats)
+    } catch (error) {
+      console.error(error)
+      toast.error("Unable to load creators")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const filteredCreators = useMemo(
+    () =>
+      creators.filter((creator) => {
+        const matchesSearch =
+          creator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          creator.email.toLowerCase().includes(searchTerm.toLowerCase())
+        const matchesFilter = filterStatus === "all" || creator.status === filterStatus
+        return matchesSearch && matchesFilter
+      }),
+    [creators, filterStatus, searchTerm]
+  )
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -136,16 +183,150 @@ const CreatorManagement = () => {
     }
   }
 
-  const handleApproveCreator = (creatorId: number) => {
-    console.log("Approving creator:", creatorId)
-    // Handle approval logic
+  const handleApproveCreator = async (creatorId: string) => {
+    setIsSaving(true)
+
+    try {
+      const res = await fetch(`/api/superadmin/creators/${creatorId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "active" }),
+      })
+      const data = await res.json()
+
+      if (!res.ok) throw new Error(data?.message || "Failed to approve creator")
+
+      toast.success("Creator approved")
+      await fetchCreators()
+    } catch (error) {
+      console.error(error)
+      toast.error("Unable to approve creator")
+    } finally {
+      setIsSaving(false)
+    }
   }
 
-  const handleSuspendCreator = (creatorId: number) => {
-    console.log("Suspending creator:", creatorId)
-    // Handle suspension logic
+  const handleSuspendCreator = async (creatorId: string) => {
+    setIsSaving(true)
+
+    try {
+      const res = await fetch(`/api/superadmin/creators/${creatorId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "suspended" }),
+      })
+      const data = await res.json()
+
+      if (!res.ok) throw new Error(data?.message || "Failed to suspend creator")
+
+      const emailRes = await fetch("/api/superadmin/creators/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          creatorId,
+          subject: "Your Xonnect creator account has been suspended",
+          message:
+            "Hello,\n\nYour Xonnect creator account has been suspended. If you believe this is a mistake, please contact support.\n\nBest regards,\nXonnect Team",
+        }),
+      })
+      const emailData = await emailRes.json()
+      if (!emailRes.ok) {
+        console.error(emailData)
+        toast.error("Creator suspended, but email notification failed")
+      } else {
+        toast.success("Creator suspended and notified by email")
+      }
+
+      await fetchCreators()
+      setSelectedCreator(null)
+    } catch (error) {
+      console.error(error)
+      toast.error("Unable to suspend creator")
+    } finally {
+      setIsSaving(false)
+    }
   }
 
+  const handleUpdateCreatorPayouts = async () => {
+    if (!selectedCreator) return
+    setIsSaving(true)
+
+    try {
+      const res = await fetch(`/api/superadmin/creators/${selectedCreator.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          videoPayoutPercent: selectedCreatorDetails.videoPayoutPercent,
+          eventStreamPayout: selectedCreatorDetails.eventStreamPayout,
+          eventVenuePayout: selectedCreatorDetails.eventVenuePayout,
+        }),
+      })
+      const data = await res.json()
+
+      if (!res.ok) throw new Error(data?.message || "Failed to update payouts")
+
+      toast.success("Creator payout settings updated")
+      await fetchCreators()
+      setSelectedCreator(null)
+    } catch (error) {
+      console.error(error)
+      toast.error("Unable to update payout settings")
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const openEmailModal = (bulk: boolean, creator?: CreatorItem) => {
+    setIsBulkEmail(bulk)
+    setShowEmailModal(true)
+
+    if (bulk) {
+      setSelectedCreator(null)
+      setEmailContent({
+        subject: "Important update for Xonnect creators",
+        body: "Hello creators,\n\nThis is an important platform update from Xonnect.\n\nBest regards,\nXonnect Team",
+      })
+    } else if (creator) {
+      setSelectedCreator(creator)
+      setEmailContent({
+        subject: `Message for ${creator.profile.fullName || creator.email}`,
+        body: `Hello ${creator.profile.fullName || "Creator"},\n\n`,
+      })
+    }
+  }
+
+  const handleSendEmail = async () => {
+    if (!emailContent.subject.trim() || !emailContent.body.trim()) {
+      toast.error("Please fill in email subject and body")
+      return
+    }
+
+    setIsSaving(true)
+
+    try {
+      const res = await fetch("/api/superadmin/creators/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sendToAll: isBulkEmail,
+          creatorId: isBulkEmail ? undefined : selectedCreator?.id,
+          subject: emailContent.subject,
+          message: emailContent.body,
+        }),
+      })
+      const data = await res.json()
+
+      if (!res.ok) throw new Error(data?.message || "Failed to send email")
+
+      toast.success(data.message || "Email sent successfully")
+      setShowEmailModal(false)
+    } catch (error) {
+      console.error(error)
+      toast.error("Unable to send email")
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -157,15 +338,14 @@ const CreatorManagement = () => {
               <div>
                 <h1 className="text-2xl font-bold">Creator Management</h1>
               </div>
-
               <div className="flex items-center space-x-4">
-                <Button variant="outline" className="border-border bg-transparent">
+                <Button
+                  variant="outline"
+                  className="border-border bg-transparent"
+                  onClick={() => openEmailModal(true)}
+                >
                   <Mail className="w-4 h-4 mr-2" />
                   Send Bulk Email
-                </Button>
-                <Button className="bg-red-600 hover:bg-red-700">
-                  <UserCheck className="w-4 h-4 mr-2" />
-                  Approve Pending
                 </Button>
               </div>
             </div>
@@ -179,7 +359,7 @@ const CreatorManagement = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-muted-foreground text-sm">Total Creators</p>
-                      <p className="text-2xl font-bold">12,847</p>
+                      <p className="text-2xl font-bold">{stats.totalCreators.toLocaleString()}</p>
                     </div>
                     <Users className="w-8 h-8 text-blue-500" />
                   </div>
@@ -191,7 +371,7 @@ const CreatorManagement = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-muted-foreground text-sm">Active Creators</p>
-                      <p className="text-2xl font-bold">11,203</p>
+                      <p className="text-2xl font-bold">{stats.activeCreators.toLocaleString()}</p>
                     </div>
                     <UserCheck className="w-8 h-8 text-green-500" />
                   </div>
@@ -202,10 +382,10 @@ const CreatorManagement = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-muted-foreground text-sm">Pending Approval</p>
-                      <p className="text-2xl font-bold">234</p>
+                      <p className="text-muted-foreground text-sm">Platform Payout</p>
+                      <p className="text-2xl font-bold">${stats.platformRevenue.toLocaleString()}</p>
                     </div>
-                    <Clock className="w-8 h-8 text-yellow-500" />
+                    <DollarSign className="w-8 h-8 text-yellow-500" />
                   </div>
                 </CardContent>
               </Card>
@@ -310,7 +490,7 @@ const CreatorManagement = () => {
                           <p className="font-semibold text-green-400">{creator.totalRevenue}</p>
                         </td>
                         <td className="p-4">
-                          <p className="font-semibold">{creator.followers.toLocaleString()}</p>
+                          <p className="font-semibold">{creator.followersCount.toLocaleString()}</p>
                         </td>
                         <td className="p-4">
                           <div className="text-sm">
@@ -327,7 +507,14 @@ const CreatorManagement = () => {
                               size="sm"
                               variant="outline"
                               className="border-border bg-transparent"
-                              onClick={() => setSelectedCreator(creator)}
+                              onClick={() => {
+                                setSelectedCreator(creator)
+                                setSelectedCreatorDetails({
+                                  videoPayoutPercent: creator.videoPayoutPercent,
+                                  eventStreamPayout: creator.eventStreamPayout,
+                                  eventVenuePayout: creator.eventVenuePayout,
+                                })
+                              }}
                             >
                               <Eye className="w-4 h-4" />
                             </Button>
@@ -433,7 +620,7 @@ const CreatorManagement = () => {
                 <div className="bg-muted p-4 rounded-lg text-center">
                   <Users className="w-6 h-6 text-blue-400 mx-auto mb-2" />
                   <p className="text-sm text-muted-foreground">Followers</p>
-                  <p className="font-bold">{selectedCreator.followers.toLocaleString()}</p>
+                  <p className="font-bold">{selectedCreator.followersCount.toLocaleString()}</p>
                 </div>
                 <div className="bg-muted p-4 rounded-lg text-center">
                   <Video className="w-6 h-6 text-purple-400 mx-auto mb-2" />
@@ -447,10 +634,87 @@ const CreatorManagement = () => {
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-muted p-4 rounded-lg text-center">
+                  <DollarSign className="w-6 h-6 text-green-400 mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">Video Payout</p>
+                  <p className="font-bold">{selectedCreatorDetails.videoPayoutPercent}%</p>
+                </div>
+                <div className="bg-muted p-4 rounded-lg text-center">
+                  <Video className="w-6 h-6 text-purple-400 mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">Event Stream Payout</p>
+                  <p className="font-bold">{selectedCreatorDetails.eventStreamPayout}%</p>
+                </div>
+                <div className="bg-muted p-4 rounded-lg text-center">
+                  <TrendingUp className="w-6 h-6 text-red-400 mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">Event Venue Payout</p>
+                  <p className="font-bold">{selectedCreatorDetails.eventVenuePayout}%</p>
+                </div>
+              </div>
+
+              <div className="border-t border-border pt-6 mb-6">
+                <h4 className="text-lg font-semibold mb-4">Payout Settings</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-2">Video Payout %</p>
+                    <Input
+                      type="number"
+                      value={selectedCreatorDetails.videoPayoutPercent}
+                      onChange={(e) =>
+                        setSelectedCreatorDetails((prev) => ({
+                          ...prev,
+                          videoPayoutPercent: Number(e.target.value),
+                        }))
+                      }
+                      min={0}
+                      max={100}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-2">Event Stream Payout %</p>
+                    <Input
+                      type="number"
+                      value={selectedCreatorDetails.eventStreamPayout}
+                      onChange={(e) =>
+                        setSelectedCreatorDetails((prev) => ({
+                          ...prev,
+                          eventStreamPayout: Number(e.target.value),
+                        }))
+                      }
+                      min={0}
+                      max={100}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-2">Event Venue Payout %</p>
+                    <Input
+                      type="number"
+                      value={selectedCreatorDetails.eventVenuePayout}
+                      onChange={(e) =>
+                        setSelectedCreatorDetails((prev) => ({
+                          ...prev,
+                          eventVenuePayout: Number(e.target.value),
+                        }))
+                      }
+                      min={0}
+                      max={100}
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className="flex items-center justify-end space-x-4">
                 <Button variant="outline" className="border-border bg-transparent">
                   <Mail className="w-4 h-4 mr-2" />
                   Send Message
+                </Button>
+                <Button
+                  className="bg-blue-600 hover:bg-blue-700"
+                  onClick={handleUpdateCreatorPayouts}
+                  disabled={isSaving}
+                >
+                  <DollarSign className="w-4 h-4 mr-2" />
+                  Save Payouts
                 </Button>
                 {selectedCreator.status === "pending" && (
                   <Button

@@ -28,7 +28,7 @@ export default async function ProfilePage({
         title="Welcome to Xonnect 🎉"
         message="Account successfully created. You are ready to start creating events."
       />
-      <div className="mx-auto max-w-4xl space-y-6">
+      <div className=" space-y-6">
         <section className="rounded-3xl border border-border bg-card p-8">
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Profile</p>
           <h1 className="mt-3 text-3xl font-semibold">{session.user.name || "Your account"}</h1>

@@ -62,16 +62,7 @@ export default function SuperadminLoginPage() {
       title="Superadmin access"
       subtitle="Use an admin or superadmin account to reach the privileged dashboard"
     >
-      <div className="mb-6 rounded-2xl border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-        <div className="flex items-center gap-2 text-foreground">
-          <ShieldCheck className="h-4 w-4" />
-          <span className="font-medium">Privileged sign-in</span>
-        </div>
-        <p className="mt-2">
-          Admin and superadmin accounts can access the dashboard here. Normal user login stays unchanged.
-        </p>
-      </div>
-
+      
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
           <label className="block text-sm font-medium text-muted-foreground">Email Address</label>

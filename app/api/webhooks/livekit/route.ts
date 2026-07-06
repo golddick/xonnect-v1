@@ -2,15 +2,18 @@ import { NextRequest, NextResponse } from "next/server"
 
 import { prisma } from "@/lib/db/prisma"
 import { WebhookReceiver } from "livekit-server-sdk"
+import { sendEventLiveNotificationEmail } from "@/lib/auth/notifications"
 
-const db = prisma as any
+const db = prisma 
 
 function getLiveKitReceiver() {
-  const apiKey = process.env.LIVEKIT_API_KEY
-  const apiSecret = process.env.LIVEKIT_API_SECRET
+  const apiKey = (process.env.LIVEKIT_API_KEY ?? process.env.LIVEKIT_WEBHOOK_API_KEY)?.trim()
+  const apiSecret = (process.env.LIVEKIT_API_SECRET ?? process.env.LIVEKIT_WEBHOOK_SECRET)?.trim()
 
-  if (!apiKey || !apiSecret) {
-    throw new Error("Missing LiveKit webhook credentials")
+  if (!apiKey || !apiSecret) { 
+    throw new Error(
+      `Missing LiveKit webhook credentials. Set LIVEKIT_API_KEY and LIVEKIT_API_SECRET, or LIVEKIT_WEBHOOK_API_KEY and LIVEKIT_WEBHOOK_SECRET.`
+    )
   }
 
   return new WebhookReceiver(apiKey, apiSecret)
@@ -50,7 +53,7 @@ async function findEventForWebhook(payload: {
   }
 
   return null
-}
+} 
 
 // LiveKit webhook receiver:
 // verifies the request signature and updates the creator event state.
@@ -130,6 +133,55 @@ export async function POST(request: NextRequest) {
       where: { id: event.id },
       data: updates,
     })
+
+    if (updated.status === "LIVE" && event.status !== "LIVE") {
+      const followers = await db.creatorFollow.findMany({
+        where: { creatorId: updated.creatorId, status: "active" },
+        select: { followerProfile: { select: { email: true, fullName: true } } },
+      })
+
+        const notificationPromises = followers.map((follow) =>
+          sendEventLiveNotificationEmail({
+            email: follow.followerProfile.email,
+            fullName: follow.followerProfile.fullName ?? null,
+            eventId: updated.id,
+            eventTitle: updated.title,
+            eventScheduledAt: updated.scheduledAt?.toISOString() ?? null,
+            location:
+              updated.locationFullAddress ?? updated.locationName ?? updated.address ?? updated.locationCountry ?? null,
+            watchUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/tv/watch/event/${updated.id}`,
+            isTicketHolder: false,
+          }).catch((error) => {
+            console.error("Failed to send live notification to follower:", error)
+          })
+        )
+
+        const ticketPurchasers = await db.creatorEventTicketPurchase.findMany({
+          where: { status: "COMPLETED", ticket: { eventId: updated.id } },
+          select: { buyerEmail: true, buyerName: true, ticketCode: true },
+        })
+
+        for (const purchaser of ticketPurchasers) {
+          notificationPromises.push(
+            sendEventLiveNotificationEmail({
+              email: purchaser.buyerEmail,
+              fullName: purchaser.buyerName ?? null,
+              eventId: updated.id,
+              eventTitle: updated.title,
+              eventScheduledAt: updated.scheduledAt?.toISOString() ?? null,
+              location:
+                updated.locationFullAddress ?? updated.locationName ?? updated.address ?? updated.locationCountry ?? null,
+              watchUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/tv/watch/event/${updated.id}`,
+              ticketCode: purchaser.ticketCode,
+              isTicketHolder: true,
+            }).catch((error) => {
+              console.error("Failed to send live notification to ticket purchaser:", error)
+            })
+          )
+        }
+
+        await Promise.allSettled(notificationPromises)
+      }
 
     return NextResponse.json(
       {

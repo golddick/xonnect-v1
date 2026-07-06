@@ -337,9 +337,8 @@ export async function appendCameraSignal(args: {
   const session = await findSessionByToken(args.token)
   if (!session) return null
 
-   // ✅ Debug: Log the ID generation
   const signalId = dropid("cameraSignal")
-  console.log('Generated signal ID:', signalId)
+
 
   if (!signalId) {
     throw new Error('dropid failed to generate a valid ID')

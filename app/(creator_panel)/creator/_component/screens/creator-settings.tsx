@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import {
   Settings,
@@ -30,6 +30,7 @@ import {
   Key,
   Bell,
 } from "lucide-react"
+import LoadingSplash from "@/components/splash_screen/loading-splash"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { sidebarItems } from "@/lib/constant"
 
@@ -49,17 +50,24 @@ export default function CreatorSettings() {
   const [otpError, setOtpError] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [passwordSuccess, setPasswordSuccess] = useState('')
-  const [userEmail, setUserEmail] = useState('john.doe@example.com')
+  const avatarInputRef = useRef<HTMLInputElement | null>(null)
+  const [userEmail, setUserEmail] = useState("")
+  const [loading, setLoading] = useState(true)
+  const [savingProfile, setSavingProfile] = useState(false)
+  const [savingPrivacy, setSavingPrivacy] = useState(false)
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
+  const [notificationMessage, setNotificationMessage] = useState<string | null>(null)
+  const [pendingAccountId, setPendingAccountId] = useState<string | null>(null)
 
   const [profileData, setProfileData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    creatorName: "JohnDoeMusic",
-    bio: "Music producer and live performer passionate about creating unique sounds and connecting with audiences worldwide.",
-    website: "https://johndoemusic.com",
-    location: "Lagos, Nigeria",
-    category: "Music",
+    firstName: "",
+    lastName: "",
+    email: "",
+    creatorName: "",
+    bio: "",
+    website: "",
+    location: "",
+    avatarUrl: "",
   })
 
   const [privacySettings, setPrivacySettings] = useState({
@@ -71,16 +79,15 @@ export default function CreatorSettings() {
   })
 
   // Payout Accounts State
-  const [payoutAccounts, setPayoutAccounts] = useState([
-    {
-      id: '1',
-      bankName: 'UBA',
-      accountNumber: '1234567890',
-      accountName: 'John Doe',
-      accountType: 'Savings',
-      isPrimary: true
-    }
-  ])
+  const [payoutAccounts, setPayoutAccounts] = useState<Array<{
+    id: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    accountType: string
+    isPrimary: boolean
+    verified?: boolean
+  }>>([])
 
   const [newAccount, setNewAccount] = useState({
     bankName: '',
@@ -109,6 +116,230 @@ export default function CreatorSettings() {
     }))
   }
 
+  const handleAvatarSelect = async (file: File | null) => {
+    if (!file) return
+    setIsUploadingAvatar(true)
+    setNotificationMessage(null)
+
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+
+      const response = await fetch("/api/creator/settings/avatar", {
+        method: "POST",
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => null)
+        throw new Error(error?.message || "Failed to upload avatar")
+      }
+
+      const payload = await response.json()
+      const url = payload?.url ?? payload?.fileUrl
+      if (!url) {
+        throw new Error("Avatar upload did not return a URL")
+      }
+
+      setProfileData((prev) => ({ ...prev, avatarUrl: url }))
+      setNotificationMessage("Avatar uploaded successfully")
+    } catch (error) {
+      setNotificationMessage(error instanceof Error ? error.message : "Failed to upload avatar")
+    } finally {
+      setIsUploadingAvatar(false)
+    }
+  }
+
+  const triggerAvatarUpload = () => {
+    avatarInputRef.current?.click()
+  }
+
+  const loadSettings = async () => {
+    setLoading(true)
+    setNotificationMessage(null)
+
+    try {
+      const [profileRes, privacyRes, payoutRes] = await Promise.all([
+        fetch("/api/creator/settings/profile", { cache: "no-store" }),
+        fetch("/api/creator/settings/privacy", { cache: "no-store" }),
+        fetch("/api/creator/settings/payout-accounts", { cache: "no-store" }),
+      ])
+
+      if (!profileRes.ok || !privacyRes.ok || !payoutRes.ok) {
+        throw new Error("Failed to load settings")
+      }
+
+      const profilePayload = await profileRes.json()
+      const privacyPayload = await privacyRes.json()
+      const payoutPayload = await payoutRes.json()
+
+      setProfileData((prev) => ({
+        ...prev,
+        firstName: profilePayload.profile?.firstName ?? prev.firstName,
+        lastName: profilePayload.profile?.lastName ?? prev.lastName,
+        email: profilePayload.profile?.email ?? prev.email,
+        creatorName: profilePayload.profile?.creatorName ?? prev.creatorName,
+        bio: profilePayload.profile?.bio ?? prev.bio,
+        website: profilePayload.profile?.website ?? prev.website,
+        location: profilePayload.profile?.location ?? prev.location,
+        avatarUrl: profilePayload.profile?.avatarUrl ?? prev.avatarUrl,
+      }))
+      setUserEmail(profilePayload.profile?.email ?? "")
+
+      setPrivacySettings({
+        profileVisibility: privacyPayload.privacy?.profileVisibility ?? "public",
+        showEmail: privacyPayload.privacy?.showEmail ?? false,
+        showLocation: privacyPayload.privacy?.showLocation ?? true,
+        allowMessages: privacyPayload.privacy?.allowMessages ?? true,
+        showOnlineStatus: privacyPayload.privacy?.showOnlineStatus ?? true,
+      })
+
+      setPayoutAccounts(payoutPayload.payoutAccounts ?? [])
+    } catch (error) {
+      console.error("Load creator settings error:", error)
+      setNotificationMessage("Unable to load creator settings. Please refresh.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    loadSettings()
+  }, [])
+
+  const handleSaveProfile = async () => {
+    setSavingProfile(true)
+    setNotificationMessage(null)
+
+    try {
+      const response = await fetch("/api/creator/settings/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: profileData.firstName,
+          lastName: profileData.lastName,
+          creatorName: profileData.creatorName,
+          bio: profileData.bio,
+          website: profileData.website,
+          location: profileData.location,
+          avatarUrl: profileData.avatarUrl,
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => null)
+        throw new Error(error?.message || "Failed to save profile")
+      }
+
+      setNotificationMessage("Profile updated successfully")
+    } catch (error) {
+      setNotificationMessage(error instanceof Error ? error.message : "Failed to save profile")
+    } finally {
+      setSavingProfile(false)
+    }
+  }
+
+  const handleSavePrivacy = async () => {
+    setSavingPrivacy(true)
+    setNotificationMessage(null)
+
+    try {
+      const response = await fetch("/api/creator/settings/privacy", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          profileVisibility: privacySettings.profileVisibility,
+          showEmail: privacySettings.showEmail,
+          showLocation: privacySettings.showLocation,
+          allowMessages: privacySettings.allowMessages,
+          showOnlineStatus: privacySettings.showOnlineStatus,
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => null)
+        throw new Error(error?.message || "Failed to save privacy settings")
+      }
+
+      setNotificationMessage("Privacy settings saved")
+    } catch (error) {
+      setNotificationMessage(error instanceof Error ? error.message : "Failed to save privacy settings")
+    } finally {
+      setSavingPrivacy(false)
+    }
+  }
+
+  const handleVerifyAccount = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setVerifyingAccount(true)
+    setOtpError("")
+    setNotificationMessage(null)
+
+    if (!newAccount.bankName || !newAccount.accountNumber || !newAccount.accountType) {
+      setOtpError("Bank name, account number, and account type are required.")
+      setVerifyingAccount(false)
+      return
+    }
+
+    try {
+      const createResponse = await fetch("/api/creator/settings/payout-accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bankName: newAccount.bankName,
+          accountNumber: newAccount.accountNumber,
+          accountName: newAccount.accountName,
+          accountType: newAccount.accountType,
+          isPrimary: newAccount.isPrimary,
+        }),
+      })
+
+      if (!createResponse.ok) {
+        const error = await createResponse.json().catch(() => null)
+        throw new Error(error?.message || "Unable to create payout account")
+      }
+
+      const created = await createResponse.json()
+      setPendingAccountId(created.payoutAccount?.id ?? null)
+      setShowOtpVerification(true)
+
+      const otpResponse = await fetch("/api/creator/settings/payout-accounts/send-otp", {
+        method: "POST",
+      })
+
+      if (!otpResponse.ok) {
+        const error = await otpResponse.json().catch(() => null)
+        throw new Error(error?.message || "Unable to send OTP")
+      }
+
+      setOtpTimer(300)
+      setResendCooldown(60)
+      const timer = setInterval(() => {
+        setOtpTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer)
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+      const cooldownTimer = setInterval(() => {
+        setResendCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(cooldownTimer)
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+    } catch (error) {
+      setOtpError(error instanceof Error ? error.message : "Failed to start account verification")
+    } finally {
+      setVerifyingAccount(false)
+    }
+  }
+
+
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setPasswordData(prev => ({
@@ -124,7 +355,6 @@ export default function CreatorSettings() {
     }))
   }
 
-  // Payout Accounts Functions
   const resetForm = () => {
     setNewAccount({
       bankName: '',
@@ -151,39 +381,6 @@ export default function CreatorSettings() {
       }))
       setVerifyingAccount(false)
     }, 1000)
-  }
-
-  const handleVerifyAccount = async (e: React.FormEvent) => {
-    e.preventDefault()
-    // Send OTP to user's email
-    try {
-      setShowOtpVerification(true)
-      
-      // Start OTP timer
-      const timer = setInterval(() => {
-        setOtpTimer(prev => {
-          if (prev <= 1) {
-            clearInterval(timer)
-            return 0
-          }
-          return prev - 1
-        })
-      }, 1000)
-      
-      // Start resend cooldown (60 seconds)
-      setResendCooldown(60)
-      const resendTimer = setInterval(() => {
-        setResendCooldown(prev => {
-          if (prev <= 1) {
-            clearInterval(resendTimer)
-            return 0
-          }
-          return prev - 1
-        })
-      }, 1000)
-    } catch (error) {
-      console.error('Error sending OTP:', error)
-    }
   }
 
   const handleOtpChange = (index: number, value: string) => {

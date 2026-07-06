@@ -162,7 +162,7 @@ export async function PUT(
       { message: "Failed to update creator video" },
       { status: 500 }
     )
-  }
+  } 
 }
 
 export async function DELETE(
