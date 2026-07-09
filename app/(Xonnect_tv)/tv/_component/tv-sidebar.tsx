@@ -1,17 +1,25 @@
 "use client"
 
-import { useState } from "react"
-import { ChevronDown, Menu, X, Home, Video, Film, Trophy, Tv, Sparkles, Gamepad2, MicVocal } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useSession } from "next-auth/react"
+import { ChevronDown, Menu, X, Home, Video, Film, Trophy, Tv, Gamepad2, MicVocal } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
+import Logo from "@/components/nav/logo"
 
 
 interface TvSidebarProps {
   onItemClick?: () => void;
 }
 
+interface TvFollower {
+  id: string
+  name: string
+  avatarUrl: string | null
+}
 
 const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
+  const { data: session, status } = useSession()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [expandedSections, setExpandedSections] = useState({
     categories: true,
@@ -19,6 +27,41 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
     recommended: true,
     topChannels: true,
   })
+  const [followingCreators, setFollowingCreators] = useState<TvFollower[]>([])
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadFollowing() {
+      if (status !== "authenticated") {
+        setFollowingCreators([])
+        return
+      }
+
+      try {
+        const response = await fetch("/api/profile/following")
+        if (!response.ok) {
+          setFollowingCreators([])
+          return
+        }
+
+        const data = await response.json()
+        if (!cancelled) {
+          setFollowingCreators(data.creators ?? [])
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setFollowingCreators([])
+        }
+      }
+    }
+
+    loadFollowing()
+
+    return () => {
+      cancelled = true
+    }
+  }, [status])
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections((prev) => ({
@@ -29,19 +72,13 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
 
   const categories = [
     { id: "/", name: "Home", icon: Home, color: "text-red-500" },
-    { id: "live-event", name: "Live Event", icon: Video, color: "text-red-400" },
+    { id: "live-event", name: "Event", icon: Video, color: "text-red-400" },
     { id: "video", name: "Video", icon: Film, color: "text-purple-500" },
     { id: "sport", name: "Sport", icon: Trophy, color: "text-blue-500" },
-    { id: "podcast", name: "Podcast", icon: MicVocal, color: "text-gold-500" },
-    { id: "tv-show", name: "TV Show", icon: Tv, color: "text-green-500" },
+    // { id: "podcast", name: "Podcast", icon: MicVocal, color: "text-gold-500" },
+    // { id: "tv-show", name: "TV Show", icon: Tv, color: "text-green-500" },
     // { id: "entertainment", name: "Entertainment", icon: Sparkles, color: "text-yellow-500" },
     // { id: "game", name: "Game", icon: Gamepad2, color: "text-pink-500" },
-  ]
-
-  const followingChannels = [
-    { id: 1, name: "Creative Studio", avatar: "🎨", viewers: "2.3K", live: true, category: "Music" },
-    { id: 2, name: "Tech Talks", avatar: "💻", viewers: "5.1K", live: true, category: "Education" },
-    { id: 3, name: "Gaming Pro", avatar: "🎮", viewers: "12K", live: true, category: "Gaming" },
   ]
 
   const recommendedChannels = [
@@ -67,7 +104,11 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
         <div className="p-4 space-y-6">
           {/* Logo & Toggle */}
           <div className="hidden lg:flex items-center justify-between">
-            {!isCollapsed && <h1 className="font-bold text-foreground text-lg">Xonnect TV</h1>}
+            {!isCollapsed &&
+             <Link href="/" className="flex items-center space-x-2 group">
+                <Logo/>
+                <span className="text-xl font-bold text-foreground md:hidden lg:block">Xonnect</span>
+              </Link>}
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="p-2 hover:bg-muted rounded-lg transition-colors"
@@ -116,52 +157,49 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
             </AnimatePresence>
           </div>
 
-          {/* Following Section */}
-          <div className="border-t border-border pt-4">
-            <button
-              onClick={() => toggleSection("following")}
-              className="flex items-center justify-between w-full px-3 py-2 hover:bg-muted rounded-lg transition-colors"
-            >
-              {!isCollapsed && <h3 className="text-xs font-semibold text-muted-foreground uppercase">Following</h3>}
-              {!isCollapsed && (
-                <ChevronDown
-                  className={`w-4 h-4 text-muted-foreground transition-transform ${expandedSections.following ? "rotate-180" : ""}`}
-                />
-              )}
-            </button>
-            <AnimatePresence>
-              {expandedSections.following && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="space-y-2 mt-2"
-                >
-                  {followingChannels.map((channel) => (
-                    <Link
-                      key={channel.id}
-                      href={`/tv/watch/${channel.id}`}
-                      className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors group"
-                    >
-                      <span className="text-lg flex-shrink-0">{channel.avatar}</span>
-                      {!isCollapsed && (
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm text-muted-foreground group-hover:text-foreground truncate">{channel.name}</p>
-                          <div className="flex items-center space-x-1">
-                            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                            <span className="text-xs text-red-400">{channel.viewers} watching</span>
+          {followingCreators.length > 0 && (
+            <div className="border-t border-border pt-4">
+              <button
+                onClick={() => toggleSection("following")}
+                className="flex items-center justify-between w-full px-3 py-2 hover:bg-muted rounded-lg transition-colors"
+              >
+                {!isCollapsed && <h3 className="text-xs font-semibold text-muted-foreground uppercase">Following</h3>}
+                {!isCollapsed && (
+                  <ChevronDown
+                    className={`w-4 h-4 text-muted-foreground transition-transform ${expandedSections.following ? "rotate-180" : ""}`}
+                  />
+                )}
+              </button>
+              <AnimatePresence>
+                {expandedSections.following && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="space-y-2 mt-2"
+                  >
+                    {followingCreators.map((creator) => (
+                      <Link
+                        key={creator.id}
+                        href={`/tv/watch/${creator.id}`}
+                        className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors group"
+                      >
+                        <span className="text-lg flex-shrink-0">{creator.avatarUrl ? "👤" : "👤"}</span>
+                        {!isCollapsed && (
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm text-muted-foreground group-hover:text-foreground truncate">{creator.name}</p>
                           </div>
-                        </div>
-                      )}
-                    </Link>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+                        )}
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
           {/* Recommended Section */}
-          <div className="border-t border-border pt-4">
+          {/* <div className="border-t border-border pt-4">
             <button
               onClick={() => toggleSection("recommended")}
               className="flex items-center justify-between w-full px-3 py-2 hover:bg-muted rounded-lg transition-colors"
@@ -195,10 +233,10 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </div> */}
 
           {/* Top Channels Section */}
-          <div className="border-t border-border pt-4">
+          {/* <div className="border-t border-border pt-4">
             <button
               onClick={() => toggleSection("topChannels")}
               className="flex items-center justify-between w-full px-3 py-2 hover:bg-muted rounded-lg transition-colors"
@@ -238,7 +276,7 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </div> */}
         </div>
       </motion.div>
     </div>

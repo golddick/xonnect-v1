@@ -19,12 +19,14 @@ import {
   Shield,
   Zap,
   TrendingUp,
+  Handshake,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import HeroSection2 from "../../_component/heroSection"
 
 const EnterprisePartnership = () => {
   const [formData, setFormData] = useState({
@@ -49,10 +51,25 @@ const EnterprisePartnership = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setIsSubmitting(false)
-    setCurrentStep(4) // Success step
+    try {
+      const res = await fetch("/api/enterprise/partnership", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err?.error || "Submission failed")
+      }
+
+      setCurrentStep(4) // Success step
+    } catch (err) {
+      console.error(err)
+      alert(err instanceof Error ? err.message : "Submission failed")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const benefits = [
@@ -86,40 +103,16 @@ const EnterprisePartnership = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <div className="bg-gray-900 border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-8 py-12">
-          <div className="text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center justify-center mb-6"
-            >
-              <div className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center">
-                <Building className="w-8 h-8 text-white" />
-              </div>
-            </motion.div>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl font-bold mb-4"
-            >
-              Enterprise Partnership Program
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-xl text-gray-400 max-w-3xl mx-auto"
-            >
-              Join our enterprise program and unlock exclusive benefits, custom solutions, and dedicated support for
-              your organization
-            </motion.p>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background text-foreground">
+
+       {/* Hero Section */}
+            <div className="relative z-10">
+              <HeroSection2
+                title={'Enterprise Partnership'}
+                ICON={<Handshake className="w-4 h-4" />}
+                iconTitle="Our Partnership"
+              />
+            </div>
 
       <div className="max-w-7xl mx-auto px-8 py-12">
         {/* Benefits Section */}
@@ -138,7 +131,7 @@ const EnterprisePartnership = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + index * 0.1 }}
               >
-                <Card className="bg-gray-900 border-gray-800 h-full hover:border-red-600/50 transition-all duration-300">
+                <Card className="bg-card text-card-foreground border-border hover:border-red-600/50 transition-all duration-300 group">
                   <CardContent className="p-6 text-center">
                     <div className="w-12 h-12 bg-red-600/20 rounded-lg flex items-center justify-center mx-auto mb-4">
                       <benefit.icon className="w-6 h-6 text-red-400" />
@@ -154,7 +147,7 @@ const EnterprisePartnership = () => {
 
         {/* Application Form */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-          <Card className="bg-gray-900 border-gray-800 max-w-4xl mx-auto">
+          <Card className="bg-card text-card-foreground border-border hover:border-red-600/50 transition-all duration-300 group max-w-4xl mx-auto">
             <CardHeader>
               <CardTitle className="text-2xl text-center">Partnership Application</CardTitle>
 
@@ -166,7 +159,7 @@ const EnterprisePartnership = () => {
                       className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
                         currentStep >= step.number
                           ? "bg-red-600 border-red-600 text-white"
-                          : "border-gray-600 text-gray-400"
+                          : "border-border text-gray-400"
                       }`}
                     >
                       {currentStep > step.number ? (
@@ -200,7 +193,7 @@ const EnterprisePartnership = () => {
                           id="companyName"
                           value={formData.companyName}
                           onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                          className="bg-gray-800 border-gray-700"
+                          className=" border-border"
                           required
                         />
                       </div>
@@ -211,7 +204,7 @@ const EnterprisePartnership = () => {
                           id="contactName"
                           value={formData.contactName}
                           onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
-                          className="bg-gray-800 border-gray-700"
+                          className=" border-border"
                           required
                         />
                       </div>
@@ -225,7 +218,7 @@ const EnterprisePartnership = () => {
                             type="email"
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            className="bg-gray-800 border-gray-700"
+                            className=" border-border"
                             required
                           />
                         </div>
@@ -239,7 +232,7 @@ const EnterprisePartnership = () => {
                             id="phone"
                             value={formData.phone}
                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                            className="bg-gray-800 border-gray-700"
+                            className=" border-border"
                           />
                         </div>
                       </div>
@@ -252,7 +245,7 @@ const EnterprisePartnership = () => {
                             id="website"
                             value={formData.website}
                             onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                            className="bg-gray-800 border-gray-700"
+                            className=" border-border"
                             placeholder="https://yourcompany.com"
                           />
                         </div>
@@ -264,7 +257,7 @@ const EnterprisePartnership = () => {
                           id="companySize"
                           value={formData.companySize}
                           onChange={(e) => setFormData({ ...formData, companySize: e.target.value })}
-                          className="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded-lg"
+                          className="w-full border border-border bg-transparent text-gray-400 px-3 py-2 rounded-lg"
                           required
                         >
                           <option value="">Select company size</option>
@@ -281,7 +274,7 @@ const EnterprisePartnership = () => {
                           id="industry"
                           value={formData.industry}
                           onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-                          className="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded-lg"
+                          className="w-full  border bg-transparent border-border text-gray-400 px-3 py-2 rounded-lg"
                           required
                         >
                           <option value="">Select industry</option>
@@ -303,7 +296,7 @@ const EnterprisePartnership = () => {
                           id="address"
                           value={formData.address}
                           onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                          className="bg-gray-800 border-gray-700"
+                          className=" border-border"
                           rows={3}
                           placeholder="Full company address"
                         />
@@ -316,7 +309,7 @@ const EnterprisePartnership = () => {
                         id="description"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        className="bg-gray-800 border-gray-700"
+                        className=" border-border"
                         rows={4}
                         placeholder="Tell us about your company and what you do"
                         required
@@ -338,7 +331,7 @@ const EnterprisePartnership = () => {
                             type="number"
                             value={formData.expectedUsers}
                             onChange={(e) => setFormData({ ...formData, expectedUsers: e.target.value })}
-                            className="bg-gray-800 border-gray-700"
+                            className=" border-border"
                             placeholder="e.g., 500"
                             required
                           />
@@ -353,11 +346,11 @@ const EnterprisePartnership = () => {
                             id="budget"
                             value={formData.budget}
                             onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                            className="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded-lg"
+                            className="w-full border border-border bg-transparent text-gray-400 px-3 py-2 rounded-lg"
                             required
                           >
                             <option value="">Select budget range</option>
-                            <option value="10k-25k">$10,000 - $25,000</option>
+                            <option value="5k-25k">$5,000 - $25,000</option>
                             <option value="25k-50k">$25,000 - $50,000</option>
                             <option value="50k-100k">$50,000 - $100,000</option>
                             <option value="100k+">$100,000+</option>
@@ -371,7 +364,7 @@ const EnterprisePartnership = () => {
                           id="timeline"
                           value={formData.timeline}
                           onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
-                          className="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded-lg"
+                          className="w-full border border-border bg-transparent text-gray-400 px-3 py-2 rounded-lg"
                           required
                         >
                           <option value="">Select timeline</option>
@@ -389,7 +382,7 @@ const EnterprisePartnership = () => {
                         id="requirements"
                         value={formData.requirements}
                         onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
-                        className="bg-gray-800 border-gray-700"
+                        className="border border-border"
                         rows={6}
                         placeholder="Describe your specific needs, use cases, integration requirements, and any custom features you need"
                         required
@@ -399,13 +392,13 @@ const EnterprisePartnership = () => {
                     {/* File Upload Section */}
                     <div>
                       <Label>Supporting Documents (Optional)</Label>
-                      <div className="mt-2 border-2 border-dashed border-gray-700 rounded-lg p-8 text-center hover:border-red-600/50 transition-colors">
+                      <div className="mt-2 border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-red-600/50 transition-colors">
                         <Upload className="w-8 h-8 text-gray-400 mx-auto mb-4" />
                         <p className="text-gray-400 mb-2">Upload any relevant documents</p>
                         <p className="text-sm text-gray-500">
                           RFP, technical requirements, etc. (PDF, DOC, up to 10MB)
                         </p>
-                        <Button type="button" variant="outline" className="mt-4 border-gray-700 bg-transparent">
+                        <Button type="button" variant="outline" className="mt-4 border-border bg-transparent">
                           Choose Files
                         </Button>
                       </div>
@@ -416,7 +409,7 @@ const EnterprisePartnership = () => {
                 {/* Step 3: Review */}
                 {currentStep === 3 && (
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
-                    <div className="bg-gray-800 rounded-lg p-6">
+                    <div className=" rounded-lg p-6">
                       <h3 className="text-lg font-semibold mb-4">Application Summary</h3>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

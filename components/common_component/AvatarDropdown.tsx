@@ -11,43 +11,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
-import { useState } from "react"
+import { signIn, signOut, useSession } from "next-auth/react"
 import UserAvatar from "./userAvatar"
 
 export function AvatarDropdownMenu() {
-  // Mock user
-  const [user, setUser] = useState({
-    userName: "Gold Dick",
-    fullName: "Gold Dick",
-    email: "gold@example.com",
-    role: "CREATOR",
-    profileImage: "",
-  })
+  const { data: session, status } = useSession()
 
-  const name = user?.userName || user?.fullName || "Guest"
-  const creator = true
-
-  const isLoggedIn = true
+  const name = session?.user?.name || session?.user?.email || "Guest"
+  const creator = session?.user?.role === "CREATOR"
+  const isLoggedIn = status === "authenticated" && !!session?.user
 
   const handleLogout = () => {
-    // setUser(null) // just clear mock user
+    signOut({ callbackUrl: "/tv" })
   }
 
   const handleLogin = () => {
-    setUser({
-      userName: "Gold Dick",
-      fullName: "Gold Dick",
-      email: "gold@example.com",
-      role: "CREATOR",
-      profileImage: "",
-    })
+    signIn()
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="cursor-pointer">
-          <UserAvatar name={name} image={user?.profileImage || ""} />
+          <UserAvatar name={name} image={session?.user?.image || ""} />
         </div>
       </DropdownMenuTrigger>
 
@@ -58,7 +44,7 @@ export function AvatarDropdownMenu() {
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">{name}</p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  {user?.email}
+                  {session?.user?.email}
                 </p>
               </div>
             </DropdownMenuLabel>

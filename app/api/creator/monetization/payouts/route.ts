@@ -37,6 +37,23 @@ export async function GET() {
           },
         },
       },
+      select: {
+        id: true,
+        amount: true,
+        status: true,
+        note: true,
+        receiptUrl: true,
+        requestedAt: true,
+        processedAt: true,
+        payoutAccount: {
+          select: {
+            bankName: true,
+            accountName: true,
+            accountNumber: true,
+            accountType: true,
+          },
+        },
+      },
     })
 
     return NextResponse.json({ payoutRequests }, { status: 200 })

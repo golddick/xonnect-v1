@@ -15,11 +15,11 @@ export type VideoPurchaseBuyer = {
   buyerProfileId?: string | null
 }
 
-export function calculateVideoRevenueSplit(amount: number, platformFeePercentage: number) {
+export function calculateVideoRevenueSplit(amount: number, creatorPayoutPercentage: number) {
   const safeAmount = Math.max(Math.round(amount), 0)
-  const safeFeePercentage = Math.max(Math.round(platformFeePercentage), 0)
-  const platformFeeAmount = Math.round((safeAmount * safeFeePercentage) / 100)
-  const creatorRevenueAmount = Math.max(safeAmount - platformFeeAmount, 0)
+  const safeCreatorPayoutPercentage = Math.min(Math.max(Math.round(creatorPayoutPercentage), 0), 100)
+  const creatorRevenueAmount = Math.round((safeAmount * safeCreatorPayoutPercentage) / 100)
+  const platformFeeAmount = Math.max(safeAmount - creatorRevenueAmount, 0)
 
   return {
     amount: safeAmount,
@@ -49,12 +49,12 @@ export async function getCreatorVideoFeePercentage(creatorId: string) {
     throw new Error("Creator not found")
   }
 
-  return Math.max(Math.round(creator.videoPayoutPercent), 0)
+  return Math.min(Math.max(Math.round(creator.videoPayoutPercent), 0), 100)
 }
 
 export function createVideoAccessCode(videoId: string, reference: string) {
   const suffix = reference.replace(/[^a-zA-Z0-9]/g, "").slice(-8).toUpperCase()
-  return `VDO-${videoId.slice(0, 4).toUpperCase()}-${suffix}`
+  return `XON-${videoId.slice(0, 4).toUpperCase()}-${suffix}`
 }
 
 export function getVideoAccessExpiry(purchaseType: VideoPurchaseType) {
@@ -135,14 +135,16 @@ export async function completeVideoPurchase(args: {
     return { alreadyCompleted: true }
   }
 
-  const feePercentage = await getCreatorVideoFeePercentage(args.creatorId)
-  const revenueSplit = calculateVideoRevenueSplit(args.amount, feePercentage)
+  const creatorPayoutPercentage = await getCreatorVideoFeePercentage(args.creatorId)
+  const feePercentage = creatorPayoutPercentage
+  const revenueSplit = calculateVideoRevenueSplit(args.amount, creatorPayoutPercentage)
   const accessExpiresAt = getVideoAccessExpiry(args.purchaseType)
   const video = await db.creatorVideo.findUnique({
     where: { id: args.creatorVideoId },
     select: {
       id: true,
       creatorId: true,
+      amount: true,
       revenue: true,
       platformFee: true,
     },
@@ -166,6 +168,8 @@ export async function completeVideoPurchase(args: {
         buyerPhone: args.buyer.buyerPhone ?? null,
         purchaseType: args.purchaseType,
         amount: revenueSplit.amount,
+        revenue: revenueSplit.creatorRevenueAmount,
+        platformFee: revenueSplit.platformFeeAmount,
         currency: args.currency ?? "NGN",
         status: "COMPLETED",
         transactionId: args.reference,
@@ -177,6 +181,7 @@ export async function completeVideoPurchase(args: {
     await tx.creatorVideo.update({
       where: { id: args.creatorVideoId },
       data: {
+        amount: { increment: revenueSplit.amount },
         revenue: { increment: revenueSplit.creatorRevenueAmount },
         platformFee: { increment: revenueSplit.platformFeeAmount },
       },

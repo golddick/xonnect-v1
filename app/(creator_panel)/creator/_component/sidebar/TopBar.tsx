@@ -18,14 +18,19 @@ import {
 
 import React, { useState } from 'react'
 import { usePathname, useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { sidebarItems } from "@/lib/constant"
+import UserAvatar from "@/components/common_component/userAvatar"
 
 
 const TopBar = () => {
 const router = useRouter()
   const pathname = usePathname()
+  const { data: session } = useSession()
 
     const [sidebarOpen, setSidebarOpen] = useState(false)
+  const displayName = session?.user?.name || session?.user?.email || "Creator"
+  const profileImage = session?.user?.image || ""
   return (
     <div className=' w-full bg-background'>
 
@@ -81,7 +86,7 @@ const router = useRouter()
                 <h1 className="text-2xl font-bold text-foreground">
                   Creator Panel
                 </h1>
-                <p className="text-muted-foreground text-sm">Welcome back, John!</p>
+                <p className="text-muted-foreground text-sm">Welcome back, {displayName}!</p>
               </div>
             </div>
 
@@ -98,9 +103,7 @@ const router = useRouter()
                 <Bell className="w-5 h-5 text-foreground" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-600 rounded-full"></div>
               </button>
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm">J</span>
-              </div>
+              <UserAvatar name={displayName} image={profileImage} />
             </div>
           </div>
         </div>

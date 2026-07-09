@@ -6,121 +6,68 @@ import { Play, Info, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
-const featuredShows = [
-  {
-    id: "1",
-    title: "Afrobeats World Tour — Live",
-    description:
-      "The biggest Afrobeats artists from Lagos to London take the stage in a once-in-a-lifetime global concert experience. Watch live, feel every beat.",
-    thumbnail: "/afrobeats-concert-stage.jpg",
-    category: "Music · Live Event",
-    isLive: true,
-    viewers: "14.2K watching",
-  },
-  {
-    id: "2",
-    title: "Pro Gaming Championship Finals",
-    description:
-      "The world's top esports teams clash in the ultimate showdown. High stakes, insane plays, and a $500K prize pool on the line. Don't miss a second.",
-    thumbnail: "/gaming-esports-tournament.jpg",
-    category: "Gaming · Esports",
-    isLive: true,
-    viewers: "9.8K watching",
-  },
-  {
-    id: "3",
-    title: "Tech Founders Summit 2025",
-    description:
-      "Africa's most visionary founders, investors, and innovators gather to shape the future of tech. Keynotes, panels, and live Q&As all day.",
-    thumbnail: "/tech-conference-ai-presentation.jpg",
-    category: "Tech · Conference",
-    isLive: false,
-    viewers: "6.5K views",
-  },
-]
+const heroVideo = "/video/Video Generation-ed197f34041ca4cc924cb0b5.mp4"
 
 export default function XonnectHero() {
-  const [active, setActive] = useState(0)
   const [email, setEmail] = useState("")
-  const show = featuredShows[active]
 
   return (
     <section className="relative w-full min-h-[92vh] flex flex-col overflow-hidden">
-      {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        {featuredShows.map((s, i) => (
-          <motion.div
-            key={s.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: i === active ? 1 : 0 }}
-            transition={{ duration: 0.8 }}
-            className="absolute inset-0"
-          >
-            <img
-              src={s.thumbnail}
-              alt={s.title}
-              className="w-full h-full object-cover object-center"
-            />
-          </motion.div>
-        ))}
-        {/* Gradient overlays */}
-        {/*<div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent" />*/}
-        {/*<div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/30" />*/}
+        <video
+          src={heroVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/20" />
       </div>
 
-      {/* Content */}
       <div className="relative z-10 flex flex-col justify-center flex-1 px-6 sm:px-10 md:px-16 pt-24 pb-10 max-w-7xl mx-auto w-full">
         <div className="max-w-2xl">
-          {/* Live badge */}
-          {show.isLive && (
-            <motion.div
-              key={`live-${active}`}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-2 mb-4"
-            >
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600" />
-              </span>
-              <span className="text-red-400 text-sm font-bold uppercase tracking-widest">Live Now · {show.viewers}</span>
-            </motion.div>
-          )}
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-2 mb-4"
+          >
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600" />
+            </span>
+            <span className="text-red-400 text-sm font-bold uppercase tracking-widest">Live experiences, on demand</span>
+          </motion.div>
 
-          {/* Category */}
           <motion.p
-            key={`cat-${active}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-white/60 text-sm font-medium uppercase tracking-widest mb-3"
+            className="text-white/70 text-sm font-medium uppercase tracking-[0.3em] mb-3"
           >
-            {show.category}
+            Xonnect · Watch. Connect. Belong.
           </motion.p>
 
-          {/* Title */}
           <motion.h1
-            key={`title-${active}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
             className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-tight mb-4"
           >
-            {show.title}
+            Your next favorite live moment starts here.
           </motion.h1>
 
-          {/* Description */}
-          <motion.p
-            key={`desc-${active}`}
+          {/* <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-white/75 text-base sm:text-lg leading-relaxed mb-8 max-w-xl"
+            className="text-white/80 text-base sm:text-lg leading-relaxed mb-8 max-w-xl"
           >
-            {show.description}
-          </motion.p>
+            Step into cinematic live events, creator streams, and premium experiences built for viewers who want more than passive scrolling.
+          </motion.p> */}
 
-          {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -143,7 +90,6 @@ export default function XonnectHero() {
             </Link>
           </motion.div>
 
-          {/* Email signup */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -163,25 +109,6 @@ export default function XonnectHero() {
               </Button>
             </Link>
           </motion.div>
-        </div>
-      </div>
-
-      {/* Slide Selectors */}
-      <div className="relative z-10 px-6 sm:px-10 md:px-16 pb-8 max-w-7xl mx-auto w-full">
-        <div className="flex gap-2">
-          {featuredShows.map((s, i) => (
-            <button
-              key={s.id}
-              onClick={() => setActive(i)}
-              className="flex flex-col gap-1 group"
-            >
-              <div
-                className={`h-1 rounded-full transition-all duration-500 ${
-                  i === active ? "bg-red-500 w-12" : "bg-white/30 w-6 group-hover:bg-white/60"
-                }`}
-              />
-            </button>
-          ))}
         </div>
       </div>
     </section>

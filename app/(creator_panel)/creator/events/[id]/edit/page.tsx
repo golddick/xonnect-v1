@@ -124,6 +124,7 @@ export default function EventEditPage() {
   const [error, setError] = useState("")
   const [eventStatus, setEventStatus] = useState("")
   const [recordingUrl, setRecordingUrl] = useState("")
+  const [uploadingRecording, setUploadingRecording] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -216,11 +217,15 @@ export default function EventEditPage() {
     }
   }, [eventId])
 
+  const isRecordingEditable = eventStatus === "ENDED"
+
   const canEdit = useMemo(() => {
     const scheduledAt = state.scheduledDate && state.scheduledTime ? new Date(`${state.scheduledDate}T${state.scheduledTime}`) : null
     const passed = scheduledAt ? scheduledAt <= new Date() : false
     return eventStatus !== "LIVE" && eventStatus !== "ENDED" && !passed
   }, [eventStatus, state.scheduledDate, state.scheduledTime])
+
+  const canSave = canEdit || isRecordingEditable
 
   const update = <K extends keyof EditState>(key: K, value: EditState[K]) => {
     setState((prev) => ({ ...prev, [key]: value }))
@@ -263,7 +268,7 @@ export default function EventEditPage() {
     e.preventDefault()
     setError("")
 
-    if (!canEdit) {
+    if (!canSave) {
       setError("This event can no longer be edited.")
       return
     }
@@ -275,38 +280,48 @@ export default function EventEditPage() {
           ? new Date(`${state.scheduledDate}T${state.scheduledTime}`).toISOString()
           : null
 
+      const payload = isRecordingEditable
+        ? {
+            recordedVideoUrl: state.recordedVideoUrl || null,
+            recordedVideoFileId: state.recordedVideoFileId || null,
+            recordingEnabled: state.recordingEnabled,
+            recordingStatus: state.recordingStatus,
+            recordingUrl: recordingUrl || null,
+          }
+        : {
+            title: state.title,
+            description: state.description,
+            category: state.category,
+            scheduledAt,
+            timezone: state.timezone,
+            durationMinutes: state.durationMinutes,
+            address: state.address,
+            thumbnailUrl: state.thumbnailUrl || state.thumbnailPreview || null,
+            thumbnailFileId: state.thumbnailFileId || null,
+            thumbnailVideoUrl: state.thumbnailVideoUrl || state.thumbnailVideoPreview || null,
+            thumbnailVideoFileId: state.thumbnailVideoFileId || null,
+            recordedVideoUrl: state.recordedVideoUrl || null,
+            recordedVideoFileId: state.recordedVideoFileId || null,
+            isPrivate: state.isPrivate,
+            isPaid: state.isPaid,
+            requireTicket: state.requireTicket,
+            enableDonations: state.enableDonations,
+            enableLocationRestriction: state.enableLocationRestriction,
+            locationRestrictionType: state.locationRestrictionType,
+            maxViewers:
+              typeof state.maxViewers === "number" && state.maxViewers > 0
+                ? state.maxViewers
+                : null,
+            tags: state.tags,
+            recordingEnabled: state.recordingEnabled,
+            recordingStatus: state.recordingStatus,
+            recordingUrl: recordingUrl || null,
+          }
+
       const response = await fetch(`/api/creator/events/${eventId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: state.title,
-          description: state.description,
-          category: state.category,
-          scheduledAt,
-          timezone: state.timezone,
-          durationMinutes: state.durationMinutes,
-          address: state.address,
-          thumbnailUrl: state.thumbnailUrl || state.thumbnailPreview || null,
-          thumbnailFileId: state.thumbnailFileId || null,
-          thumbnailVideoUrl: state.thumbnailVideoUrl || state.thumbnailVideoPreview || null,
-          thumbnailVideoFileId: state.thumbnailVideoFileId || null,
-          recordedVideoUrl: state.recordedVideoUrl || null,
-          recordedVideoFileId: state.recordedVideoFileId || null,
-          isPrivate: state.isPrivate,
-          isPaid: state.isPaid,
-          requireTicket: state.requireTicket,
-          enableDonations: state.enableDonations,
-          enableLocationRestriction: state.enableLocationRestriction,
-          locationRestrictionType: state.locationRestrictionType,
-          maxViewers:
-            typeof state.maxViewers === "number" && state.maxViewers > 0
-              ? state.maxViewers
-              : null,
-          tags: state.tags,
-          recordingEnabled: state.recordingEnabled,
-          recordingStatus: state.recordingStatus,
-          recordingUrl: recordingUrl || null,
-        }),
+        body: JSON.stringify(payload),
       })
 
       const data = await response.json()
@@ -511,13 +526,46 @@ export default function EventEditPage() {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Link className="h-5 w-5 text-red-500" />
-              <h2 className="text-lg font-semibold">Video URL</h2>
+              <h2 className="text-lg font-semibold">Recording file or URL</h2>
             </div>
+            <p className="text-sm text-muted-foreground">
+              {isRecordingEditable
+                ? "Ended events can still attach a recording file or paste a direct URL."
+                : "Add a recording link for this event."}
+            </p>
+            <div className="rounded-2xl border border-dashed border-border p-4">
+              <UploadButton
+                endpoint="creatorVideoUploader"
+                onUploadBegin={() => {
+                  setError("")
+                  setUploadingRecording(true)
+                }}
+                onClientUploadComplete={(res) => {
+                  const uploaded = res?.[0] as any
+                  const videoUrl = uploaded?.ufsUrl || uploaded?.url || ""
+                  const videoFileId = uploaded?.key || ""
+                  if (!videoUrl) return
+                  update("recordedVideoUrl", videoUrl)
+                  update("recordedVideoFileId", videoFileId)
+                  setUploadingRecording(false)
+                }}
+                onUploadError={(uploadError: Error) => {
+                  setUploadingRecording(false)
+                  setError(uploadError.message)
+                }}
+              />
+            </div>
+            {uploadingRecording && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Uploading recording...
+              </div>
+            )}
             <input
               type="url"
               value={state.recordedVideoUrl}
               onChange={(e) => update("recordedVideoUrl", e.target.value)}
-              disabled={!canEdit}
+              disabled={!canEdit && !isRecordingEditable}
               placeholder="https://youtube.com/watch?v=..."
               className="w-full rounded-xl border border-border bg-transparent px-4 py-3 disabled:opacity-50"
             />
@@ -526,7 +574,7 @@ export default function EventEditPage() {
                 <iframe
                   className="h-56 w-full rounded-2xl border border-border bg-black"
                   src={getYouTubeEmbedUrl(state.recordedVideoUrl) ?? undefined}
-                  title="Video URL preview"
+                  title="Recording preview"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />

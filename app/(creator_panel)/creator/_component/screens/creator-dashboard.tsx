@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import {
   BarChart3,
   Calendar,
@@ -39,69 +40,101 @@ import {
   Legend,
 } from "chart.js"
 import { sidebarItems } from "@/lib/constant"
-import Sidebar from "@/app/(creator_panel)/creator/_component/sidebar/Sidebar";
+import Sidebar from "@/app/(creator_panel)/creator/_component/sidebar/Sidebar"
+import UserAvatar from "@/components/common_component/userAvatar"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend)
+
+const defaultRevenueChartData = {
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+  datasets: [
+    {
+      label: "Video on demand",
+      data: [0, 0, 0, 0, 0, 0],
+      backgroundColor: "rgba(220, 38, 38, 0.8)",
+      borderColor: "rgb(220, 38, 38)",
+      borderWidth: 2,
+    },
+    {
+      label: "Event tickets (stream)",
+      data: [0, 0, 0, 0, 0, 0],
+      backgroundColor: "rgba(255, 215, 0, 0.8)",
+      borderColor: "rgb(255, 215, 0)",
+      borderWidth: 2,
+    },
+    {
+      label: "Event tickets (venue)",
+      data: [0, 0, 0, 0, 0, 0],
+      backgroundColor: "rgba(59, 130, 246, 0.8)",
+      borderColor: "rgb(59, 130, 246)",
+      borderWidth: 2,
+    },
+  ],
+}
 
 export default function CreatorDashboard() {
   const router = useRouter()
   const pathname = usePathname()
+  const { data: session, status } = useSession()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    totalViews: 0,
+    totalFollowers: 0,
+    totalStreams: 0,
+    totalLikes: 0,
+    totalComments: 0,
+    engagementRate: 0,
+  })
+  const [recentStreams, setRecentStreams] = useState<any[]>([])
+  const [payoutSplit, setPayoutSplit] = useState({
+    videoPayoutPercent: 70,
+    eventStreamPayout: 70,
+    eventVenuePayout: 70,
+  })
+  const [showPayoutSplit, setShowPayoutSplit] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [revenueChartData, setRevenueChartData] = useState(defaultRevenueChartData)
 
-  // Sample data
-  const stats = {
-    totalRevenue: 12450,
-    totalViews: 45230,
-    totalFollowers: 1250,
-    liveStreams: 8,
-  }
+  const userName = session?.user?.name || session?.user?.email || "Creator"
+  const profileImage = session?.user?.image || ""
+  const isCreator = session?.user?.role === "CREATOR"
 
-  const recentStreams = [
-    {
-      id: 1,
-      title: "Music Production Masterclass",
-      date: "2024-01-15",
-      views: 1250,
-      revenue: 450,
-      status: "completed",
-    },
-    {
-      id: 2,
-      title: "Live Concert Performance",
-      date: "2024-01-12",
-      views: 2100,
-      revenue: 850,
-      status: "completed",
-    },
-    {
-      id: 3,
-      title: "Q&A with Fans",
-      date: "2024-01-10",
-      views: 890,
-      revenue: 120,
-      status: "completed",
-    },
-  ]
+  useEffect(() => {
+    if (status === "loading") return
 
-  const chartData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      {
-        label: "Revenue",
-        data: [1200, 1900, 3000, 5000, 2000, 3000],
-        backgroundColor: "rgba(220, 38, 38, 0.8)",
-        borderColor: "rgb(220, 38, 38)",
-        borderWidth: 2,
-      },
-      {
-        label: "Views",
-        data: [2400, 3800, 6000, 10000, 4000, 6000],
-        backgroundColor: "rgba(255, 215, 0, 0.8)",
-        borderColor: "rgb(255, 215, 0)",
-        borderWidth: 2,
-      },
-    ],
-  }
+    if (status === "unauthenticated" || !isCreator) {
+      router.replace("/tv")
+      setLoading(false)
+      return
+    }
+
+    const loadDashboard = async () => {
+      try {
+        const response = await fetch("/api/creator/dashboard", { cache: "no-store" })
+
+        if (response.status === 401 || response.status === 403) {
+          router.replace("/tv")
+          return
+        }
+
+        const data = await response.json()
+
+        if (!response.ok) throw new Error(data?.message || "Failed to load dashboard")
+
+        setStats(data.stats)
+        setRecentStreams(data.recentStreams || [])
+        setPayoutSplit(data.payoutSplit || payoutSplit)
+        setRevenueChartData(data.revenueChart || defaultRevenueChartData)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadDashboard()
+  }, [isCreator, router, status])
 
   const chartOptions = {
     responsive: true,
@@ -207,9 +240,7 @@ export default function CreatorDashboard() {
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-600 rounded-full"></div>
               </button>
               <ThemeToggle />
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                <span className="text-foreground font-bold text-sm">J</span>
-              </div>
+              <UserAvatar name={userName} image={profileImage} />
             </div>
           </div>
         </div>
@@ -222,7 +253,7 @@ export default function CreatorDashboard() {
                 <div>
                   <p className="text-muted-foreground text-sm font-medium">Total Revenue</p>
                   <p className="text-3xl font-bold text-foreground">₦{stats.totalRevenue.toLocaleString()}</p>
-                  <p className="text-green-400 text-sm mt-1">+12% from last month</p>
+                  <p className="text-green-400 text-sm mt-1">Live earnings</p>
                 </div>
                 <div className="w-12 h-12 bg-red-600/10 rounded-xl flex items-center justify-center">
                   <DollarSign className="w-6 h-6 text-yellow-500" />
@@ -235,7 +266,7 @@ export default function CreatorDashboard() {
                 <div>
                   <p className="text-muted-foreground text-sm font-medium">Total Views</p>
                   <p className="text-3xl font-bold text-foreground">{stats.totalViews.toLocaleString()}</p>
-                  <p className="text-blue-400 text-sm mt-1">+8% from last month</p>
+                  <p className="text-blue-400 text-sm mt-1">Audience reach</p>
                 </div>
                 <div className="w-12 h-12 bg-red-600/20 rounded-xl flex items-center justify-center">
                   <Eye className="w-6 h-6 text-red-400" />
@@ -248,7 +279,7 @@ export default function CreatorDashboard() {
                 <div>
                   <p className="text-muted-foreground text-sm font-medium">Followers</p>
                   <p className="text-3xl font-bold text-foreground">{stats.totalFollowers.toLocaleString()}</p>
-                  <p className="text-purple-400 text-sm mt-1">+25 new this week</p>
+                  <p className="text-purple-400 text-sm mt-1">Community size</p>
                 </div>
                 <div className="w-12 h-12 bg-red-600/20 rounded-xl flex items-center justify-center">
                   <Users className="w-6 h-6 text-red-400" />
@@ -259,9 +290,9 @@ export default function CreatorDashboard() {
             <div className="bg-card border border-border rounded-2xl p-6 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-sm font-medium">Live Streams</p>
-                  <p className="text-3xl font-bold text-foreground">{stats.liveStreams}</p>
-                  <p className="text-green-400 text-sm mt-1">This month</p>
+                  <p className="text-muted-foreground text-sm font-medium">Total Content</p>
+                  <p className="text-3xl font-bold text-foreground">{stats.totalStreams}</p>
+                  <p className="text-green-400 text-sm mt-1">Content count</p>
                 </div>
                 <div className="w-12 h-12 bg-red-600/20 rounded-xl flex items-center justify-center">
                   <Video className="w-6 h-6 text-red-400" />
@@ -270,39 +301,33 @@ export default function CreatorDashboard() {
             </div>
           </div>
 
-          {/* Quick Actions */}
+          {/* Payout Split Summary */}
           <div className="bg-card border border-border rounded-2xl p-6">
-            <h3 className="text-xl font-bold text-foreground mb-6">Quick Actions</h3>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-foreground">Payout Split</h3>
+                <p className="text-sm text-muted-foreground">Creator revenue distribution from your model</p>
+              </div>
+              <button
+                onClick={() => setShowPayoutSplit(true)}
+                className="rounded-lg border border-red-600/40 bg-red-600/10 px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-600/20"
+              >
+                View Split
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <button className="flex items-center gap-4 bg-muted border border-border rounded-xl p-4 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300">
-                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
-                  <Video className="w-6 h-6 text-foreground" />
-                </div>
-                <div className="text-left">
-                  <h4 className="font-semibold text-foreground">Start Live Stream</h4>
-                  <p className="text-sm text-muted-foreground">Go live instantly</p>
-                </div>
-              </button>
-
-              <button className="flex items-center gap-4 bg-muted border border-border rounded-xl p-4 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300">
-                <div className="w-12 h-12 bg-yellow-600 rounded-xl flex items-center justify-center">
-                  <Plus className="w-6 h-6 text-foreground" />
-                </div>
-                <div className="text-left">
-                  <h4 className="font-semibold text-foreground">Upload Video</h4>
-                  <p className="text-sm text-muted-foreground">Share new content</p>
-                </div>
-              </button>
-
-              <button className="flex items-center gap-4 bg-muted border border-border rounded-xl p-4 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300">
-                <div className="w-12 h-12 bg-gray-600 rounded-xl flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-foreground" />
-                </div>
-                <div className="text-left">
-                  <h4 className="font-semibold text-foreground">Schedule Event</h4>
-                  <p className="text-sm text-muted-foreground">Plan ahead</p>
-                </div>
-              </button>
+              <div className="rounded-xl border border-border bg-muted/40 p-4">
+                <p className="text-sm text-muted-foreground">Video payout</p>
+                <p className="mt-2 text-2xl font-semibold text-foreground">{payoutSplit.videoPayoutPercent}%</p>
+              </div>
+              <div className="rounded-xl border border-border bg-muted/40 p-4">
+                <p className="text-sm text-muted-foreground">Event stream payout</p>
+                <p className="mt-2 text-2xl font-semibold text-foreground">{payoutSplit.eventStreamPayout}%</p>
+              </div>
+              <div className="rounded-xl border border-border bg-muted/40 p-4">
+                <p className="text-sm text-muted-foreground">Event venue payout</p>
+                <p className="mt-2 text-2xl font-semibold text-foreground">{payoutSplit.eventVenuePayout}%</p>
+              </div>
             </div>
           </div>
 
@@ -312,10 +337,10 @@ export default function CreatorDashboard() {
             <div className="bg-card border border-border rounded-2xl p-6">
               <div className="flex items-center gap-2 mb-6">
                 <TrendingUp className="w-5 h-5 text-red-400" />
-                <h3 className="text-xl font-bold text-foreground">Revenue & Views</h3>
+                <h3 className="text-xl font-bold text-foreground">Revenue</h3>
               </div>
               <div className="h-64 text-white">
-                <Bar data={chartData} options={chartOptions} />
+                <Bar data={revenueChartData} options={chartOptions} />
               </div>
             </div>
 
@@ -360,27 +385,64 @@ export default function CreatorDashboard() {
                 <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Heart className="w-8 h-8 text-red-400" />
                 </div>
-                <h4 className="text-2xl font-bold text-foreground">2.4K</h4>
+                <h4 className="text-2xl font-bold text-foreground">{stats.totalLikes.toLocaleString()}</h4>
                 <p className="text-muted-foreground">Total Likes</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <MessageSquare className="w-8 h-8 text-blue-400" />
                 </div>
-                <h4 className="text-2xl font-bold text-foreground">892</h4>
+                <h4 className="text-2xl font-bold text-foreground">{stats.totalComments.toLocaleString()}</h4>
                 <p className="text-muted-foreground">Comments</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Star className="w-8 h-8 text-yellow-400" />
                 </div>
-                <h4 className="text-2xl font-bold text-foreground">4.8</h4>
-                <p className="text-muted-foreground">Avg Rating</p>
+                <h4 className="text-2xl font-bold text-foreground">{stats.engagementRate}%</h4>
+                <p className="text-muted-foreground">Engagement Rate</p>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {showPayoutSplit && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/80 backdrop-blur-sm">
+          <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-foreground">Payout Split</h3>
+                <p className="text-sm text-muted-foreground">Current revenue split configured for your creator account</p>
+              </div>
+              <button onClick={() => setShowPayoutSplit(false)} className="rounded-lg p-2 hover:bg-muted">
+                <X className="h-5 w-5 text-muted-foreground" />
+              </button>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              <div className="rounded-xl border border-border bg-muted/40 p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Video payout</span>
+                  <span className="text-lg font-semibold text-foreground">{payoutSplit.videoPayoutPercent}%</span>
+                </div>
+              </div>
+              <div className="rounded-xl border border-border bg-muted/40 p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Event stream payout</span>
+                  <span className="text-lg font-semibold text-foreground">{payoutSplit.eventStreamPayout}%</span>
+                </div>
+              </div>
+              <div className="rounded-xl border border-border bg-muted/40 p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Event venue payout</span>
+                  <span className="text-lg font-semibold text-foreground">{payoutSplit.eventVenuePayout}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

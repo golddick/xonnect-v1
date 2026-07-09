@@ -106,11 +106,11 @@ export function isValidPaystackSignature(rawBody: string, signature: string | nu
 
 export function createPurchaseTicketCode(ticketId: string, reference: string) {
   const suffix = reference.replace(/[^a-zA-Z0-9]/g, "").slice(-8).toUpperCase()
-  return `TCK-${ticketId.slice(0, 4).toUpperCase()}-${suffix}`
+  return `XON-${ticketId.slice(0, 4).toUpperCase()}-${suffix}`
 }
 
 export function createTicketItemCode(ticketId: string, reference: string, index: number) {
   const suffix = `${reference.replace(/[^a-zA-Z0-9]/g, "").slice(-6).toUpperCase()}${String(index + 1).padStart(2, "0")}`
-  return `TCK-${ticketId.slice(0, 4).toUpperCase()}-${suffix}`
+  return `XON-${ticketId.slice(0, 4).toUpperCase()}-${suffix}`
 }
 

@@ -20,6 +20,8 @@ export interface Event {
   peakViewers: number
   averageWatchTime: number
   totalParticipants: number
+  platformRevenue?: string
+  creatorRevenue?: string
 }
 
 export interface Video {
@@ -34,6 +36,8 @@ export interface Video {
   category: string
   thumbnail: string
   description?: string
+  platformRevenue?: string
+  creatorRevenue?: string
 }
 
 export interface EventsResponse {

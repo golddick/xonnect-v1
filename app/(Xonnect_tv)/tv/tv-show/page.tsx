@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { buildWatchHref } from "@/lib/tv/watch-href"
 import { Search, Grid3x3, List } from "lucide-react"
 import TvSidebar from "@/app/(Xonnect_tv)/tv/_component/tv-sidebar"
 import StreamCard from "@/app/(Xonnect_tv)/tv/_component/stream-card"
@@ -10,6 +12,7 @@ import {ThemeToggle} from "@/components/theme-toggle";
 const TVShowPage = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const router = useRouter()
   const [selectedGenre, setSelectedGenre] = useState("all")
 
   const genres = [
@@ -100,7 +103,7 @@ const TVShowPage = () => {
             className={`grid gap-4 ${viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"}`}
           >
             {shows.map((show) => (
-              <StreamCard key={show.id} {...show} />
+              <StreamCard key={show.id} {...show} onWatch={() => router.push(buildWatchHref({ ...show, type: show.isLive ? "live" : "video" }))} />
             ))}
           </div>
         </div>

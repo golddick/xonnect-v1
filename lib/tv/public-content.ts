@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db/prisma"
 import { CreatorEventStatus } from "@/lib/generated/prisma"
 
-type PublicTvContentType = "live" | "scheduled" | "video" | "folder"
+type PublicTvContentType = "live" | "scheduled" | "ended" | "video" | "folder"
 
 export type PublicTvCategory = {
   id: string
@@ -44,6 +44,7 @@ export type PublicTvLandingPayload = {
 export type PublicTvLiveEventPayload = {
   live: PublicTvCard[]
   scheduled: PublicTvCard[]
+  ended: PublicTvCard[]
   all: PublicTvCard[]
   sidebar: {
     categories: PublicTvCategory[]
@@ -142,7 +143,7 @@ function mapEventToCard(event: {
     viewers: toViewerCount(event.currentViewersCount, event.peakViewersCount),
     isLive: event.status === "LIVE",
     category: event.category,
-    type: event.status === "LIVE" ? "live" : "scheduled",
+    type: event.status === "LIVE" ? "live" : event.status === "SCHEDULED" ? "scheduled" : "ended",
     duration: `${event.durationMinutes}m`,
     scheduledAt: event.scheduledAt?.toISOString() ?? null,
   }
@@ -287,7 +288,7 @@ export async function getTvLandingPayload(options?: {
       : {}),
   }
 
-  const [liveEvents, scheduledEvents, videoFolders] = await Promise.all([
+  const [liveEvents, scheduledEvents, endedEvents, videoFolders] = await Promise.all([
     prisma.creatorEvent.findMany({
       where: { ...eventWhere, status: CreatorEventStatus.LIVE },
       orderBy: [{ currentViewersCount: "desc" }, { peakViewersCount: "desc" }, { createdAt: "desc" }],
@@ -319,6 +320,34 @@ export async function getTvLandingPayload(options?: {
     prisma.creatorEvent.findMany({
       where: { ...eventWhere, status: CreatorEventStatus.SCHEDULED },
       orderBy: [{ scheduledAt: "asc" }, { createdAt: "desc" }],
+      take: scheduledLimit,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        category: true,
+        status: true,
+        thumbnailUrl: true,
+        thumbnailVideoUrl: true,
+        scheduledAt: true,
+        durationMinutes: true,
+        currentViewersCount: true,
+        peakViewersCount: true,
+        creator: {
+          select: {
+            profile: {
+              select: {
+                fullName: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+      },
+    }),
+    prisma.creatorEvent.findMany({
+      where: { ...eventWhere, status: CreatorEventStatus.ENDED },
+      orderBy: [{ endedAt: "desc" }, { createdAt: "desc" }],
       take: scheduledLimit,
       select: {
         id: true,
@@ -432,6 +461,7 @@ export async function getTvLandingPayload(options?: {
 
   const liveCards = liveEvents.map(mapEventToCard)
   const scheduledCards = scheduledEvents.map(mapEventToCard)
+  const endedCards = endedEvents.map(mapEventToCard)
   const folderCards = videoFolders.map(mapFolderToCard)
   const videoCards = folderCards.flatMap((folder) => folder.videos ?? [])
 
@@ -442,7 +472,7 @@ export async function getTvLandingPayload(options?: {
     featuredCarousel: priorityFeed.slice(0, 5),
     priorityFeed,
     contentColumns: {
-      live: [...liveCards, ...scheduledCards],
+      live: [...scheduledCards, ...endedCards, ...liveCards],
       video: folderCards,
     },
     sidebar: {
@@ -464,7 +494,7 @@ export async function getTvLiveEventPayload(options?: {
     ...(category ? { category: { equals: category, mode: "insensitive" as const } } : {}),
   }
 
-  const [liveEvents, scheduledEvents] = await Promise.all([
+  const [liveEvents, scheduledEvents, endedEvents] = await Promise.all([
     prisma.creatorEvent.findMany({
       where: { ...where, status: CreatorEventStatus.LIVE },
       orderBy: [{ currentViewersCount: "desc" }, { peakViewersCount: "desc" }, { createdAt: "desc" }],
@@ -521,15 +551,45 @@ export async function getTvLiveEventPayload(options?: {
         },
       },
     }),
+    prisma.creatorEvent.findMany({
+      where: { ...where, status: CreatorEventStatus.ENDED },
+      orderBy: [{ endedAt: "desc" }, { createdAt: "desc" }],
+      take: limit,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        category: true,
+        status: true,
+        thumbnailUrl: true,
+        thumbnailVideoUrl: true,
+        scheduledAt: true,
+        durationMinutes: true,
+        currentViewersCount: true,
+        peakViewersCount: true,
+        creator: {
+          select: {
+            profile: {
+              select: {
+                fullName: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+      },
+    }),
   ])
 
   const live = liveEvents.map(mapEventToCard)
   const scheduled = scheduledEvents.map(mapEventToCard)
+  const ended = endedEvents.map(mapEventToCard)
 
   return {
     live,
     scheduled,
-    all: orderPriority([...live, ...scheduled]),
+    ended,
+    all: [...scheduled, ...ended, ...live],
     sidebar: {
       categories: DEFAULT_CATEGORIES,
       liveEvents: orderPriority([...live, ...scheduled]).slice(0, 4),
@@ -539,7 +599,7 @@ export async function getTvLiveEventPayload(options?: {
 
 export async function getTvSportPayload(options?: {
   limit?: number
-  contentType?: "all" | "live" | "scheduled" | "video"
+  contentType?: "all" | "live" | "scheduled" | "video" | "documentary" | "movie" | "series"
 }): Promise<PublicTvSportPayload> {
   const limit = options?.limit ?? 12
   const contentType = options?.contentType ?? "all"

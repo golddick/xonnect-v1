@@ -11,6 +11,7 @@ export type ChatMessage = {
   time: string
   text: string
   reactions: Record<ChatReaction, number>
+  failed?: boolean
 }
 
 type WatchChatPanelProps = {
@@ -20,6 +21,7 @@ type WatchChatPanelProps = {
   onReaction: (messageId: string, reaction: ChatReaction) => void
   onDraftChange: (value: string) => void
   onSend: () => void
+  onRetry?: (messageId: string) => void
   onQuickReaction: (reaction: ChatReaction) => void
 }
 
@@ -30,6 +32,7 @@ export default function WatchChatPanel({
   onReaction,
   onDraftChange,
   onSend,
+  onRetry,
   onQuickReaction,
 }: WatchChatPanelProps) {
   return (
@@ -56,14 +59,26 @@ export default function WatchChatPanel({
                     {message.handle} <span className="px-1">-</span> {message.time}
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => onReaction(message.id, "\u{1F525}")}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background/80 text-xs text-muted-foreground transition-colors hover:border-red-500/50 hover:text-foreground"
-                  title="React with fire"
-                >
-                  <Smile className="h-3.5 w-3.5" />
-                </button>
+                <div className="flex items-center gap-2">
+                  {message.failed && (
+                    <button
+                      type="button"
+                      onClick={() => onRetry?.(message.id)}
+                      className="text-xs text-red-500 hover:underline"
+                      title="Retry sending"
+                    >
+                      Retry
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => onReaction(message.id, "\u{1F525}")}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background/80 text-xs text-muted-foreground transition-colors hover:border-red-500/50 hover:text-foreground"
+                    title="React with fire"
+                  >
+                    <Smile className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
 
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{message.text}</p>

@@ -7,7 +7,7 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: "Xonnect",
-  description: "Creator streaming platform",
+  description: "Organization streaming platform",
 }
 
 export default function RootLayout({

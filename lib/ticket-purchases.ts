@@ -13,11 +13,11 @@ export type TicketPurchaseParticipant = {
   buyerPhone?: string | null
 }
 
-export function calculateRevenueSplit(amount: number, platformFeePercentage: number) {
+export function calculateRevenueSplit(amount: number, creatorPayoutPercentage: number) {
   const safeAmount = Math.max(Math.round(amount), 0)
-  const safeFeePercentage = Math.max(Math.round(platformFeePercentage), 0)
-  const platformFeeAmount = Math.round((safeAmount * safeFeePercentage) / 100)
-  const creatorRevenueAmount = Math.max(safeAmount - platformFeeAmount, 0)
+  const safeCreatorPayoutPercentage = Math.min(Math.max(Math.round(creatorPayoutPercentage), 0), 100)
+  const creatorRevenueAmount = Math.round((safeAmount * safeCreatorPayoutPercentage) / 100)
+  const platformFeeAmount = Math.max(safeAmount - creatorRevenueAmount, 0)
 
   return {
     amount: safeAmount,
@@ -53,9 +53,15 @@ export async function getCreatorTicketFeePercentage(ticketId: string) {
     throw new Error("Creator not found for ticket")
   }
 
-  return ticket.access === CreatorEventTicketAccessType.VENUE
-    ? creator.eventVenuePayout
-    : creator.eventStreamPayout
+  return Math.min(
+    Math.max(
+      ticket.access === CreatorEventTicketAccessType.VENUE
+        ? creator.eventVenuePayout
+        : creator.eventStreamPayout,
+      0
+    ),
+    100
+  )
 }
 
 export async function completePurchase(args: {
@@ -106,13 +112,14 @@ export async function completePurchase(args: {
     throw new Error("Ticket not found")
   }
 
-  const feePercentage = ticket.event?.creator
+  const creatorPayoutPercentage = ticket.event?.creator
     ? ticket.access === CreatorEventTicketAccessType.VENUE
       ? ticket.event.creator.eventVenuePayout
       : ticket.event.creator.eventStreamPayout
     : 0
+  const feePercentage = creatorPayoutPercentage
 
-  const revenueSplit = calculateRevenueSplit(args.amount, feePercentage)
+  const revenueSplit = calculateRevenueSplit(args.amount, creatorPayoutPercentage)
   const ticketCode = createPurchaseTicketCode(args.ticketId, args.reference)
 
   const purchaseQuantity = Math.max(existing.quantity ?? 1, 1)
@@ -136,6 +143,8 @@ export async function completePurchase(args: {
         buyerPhone: args.buyer.buyerPhone ?? null,
         quantity: purchaseQuantity,
         amount: revenueSplit.amount,
+        revenue: revenueSplit.creatorRevenueAmount,
+        platformFee: revenueSplit.platformFeeAmount,
         currency: args.currency ?? "NGN",
         status: "COMPLETED",
         transactionId: args.reference,
@@ -162,7 +171,8 @@ export async function completePurchase(args: {
       where: { id: args.ticketId },
       data: {
         soldCount: { increment: purchaseQuantity },
-        revenue: { increment: revenueSplit.amount },
+        amount: { increment: revenueSplit.amount },
+        revenue: { increment: revenueSplit.creatorRevenueAmount },
         platformFee: { increment: revenueSplit.platformFeeAmount },
         ...(shouldMarkSoldOut ? { status: "SOLD_OUT" } : {}),
       },
@@ -171,6 +181,7 @@ export async function completePurchase(args: {
     await tx.creatorEvent.update({
       where: { id: args.eventId },
       data: {
+        amount: { increment: revenueSplit.amount },
         revenue: { increment: revenueSplit.creatorRevenueAmount },
         platformFee: { increment: revenueSplit.platformFeeAmount },
       },

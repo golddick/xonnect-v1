@@ -2,14 +2,42 @@
 
 import { TicketRecord } from "@/lib/type/superadmin-ticket"
 import { motion } from "framer-motion"
-import { Users } from "lucide-react"
+import { Users, Loader2 } from "lucide-react"
 
 interface OverviewTabProps {
   ticketRecords: TicketRecord[]
   totalRevenue: number
+  loading?: boolean
 }
 
-export default function OverviewTab({ ticketRecords, totalRevenue }: OverviewTabProps) {
+export default function OverviewTab({ ticketRecords, totalRevenue, loading = false }: OverviewTabProps) {
+  const platformDistribution = [
+    {
+      label: "Stream",
+      count: ticketRecords.filter((record) => record.access === "Stream").reduce((sum, record) => sum + record.totalSold, 0),
+      percentage: ticketRecords.length ? Math.round((ticketRecords.filter((record) => record.access === "Stream").length / ticketRecords.length) * 100) : 0,
+    },
+    {
+      label: "Venue",
+      count: ticketRecords.filter((record) => record.access === "Venue").reduce((sum, record) => sum + record.totalSold, 0),
+      percentage: ticketRecords.length ? Math.round((ticketRecords.filter((record) => record.access === "Venue").length / ticketRecords.length) * 100) : 0,
+    },
+  ];
+
+  const statusDistribution = [
+    {
+      label: "Active",
+      count: ticketRecords.filter((record) => record.status === "active").length,
+      percentage: ticketRecords.length ? Math.round((ticketRecords.filter((record) => record.status === "active").length / ticketRecords.length) * 100) : 0,
+      color: "from-green-600",
+    },
+    {
+      label: "Inactive",
+      count: ticketRecords.filter((record) => record.status === "inactive").length,
+      percentage: ticketRecords.length ? Math.round((ticketRecords.filter((record) => record.status === "inactive").length / ticketRecords.length) * 100) : 0,
+      color: "from-yellow-600",
+    },
+  ];
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -17,6 +45,13 @@ export default function OverviewTab({ ticketRecords, totalRevenue }: OverviewTab
       transition={{ duration: 0.4 }}
       className="space-y-6"
     >
+      {loading ? (
+        <div className="flex items-center justify-center py-10 text-muted-foreground">
+          <Loader2 className="w-5 h-5 animate-spin mr-2" />
+          Loading ticket analytics...
+        </div>
+      ) : (
+        <>
       {/* Top Creators by Revenue */}
       <div className="bg-card border border-border rounded-2xl p-6 hover:bg-card/70 transition-all duration-300 text-foreground">
         <h3 className="font-bold mb-6 flex items-center gap-2">
@@ -37,7 +72,7 @@ export default function OverviewTab({ ticketRecords, totalRevenue }: OverviewTab
                 <div className="w-full bg-white/10 rounded-full h-2">
                   <div
                     className="bg-gradient-to-r from-red-600 to-red-500 h-2 rounded-full"
-                    style={{ width: `${(record.revenue / (totalRevenue / 1.2)) * 100}%` }}
+                    style={{ width: `${totalRevenue > 0 ? (record.revenue / (totalRevenue / 1.2)) * 100 : 0}%` }}
                   ></div>
                 </div>
               </div>
@@ -50,11 +85,7 @@ export default function OverviewTab({ ticketRecords, totalRevenue }: OverviewTab
         <div className="bg-card border border-border rounded-2xl p-6 hover:bg-card/70 transition-all duration-300 text-foreground">
           <h3 className="font-bold mb-6">Platform Distribution</h3>
           <div className="space-y-4">
-            {[
-              { label: "Streaming", count: 450, percentage: 55 },
-              { label: "Physical", count: 287, percentage: 35 },
-              { label: "Hybrid", count: 156, percentage: 10 },
-            ].map((item, index) => (
+            {platformDistribution.map((item, index) => (
               <div key={index}>
                 <div className="flex items-center justify-between mb-2 text-sm">
                   <span className="text-muted-foreground">{item.label}</span>
@@ -74,10 +105,7 @@ export default function OverviewTab({ ticketRecords, totalRevenue }: OverviewTab
         <div className="bg-card border border-border rounded-2xl p-6 hover:bg-card/70 transition-all duration-300 text-foreground">
           <h3 className="font-bold mb-6">Ticket Status Distribution</h3>
           <div className="space-y-4">
-            {[
-              { label: "Active", count: 2, percentage: 67, color: "from-green-600" },
-              { label: "Inactive", count: 1, percentage: 33, color: "from-yellow-600" },
-            ].map((item, index) => (
+            {statusDistribution.map((item, index) => (
               <div key={index}>
                 <div className="flex items-center justify-between mb-2 text-sm">
                   <span className="text-muted-foreground">{item.label}</span>
@@ -94,6 +122,8 @@ export default function OverviewTab({ ticketRecords, totalRevenue }: OverviewTab
           </div>
         </div>
       </div>
+        </>
+      )}
     </motion.div>
   )
 }

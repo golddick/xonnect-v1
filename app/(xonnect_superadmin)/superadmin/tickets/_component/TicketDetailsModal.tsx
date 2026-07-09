@@ -100,7 +100,17 @@ export default function TicketDetailsModal({ selectedTicket, onClose }: TicketDe
               </div>
               <div>
                 <p className="text-muted-foreground text-sm mb-2">Revenue</p>
-                <p className="font-bold text-2xl">₦{(selectedTicket.revenue / 1000000).toFixed(2)}M</p>
+                <p className="font-bold text-2xl">₦{selectedTicket.revenue.toLocaleString()}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <div className="rounded-lg border border-border p-4">
+                <p className="text-muted-foreground text-sm mb-2">Platform Revenue</p>
+                <p className="font-bold text-green-400">₦{(selectedTicket.platformRevenue || 0).toLocaleString()}</p>
+              </div>
+              <div className="rounded-lg border border-border p-4">
+                <p className="text-muted-foreground text-sm mb-2">Creator Revenue</p>
+                <p className="font-bold text-yellow-400">₦{(selectedTicket.creatorRevenue || 0).toLocaleString()}</p>
               </div>
             </div>
             <div className="mt-4">

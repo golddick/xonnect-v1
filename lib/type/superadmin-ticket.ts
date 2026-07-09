@@ -7,10 +7,22 @@ export interface TicketRecord {
   totalIssued: number
   totalSold: number
   revenue: number
+  creatorRevenue: number
+  platformRevenue: number
   access: string
   createdDate: string
   status: "active" | "inactive" | "archived"
   platform: "streaming" | "physical" | "hybrid"
+  purchases?: Array<{
+    id: string
+    buyer: string
+    amount: number
+    creatorRevenue: number
+    platformRevenue: number
+    status: string
+    transactionId: string
+    date: string
+  }>
 }
 
 export interface Transaction {
