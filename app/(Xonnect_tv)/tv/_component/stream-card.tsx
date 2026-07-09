@@ -13,6 +13,7 @@ interface StreamCardProps {
   viewers: number
   isLive: boolean
   category: string
+  type?: string
   duration?: string
   pricing?: string
   onWatch?: () => void
@@ -27,6 +28,7 @@ const StreamCard = ({
   viewers,
   isLive,
   category,
+  type,
   duration,
   pricing,
   onWatch,
@@ -60,17 +62,21 @@ const StreamCard = ({
           />
 
           {/* Overlays */}
-          {isLive && (
+          {type === "ended" ? (
+            <div className="absolute top-3 left-3 bg-slate-700 text-foreground px-2 py-1 rounded text-xs font-bold">
+              ENDED
+            </div>
+          ) : isLive ? (
             <div className="absolute top-3 left-3 bg-red-600 text-foreground px-2 py-1 rounded text-xs font-bold flex items-center space-x-1">
               <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
               <span>LIVE</span>
             </div>
-          )}
-
-          {!isLive && duration && (
-            <div className="absolute top-3 left-3 bg-background/70 text-foreground px-2 py-1 rounded text-xs font-semibold">
-              {duration}
-            </div>
+          ) : (
+            duration && (
+              <div className="absolute top-3 left-3 bg-background/70 text-foreground px-2 py-1 rounded text-xs font-semibold">
+                {duration}
+              </div>
+            )
           )}
 
           {!isLive && pricing && (

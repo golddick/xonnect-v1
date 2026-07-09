@@ -43,6 +43,7 @@ type RevenueSummary = {
   videoRevenue: number
   availableForPayout: number
   pendingPayouts: number
+  minimumPayoutAmount: number
 }
 
 export default function CreatorMonetizationView() {
@@ -56,6 +57,7 @@ export default function CreatorMonetizationView() {
     videoRevenue: 0,
     availableForPayout: 0,
     pendingPayouts: 0,
+    minimumPayoutAmount: 50,
   })
   const [loading, setLoading] = useState(true)
 

@@ -56,6 +56,7 @@ type RevenueSummary = {
   videoRevenue: number
   availableForPayout: number
   pendingPayouts: number
+  minimumPayoutAmount: number
 }
 
 const CreatorPayouts = () => {
@@ -76,6 +77,7 @@ const CreatorPayouts = () => {
     videoRevenue: 0,
     availableForPayout: 0,
     pendingPayouts: 0,
+    minimumPayoutAmount: 50,
   })
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -90,7 +92,7 @@ const CreatorPayouts = () => {
         fetch("/api/creator/monetization/payout-accounts", { cache: "no-store" }),
         fetch("/api/creator/monetization/payouts", { cache: "no-store" }),
       ])
-
+ 
       if (summaryRes.ok) {
         const summaryPayload = await summaryRes.json()
         setSummary(summaryPayload.summary ?? summaryPayload)
@@ -359,7 +361,7 @@ const CreatorPayouts = () => {
                   setFeedback(null)
                   setShowRequestModal(true)
                 }}
-                disabled={summary.availableForPayout < 50 || accounts.length === 0}
+                disabled={summary.availableForPayout < summary.minimumPayoutAmount || accounts.length === 0}
                 className="bg-red-600 hover:bg-red-700"
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -368,14 +370,14 @@ const CreatorPayouts = () => {
             </div>
           </div>
 
-          {summary.availableForPayout < 50 && (
+          {summary.availableForPayout < summary.minimumPayoutAmount && (
             <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mb-6">
               <div className="flex items-center space-x-3">
                 <AlertCircle className="w-5 h-5 text-yellow-400" />
                 <div>
                   <p className="font-semibold text-yellow-400">Minimum Payout Amount</p>
                   <p className="text-sm text-gray-300">
-                    You need at least ₦50.00 in available earnings to request a payout. Current available: {formatCurrency(summary.availableForPayout)}
+                    You need at least {formatCurrency(summary.minimumPayoutAmount)} in available earnings to request a payout. Current available: {formatCurrency(summary.availableForPayout)}
                   </p>
                 </div>
               </div>

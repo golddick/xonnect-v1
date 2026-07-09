@@ -1285,7 +1285,7 @@
 import type React from "react"
 import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { uploadFile as uploadDropaphiFile } from "@/lib/auth/dropaphi-upload"
+import { uploadFile as uploadDropaphiFile, uploadFileRaw } from "@/lib/auth/dropaphi-upload"
 import { getVideoDuration } from "@/lib/utils/video-duration"
 import { UploadButton } from "@/lib/utils/uploadthing"
 import {
@@ -1518,7 +1518,8 @@ export default function UploadVideoComponent({ onClose, onUpload, initialFolderI
   }
 
 
-  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+
+const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
   const file = e.target.files?.[0]
   if (!file) return
 
@@ -1548,8 +1549,8 @@ export default function UploadVideoComponent({ onClose, onUpload, initialFolderI
     // Convert File to ArrayBuffer
     const arrayBuffer = await file.arrayBuffer()
     
-    // Upload thumbnail using DropAphi
-    const result = await uploadDropaphiFile(file, file.name)
+    
+    const result = await uploadFileRaw(arrayBuffer, file.type)
 
     if (!result.ok) {
       throw new Error(result.message || "Thumbnail upload failed")
@@ -1663,9 +1664,15 @@ export default function UploadVideoComponent({ onClose, onUpload, initialFolderI
         isPrivate: formData.isPrivate,
         isPremium: formData.isPremium,
         monetizationType: formData.monetizationType,
-        rent24Price: formData.monetizationType === "rent" || formData.monetizationType === "both" ? formData.rent24Price : null,
-        rent48Price: formData.monetizationType === "rent" || formData.monetizationType === "both" ? formData.rent48Price : null,
-        purchasePrice: formData.monetizationType === "buy" || formData.monetizationType === "both" ? formData.purchasePrice : null,
+         rent24Price: (formData.monetizationType === "rent" || formData.monetizationType === "both") 
+          ? Number(formData.rent24Price) || null
+          : null,
+        rent48Price: (formData.monetizationType === "rent" || formData.monetizationType === "both") 
+          ? Number(formData.rent48Price) || null
+          : null,
+        purchasePrice: (formData.monetizationType === "buy" || formData.monetizationType === "both") 
+          ? Number(formData.purchasePrice) || null
+          : null,
         allowComments: formData.allowComments,
         ageRestriction: formData.ageRestriction,
         publishNow: formData.publishNow,

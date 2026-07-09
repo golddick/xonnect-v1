@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Building2, Mail, Send, CheckCircle, AlertCircle, XCircle, Eye, Trash2, Plus, Search, X, Clock, User, FileText, Phone } from "lucide-react"
 import { EnterpriseRequest } from "@/lib/type/enterprise"
@@ -90,28 +90,75 @@ export default function SuperAdminEnterpriseManagement() {
   const approvedRequests = requests.filter((r) => r.status === "approved").length
   const totalUsers = requests.filter((r) => r.status === "approved").reduce((sum, r) => sum + r.estimatedUsers, 0)
 
-  const handleApprove = (requestId: string) => {
-    setRequests(requests.map(r => 
-      r.id === requestId ? { ...r, status: "approved" as const } : r
-    ))
-    setShowDetailsModal(false)
+  useEffect(() => {
+    // fetch requests from API
+    async function load() {
+      try {
+        const res = await fetch("/api/superadmin/enterprise-requests")
+        if (!res.ok) throw new Error("Failed to load")
+        const data = await res.json()
+        setRequests(data.requests ?? [])
+      } catch (e) {
+        console.error("Failed to load enterprise requests", e)
+      }
+    }
+
+    load()
+  }, [])
+
+  const handleApprove = async (requestId: string) => {
+    try {
+      const res = await fetch(`/api/superadmin/enterprise-requests/${requestId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "approve" }),
+      })
+      if (!res.ok) throw new Error("Failed to approve")
+      const json = await res.json()
+      setRequests((prev) => prev.map((r) => (r.id === requestId ? { ...r, status: "approved" } : r)))
+      setShowDetailsModal(false)
+    } catch (e) {
+      console.error(e)
+      alert("Failed to approve request")
+    }
   }
 
-  const handleReject = (requestId: string) => {
-    setRequests(requests.map(r => 
-      r.id === requestId ? { ...r, status: "rejected" as const } : r
-    ))
-    setShowDetailsModal(false)
+  const handleReject = async (requestId: string) => {
+    try {
+      const res = await fetch(`/api/superadmin/enterprise-requests/${requestId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "reject" }),
+      })
+      if (!res.ok) throw new Error("Failed to reject")
+      setRequests((prev) => prev.map((r) => (r.id === requestId ? { ...r, status: "rejected" } : r)))
+      setShowDetailsModal(false)
+    } catch (e) {
+      console.error(e)
+      alert("Failed to reject request")
+    }
   }
 
-  const handleSendEmail = () => {
+  const handleSendEmail = async () => {
     if (!emailContent.subject || !emailContent.body) {
       alert("Please fill in all email fields")
       return
     }
-    alert(`Email sent to ${selectedRequest?.email}!`)
-    setShowEmailModal(false)
-    setEmailContent({ subject: "", body: "" })
+
+    try {
+      const res = await fetch(`/api/superadmin/enterprise-requests/send-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requestId: selectedRequest?.id, subject: emailContent.subject, message: emailContent.body, fullName: selectedRequest?.contactPerson }),
+      })
+      if (!res.ok) throw new Error("Failed to send email")
+      alert(`Email sent to ${selectedRequest?.email}!`)
+      setShowEmailModal(false)
+      setEmailContent({ subject: "", body: "" })
+    } catch (e) {
+      console.error(e)
+      alert("Failed to send email")
+    }
   }
 
   const tabs = [

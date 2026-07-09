@@ -25,11 +25,11 @@ const Navigation = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-background/90 backdrop-blur-md border-b border-border" : "bg-transparent"
+        scrolled ? "bg-background/90 backdrop-blur-md border-b border-border " : "bg-transparent"
       }`}
     >
       <div className="  w-full mx-auto px-6 md:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between p-4 h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
            <Logo/>
@@ -97,13 +97,7 @@ const Navigation = () => {
                 >
                   Features
                 </Link>
-                {/* <Link
-                  href="/pricing"
-                  className="block text-muted-foreground hover:text-foreground transition-colors py-2"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Pricing
-                </Link> */}
+                
                 <Link
                   href="/about"
                   className="block text-muted-foreground hover:text-foreground transition-colors py-2"

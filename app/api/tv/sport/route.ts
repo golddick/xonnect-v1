@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
     const payload = await getTvSportPayload({
       contentType:
-        type === "live" || type === "scheduled" || type === "video" ? type : "all",
+        type === "live" || type === "scheduled" || type === "documentary" || type === "series" || type === "movie" || type === "video" ? type : "all",
       limit: Number.isFinite(limit) ? limit : 12,
     })
 

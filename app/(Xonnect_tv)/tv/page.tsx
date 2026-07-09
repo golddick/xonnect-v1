@@ -227,6 +227,7 @@ export default function TvPage() {
                     channelAvatar={stream.channelAvatar}
                     viewers={stream.viewers}
                     isLive={stream.isLive}
+                    type={stream.type}
                     category={stream.category}
                     duration={stream.duration ?? undefined}
                     onWatch={() => router.push(buildWatchHref(stream))}

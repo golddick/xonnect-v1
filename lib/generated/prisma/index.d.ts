@@ -24,6 +24,11 @@ export type Profile = $Result.DefaultSelection<Prisma.$ProfilePayload>
  */
 export type SuperAdminSetting = $Result.DefaultSelection<Prisma.$SuperAdminSettingPayload>
 /**
+ * Model EnterpriseRequest
+ * 
+ */
+export type EnterpriseRequest = $Result.DefaultSelection<Prisma.$EnterpriseRequestPayload>
+/**
  * Model AuthCredential
  * 
  */
@@ -73,6 +78,11 @@ export type CreatorVideoPurchase = $Result.DefaultSelection<Prisma.$CreatorVideo
  * 
  */
 export type CreatorVideoView = $Result.DefaultSelection<Prisma.$CreatorVideoViewPayload>
+/**
+ * Model ChatMessage
+ * 
+ */
+export type ChatMessage = $Result.DefaultSelection<Prisma.$ChatMessagePayload>
 /**
  * Model CreatorVideoLike
  * 
@@ -448,6 +458,16 @@ export class PrismaClient<
   get superAdminSetting(): Prisma.SuperAdminSettingDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.enterpriseRequest`: Exposes CRUD operations for the **EnterpriseRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EnterpriseRequests
+    * const enterpriseRequests = await prisma.enterpriseRequest.findMany()
+    * ```
+    */
+  get enterpriseRequest(): Prisma.EnterpriseRequestDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.authCredential`: Exposes CRUD operations for the **AuthCredential** model.
     * Example usage:
     * ```ts
@@ -546,6 +566,16 @@ export class PrismaClient<
     * ```
     */
   get creatorVideoView(): Prisma.CreatorVideoViewDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chatMessage`: Exposes CRUD operations for the **ChatMessage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChatMessages
+    * const chatMessages = await prisma.chatMessage.findMany()
+    * ```
+    */
+  get chatMessage(): Prisma.ChatMessageDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.creatorVideoLike`: Exposes CRUD operations for the **CreatorVideoLike** model.
@@ -1132,6 +1162,7 @@ export namespace Prisma {
   export const ModelName: {
     Profile: 'Profile',
     SuperAdminSetting: 'SuperAdminSetting',
+    EnterpriseRequest: 'EnterpriseRequest',
     AuthCredential: 'AuthCredential',
     Category: 'Category',
     Creator: 'Creator',
@@ -1142,6 +1173,7 @@ export namespace Prisma {
     CreatorVideo: 'CreatorVideo',
     CreatorVideoPurchase: 'CreatorVideoPurchase',
     CreatorVideoView: 'CreatorVideoView',
+    ChatMessage: 'ChatMessage',
     CreatorVideoLike: 'CreatorVideoLike',
     CreatorEventLike: 'CreatorEventLike',
     CreatorVideoComment: 'CreatorVideoComment',
@@ -1172,7 +1204,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "profile" | "superAdminSetting" | "authCredential" | "category" | "creator" | "creatorFollow" | "creatorPayoutAccount" | "creatorPayoutRequest" | "creatorVideoFolder" | "creatorVideo" | "creatorVideoPurchase" | "creatorVideoView" | "creatorVideoLike" | "creatorEventLike" | "creatorVideoComment" | "creatorEvent" | "creatorEventLocationRestriction" | "creatorEventTicket" | "creatorEventTicketPurchase" | "creatorEventTicketItem" | "creatorEventCheckInUser" | "creatorEventCheckInCameraSession" | "creatorEventCheckInCameraSignal" | "creatorEventCheckInCameraAudit" | "creatorEventCheckInScan" | "session" | "verificationToken"
+      modelProps: "profile" | "superAdminSetting" | "enterpriseRequest" | "authCredential" | "category" | "creator" | "creatorFollow" | "creatorPayoutAccount" | "creatorPayoutRequest" | "creatorVideoFolder" | "creatorVideo" | "creatorVideoPurchase" | "creatorVideoView" | "chatMessage" | "creatorVideoLike" | "creatorEventLike" | "creatorVideoComment" | "creatorEvent" | "creatorEventLocationRestriction" | "creatorEventTicket" | "creatorEventTicketPurchase" | "creatorEventTicketItem" | "creatorEventCheckInUser" | "creatorEventCheckInCameraSession" | "creatorEventCheckInCameraSignal" | "creatorEventCheckInCameraAudit" | "creatorEventCheckInScan" | "session" | "verificationToken"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1321,6 +1353,80 @@ export namespace Prisma {
           count: {
             args: Prisma.SuperAdminSettingCountArgs<ExtArgs>
             result: $Utils.Optional<SuperAdminSettingCountAggregateOutputType> | number
+          }
+        }
+      }
+      EnterpriseRequest: {
+        payload: Prisma.$EnterpriseRequestPayload<ExtArgs>
+        fields: Prisma.EnterpriseRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EnterpriseRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnterpriseRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EnterpriseRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnterpriseRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.EnterpriseRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnterpriseRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EnterpriseRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnterpriseRequestPayload>
+          }
+          findMany: {
+            args: Prisma.EnterpriseRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnterpriseRequestPayload>[]
+          }
+          create: {
+            args: Prisma.EnterpriseRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnterpriseRequestPayload>
+          }
+          createMany: {
+            args: Prisma.EnterpriseRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.EnterpriseRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnterpriseRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.EnterpriseRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnterpriseRequestPayload>
+          }
+          update: {
+            args: Prisma.EnterpriseRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnterpriseRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.EnterpriseRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EnterpriseRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.EnterpriseRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnterpriseRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.EnterpriseRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnterpriseRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.EnterpriseRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEnterpriseRequest>
+          }
+          groupBy: {
+            args: Prisma.EnterpriseRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EnterpriseRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EnterpriseRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<EnterpriseRequestCountAggregateOutputType> | number
           }
         }
       }
@@ -2061,6 +2167,80 @@ export namespace Prisma {
           count: {
             args: Prisma.CreatorVideoViewCountArgs<ExtArgs>
             result: $Utils.Optional<CreatorVideoViewCountAggregateOutputType> | number
+          }
+        }
+      }
+      ChatMessage: {
+        payload: Prisma.$ChatMessagePayload<ExtArgs>
+        fields: Prisma.ChatMessageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChatMessageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChatMessageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          findFirst: {
+            args: Prisma.ChatMessageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChatMessageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          findMany: {
+            args: Prisma.ChatMessageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>[]
+          }
+          create: {
+            args: Prisma.ChatMessageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          createMany: {
+            args: Prisma.ChatMessageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChatMessageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>[]
+          }
+          delete: {
+            args: Prisma.ChatMessageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          update: {
+            args: Prisma.ChatMessageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          deleteMany: {
+            args: Prisma.ChatMessageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChatMessageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ChatMessageUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>[]
+          }
+          upsert: {
+            args: Prisma.ChatMessageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatMessagePayload>
+          }
+          aggregate: {
+            args: Prisma.ChatMessageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChatMessage>
+          }
+          groupBy: {
+            args: Prisma.ChatMessageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChatMessageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChatMessageCountArgs<ExtArgs>
+            result: $Utils.Optional<ChatMessageCountAggregateOutputType> | number
           }
         }
       }
@@ -3284,6 +3464,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     profile?: ProfileOmit
     superAdminSetting?: SuperAdminSettingOmit
+    enterpriseRequest?: EnterpriseRequestOmit
     authCredential?: AuthCredentialOmit
     category?: CategoryOmit
     creator?: CreatorOmit
@@ -3294,6 +3475,7 @@ export namespace Prisma {
     creatorVideo?: CreatorVideoOmit
     creatorVideoPurchase?: CreatorVideoPurchaseOmit
     creatorVideoView?: CreatorVideoViewOmit
+    chatMessage?: ChatMessageOmit
     creatorVideoLike?: CreatorVideoLikeOmit
     creatorEventLike?: CreatorEventLikeOmit
     creatorVideoComment?: CreatorVideoCommentOmit
@@ -6709,6 +6891,1196 @@ export namespace Prisma {
      * Omit specific fields from the SuperAdminSetting
      */
     omit?: SuperAdminSettingOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model EnterpriseRequest
+   */
+
+  export type AggregateEnterpriseRequest = {
+    _count: EnterpriseRequestCountAggregateOutputType | null
+    _avg: EnterpriseRequestAvgAggregateOutputType | null
+    _sum: EnterpriseRequestSumAggregateOutputType | null
+    _min: EnterpriseRequestMinAggregateOutputType | null
+    _max: EnterpriseRequestMaxAggregateOutputType | null
+  }
+
+  export type EnterpriseRequestAvgAggregateOutputType = {
+    estimatedUsers: number | null
+  }
+
+  export type EnterpriseRequestSumAggregateOutputType = {
+    estimatedUsers: number | null
+  }
+
+  export type EnterpriseRequestMinAggregateOutputType = {
+    id: string | null
+    company: string | null
+    contactPerson: string | null
+    email: string | null
+    phone: string | null
+    website: string | null
+    companySize: string | null
+    industry: string | null
+    address: string | null
+    description: string | null
+    requirements: string | null
+    estimatedUsers: number | null
+    budget: string | null
+    timeline: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EnterpriseRequestMaxAggregateOutputType = {
+    id: string | null
+    company: string | null
+    contactPerson: string | null
+    email: string | null
+    phone: string | null
+    website: string | null
+    companySize: string | null
+    industry: string | null
+    address: string | null
+    description: string | null
+    requirements: string | null
+    estimatedUsers: number | null
+    budget: string | null
+    timeline: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EnterpriseRequestCountAggregateOutputType = {
+    id: number
+    company: number
+    contactPerson: number
+    email: number
+    phone: number
+    website: number
+    companySize: number
+    industry: number
+    address: number
+    description: number
+    requirements: number
+    estimatedUsers: number
+    budget: number
+    timeline: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type EnterpriseRequestAvgAggregateInputType = {
+    estimatedUsers?: true
+  }
+
+  export type EnterpriseRequestSumAggregateInputType = {
+    estimatedUsers?: true
+  }
+
+  export type EnterpriseRequestMinAggregateInputType = {
+    id?: true
+    company?: true
+    contactPerson?: true
+    email?: true
+    phone?: true
+    website?: true
+    companySize?: true
+    industry?: true
+    address?: true
+    description?: true
+    requirements?: true
+    estimatedUsers?: true
+    budget?: true
+    timeline?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EnterpriseRequestMaxAggregateInputType = {
+    id?: true
+    company?: true
+    contactPerson?: true
+    email?: true
+    phone?: true
+    website?: true
+    companySize?: true
+    industry?: true
+    address?: true
+    description?: true
+    requirements?: true
+    estimatedUsers?: true
+    budget?: true
+    timeline?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EnterpriseRequestCountAggregateInputType = {
+    id?: true
+    company?: true
+    contactPerson?: true
+    email?: true
+    phone?: true
+    website?: true
+    companySize?: true
+    industry?: true
+    address?: true
+    description?: true
+    requirements?: true
+    estimatedUsers?: true
+    budget?: true
+    timeline?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type EnterpriseRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EnterpriseRequest to aggregate.
+     */
+    where?: EnterpriseRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EnterpriseRequests to fetch.
+     */
+    orderBy?: EnterpriseRequestOrderByWithRelationInput | EnterpriseRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EnterpriseRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EnterpriseRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EnterpriseRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EnterpriseRequests
+    **/
+    _count?: true | EnterpriseRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: EnterpriseRequestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EnterpriseRequestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EnterpriseRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EnterpriseRequestMaxAggregateInputType
+  }
+
+  export type GetEnterpriseRequestAggregateType<T extends EnterpriseRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateEnterpriseRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEnterpriseRequest[P]>
+      : GetScalarType<T[P], AggregateEnterpriseRequest[P]>
+  }
+
+
+
+
+  export type EnterpriseRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EnterpriseRequestWhereInput
+    orderBy?: EnterpriseRequestOrderByWithAggregationInput | EnterpriseRequestOrderByWithAggregationInput[]
+    by: EnterpriseRequestScalarFieldEnum[] | EnterpriseRequestScalarFieldEnum
+    having?: EnterpriseRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EnterpriseRequestCountAggregateInputType | true
+    _avg?: EnterpriseRequestAvgAggregateInputType
+    _sum?: EnterpriseRequestSumAggregateInputType
+    _min?: EnterpriseRequestMinAggregateInputType
+    _max?: EnterpriseRequestMaxAggregateInputType
+  }
+
+  export type EnterpriseRequestGroupByOutputType = {
+    id: string
+    company: string
+    contactPerson: string
+    email: string
+    phone: string | null
+    website: string | null
+    companySize: string | null
+    industry: string | null
+    address: string | null
+    description: string | null
+    requirements: string | null
+    estimatedUsers: number | null
+    budget: string | null
+    timeline: string | null
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: EnterpriseRequestCountAggregateOutputType | null
+    _avg: EnterpriseRequestAvgAggregateOutputType | null
+    _sum: EnterpriseRequestSumAggregateOutputType | null
+    _min: EnterpriseRequestMinAggregateOutputType | null
+    _max: EnterpriseRequestMaxAggregateOutputType | null
+  }
+
+  type GetEnterpriseRequestGroupByPayload<T extends EnterpriseRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EnterpriseRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EnterpriseRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EnterpriseRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], EnterpriseRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EnterpriseRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    company?: boolean
+    contactPerson?: boolean
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    companySize?: boolean
+    industry?: boolean
+    address?: boolean
+    description?: boolean
+    requirements?: boolean
+    estimatedUsers?: boolean
+    budget?: boolean
+    timeline?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["enterpriseRequest"]>
+
+  export type EnterpriseRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    company?: boolean
+    contactPerson?: boolean
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    companySize?: boolean
+    industry?: boolean
+    address?: boolean
+    description?: boolean
+    requirements?: boolean
+    estimatedUsers?: boolean
+    budget?: boolean
+    timeline?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["enterpriseRequest"]>
+
+  export type EnterpriseRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    company?: boolean
+    contactPerson?: boolean
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    companySize?: boolean
+    industry?: boolean
+    address?: boolean
+    description?: boolean
+    requirements?: boolean
+    estimatedUsers?: boolean
+    budget?: boolean
+    timeline?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["enterpriseRequest"]>
+
+  export type EnterpriseRequestSelectScalar = {
+    id?: boolean
+    company?: boolean
+    contactPerson?: boolean
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    companySize?: boolean
+    industry?: boolean
+    address?: boolean
+    description?: boolean
+    requirements?: boolean
+    estimatedUsers?: boolean
+    budget?: boolean
+    timeline?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type EnterpriseRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "company" | "contactPerson" | "email" | "phone" | "website" | "companySize" | "industry" | "address" | "description" | "requirements" | "estimatedUsers" | "budget" | "timeline" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["enterpriseRequest"]>
+
+  export type $EnterpriseRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EnterpriseRequest"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      company: string
+      contactPerson: string
+      email: string
+      phone: string | null
+      website: string | null
+      companySize: string | null
+      industry: string | null
+      address: string | null
+      description: string | null
+      requirements: string | null
+      estimatedUsers: number | null
+      budget: string | null
+      timeline: string | null
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["enterpriseRequest"]>
+    composites: {}
+  }
+
+  type EnterpriseRequestGetPayload<S extends boolean | null | undefined | EnterpriseRequestDefaultArgs> = $Result.GetResult<Prisma.$EnterpriseRequestPayload, S>
+
+  type EnterpriseRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<EnterpriseRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EnterpriseRequestCountAggregateInputType | true
+    }
+
+  export interface EnterpriseRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EnterpriseRequest'], meta: { name: 'EnterpriseRequest' } }
+    /**
+     * Find zero or one EnterpriseRequest that matches the filter.
+     * @param {EnterpriseRequestFindUniqueArgs} args - Arguments to find a EnterpriseRequest
+     * @example
+     * // Get one EnterpriseRequest
+     * const enterpriseRequest = await prisma.enterpriseRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EnterpriseRequestFindUniqueArgs>(args: SelectSubset<T, EnterpriseRequestFindUniqueArgs<ExtArgs>>): Prisma__EnterpriseRequestClient<$Result.GetResult<Prisma.$EnterpriseRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one EnterpriseRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {EnterpriseRequestFindUniqueOrThrowArgs} args - Arguments to find a EnterpriseRequest
+     * @example
+     * // Get one EnterpriseRequest
+     * const enterpriseRequest = await prisma.enterpriseRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EnterpriseRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, EnterpriseRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EnterpriseRequestClient<$Result.GetResult<Prisma.$EnterpriseRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EnterpriseRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnterpriseRequestFindFirstArgs} args - Arguments to find a EnterpriseRequest
+     * @example
+     * // Get one EnterpriseRequest
+     * const enterpriseRequest = await prisma.enterpriseRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EnterpriseRequestFindFirstArgs>(args?: SelectSubset<T, EnterpriseRequestFindFirstArgs<ExtArgs>>): Prisma__EnterpriseRequestClient<$Result.GetResult<Prisma.$EnterpriseRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EnterpriseRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnterpriseRequestFindFirstOrThrowArgs} args - Arguments to find a EnterpriseRequest
+     * @example
+     * // Get one EnterpriseRequest
+     * const enterpriseRequest = await prisma.enterpriseRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EnterpriseRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, EnterpriseRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__EnterpriseRequestClient<$Result.GetResult<Prisma.$EnterpriseRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more EnterpriseRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnterpriseRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EnterpriseRequests
+     * const enterpriseRequests = await prisma.enterpriseRequest.findMany()
+     * 
+     * // Get first 10 EnterpriseRequests
+     * const enterpriseRequests = await prisma.enterpriseRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const enterpriseRequestWithIdOnly = await prisma.enterpriseRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EnterpriseRequestFindManyArgs>(args?: SelectSubset<T, EnterpriseRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EnterpriseRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a EnterpriseRequest.
+     * @param {EnterpriseRequestCreateArgs} args - Arguments to create a EnterpriseRequest.
+     * @example
+     * // Create one EnterpriseRequest
+     * const EnterpriseRequest = await prisma.enterpriseRequest.create({
+     *   data: {
+     *     // ... data to create a EnterpriseRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends EnterpriseRequestCreateArgs>(args: SelectSubset<T, EnterpriseRequestCreateArgs<ExtArgs>>): Prisma__EnterpriseRequestClient<$Result.GetResult<Prisma.$EnterpriseRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many EnterpriseRequests.
+     * @param {EnterpriseRequestCreateManyArgs} args - Arguments to create many EnterpriseRequests.
+     * @example
+     * // Create many EnterpriseRequests
+     * const enterpriseRequest = await prisma.enterpriseRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EnterpriseRequestCreateManyArgs>(args?: SelectSubset<T, EnterpriseRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many EnterpriseRequests and returns the data saved in the database.
+     * @param {EnterpriseRequestCreateManyAndReturnArgs} args - Arguments to create many EnterpriseRequests.
+     * @example
+     * // Create many EnterpriseRequests
+     * const enterpriseRequest = await prisma.enterpriseRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many EnterpriseRequests and only return the `id`
+     * const enterpriseRequestWithIdOnly = await prisma.enterpriseRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends EnterpriseRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, EnterpriseRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EnterpriseRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a EnterpriseRequest.
+     * @param {EnterpriseRequestDeleteArgs} args - Arguments to delete one EnterpriseRequest.
+     * @example
+     * // Delete one EnterpriseRequest
+     * const EnterpriseRequest = await prisma.enterpriseRequest.delete({
+     *   where: {
+     *     // ... filter to delete one EnterpriseRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EnterpriseRequestDeleteArgs>(args: SelectSubset<T, EnterpriseRequestDeleteArgs<ExtArgs>>): Prisma__EnterpriseRequestClient<$Result.GetResult<Prisma.$EnterpriseRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one EnterpriseRequest.
+     * @param {EnterpriseRequestUpdateArgs} args - Arguments to update one EnterpriseRequest.
+     * @example
+     * // Update one EnterpriseRequest
+     * const enterpriseRequest = await prisma.enterpriseRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EnterpriseRequestUpdateArgs>(args: SelectSubset<T, EnterpriseRequestUpdateArgs<ExtArgs>>): Prisma__EnterpriseRequestClient<$Result.GetResult<Prisma.$EnterpriseRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more EnterpriseRequests.
+     * @param {EnterpriseRequestDeleteManyArgs} args - Arguments to filter EnterpriseRequests to delete.
+     * @example
+     * // Delete a few EnterpriseRequests
+     * const { count } = await prisma.enterpriseRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EnterpriseRequestDeleteManyArgs>(args?: SelectSubset<T, EnterpriseRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EnterpriseRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnterpriseRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EnterpriseRequests
+     * const enterpriseRequest = await prisma.enterpriseRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EnterpriseRequestUpdateManyArgs>(args: SelectSubset<T, EnterpriseRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EnterpriseRequests and returns the data updated in the database.
+     * @param {EnterpriseRequestUpdateManyAndReturnArgs} args - Arguments to update many EnterpriseRequests.
+     * @example
+     * // Update many EnterpriseRequests
+     * const enterpriseRequest = await prisma.enterpriseRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more EnterpriseRequests and only return the `id`
+     * const enterpriseRequestWithIdOnly = await prisma.enterpriseRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends EnterpriseRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, EnterpriseRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EnterpriseRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one EnterpriseRequest.
+     * @param {EnterpriseRequestUpsertArgs} args - Arguments to update or create a EnterpriseRequest.
+     * @example
+     * // Update or create a EnterpriseRequest
+     * const enterpriseRequest = await prisma.enterpriseRequest.upsert({
+     *   create: {
+     *     // ... data to create a EnterpriseRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EnterpriseRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EnterpriseRequestUpsertArgs>(args: SelectSubset<T, EnterpriseRequestUpsertArgs<ExtArgs>>): Prisma__EnterpriseRequestClient<$Result.GetResult<Prisma.$EnterpriseRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of EnterpriseRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnterpriseRequestCountArgs} args - Arguments to filter EnterpriseRequests to count.
+     * @example
+     * // Count the number of EnterpriseRequests
+     * const count = await prisma.enterpriseRequest.count({
+     *   where: {
+     *     // ... the filter for the EnterpriseRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends EnterpriseRequestCountArgs>(
+      args?: Subset<T, EnterpriseRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EnterpriseRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EnterpriseRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnterpriseRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EnterpriseRequestAggregateArgs>(args: Subset<T, EnterpriseRequestAggregateArgs>): Prisma.PrismaPromise<GetEnterpriseRequestAggregateType<T>>
+
+    /**
+     * Group by EnterpriseRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnterpriseRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EnterpriseRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EnterpriseRequestGroupByArgs['orderBy'] }
+        : { orderBy?: EnterpriseRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EnterpriseRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEnterpriseRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EnterpriseRequest model
+   */
+  readonly fields: EnterpriseRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EnterpriseRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EnterpriseRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EnterpriseRequest model
+   */
+  interface EnterpriseRequestFieldRefs {
+    readonly id: FieldRef<"EnterpriseRequest", 'String'>
+    readonly company: FieldRef<"EnterpriseRequest", 'String'>
+    readonly contactPerson: FieldRef<"EnterpriseRequest", 'String'>
+    readonly email: FieldRef<"EnterpriseRequest", 'String'>
+    readonly phone: FieldRef<"EnterpriseRequest", 'String'>
+    readonly website: FieldRef<"EnterpriseRequest", 'String'>
+    readonly companySize: FieldRef<"EnterpriseRequest", 'String'>
+    readonly industry: FieldRef<"EnterpriseRequest", 'String'>
+    readonly address: FieldRef<"EnterpriseRequest", 'String'>
+    readonly description: FieldRef<"EnterpriseRequest", 'String'>
+    readonly requirements: FieldRef<"EnterpriseRequest", 'String'>
+    readonly estimatedUsers: FieldRef<"EnterpriseRequest", 'Int'>
+    readonly budget: FieldRef<"EnterpriseRequest", 'String'>
+    readonly timeline: FieldRef<"EnterpriseRequest", 'String'>
+    readonly status: FieldRef<"EnterpriseRequest", 'String'>
+    readonly createdAt: FieldRef<"EnterpriseRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"EnterpriseRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EnterpriseRequest findUnique
+   */
+  export type EnterpriseRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which EnterpriseRequest to fetch.
+     */
+    where: EnterpriseRequestWhereUniqueInput
+  }
+
+  /**
+   * EnterpriseRequest findUniqueOrThrow
+   */
+  export type EnterpriseRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which EnterpriseRequest to fetch.
+     */
+    where: EnterpriseRequestWhereUniqueInput
+  }
+
+  /**
+   * EnterpriseRequest findFirst
+   */
+  export type EnterpriseRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which EnterpriseRequest to fetch.
+     */
+    where?: EnterpriseRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EnterpriseRequests to fetch.
+     */
+    orderBy?: EnterpriseRequestOrderByWithRelationInput | EnterpriseRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EnterpriseRequests.
+     */
+    cursor?: EnterpriseRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EnterpriseRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EnterpriseRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EnterpriseRequests.
+     */
+    distinct?: EnterpriseRequestScalarFieldEnum | EnterpriseRequestScalarFieldEnum[]
+  }
+
+  /**
+   * EnterpriseRequest findFirstOrThrow
+   */
+  export type EnterpriseRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which EnterpriseRequest to fetch.
+     */
+    where?: EnterpriseRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EnterpriseRequests to fetch.
+     */
+    orderBy?: EnterpriseRequestOrderByWithRelationInput | EnterpriseRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EnterpriseRequests.
+     */
+    cursor?: EnterpriseRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EnterpriseRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EnterpriseRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EnterpriseRequests.
+     */
+    distinct?: EnterpriseRequestScalarFieldEnum | EnterpriseRequestScalarFieldEnum[]
+  }
+
+  /**
+   * EnterpriseRequest findMany
+   */
+  export type EnterpriseRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which EnterpriseRequests to fetch.
+     */
+    where?: EnterpriseRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EnterpriseRequests to fetch.
+     */
+    orderBy?: EnterpriseRequestOrderByWithRelationInput | EnterpriseRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EnterpriseRequests.
+     */
+    cursor?: EnterpriseRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EnterpriseRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EnterpriseRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EnterpriseRequests.
+     */
+    distinct?: EnterpriseRequestScalarFieldEnum | EnterpriseRequestScalarFieldEnum[]
+  }
+
+  /**
+   * EnterpriseRequest create
+   */
+  export type EnterpriseRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
+    /**
+     * The data needed to create a EnterpriseRequest.
+     */
+    data: XOR<EnterpriseRequestCreateInput, EnterpriseRequestUncheckedCreateInput>
+  }
+
+  /**
+   * EnterpriseRequest createMany
+   */
+  export type EnterpriseRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EnterpriseRequests.
+     */
+    data: EnterpriseRequestCreateManyInput | EnterpriseRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EnterpriseRequest createManyAndReturn
+   */
+  export type EnterpriseRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many EnterpriseRequests.
+     */
+    data: EnterpriseRequestCreateManyInput | EnterpriseRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EnterpriseRequest update
+   */
+  export type EnterpriseRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
+    /**
+     * The data needed to update a EnterpriseRequest.
+     */
+    data: XOR<EnterpriseRequestUpdateInput, EnterpriseRequestUncheckedUpdateInput>
+    /**
+     * Choose, which EnterpriseRequest to update.
+     */
+    where: EnterpriseRequestWhereUniqueInput
+  }
+
+  /**
+   * EnterpriseRequest updateMany
+   */
+  export type EnterpriseRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EnterpriseRequests.
+     */
+    data: XOR<EnterpriseRequestUpdateManyMutationInput, EnterpriseRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which EnterpriseRequests to update
+     */
+    where?: EnterpriseRequestWhereInput
+    /**
+     * Limit how many EnterpriseRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EnterpriseRequest updateManyAndReturn
+   */
+  export type EnterpriseRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update EnterpriseRequests.
+     */
+    data: XOR<EnterpriseRequestUpdateManyMutationInput, EnterpriseRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which EnterpriseRequests to update
+     */
+    where?: EnterpriseRequestWhereInput
+    /**
+     * Limit how many EnterpriseRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EnterpriseRequest upsert
+   */
+  export type EnterpriseRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
+    /**
+     * The filter to search for the EnterpriseRequest to update in case it exists.
+     */
+    where: EnterpriseRequestWhereUniqueInput
+    /**
+     * In case the EnterpriseRequest found by the `where` argument doesn't exist, create a new EnterpriseRequest with this data.
+     */
+    create: XOR<EnterpriseRequestCreateInput, EnterpriseRequestUncheckedCreateInput>
+    /**
+     * In case the EnterpriseRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EnterpriseRequestUpdateInput, EnterpriseRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * EnterpriseRequest delete
+   */
+  export type EnterpriseRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
+    /**
+     * Filter which EnterpriseRequest to delete.
+     */
+    where: EnterpriseRequestWhereUniqueInput
+  }
+
+  /**
+   * EnterpriseRequest deleteMany
+   */
+  export type EnterpriseRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EnterpriseRequests to delete
+     */
+    where?: EnterpriseRequestWhereInput
+    /**
+     * Limit how many EnterpriseRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * EnterpriseRequest without action
+   */
+  export type EnterpriseRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnterpriseRequest
+     */
+    select?: EnterpriseRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnterpriseRequest
+     */
+    omit?: EnterpriseRequestOmit<ExtArgs> | null
   }
 
 
@@ -12475,6 +13847,7 @@ export namespace Prisma {
     currency: string | null
     status: string | null
     note: string | null
+    receiptUrl: string | null
     transactionId: string | null
     requestedAt: Date | null
     processedAt: Date | null
@@ -12490,6 +13863,7 @@ export namespace Prisma {
     currency: string | null
     status: string | null
     note: string | null
+    receiptUrl: string | null
     transactionId: string | null
     requestedAt: Date | null
     processedAt: Date | null
@@ -12505,6 +13879,7 @@ export namespace Prisma {
     currency: number
     status: number
     note: number
+    receiptUrl: number
     transactionId: number
     requestedAt: number
     processedAt: number
@@ -12530,6 +13905,7 @@ export namespace Prisma {
     currency?: true
     status?: true
     note?: true
+    receiptUrl?: true
     transactionId?: true
     requestedAt?: true
     processedAt?: true
@@ -12545,6 +13921,7 @@ export namespace Prisma {
     currency?: true
     status?: true
     note?: true
+    receiptUrl?: true
     transactionId?: true
     requestedAt?: true
     processedAt?: true
@@ -12560,6 +13937,7 @@ export namespace Prisma {
     currency?: true
     status?: true
     note?: true
+    receiptUrl?: true
     transactionId?: true
     requestedAt?: true
     processedAt?: true
@@ -12662,6 +14040,7 @@ export namespace Prisma {
     currency: string
     status: string
     note: string | null
+    receiptUrl: string | null
     transactionId: string | null
     requestedAt: Date
     processedAt: Date | null
@@ -12696,6 +14075,7 @@ export namespace Prisma {
     currency?: boolean
     status?: boolean
     note?: boolean
+    receiptUrl?: boolean
     transactionId?: boolean
     requestedAt?: boolean
     processedAt?: boolean
@@ -12713,6 +14093,7 @@ export namespace Prisma {
     currency?: boolean
     status?: boolean
     note?: boolean
+    receiptUrl?: boolean
     transactionId?: boolean
     requestedAt?: boolean
     processedAt?: boolean
@@ -12730,6 +14111,7 @@ export namespace Prisma {
     currency?: boolean
     status?: boolean
     note?: boolean
+    receiptUrl?: boolean
     transactionId?: boolean
     requestedAt?: boolean
     processedAt?: boolean
@@ -12747,6 +14129,7 @@ export namespace Prisma {
     currency?: boolean
     status?: boolean
     note?: boolean
+    receiptUrl?: boolean
     transactionId?: boolean
     requestedAt?: boolean
     processedAt?: boolean
@@ -12754,7 +14137,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CreatorPayoutRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "payoutAccountId" | "amount" | "currency" | "status" | "note" | "transactionId" | "requestedAt" | "processedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorPayoutRequest"]>
+  export type CreatorPayoutRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "payoutAccountId" | "amount" | "currency" | "status" | "note" | "receiptUrl" | "transactionId" | "requestedAt" | "processedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorPayoutRequest"]>
   export type CreatorPayoutRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
     payoutAccount?: boolean | CreatorPayoutRequest$payoutAccountArgs<ExtArgs>
@@ -12782,6 +14165,7 @@ export namespace Prisma {
       currency: string
       status: string
       note: string | null
+      receiptUrl: string | null
       transactionId: string | null
       requestedAt: Date
       processedAt: Date | null
@@ -13219,6 +14603,7 @@ export namespace Prisma {
     readonly currency: FieldRef<"CreatorPayoutRequest", 'String'>
     readonly status: FieldRef<"CreatorPayoutRequest", 'String'>
     readonly note: FieldRef<"CreatorPayoutRequest", 'String'>
+    readonly receiptUrl: FieldRef<"CreatorPayoutRequest", 'String'>
     readonly transactionId: FieldRef<"CreatorPayoutRequest", 'String'>
     readonly requestedAt: FieldRef<"CreatorPayoutRequest", 'DateTime'>
     readonly processedAt: FieldRef<"CreatorPayoutRequest", 'DateTime'>
@@ -14823,6 +16208,7 @@ export namespace Prisma {
     rent24Price: number | null
     rent48Price: number | null
     purchasePrice: number | null
+    amount: number | null
     revenue: number | null
     platformFee: number | null
     episodeIndex: number | null
@@ -14835,6 +16221,7 @@ export namespace Prisma {
     rent24Price: number | null
     rent48Price: number | null
     purchasePrice: number | null
+    amount: number | null
     revenue: number | null
     platformFee: number | null
     episodeIndex: number | null
@@ -14863,6 +16250,7 @@ export namespace Prisma {
     rent24Price: number | null
     rent48Price: number | null
     purchasePrice: number | null
+    amount: number | null
     revenue: number | null
     platformFee: number | null
     packageName: string | null
@@ -14897,6 +16285,7 @@ export namespace Prisma {
     rent24Price: number | null
     rent48Price: number | null
     purchasePrice: number | null
+    amount: number | null
     revenue: number | null
     platformFee: number | null
     packageName: string | null
@@ -14931,6 +16320,7 @@ export namespace Prisma {
     rent24Price: number
     rent48Price: number
     purchasePrice: number
+    amount: number
     revenue: number
     platformFee: number
     tags: number
@@ -14952,6 +16342,7 @@ export namespace Prisma {
     rent24Price?: true
     rent48Price?: true
     purchasePrice?: true
+    amount?: true
     revenue?: true
     platformFee?: true
     episodeIndex?: true
@@ -14964,6 +16355,7 @@ export namespace Prisma {
     rent24Price?: true
     rent48Price?: true
     purchasePrice?: true
+    amount?: true
     revenue?: true
     platformFee?: true
     episodeIndex?: true
@@ -14992,6 +16384,7 @@ export namespace Prisma {
     rent24Price?: true
     rent48Price?: true
     purchasePrice?: true
+    amount?: true
     revenue?: true
     platformFee?: true
     packageName?: true
@@ -15026,6 +16419,7 @@ export namespace Prisma {
     rent24Price?: true
     rent48Price?: true
     purchasePrice?: true
+    amount?: true
     revenue?: true
     platformFee?: true
     packageName?: true
@@ -15060,6 +16454,7 @@ export namespace Prisma {
     rent24Price?: true
     rent48Price?: true
     purchasePrice?: true
+    amount?: true
     revenue?: true
     platformFee?: true
     tags?: true
@@ -15182,6 +16577,7 @@ export namespace Prisma {
     rent24Price: number | null
     rent48Price: number | null
     purchasePrice: number | null
+    amount: number
     revenue: number
     platformFee: number
     tags: string[]
@@ -15236,6 +16632,7 @@ export namespace Prisma {
     rent24Price?: boolean
     rent48Price?: boolean
     purchasePrice?: boolean
+    amount?: boolean
     revenue?: boolean
     platformFee?: boolean
     tags?: boolean
@@ -15278,6 +16675,7 @@ export namespace Prisma {
     rent24Price?: boolean
     rent48Price?: boolean
     purchasePrice?: boolean
+    amount?: boolean
     revenue?: boolean
     platformFee?: boolean
     tags?: boolean
@@ -15315,6 +16713,7 @@ export namespace Prisma {
     rent24Price?: boolean
     rent48Price?: boolean
     purchasePrice?: boolean
+    amount?: boolean
     revenue?: boolean
     platformFee?: boolean
     tags?: boolean
@@ -15352,6 +16751,7 @@ export namespace Prisma {
     rent24Price?: boolean
     rent48Price?: boolean
     purchasePrice?: boolean
+    amount?: boolean
     revenue?: boolean
     platformFee?: boolean
     tags?: boolean
@@ -15367,7 +16767,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CreatorVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "folderId" | "title" | "description" | "category" | "videoUrl" | "videoFileId" | "thumbnailUrl" | "thumbnailFileId" | "isPrivate" | "isPremium" | "monetizationType" | "status" | "publishNow" | "scheduledAt" | "rent24Price" | "rent48Price" | "purchasePrice" | "revenue" | "platformFee" | "tags" | "packageName" | "episodeIndex" | "duration" | "allowComments" | "ageRestriction" | "viewsCount" | "likesCount" | "commentsCount" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorVideo"]>
+  export type CreatorVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "folderId" | "title" | "description" | "category" | "videoUrl" | "videoFileId" | "thumbnailUrl" | "thumbnailFileId" | "isPrivate" | "isPremium" | "monetizationType" | "status" | "publishNow" | "scheduledAt" | "rent24Price" | "rent48Price" | "purchasePrice" | "amount" | "revenue" | "platformFee" | "tags" | "packageName" | "episodeIndex" | "duration" | "allowComments" | "ageRestriction" | "viewsCount" | "likesCount" | "commentsCount" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorVideo"]>
   export type CreatorVideoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
     folder?: boolean | CreatorVideoFolderDefaultArgs<ExtArgs>
@@ -15416,6 +16816,7 @@ export namespace Prisma {
       rent24Price: number | null
       rent48Price: number | null
       purchasePrice: number | null
+      amount: number
       revenue: number
       platformFee: number
       tags: string[]
@@ -15877,6 +17278,7 @@ export namespace Prisma {
     readonly rent24Price: FieldRef<"CreatorVideo", 'Int'>
     readonly rent48Price: FieldRef<"CreatorVideo", 'Int'>
     readonly purchasePrice: FieldRef<"CreatorVideo", 'Int'>
+    readonly amount: FieldRef<"CreatorVideo", 'Int'>
     readonly revenue: FieldRef<"CreatorVideo", 'Int'>
     readonly platformFee: FieldRef<"CreatorVideo", 'Int'>
     readonly tags: FieldRef<"CreatorVideo", 'String[]'>
@@ -16418,11 +17820,15 @@ export namespace Prisma {
   }
 
   export type CreatorVideoPurchaseAvgAggregateOutputType = {
+    revenue: number | null
     amount: number | null
+    platformFee: number | null
   }
 
   export type CreatorVideoPurchaseSumAggregateOutputType = {
+    revenue: number | null
     amount: number | null
+    platformFee: number | null
   }
 
   export type CreatorVideoPurchaseMinAggregateOutputType = {
@@ -16435,7 +17841,9 @@ export namespace Prisma {
     buyerPhone: string | null
     purchaseType: string | null
     accessCode: string | null
+    revenue: number | null
     amount: number | null
+    platformFee: number | null
     currency: string | null
     status: string | null
     transactionId: string | null
@@ -16454,7 +17862,9 @@ export namespace Prisma {
     buyerPhone: string | null
     purchaseType: string | null
     accessCode: string | null
+    revenue: number | null
     amount: number | null
+    platformFee: number | null
     currency: string | null
     status: string | null
     transactionId: string | null
@@ -16473,7 +17883,9 @@ export namespace Prisma {
     buyerPhone: number
     purchaseType: number
     accessCode: number
+    revenue: number
     amount: number
+    platformFee: number
     currency: number
     status: number
     transactionId: number
@@ -16485,11 +17897,15 @@ export namespace Prisma {
 
 
   export type CreatorVideoPurchaseAvgAggregateInputType = {
+    revenue?: true
     amount?: true
+    platformFee?: true
   }
 
   export type CreatorVideoPurchaseSumAggregateInputType = {
+    revenue?: true
     amount?: true
+    platformFee?: true
   }
 
   export type CreatorVideoPurchaseMinAggregateInputType = {
@@ -16502,7 +17918,9 @@ export namespace Prisma {
     buyerPhone?: true
     purchaseType?: true
     accessCode?: true
+    revenue?: true
     amount?: true
+    platformFee?: true
     currency?: true
     status?: true
     transactionId?: true
@@ -16521,7 +17939,9 @@ export namespace Prisma {
     buyerPhone?: true
     purchaseType?: true
     accessCode?: true
+    revenue?: true
     amount?: true
+    platformFee?: true
     currency?: true
     status?: true
     transactionId?: true
@@ -16540,7 +17960,9 @@ export namespace Prisma {
     buyerPhone?: true
     purchaseType?: true
     accessCode?: true
+    revenue?: true
     amount?: true
+    platformFee?: true
     currency?: true
     status?: true
     transactionId?: true
@@ -16646,7 +18068,9 @@ export namespace Prisma {
     buyerPhone: string | null
     purchaseType: string
     accessCode: string
+    revenue: number
     amount: number
+    platformFee: number
     currency: string
     status: string
     transactionId: string
@@ -16684,7 +18108,9 @@ export namespace Prisma {
     buyerPhone?: boolean
     purchaseType?: boolean
     accessCode?: boolean
+    revenue?: boolean
     amount?: boolean
+    platformFee?: boolean
     currency?: boolean
     status?: boolean
     transactionId?: boolean
@@ -16706,7 +18132,9 @@ export namespace Prisma {
     buyerPhone?: boolean
     purchaseType?: boolean
     accessCode?: boolean
+    revenue?: boolean
     amount?: boolean
+    platformFee?: boolean
     currency?: boolean
     status?: boolean
     transactionId?: boolean
@@ -16728,7 +18156,9 @@ export namespace Prisma {
     buyerPhone?: boolean
     purchaseType?: boolean
     accessCode?: boolean
+    revenue?: boolean
     amount?: boolean
+    platformFee?: boolean
     currency?: boolean
     status?: boolean
     transactionId?: boolean
@@ -16750,7 +18180,9 @@ export namespace Prisma {
     buyerPhone?: boolean
     purchaseType?: boolean
     accessCode?: boolean
+    revenue?: boolean
     amount?: boolean
+    platformFee?: boolean
     currency?: boolean
     status?: boolean
     transactionId?: boolean
@@ -16759,7 +18191,7 @@ export namespace Prisma {
     completedAt?: boolean
   }
 
-  export type CreatorVideoPurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "creatorVideoId" | "buyerProfileId" | "buyerName" | "buyerEmail" | "buyerPhone" | "purchaseType" | "accessCode" | "amount" | "currency" | "status" | "transactionId" | "accessExpiresAt" | "purchasedAt" | "completedAt", ExtArgs["result"]["creatorVideoPurchase"]>
+  export type CreatorVideoPurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "creatorVideoId" | "buyerProfileId" | "buyerName" | "buyerEmail" | "buyerPhone" | "purchaseType" | "accessCode" | "revenue" | "amount" | "platformFee" | "currency" | "status" | "transactionId" | "accessExpiresAt" | "purchasedAt" | "completedAt", ExtArgs["result"]["creatorVideoPurchase"]>
   export type CreatorVideoPurchaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
@@ -16793,7 +18225,9 @@ export namespace Prisma {
       buyerPhone: string | null
       purchaseType: string
       accessCode: string
+      revenue: number
       amount: number
+      platformFee: number
       currency: string
       status: string
       transactionId: string
@@ -17235,7 +18669,9 @@ export namespace Prisma {
     readonly buyerPhone: FieldRef<"CreatorVideoPurchase", 'String'>
     readonly purchaseType: FieldRef<"CreatorVideoPurchase", 'String'>
     readonly accessCode: FieldRef<"CreatorVideoPurchase", 'String'>
+    readonly revenue: FieldRef<"CreatorVideoPurchase", 'Int'>
     readonly amount: FieldRef<"CreatorVideoPurchase", 'Int'>
+    readonly platformFee: FieldRef<"CreatorVideoPurchase", 'Int'>
     readonly currency: FieldRef<"CreatorVideoPurchase", 'String'>
     readonly status: FieldRef<"CreatorVideoPurchase", 'String'>
     readonly transactionId: FieldRef<"CreatorVideoPurchase", 'String'>
@@ -18727,6 +20163,1041 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CreatorVideoViewInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ChatMessage
+   */
+
+  export type AggregateChatMessage = {
+    _count: ChatMessageCountAggregateOutputType | null
+    _min: ChatMessageMinAggregateOutputType | null
+    _max: ChatMessageMaxAggregateOutputType | null
+  }
+
+  export type ChatMessageMinAggregateOutputType = {
+    id: string | null
+    kind: string | null
+    channelId: string | null
+    name: string | null
+    handle: string | null
+    text: string | null
+    createdAt: Date | null
+  }
+
+  export type ChatMessageMaxAggregateOutputType = {
+    id: string | null
+    kind: string | null
+    channelId: string | null
+    name: string | null
+    handle: string | null
+    text: string | null
+    createdAt: Date | null
+  }
+
+  export type ChatMessageCountAggregateOutputType = {
+    id: number
+    kind: number
+    channelId: number
+    name: number
+    handle: number
+    text: number
+    reactions: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ChatMessageMinAggregateInputType = {
+    id?: true
+    kind?: true
+    channelId?: true
+    name?: true
+    handle?: true
+    text?: true
+    createdAt?: true
+  }
+
+  export type ChatMessageMaxAggregateInputType = {
+    id?: true
+    kind?: true
+    channelId?: true
+    name?: true
+    handle?: true
+    text?: true
+    createdAt?: true
+  }
+
+  export type ChatMessageCountAggregateInputType = {
+    id?: true
+    kind?: true
+    channelId?: true
+    name?: true
+    handle?: true
+    text?: true
+    reactions?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ChatMessageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatMessage to aggregate.
+     */
+    where?: ChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessageOrderByWithRelationInput | ChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChatMessages
+    **/
+    _count?: true | ChatMessageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChatMessageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChatMessageMaxAggregateInputType
+  }
+
+  export type GetChatMessageAggregateType<T extends ChatMessageAggregateArgs> = {
+        [P in keyof T & keyof AggregateChatMessage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChatMessage[P]>
+      : GetScalarType<T[P], AggregateChatMessage[P]>
+  }
+
+
+
+
+  export type ChatMessageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatMessageWhereInput
+    orderBy?: ChatMessageOrderByWithAggregationInput | ChatMessageOrderByWithAggregationInput[]
+    by: ChatMessageScalarFieldEnum[] | ChatMessageScalarFieldEnum
+    having?: ChatMessageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChatMessageCountAggregateInputType | true
+    _min?: ChatMessageMinAggregateInputType
+    _max?: ChatMessageMaxAggregateInputType
+  }
+
+  export type ChatMessageGroupByOutputType = {
+    id: string
+    kind: string
+    channelId: string
+    name: string
+    handle: string
+    text: string
+    reactions: JsonValue
+    createdAt: Date
+    _count: ChatMessageCountAggregateOutputType | null
+    _min: ChatMessageMinAggregateOutputType | null
+    _max: ChatMessageMaxAggregateOutputType | null
+  }
+
+  type GetChatMessageGroupByPayload<T extends ChatMessageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChatMessageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChatMessageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChatMessageGroupByOutputType[P]>
+            : GetScalarType<T[P], ChatMessageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChatMessageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    kind?: boolean
+    channelId?: boolean
+    name?: boolean
+    handle?: boolean
+    text?: boolean
+    reactions?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["chatMessage"]>
+
+  export type ChatMessageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    kind?: boolean
+    channelId?: boolean
+    name?: boolean
+    handle?: boolean
+    text?: boolean
+    reactions?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["chatMessage"]>
+
+  export type ChatMessageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    kind?: boolean
+    channelId?: boolean
+    name?: boolean
+    handle?: boolean
+    text?: boolean
+    reactions?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["chatMessage"]>
+
+  export type ChatMessageSelectScalar = {
+    id?: boolean
+    kind?: boolean
+    channelId?: boolean
+    name?: boolean
+    handle?: boolean
+    text?: boolean
+    reactions?: boolean
+    createdAt?: boolean
+  }
+
+  export type ChatMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "kind" | "channelId" | "name" | "handle" | "text" | "reactions" | "createdAt", ExtArgs["result"]["chatMessage"]>
+
+  export type $ChatMessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChatMessage"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      kind: string
+      channelId: string
+      name: string
+      handle: string
+      text: string
+      reactions: Prisma.JsonValue
+      createdAt: Date
+    }, ExtArgs["result"]["chatMessage"]>
+    composites: {}
+  }
+
+  type ChatMessageGetPayload<S extends boolean | null | undefined | ChatMessageDefaultArgs> = $Result.GetResult<Prisma.$ChatMessagePayload, S>
+
+  type ChatMessageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChatMessageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChatMessageCountAggregateInputType | true
+    }
+
+  export interface ChatMessageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChatMessage'], meta: { name: 'ChatMessage' } }
+    /**
+     * Find zero or one ChatMessage that matches the filter.
+     * @param {ChatMessageFindUniqueArgs} args - Arguments to find a ChatMessage
+     * @example
+     * // Get one ChatMessage
+     * const chatMessage = await prisma.chatMessage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChatMessageFindUniqueArgs>(args: SelectSubset<T, ChatMessageFindUniqueArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ChatMessage that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ChatMessageFindUniqueOrThrowArgs} args - Arguments to find a ChatMessage
+     * @example
+     * // Get one ChatMessage
+     * const chatMessage = await prisma.chatMessage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChatMessageFindUniqueOrThrowArgs>(args: SelectSubset<T, ChatMessageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChatMessage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageFindFirstArgs} args - Arguments to find a ChatMessage
+     * @example
+     * // Get one ChatMessage
+     * const chatMessage = await prisma.chatMessage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChatMessageFindFirstArgs>(args?: SelectSubset<T, ChatMessageFindFirstArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChatMessage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageFindFirstOrThrowArgs} args - Arguments to find a ChatMessage
+     * @example
+     * // Get one ChatMessage
+     * const chatMessage = await prisma.chatMessage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChatMessageFindFirstOrThrowArgs>(args?: SelectSubset<T, ChatMessageFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ChatMessages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChatMessages
+     * const chatMessages = await prisma.chatMessage.findMany()
+     * 
+     * // Get first 10 ChatMessages
+     * const chatMessages = await prisma.chatMessage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chatMessageWithIdOnly = await prisma.chatMessage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChatMessageFindManyArgs>(args?: SelectSubset<T, ChatMessageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ChatMessage.
+     * @param {ChatMessageCreateArgs} args - Arguments to create a ChatMessage.
+     * @example
+     * // Create one ChatMessage
+     * const ChatMessage = await prisma.chatMessage.create({
+     *   data: {
+     *     // ... data to create a ChatMessage
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChatMessageCreateArgs>(args: SelectSubset<T, ChatMessageCreateArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ChatMessages.
+     * @param {ChatMessageCreateManyArgs} args - Arguments to create many ChatMessages.
+     * @example
+     * // Create many ChatMessages
+     * const chatMessage = await prisma.chatMessage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChatMessageCreateManyArgs>(args?: SelectSubset<T, ChatMessageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChatMessages and returns the data saved in the database.
+     * @param {ChatMessageCreateManyAndReturnArgs} args - Arguments to create many ChatMessages.
+     * @example
+     * // Create many ChatMessages
+     * const chatMessage = await prisma.chatMessage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChatMessages and only return the `id`
+     * const chatMessageWithIdOnly = await prisma.chatMessage.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChatMessageCreateManyAndReturnArgs>(args?: SelectSubset<T, ChatMessageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ChatMessage.
+     * @param {ChatMessageDeleteArgs} args - Arguments to delete one ChatMessage.
+     * @example
+     * // Delete one ChatMessage
+     * const ChatMessage = await prisma.chatMessage.delete({
+     *   where: {
+     *     // ... filter to delete one ChatMessage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChatMessageDeleteArgs>(args: SelectSubset<T, ChatMessageDeleteArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ChatMessage.
+     * @param {ChatMessageUpdateArgs} args - Arguments to update one ChatMessage.
+     * @example
+     * // Update one ChatMessage
+     * const chatMessage = await prisma.chatMessage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChatMessageUpdateArgs>(args: SelectSubset<T, ChatMessageUpdateArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ChatMessages.
+     * @param {ChatMessageDeleteManyArgs} args - Arguments to filter ChatMessages to delete.
+     * @example
+     * // Delete a few ChatMessages
+     * const { count } = await prisma.chatMessage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChatMessageDeleteManyArgs>(args?: SelectSubset<T, ChatMessageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChatMessages
+     * const chatMessage = await prisma.chatMessage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChatMessageUpdateManyArgs>(args: SelectSubset<T, ChatMessageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatMessages and returns the data updated in the database.
+     * @param {ChatMessageUpdateManyAndReturnArgs} args - Arguments to update many ChatMessages.
+     * @example
+     * // Update many ChatMessages
+     * const chatMessage = await prisma.chatMessage.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ChatMessages and only return the `id`
+     * const chatMessageWithIdOnly = await prisma.chatMessage.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ChatMessageUpdateManyAndReturnArgs>(args: SelectSubset<T, ChatMessageUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ChatMessage.
+     * @param {ChatMessageUpsertArgs} args - Arguments to update or create a ChatMessage.
+     * @example
+     * // Update or create a ChatMessage
+     * const chatMessage = await prisma.chatMessage.upsert({
+     *   create: {
+     *     // ... data to create a ChatMessage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChatMessage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChatMessageUpsertArgs>(args: SelectSubset<T, ChatMessageUpsertArgs<ExtArgs>>): Prisma__ChatMessageClient<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ChatMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageCountArgs} args - Arguments to filter ChatMessages to count.
+     * @example
+     * // Count the number of ChatMessages
+     * const count = await prisma.chatMessage.count({
+     *   where: {
+     *     // ... the filter for the ChatMessages we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChatMessageCountArgs>(
+      args?: Subset<T, ChatMessageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChatMessageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChatMessage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChatMessageAggregateArgs>(args: Subset<T, ChatMessageAggregateArgs>): Prisma.PrismaPromise<GetChatMessageAggregateType<T>>
+
+    /**
+     * Group by ChatMessage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatMessageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChatMessageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChatMessageGroupByArgs['orderBy'] }
+        : { orderBy?: ChatMessageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChatMessageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChatMessageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChatMessage model
+   */
+  readonly fields: ChatMessageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChatMessage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChatMessageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChatMessage model
+   */
+  interface ChatMessageFieldRefs {
+    readonly id: FieldRef<"ChatMessage", 'String'>
+    readonly kind: FieldRef<"ChatMessage", 'String'>
+    readonly channelId: FieldRef<"ChatMessage", 'String'>
+    readonly name: FieldRef<"ChatMessage", 'String'>
+    readonly handle: FieldRef<"ChatMessage", 'String'>
+    readonly text: FieldRef<"ChatMessage", 'String'>
+    readonly reactions: FieldRef<"ChatMessage", 'Json'>
+    readonly createdAt: FieldRef<"ChatMessage", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChatMessage findUnique
+   */
+  export type ChatMessageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * Filter, which ChatMessage to fetch.
+     */
+    where: ChatMessageWhereUniqueInput
+  }
+
+  /**
+   * ChatMessage findUniqueOrThrow
+   */
+  export type ChatMessageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * Filter, which ChatMessage to fetch.
+     */
+    where: ChatMessageWhereUniqueInput
+  }
+
+  /**
+   * ChatMessage findFirst
+   */
+  export type ChatMessageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * Filter, which ChatMessage to fetch.
+     */
+    where?: ChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessageOrderByWithRelationInput | ChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatMessages.
+     */
+    cursor?: ChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatMessages.
+     */
+    distinct?: ChatMessageScalarFieldEnum | ChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * ChatMessage findFirstOrThrow
+   */
+  export type ChatMessageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * Filter, which ChatMessage to fetch.
+     */
+    where?: ChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessageOrderByWithRelationInput | ChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatMessages.
+     */
+    cursor?: ChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatMessages.
+     */
+    distinct?: ChatMessageScalarFieldEnum | ChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * ChatMessage findMany
+   */
+  export type ChatMessageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * Filter, which ChatMessages to fetch.
+     */
+    where?: ChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatMessages to fetch.
+     */
+    orderBy?: ChatMessageOrderByWithRelationInput | ChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChatMessages.
+     */
+    cursor?: ChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatMessages.
+     */
+    distinct?: ChatMessageScalarFieldEnum | ChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * ChatMessage create
+   */
+  export type ChatMessageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ChatMessage.
+     */
+    data: XOR<ChatMessageCreateInput, ChatMessageUncheckedCreateInput>
+  }
+
+  /**
+   * ChatMessage createMany
+   */
+  export type ChatMessageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChatMessages.
+     */
+    data: ChatMessageCreateManyInput | ChatMessageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChatMessage createManyAndReturn
+   */
+  export type ChatMessageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * The data used to create many ChatMessages.
+     */
+    data: ChatMessageCreateManyInput | ChatMessageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChatMessage update
+   */
+  export type ChatMessageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ChatMessage.
+     */
+    data: XOR<ChatMessageUpdateInput, ChatMessageUncheckedUpdateInput>
+    /**
+     * Choose, which ChatMessage to update.
+     */
+    where: ChatMessageWhereUniqueInput
+  }
+
+  /**
+   * ChatMessage updateMany
+   */
+  export type ChatMessageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChatMessages.
+     */
+    data: XOR<ChatMessageUpdateManyMutationInput, ChatMessageUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatMessages to update
+     */
+    where?: ChatMessageWhereInput
+    /**
+     * Limit how many ChatMessages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatMessage updateManyAndReturn
+   */
+  export type ChatMessageUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * The data used to update ChatMessages.
+     */
+    data: XOR<ChatMessageUpdateManyMutationInput, ChatMessageUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatMessages to update
+     */
+    where?: ChatMessageWhereInput
+    /**
+     * Limit how many ChatMessages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatMessage upsert
+   */
+  export type ChatMessageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ChatMessage to update in case it exists.
+     */
+    where: ChatMessageWhereUniqueInput
+    /**
+     * In case the ChatMessage found by the `where` argument doesn't exist, create a new ChatMessage with this data.
+     */
+    create: XOR<ChatMessageCreateInput, ChatMessageUncheckedCreateInput>
+    /**
+     * In case the ChatMessage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChatMessageUpdateInput, ChatMessageUncheckedUpdateInput>
+  }
+
+  /**
+   * ChatMessage delete
+   */
+  export type ChatMessageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
+    /**
+     * Filter which ChatMessage to delete.
+     */
+    where: ChatMessageWhereUniqueInput
+  }
+
+  /**
+   * ChatMessage deleteMany
+   */
+  export type ChatMessageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatMessages to delete
+     */
+    where?: ChatMessageWhereInput
+    /**
+     * Limit how many ChatMessages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatMessage without action
+   */
+  export type ChatMessageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessage
+     */
+    select?: ChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatMessage
+     */
+    omit?: ChatMessageOmit<ExtArgs> | null
   }
 
 
@@ -22024,6 +24495,7 @@ export namespace Prisma {
     currentViewersCount: number | null
     venueParticipantCount: number | null
     revenue: number | null
+    amount: number | null
     platformFee: number | null
   }
 
@@ -22040,6 +24512,7 @@ export namespace Prisma {
     currentViewersCount: number | null
     venueParticipantCount: number | null
     revenue: number | null
+    amount: number | null
     platformFee: number | null
   }
 
@@ -22096,6 +24569,7 @@ export namespace Prisma {
     currentViewersCount: number | null
     venueParticipantCount: number | null
     revenue: number | null
+    amount: number | null
     platformFee: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -22154,6 +24628,7 @@ export namespace Prisma {
     currentViewersCount: number | null
     venueParticipantCount: number | null
     revenue: number | null
+    amount: number | null
     platformFee: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -22213,6 +24688,7 @@ export namespace Prisma {
     currentViewersCount: number
     venueParticipantCount: number
     revenue: number
+    amount: number
     platformFee: number
     createdAt: number
     updatedAt: number
@@ -22233,6 +24709,7 @@ export namespace Prisma {
     currentViewersCount?: true
     venueParticipantCount?: true
     revenue?: true
+    amount?: true
     platformFee?: true
   }
 
@@ -22249,6 +24726,7 @@ export namespace Prisma {
     currentViewersCount?: true
     venueParticipantCount?: true
     revenue?: true
+    amount?: true
     platformFee?: true
   }
 
@@ -22305,6 +24783,7 @@ export namespace Prisma {
     currentViewersCount?: true
     venueParticipantCount?: true
     revenue?: true
+    amount?: true
     platformFee?: true
     createdAt?: true
     updatedAt?: true
@@ -22363,6 +24842,7 @@ export namespace Prisma {
     currentViewersCount?: true
     venueParticipantCount?: true
     revenue?: true
+    amount?: true
     platformFee?: true
     createdAt?: true
     updatedAt?: true
@@ -22422,6 +24902,7 @@ export namespace Prisma {
     currentViewersCount?: true
     venueParticipantCount?: true
     revenue?: true
+    amount?: true
     platformFee?: true
     createdAt?: true
     updatedAt?: true
@@ -22568,6 +25049,7 @@ export namespace Prisma {
     currentViewersCount: number
     venueParticipantCount: number
     revenue: number
+    amount: number
     platformFee: number
     createdAt: Date
     updatedAt: Date
@@ -22646,6 +25128,7 @@ export namespace Prisma {
     currentViewersCount?: boolean
     venueParticipantCount?: boolean
     revenue?: boolean
+    amount?: boolean
     platformFee?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -22713,6 +25196,7 @@ export namespace Prisma {
     currentViewersCount?: boolean
     venueParticipantCount?: boolean
     revenue?: boolean
+    amount?: boolean
     platformFee?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -22773,6 +25257,7 @@ export namespace Prisma {
     currentViewersCount?: boolean
     venueParticipantCount?: boolean
     revenue?: boolean
+    amount?: boolean
     platformFee?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -22833,12 +25318,13 @@ export namespace Prisma {
     currentViewersCount?: boolean
     venueParticipantCount?: boolean
     revenue?: boolean
+    amount?: boolean
     platformFee?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CreatorEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "title" | "description" | "category" | "status" | "isPrivate" | "isPaid" | "requireTicket" | "enableDonations" | "enableLocationRestriction" | "locationRestrictionType" | "address" | "locationName" | "locationCountry" | "locationState" | "locationType" | "locationLat" | "locationLon" | "locationFullAddress" | "thumbnailUrl" | "thumbnailFileId" | "thumbnailVideoUrl" | "thumbnailVideoFileId" | "recordedVideoUrl" | "recordedVideoFileId" | "streamKey" | "rtmpUrl" | "ingressId" | "livekitRoomName" | "recordingEnabled" | "recordingStatus" | "recordingAssetId" | "recordingUrl" | "recordingFileId" | "recordingStartedAt" | "recordingEndedAt" | "hasRecordedVideo" | "timezone" | "scheduledAt" | "startedAt" | "endedAt" | "durationMinutes" | "maxViewers" | "estimatedUsers" | "tags" | "viewsCount" | "likesCount" | "commentsCount" | "peakViewersCount" | "currentViewersCount" | "venueParticipantCount" | "revenue" | "platformFee" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEvent"]>
+  export type CreatorEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "title" | "description" | "category" | "status" | "isPrivate" | "isPaid" | "requireTicket" | "enableDonations" | "enableLocationRestriction" | "locationRestrictionType" | "address" | "locationName" | "locationCountry" | "locationState" | "locationType" | "locationLat" | "locationLon" | "locationFullAddress" | "thumbnailUrl" | "thumbnailFileId" | "thumbnailVideoUrl" | "thumbnailVideoFileId" | "recordedVideoUrl" | "recordedVideoFileId" | "streamKey" | "rtmpUrl" | "ingressId" | "livekitRoomName" | "recordingEnabled" | "recordingStatus" | "recordingAssetId" | "recordingUrl" | "recordingFileId" | "recordingStartedAt" | "recordingEndedAt" | "hasRecordedVideo" | "timezone" | "scheduledAt" | "startedAt" | "endedAt" | "durationMinutes" | "maxViewers" | "estimatedUsers" | "tags" | "viewsCount" | "likesCount" | "commentsCount" | "peakViewersCount" | "currentViewersCount" | "venueParticipantCount" | "revenue" | "amount" | "platformFee" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEvent"]>
   export type CreatorEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
     restrictedLocations?: boolean | CreatorEvent$restrictedLocationsArgs<ExtArgs>
@@ -22921,6 +25407,7 @@ export namespace Prisma {
       currentViewersCount: number
       venueParticipantCount: number
       revenue: number
+      amount: number
       platformFee: number
       createdAt: Date
       updatedAt: Date
@@ -23407,6 +25894,7 @@ export namespace Prisma {
     readonly currentViewersCount: FieldRef<"CreatorEvent", 'Int'>
     readonly venueParticipantCount: FieldRef<"CreatorEvent", 'Int'>
     readonly revenue: FieldRef<"CreatorEvent", 'Int'>
+    readonly amount: FieldRef<"CreatorEvent", 'Int'>
     readonly platformFee: FieldRef<"CreatorEvent", 'Int'>
     readonly createdAt: FieldRef<"CreatorEvent", 'DateTime'>
     readonly updatedAt: FieldRef<"CreatorEvent", 'DateTime'>
@@ -25156,6 +27644,7 @@ export namespace Prisma {
     quantity: number | null
     soldCount: number | null
     revenue: number | null
+    amount: number | null
     platformFee: number | null
   }
 
@@ -25164,6 +27653,7 @@ export namespace Prisma {
     quantity: number | null
     soldCount: number | null
     revenue: number | null
+    amount: number | null
     platformFee: number | null
   }
 
@@ -25176,6 +27666,7 @@ export namespace Prisma {
     quantity: number | null
     soldCount: number | null
     revenue: number | null
+    amount: number | null
     platformFee: number | null
     description: string | null
     status: $Enums.CreatorEventTicketStatus | null
@@ -25192,6 +27683,7 @@ export namespace Prisma {
     quantity: number | null
     soldCount: number | null
     revenue: number | null
+    amount: number | null
     platformFee: number | null
     description: string | null
     status: $Enums.CreatorEventTicketStatus | null
@@ -25208,6 +27700,7 @@ export namespace Prisma {
     quantity: number
     soldCount: number
     revenue: number
+    amount: number
     platformFee: number
     description: number
     benefits: number
@@ -25223,6 +27716,7 @@ export namespace Prisma {
     quantity?: true
     soldCount?: true
     revenue?: true
+    amount?: true
     platformFee?: true
   }
 
@@ -25231,6 +27725,7 @@ export namespace Prisma {
     quantity?: true
     soldCount?: true
     revenue?: true
+    amount?: true
     platformFee?: true
   }
 
@@ -25243,6 +27738,7 @@ export namespace Prisma {
     quantity?: true
     soldCount?: true
     revenue?: true
+    amount?: true
     platformFee?: true
     description?: true
     status?: true
@@ -25259,6 +27755,7 @@ export namespace Prisma {
     quantity?: true
     soldCount?: true
     revenue?: true
+    amount?: true
     platformFee?: true
     description?: true
     status?: true
@@ -25275,6 +27772,7 @@ export namespace Prisma {
     quantity?: true
     soldCount?: true
     revenue?: true
+    amount?: true
     platformFee?: true
     description?: true
     benefits?: true
@@ -25379,6 +27877,7 @@ export namespace Prisma {
     quantity: number
     soldCount: number
     revenue: number
+    amount: number
     platformFee: number
     description: string | null
     benefits: string[]
@@ -25415,6 +27914,7 @@ export namespace Prisma {
     quantity?: boolean
     soldCount?: boolean
     revenue?: boolean
+    amount?: boolean
     platformFee?: boolean
     description?: boolean
     benefits?: boolean
@@ -25436,6 +27936,7 @@ export namespace Prisma {
     quantity?: boolean
     soldCount?: boolean
     revenue?: boolean
+    amount?: boolean
     platformFee?: boolean
     description?: boolean
     benefits?: boolean
@@ -25454,6 +27955,7 @@ export namespace Prisma {
     quantity?: boolean
     soldCount?: boolean
     revenue?: boolean
+    amount?: boolean
     platformFee?: boolean
     description?: boolean
     benefits?: boolean
@@ -25472,6 +27974,7 @@ export namespace Prisma {
     quantity?: boolean
     soldCount?: boolean
     revenue?: boolean
+    amount?: boolean
     platformFee?: boolean
     description?: boolean
     benefits?: boolean
@@ -25480,7 +27983,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CreatorEventTicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "ticketType" | "access" | "price" | "quantity" | "soldCount" | "revenue" | "platformFee" | "description" | "benefits" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEventTicket"]>
+  export type CreatorEventTicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "ticketType" | "access" | "price" | "quantity" | "soldCount" | "revenue" | "amount" | "platformFee" | "description" | "benefits" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEventTicket"]>
   export type CreatorEventTicketInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     event?: boolean | CreatorEventDefaultArgs<ExtArgs>
     purchases?: boolean | CreatorEventTicket$purchasesArgs<ExtArgs>
@@ -25510,6 +28013,7 @@ export namespace Prisma {
       quantity: number
       soldCount: number
       revenue: number
+      amount: number
       platformFee: number
       description: string | null
       benefits: string[]
@@ -25950,6 +28454,7 @@ export namespace Prisma {
     readonly quantity: FieldRef<"CreatorEventTicket", 'Int'>
     readonly soldCount: FieldRef<"CreatorEventTicket", 'Int'>
     readonly revenue: FieldRef<"CreatorEventTicket", 'Int'>
+    readonly amount: FieldRef<"CreatorEventTicket", 'Int'>
     readonly platformFee: FieldRef<"CreatorEventTicket", 'Int'>
     readonly description: FieldRef<"CreatorEventTicket", 'String'>
     readonly benefits: FieldRef<"CreatorEventTicket", 'String[]'>
@@ -26437,12 +28942,16 @@ export namespace Prisma {
 
   export type CreatorEventTicketPurchaseAvgAggregateOutputType = {
     quantity: number | null
+    revenue: number | null
     amount: number | null
+    platformFee: number | null
   }
 
   export type CreatorEventTicketPurchaseSumAggregateOutputType = {
     quantity: number | null
+    revenue: number | null
     amount: number | null
+    platformFee: number | null
   }
 
   export type CreatorEventTicketPurchaseMinAggregateOutputType = {
@@ -26452,7 +28961,9 @@ export namespace Prisma {
     buyerEmail: string | null
     buyerPhone: string | null
     quantity: number | null
+    revenue: number | null
     amount: number | null
+    platformFee: number | null
     currency: string | null
     status: $Enums.CreatorEventTicketPurchaseStatus | null
     transactionId: string | null
@@ -26470,7 +28981,9 @@ export namespace Prisma {
     buyerEmail: string | null
     buyerPhone: string | null
     quantity: number | null
+    revenue: number | null
     amount: number | null
+    platformFee: number | null
     currency: string | null
     status: $Enums.CreatorEventTicketPurchaseStatus | null
     transactionId: string | null
@@ -26488,7 +29001,9 @@ export namespace Prisma {
     buyerEmail: number
     buyerPhone: number
     quantity: number
+    revenue: number
     amount: number
+    platformFee: number
     currency: number
     status: number
     transactionId: number
@@ -26503,12 +29018,16 @@ export namespace Prisma {
 
   export type CreatorEventTicketPurchaseAvgAggregateInputType = {
     quantity?: true
+    revenue?: true
     amount?: true
+    platformFee?: true
   }
 
   export type CreatorEventTicketPurchaseSumAggregateInputType = {
     quantity?: true
+    revenue?: true
     amount?: true
+    platformFee?: true
   }
 
   export type CreatorEventTicketPurchaseMinAggregateInputType = {
@@ -26518,7 +29037,9 @@ export namespace Prisma {
     buyerEmail?: true
     buyerPhone?: true
     quantity?: true
+    revenue?: true
     amount?: true
+    platformFee?: true
     currency?: true
     status?: true
     transactionId?: true
@@ -26536,7 +29057,9 @@ export namespace Prisma {
     buyerEmail?: true
     buyerPhone?: true
     quantity?: true
+    revenue?: true
     amount?: true
+    platformFee?: true
     currency?: true
     status?: true
     transactionId?: true
@@ -26554,7 +29077,9 @@ export namespace Prisma {
     buyerEmail?: true
     buyerPhone?: true
     quantity?: true
+    revenue?: true
     amount?: true
+    platformFee?: true
     currency?: true
     status?: true
     transactionId?: true
@@ -26659,7 +29184,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone: string | null
     quantity: number
+    revenue: number
     amount: number
+    platformFee: number
     currency: string
     status: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -26696,7 +29223,9 @@ export namespace Prisma {
     buyerEmail?: boolean
     buyerPhone?: boolean
     quantity?: boolean
+    revenue?: boolean
     amount?: boolean
+    platformFee?: boolean
     currency?: boolean
     status?: boolean
     transactionId?: boolean
@@ -26719,7 +29248,9 @@ export namespace Prisma {
     buyerEmail?: boolean
     buyerPhone?: boolean
     quantity?: boolean
+    revenue?: boolean
     amount?: boolean
+    platformFee?: boolean
     currency?: boolean
     status?: boolean
     transactionId?: boolean
@@ -26739,7 +29270,9 @@ export namespace Prisma {
     buyerEmail?: boolean
     buyerPhone?: boolean
     quantity?: boolean
+    revenue?: boolean
     amount?: boolean
+    platformFee?: boolean
     currency?: boolean
     status?: boolean
     transactionId?: boolean
@@ -26759,7 +29292,9 @@ export namespace Prisma {
     buyerEmail?: boolean
     buyerPhone?: boolean
     quantity?: boolean
+    revenue?: boolean
     amount?: boolean
+    platformFee?: boolean
     currency?: boolean
     status?: boolean
     transactionId?: boolean
@@ -26770,7 +29305,7 @@ export namespace Prisma {
     checkedInByUserId?: boolean
   }
 
-  export type CreatorEventTicketPurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ticketId" | "buyerName" | "buyerEmail" | "buyerPhone" | "quantity" | "amount" | "currency" | "status" | "transactionId" | "ticketCode" | "purchasedAt" | "refundedAt" | "checkedInAt" | "checkedInByUserId", ExtArgs["result"]["creatorEventTicketPurchase"]>
+  export type CreatorEventTicketPurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ticketId" | "buyerName" | "buyerEmail" | "buyerPhone" | "quantity" | "revenue" | "amount" | "platformFee" | "currency" | "status" | "transactionId" | "ticketCode" | "purchasedAt" | "refundedAt" | "checkedInAt" | "checkedInByUserId", ExtArgs["result"]["creatorEventTicketPurchase"]>
   export type CreatorEventTicketPurchaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     ticket?: boolean | CreatorEventTicketDefaultArgs<ExtArgs>
     checkedInByUser?: boolean | CreatorEventTicketPurchase$checkedInByUserArgs<ExtArgs>
@@ -26802,7 +29337,9 @@ export namespace Prisma {
       buyerEmail: string
       buyerPhone: string | null
       quantity: number
+      revenue: number
       amount: number
+      platformFee: number
       currency: string
       status: $Enums.CreatorEventTicketPurchaseStatus
       transactionId: string
@@ -27244,7 +29781,9 @@ export namespace Prisma {
     readonly buyerEmail: FieldRef<"CreatorEventTicketPurchase", 'String'>
     readonly buyerPhone: FieldRef<"CreatorEventTicketPurchase", 'String'>
     readonly quantity: FieldRef<"CreatorEventTicketPurchase", 'Int'>
+    readonly revenue: FieldRef<"CreatorEventTicketPurchase", 'Int'>
     readonly amount: FieldRef<"CreatorEventTicketPurchase", 'Int'>
+    readonly platformFee: FieldRef<"CreatorEventTicketPurchase", 'Int'>
     readonly currency: FieldRef<"CreatorEventTicketPurchase", 'String'>
     readonly status: FieldRef<"CreatorEventTicketPurchase", 'CreatorEventTicketPurchaseStatus'>
     readonly transactionId: FieldRef<"CreatorEventTicketPurchase", 'String'>
@@ -37036,6 +39575,29 @@ export namespace Prisma {
   export type SuperAdminSettingScalarFieldEnum = (typeof SuperAdminSettingScalarFieldEnum)[keyof typeof SuperAdminSettingScalarFieldEnum]
 
 
+  export const EnterpriseRequestScalarFieldEnum: {
+    id: 'id',
+    company: 'company',
+    contactPerson: 'contactPerson',
+    email: 'email',
+    phone: 'phone',
+    website: 'website',
+    companySize: 'companySize',
+    industry: 'industry',
+    address: 'address',
+    description: 'description',
+    requirements: 'requirements',
+    estimatedUsers: 'estimatedUsers',
+    budget: 'budget',
+    timeline: 'timeline',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type EnterpriseRequestScalarFieldEnum = (typeof EnterpriseRequestScalarFieldEnum)[keyof typeof EnterpriseRequestScalarFieldEnum]
+
+
   export const AuthCredentialScalarFieldEnum: {
     email: 'email',
     passwordHash: 'passwordHash',
@@ -37112,6 +39674,7 @@ export namespace Prisma {
     currency: 'currency',
     status: 'status',
     note: 'note',
+    receiptUrl: 'receiptUrl',
     transactionId: 'transactionId',
     requestedAt: 'requestedAt',
     processedAt: 'processedAt',
@@ -37157,6 +39720,7 @@ export namespace Prisma {
     rent24Price: 'rent24Price',
     rent48Price: 'rent48Price',
     purchasePrice: 'purchasePrice',
+    amount: 'amount',
     revenue: 'revenue',
     platformFee: 'platformFee',
     tags: 'tags',
@@ -37185,7 +39749,9 @@ export namespace Prisma {
     buyerPhone: 'buyerPhone',
     purchaseType: 'purchaseType',
     accessCode: 'accessCode',
+    revenue: 'revenue',
     amount: 'amount',
+    platformFee: 'platformFee',
     currency: 'currency',
     status: 'status',
     transactionId: 'transactionId',
@@ -37205,6 +39771,20 @@ export namespace Prisma {
   };
 
   export type CreatorVideoViewScalarFieldEnum = (typeof CreatorVideoViewScalarFieldEnum)[keyof typeof CreatorVideoViewScalarFieldEnum]
+
+
+  export const ChatMessageScalarFieldEnum: {
+    id: 'id',
+    kind: 'kind',
+    channelId: 'channelId',
+    name: 'name',
+    handle: 'handle',
+    text: 'text',
+    reactions: 'reactions',
+    createdAt: 'createdAt'
+  };
+
+  export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
 
 
   export const CreatorVideoLikeScalarFieldEnum: {
@@ -37296,6 +39876,7 @@ export namespace Prisma {
     currentViewersCount: 'currentViewersCount',
     venueParticipantCount: 'venueParticipantCount',
     revenue: 'revenue',
+    amount: 'amount',
     platformFee: 'platformFee',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -37329,6 +39910,7 @@ export namespace Prisma {
     quantity: 'quantity',
     soldCount: 'soldCount',
     revenue: 'revenue',
+    amount: 'amount',
     platformFee: 'platformFee',
     description: 'description',
     benefits: 'benefits',
@@ -37347,7 +39929,9 @@ export namespace Prisma {
     buyerEmail: 'buyerEmail',
     buyerPhone: 'buyerPhone',
     quantity: 'quantity',
+    revenue: 'revenue',
     amount: 'amount',
+    platformFee: 'platformFee',
     currency: 'currency',
     status: 'status',
     transactionId: 'transactionId',
@@ -37489,6 +40073,13 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -37503,6 +40094,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -37598,6 +40198,20 @@ export namespace Prisma {
    * Reference to a field of type 'SuperAdminSettingSection[]'
    */
   export type ListEnumSuperAdminSettingSectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SuperAdminSettingSection[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -38039,6 +40653,120 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"SuperAdminSetting"> | Date | string
   }
 
+  export type EnterpriseRequestWhereInput = {
+    AND?: EnterpriseRequestWhereInput | EnterpriseRequestWhereInput[]
+    OR?: EnterpriseRequestWhereInput[]
+    NOT?: EnterpriseRequestWhereInput | EnterpriseRequestWhereInput[]
+    id?: StringFilter<"EnterpriseRequest"> | string
+    company?: StringFilter<"EnterpriseRequest"> | string
+    contactPerson?: StringFilter<"EnterpriseRequest"> | string
+    email?: StringFilter<"EnterpriseRequest"> | string
+    phone?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    website?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    companySize?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    industry?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    address?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    description?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    requirements?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    estimatedUsers?: IntNullableFilter<"EnterpriseRequest"> | number | null
+    budget?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    timeline?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    status?: StringFilter<"EnterpriseRequest"> | string
+    createdAt?: DateTimeFilter<"EnterpriseRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"EnterpriseRequest"> | Date | string
+  }
+
+  export type EnterpriseRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    company?: SortOrder
+    contactPerson?: SortOrder
+    email?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    companySize?: SortOrderInput | SortOrder
+    industry?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    requirements?: SortOrderInput | SortOrder
+    estimatedUsers?: SortOrderInput | SortOrder
+    budget?: SortOrderInput | SortOrder
+    timeline?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnterpriseRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: EnterpriseRequestWhereInput | EnterpriseRequestWhereInput[]
+    OR?: EnterpriseRequestWhereInput[]
+    NOT?: EnterpriseRequestWhereInput | EnterpriseRequestWhereInput[]
+    company?: StringFilter<"EnterpriseRequest"> | string
+    contactPerson?: StringFilter<"EnterpriseRequest"> | string
+    email?: StringFilter<"EnterpriseRequest"> | string
+    phone?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    website?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    companySize?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    industry?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    address?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    description?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    requirements?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    estimatedUsers?: IntNullableFilter<"EnterpriseRequest"> | number | null
+    budget?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    timeline?: StringNullableFilter<"EnterpriseRequest"> | string | null
+    status?: StringFilter<"EnterpriseRequest"> | string
+    createdAt?: DateTimeFilter<"EnterpriseRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"EnterpriseRequest"> | Date | string
+  }, "id">
+
+  export type EnterpriseRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    company?: SortOrder
+    contactPerson?: SortOrder
+    email?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    companySize?: SortOrderInput | SortOrder
+    industry?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    requirements?: SortOrderInput | SortOrder
+    estimatedUsers?: SortOrderInput | SortOrder
+    budget?: SortOrderInput | SortOrder
+    timeline?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: EnterpriseRequestCountOrderByAggregateInput
+    _avg?: EnterpriseRequestAvgOrderByAggregateInput
+    _max?: EnterpriseRequestMaxOrderByAggregateInput
+    _min?: EnterpriseRequestMinOrderByAggregateInput
+    _sum?: EnterpriseRequestSumOrderByAggregateInput
+  }
+
+  export type EnterpriseRequestScalarWhereWithAggregatesInput = {
+    AND?: EnterpriseRequestScalarWhereWithAggregatesInput | EnterpriseRequestScalarWhereWithAggregatesInput[]
+    OR?: EnterpriseRequestScalarWhereWithAggregatesInput[]
+    NOT?: EnterpriseRequestScalarWhereWithAggregatesInput | EnterpriseRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"EnterpriseRequest"> | string
+    company?: StringWithAggregatesFilter<"EnterpriseRequest"> | string
+    contactPerson?: StringWithAggregatesFilter<"EnterpriseRequest"> | string
+    email?: StringWithAggregatesFilter<"EnterpriseRequest"> | string
+    phone?: StringNullableWithAggregatesFilter<"EnterpriseRequest"> | string | null
+    website?: StringNullableWithAggregatesFilter<"EnterpriseRequest"> | string | null
+    companySize?: StringNullableWithAggregatesFilter<"EnterpriseRequest"> | string | null
+    industry?: StringNullableWithAggregatesFilter<"EnterpriseRequest"> | string | null
+    address?: StringNullableWithAggregatesFilter<"EnterpriseRequest"> | string | null
+    description?: StringNullableWithAggregatesFilter<"EnterpriseRequest"> | string | null
+    requirements?: StringNullableWithAggregatesFilter<"EnterpriseRequest"> | string | null
+    estimatedUsers?: IntNullableWithAggregatesFilter<"EnterpriseRequest"> | number | null
+    budget?: StringNullableWithAggregatesFilter<"EnterpriseRequest"> | string | null
+    timeline?: StringNullableWithAggregatesFilter<"EnterpriseRequest"> | string | null
+    status?: StringWithAggregatesFilter<"EnterpriseRequest"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"EnterpriseRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"EnterpriseRequest"> | Date | string
+  }
+
   export type AuthCredentialWhereInput = {
     AND?: AuthCredentialWhereInput | AuthCredentialWhereInput[]
     OR?: AuthCredentialWhereInput[]
@@ -38420,6 +41148,7 @@ export namespace Prisma {
     currency?: StringFilter<"CreatorPayoutRequest"> | string
     status?: StringFilter<"CreatorPayoutRequest"> | string
     note?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    receiptUrl?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
     transactionId?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
     requestedAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
     processedAt?: DateTimeNullableFilter<"CreatorPayoutRequest"> | Date | string | null
@@ -38437,6 +41166,7 @@ export namespace Prisma {
     currency?: SortOrder
     status?: SortOrder
     note?: SortOrderInput | SortOrder
+    receiptUrl?: SortOrderInput | SortOrder
     transactionId?: SortOrderInput | SortOrder
     requestedAt?: SortOrder
     processedAt?: SortOrderInput | SortOrder
@@ -38457,6 +41187,7 @@ export namespace Prisma {
     currency?: StringFilter<"CreatorPayoutRequest"> | string
     status?: StringFilter<"CreatorPayoutRequest"> | string
     note?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    receiptUrl?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
     transactionId?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
     requestedAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
     processedAt?: DateTimeNullableFilter<"CreatorPayoutRequest"> | Date | string | null
@@ -38474,6 +41205,7 @@ export namespace Prisma {
     currency?: SortOrder
     status?: SortOrder
     note?: SortOrderInput | SortOrder
+    receiptUrl?: SortOrderInput | SortOrder
     transactionId?: SortOrderInput | SortOrder
     requestedAt?: SortOrder
     processedAt?: SortOrderInput | SortOrder
@@ -38497,6 +41229,7 @@ export namespace Prisma {
     currency?: StringWithAggregatesFilter<"CreatorPayoutRequest"> | string
     status?: StringWithAggregatesFilter<"CreatorPayoutRequest"> | string
     note?: StringNullableWithAggregatesFilter<"CreatorPayoutRequest"> | string | null
+    receiptUrl?: StringNullableWithAggregatesFilter<"CreatorPayoutRequest"> | string | null
     transactionId?: StringNullableWithAggregatesFilter<"CreatorPayoutRequest"> | string | null
     requestedAt?: DateTimeWithAggregatesFilter<"CreatorPayoutRequest"> | Date | string
     processedAt?: DateTimeNullableWithAggregatesFilter<"CreatorPayoutRequest"> | Date | string | null
@@ -38605,6 +41338,7 @@ export namespace Prisma {
     rent24Price?: IntNullableFilter<"CreatorVideo"> | number | null
     rent48Price?: IntNullableFilter<"CreatorVideo"> | number | null
     purchasePrice?: IntNullableFilter<"CreatorVideo"> | number | null
+    amount?: IntFilter<"CreatorVideo"> | number
     revenue?: IntFilter<"CreatorVideo"> | number
     platformFee?: IntFilter<"CreatorVideo"> | number
     tags?: StringNullableListFilter<"CreatorVideo">
@@ -38646,6 +41380,7 @@ export namespace Prisma {
     rent24Price?: SortOrderInput | SortOrder
     rent48Price?: SortOrderInput | SortOrder
     purchasePrice?: SortOrderInput | SortOrder
+    amount?: SortOrder
     revenue?: SortOrder
     platformFee?: SortOrder
     tags?: SortOrder
@@ -38690,6 +41425,7 @@ export namespace Prisma {
     rent24Price?: IntNullableFilter<"CreatorVideo"> | number | null
     rent48Price?: IntNullableFilter<"CreatorVideo"> | number | null
     purchasePrice?: IntNullableFilter<"CreatorVideo"> | number | null
+    amount?: IntFilter<"CreatorVideo"> | number
     revenue?: IntFilter<"CreatorVideo"> | number
     platformFee?: IntFilter<"CreatorVideo"> | number
     tags?: StringNullableListFilter<"CreatorVideo">
@@ -38731,6 +41467,7 @@ export namespace Prisma {
     rent24Price?: SortOrderInput | SortOrder
     rent48Price?: SortOrderInput | SortOrder
     purchasePrice?: SortOrderInput | SortOrder
+    amount?: SortOrder
     revenue?: SortOrder
     platformFee?: SortOrder
     tags?: SortOrder
@@ -38774,6 +41511,7 @@ export namespace Prisma {
     rent24Price?: IntNullableWithAggregatesFilter<"CreatorVideo"> | number | null
     rent48Price?: IntNullableWithAggregatesFilter<"CreatorVideo"> | number | null
     purchasePrice?: IntNullableWithAggregatesFilter<"CreatorVideo"> | number | null
+    amount?: IntWithAggregatesFilter<"CreatorVideo"> | number
     revenue?: IntWithAggregatesFilter<"CreatorVideo"> | number
     platformFee?: IntWithAggregatesFilter<"CreatorVideo"> | number
     tags?: StringNullableListFilter<"CreatorVideo">
@@ -38802,7 +41540,9 @@ export namespace Prisma {
     buyerPhone?: StringNullableFilter<"CreatorVideoPurchase"> | string | null
     purchaseType?: StringFilter<"CreatorVideoPurchase"> | string
     accessCode?: StringFilter<"CreatorVideoPurchase"> | string
+    revenue?: IntFilter<"CreatorVideoPurchase"> | number
     amount?: IntFilter<"CreatorVideoPurchase"> | number
+    platformFee?: IntFilter<"CreatorVideoPurchase"> | number
     currency?: StringFilter<"CreatorVideoPurchase"> | string
     status?: StringFilter<"CreatorVideoPurchase"> | string
     transactionId?: StringFilter<"CreatorVideoPurchase"> | string
@@ -38824,7 +41564,9 @@ export namespace Prisma {
     buyerPhone?: SortOrderInput | SortOrder
     purchaseType?: SortOrder
     accessCode?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     transactionId?: SortOrder
@@ -38850,7 +41592,9 @@ export namespace Prisma {
     buyerEmail?: StringNullableFilter<"CreatorVideoPurchase"> | string | null
     buyerPhone?: StringNullableFilter<"CreatorVideoPurchase"> | string | null
     purchaseType?: StringFilter<"CreatorVideoPurchase"> | string
+    revenue?: IntFilter<"CreatorVideoPurchase"> | number
     amount?: IntFilter<"CreatorVideoPurchase"> | number
+    platformFee?: IntFilter<"CreatorVideoPurchase"> | number
     currency?: StringFilter<"CreatorVideoPurchase"> | string
     status?: StringFilter<"CreatorVideoPurchase"> | string
     accessExpiresAt?: DateTimeNullableFilter<"CreatorVideoPurchase"> | Date | string | null
@@ -38871,7 +41615,9 @@ export namespace Prisma {
     buyerPhone?: SortOrderInput | SortOrder
     purchaseType?: SortOrder
     accessCode?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     transactionId?: SortOrder
@@ -38898,7 +41644,9 @@ export namespace Prisma {
     buyerPhone?: StringNullableWithAggregatesFilter<"CreatorVideoPurchase"> | string | null
     purchaseType?: StringWithAggregatesFilter<"CreatorVideoPurchase"> | string
     accessCode?: StringWithAggregatesFilter<"CreatorVideoPurchase"> | string
+    revenue?: IntWithAggregatesFilter<"CreatorVideoPurchase"> | number
     amount?: IntWithAggregatesFilter<"CreatorVideoPurchase"> | number
+    platformFee?: IntWithAggregatesFilter<"CreatorVideoPurchase"> | number
     currency?: StringWithAggregatesFilter<"CreatorVideoPurchase"> | string
     status?: StringWithAggregatesFilter<"CreatorVideoPurchase"> | string
     transactionId?: StringWithAggregatesFilter<"CreatorVideoPurchase"> | string
@@ -38955,6 +41703,73 @@ export namespace Prisma {
     creatorVideoId?: StringWithAggregatesFilter<"CreatorVideoView"> | string
     viewerProfileId?: StringNullableWithAggregatesFilter<"CreatorVideoView"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CreatorVideoView"> | Date | string
+  }
+
+  export type ChatMessageWhereInput = {
+    AND?: ChatMessageWhereInput | ChatMessageWhereInput[]
+    OR?: ChatMessageWhereInput[]
+    NOT?: ChatMessageWhereInput | ChatMessageWhereInput[]
+    id?: StringFilter<"ChatMessage"> | string
+    kind?: StringFilter<"ChatMessage"> | string
+    channelId?: StringFilter<"ChatMessage"> | string
+    name?: StringFilter<"ChatMessage"> | string
+    handle?: StringFilter<"ChatMessage"> | string
+    text?: StringFilter<"ChatMessage"> | string
+    reactions?: JsonFilter<"ChatMessage">
+    createdAt?: DateTimeFilter<"ChatMessage"> | Date | string
+  }
+
+  export type ChatMessageOrderByWithRelationInput = {
+    id?: SortOrder
+    kind?: SortOrder
+    channelId?: SortOrder
+    name?: SortOrder
+    handle?: SortOrder
+    text?: SortOrder
+    reactions?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ChatMessageWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ChatMessageWhereInput | ChatMessageWhereInput[]
+    OR?: ChatMessageWhereInput[]
+    NOT?: ChatMessageWhereInput | ChatMessageWhereInput[]
+    kind?: StringFilter<"ChatMessage"> | string
+    channelId?: StringFilter<"ChatMessage"> | string
+    name?: StringFilter<"ChatMessage"> | string
+    handle?: StringFilter<"ChatMessage"> | string
+    text?: StringFilter<"ChatMessage"> | string
+    reactions?: JsonFilter<"ChatMessage">
+    createdAt?: DateTimeFilter<"ChatMessage"> | Date | string
+  }, "id">
+
+  export type ChatMessageOrderByWithAggregationInput = {
+    id?: SortOrder
+    kind?: SortOrder
+    channelId?: SortOrder
+    name?: SortOrder
+    handle?: SortOrder
+    text?: SortOrder
+    reactions?: SortOrder
+    createdAt?: SortOrder
+    _count?: ChatMessageCountOrderByAggregateInput
+    _max?: ChatMessageMaxOrderByAggregateInput
+    _min?: ChatMessageMinOrderByAggregateInput
+  }
+
+  export type ChatMessageScalarWhereWithAggregatesInput = {
+    AND?: ChatMessageScalarWhereWithAggregatesInput | ChatMessageScalarWhereWithAggregatesInput[]
+    OR?: ChatMessageScalarWhereWithAggregatesInput[]
+    NOT?: ChatMessageScalarWhereWithAggregatesInput | ChatMessageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ChatMessage"> | string
+    kind?: StringWithAggregatesFilter<"ChatMessage"> | string
+    channelId?: StringWithAggregatesFilter<"ChatMessage"> | string
+    name?: StringWithAggregatesFilter<"ChatMessage"> | string
+    handle?: StringWithAggregatesFilter<"ChatMessage"> | string
+    text?: StringWithAggregatesFilter<"ChatMessage"> | string
+    reactions?: JsonWithAggregatesFilter<"ChatMessage">
+    createdAt?: DateTimeWithAggregatesFilter<"ChatMessage"> | Date | string
   }
 
   export type CreatorVideoLikeWhereInput = {
@@ -39197,6 +42012,7 @@ export namespace Prisma {
     currentViewersCount?: IntFilter<"CreatorEvent"> | number
     venueParticipantCount?: IntFilter<"CreatorEvent"> | number
     revenue?: IntFilter<"CreatorEvent"> | number
+    amount?: IntFilter<"CreatorEvent"> | number
     platformFee?: IntFilter<"CreatorEvent"> | number
     createdAt?: DateTimeFilter<"CreatorEvent"> | Date | string
     updatedAt?: DateTimeFilter<"CreatorEvent"> | Date | string
@@ -39263,6 +42079,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -39332,6 +42149,7 @@ export namespace Prisma {
     currentViewersCount?: IntFilter<"CreatorEvent"> | number
     venueParticipantCount?: IntFilter<"CreatorEvent"> | number
     revenue?: IntFilter<"CreatorEvent"> | number
+    amount?: IntFilter<"CreatorEvent"> | number
     platformFee?: IntFilter<"CreatorEvent"> | number
     createdAt?: DateTimeFilter<"CreatorEvent"> | Date | string
     updatedAt?: DateTimeFilter<"CreatorEvent"> | Date | string
@@ -39398,6 +42216,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -39465,6 +42284,7 @@ export namespace Prisma {
     currentViewersCount?: IntWithAggregatesFilter<"CreatorEvent"> | number
     venueParticipantCount?: IntWithAggregatesFilter<"CreatorEvent"> | number
     revenue?: IntWithAggregatesFilter<"CreatorEvent"> | number
+    amount?: IntWithAggregatesFilter<"CreatorEvent"> | number
     platformFee?: IntWithAggregatesFilter<"CreatorEvent"> | number
     createdAt?: DateTimeWithAggregatesFilter<"CreatorEvent"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CreatorEvent"> | Date | string
@@ -39564,6 +42384,7 @@ export namespace Prisma {
     quantity?: IntFilter<"CreatorEventTicket"> | number
     soldCount?: IntFilter<"CreatorEventTicket"> | number
     revenue?: IntFilter<"CreatorEventTicket"> | number
+    amount?: IntFilter<"CreatorEventTicket"> | number
     platformFee?: IntFilter<"CreatorEventTicket"> | number
     description?: StringNullableFilter<"CreatorEventTicket"> | string | null
     benefits?: StringNullableListFilter<"CreatorEventTicket">
@@ -39584,6 +42405,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
     description?: SortOrderInput | SortOrder
     benefits?: SortOrder
@@ -39608,6 +42430,7 @@ export namespace Prisma {
     quantity?: IntFilter<"CreatorEventTicket"> | number
     soldCount?: IntFilter<"CreatorEventTicket"> | number
     revenue?: IntFilter<"CreatorEventTicket"> | number
+    amount?: IntFilter<"CreatorEventTicket"> | number
     platformFee?: IntFilter<"CreatorEventTicket"> | number
     description?: StringNullableFilter<"CreatorEventTicket"> | string | null
     benefits?: StringNullableListFilter<"CreatorEventTicket">
@@ -39628,6 +42451,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
     description?: SortOrderInput | SortOrder
     benefits?: SortOrder
@@ -39653,6 +42477,7 @@ export namespace Prisma {
     quantity?: IntWithAggregatesFilter<"CreatorEventTicket"> | number
     soldCount?: IntWithAggregatesFilter<"CreatorEventTicket"> | number
     revenue?: IntWithAggregatesFilter<"CreatorEventTicket"> | number
+    amount?: IntWithAggregatesFilter<"CreatorEventTicket"> | number
     platformFee?: IntWithAggregatesFilter<"CreatorEventTicket"> | number
     description?: StringNullableWithAggregatesFilter<"CreatorEventTicket"> | string | null
     benefits?: StringNullableListFilter<"CreatorEventTicket">
@@ -39671,7 +42496,9 @@ export namespace Prisma {
     buyerEmail?: StringFilter<"CreatorEventTicketPurchase"> | string
     buyerPhone?: StringNullableFilter<"CreatorEventTicketPurchase"> | string | null
     quantity?: IntFilter<"CreatorEventTicketPurchase"> | number
+    revenue?: IntFilter<"CreatorEventTicketPurchase"> | number
     amount?: IntFilter<"CreatorEventTicketPurchase"> | number
+    platformFee?: IntFilter<"CreatorEventTicketPurchase"> | number
     currency?: StringFilter<"CreatorEventTicketPurchase"> | string
     status?: EnumCreatorEventTicketPurchaseStatusFilter<"CreatorEventTicketPurchase"> | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFilter<"CreatorEventTicketPurchase"> | string
@@ -39693,7 +42520,9 @@ export namespace Prisma {
     buyerEmail?: SortOrder
     buyerPhone?: SortOrderInput | SortOrder
     quantity?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     transactionId?: SortOrder
@@ -39720,7 +42549,9 @@ export namespace Prisma {
     buyerEmail?: StringFilter<"CreatorEventTicketPurchase"> | string
     buyerPhone?: StringNullableFilter<"CreatorEventTicketPurchase"> | string | null
     quantity?: IntFilter<"CreatorEventTicketPurchase"> | number
+    revenue?: IntFilter<"CreatorEventTicketPurchase"> | number
     amount?: IntFilter<"CreatorEventTicketPurchase"> | number
+    platformFee?: IntFilter<"CreatorEventTicketPurchase"> | number
     currency?: StringFilter<"CreatorEventTicketPurchase"> | string
     status?: EnumCreatorEventTicketPurchaseStatusFilter<"CreatorEventTicketPurchase"> | $Enums.CreatorEventTicketPurchaseStatus
     purchasedAt?: DateTimeFilter<"CreatorEventTicketPurchase"> | Date | string
@@ -39740,7 +42571,9 @@ export namespace Prisma {
     buyerEmail?: SortOrder
     buyerPhone?: SortOrderInput | SortOrder
     quantity?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     transactionId?: SortOrder
@@ -39766,7 +42599,9 @@ export namespace Prisma {
     buyerEmail?: StringWithAggregatesFilter<"CreatorEventTicketPurchase"> | string
     buyerPhone?: StringNullableWithAggregatesFilter<"CreatorEventTicketPurchase"> | string | null
     quantity?: IntWithAggregatesFilter<"CreatorEventTicketPurchase"> | number
+    revenue?: IntWithAggregatesFilter<"CreatorEventTicketPurchase"> | number
     amount?: IntWithAggregatesFilter<"CreatorEventTicketPurchase"> | number
+    platformFee?: IntWithAggregatesFilter<"CreatorEventTicketPurchase"> | number
     currency?: StringWithAggregatesFilter<"CreatorEventTicketPurchase"> | string
     status?: EnumCreatorEventTicketPurchaseStatusWithAggregatesFilter<"CreatorEventTicketPurchase"> | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringWithAggregatesFilter<"CreatorEventTicketPurchase"> | string
@@ -40807,6 +43642,146 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type EnterpriseRequestCreateInput = {
+    id?: string
+    company: string
+    contactPerson: string
+    email: string
+    phone?: string | null
+    website?: string | null
+    companySize?: string | null
+    industry?: string | null
+    address?: string | null
+    description?: string | null
+    requirements?: string | null
+    estimatedUsers?: number | null
+    budget?: string | null
+    timeline?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EnterpriseRequestUncheckedCreateInput = {
+    id?: string
+    company: string
+    contactPerson: string
+    email: string
+    phone?: string | null
+    website?: string | null
+    companySize?: string | null
+    industry?: string | null
+    address?: string | null
+    description?: string | null
+    requirements?: string | null
+    estimatedUsers?: number | null
+    budget?: string | null
+    timeline?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EnterpriseRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    company?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsers?: NullableIntFieldUpdateOperationsInput | number | null
+    budget?: NullableStringFieldUpdateOperationsInput | string | null
+    timeline?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EnterpriseRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    company?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsers?: NullableIntFieldUpdateOperationsInput | number | null
+    budget?: NullableStringFieldUpdateOperationsInput | string | null
+    timeline?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EnterpriseRequestCreateManyInput = {
+    id?: string
+    company: string
+    contactPerson: string
+    email: string
+    phone?: string | null
+    website?: string | null
+    companySize?: string | null
+    industry?: string | null
+    address?: string | null
+    description?: string | null
+    requirements?: string | null
+    estimatedUsers?: number | null
+    budget?: string | null
+    timeline?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EnterpriseRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    company?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsers?: NullableIntFieldUpdateOperationsInput | number | null
+    budget?: NullableStringFieldUpdateOperationsInput | string | null
+    timeline?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EnterpriseRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    company?: StringFieldUpdateOperationsInput | string
+    contactPerson?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    companySize?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedUsers?: NullableIntFieldUpdateOperationsInput | number | null
+    budget?: NullableStringFieldUpdateOperationsInput | string | null
+    timeline?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AuthCredentialCreateInput = {
     passwordHash: string
     createdAt?: Date | string
@@ -41215,6 +44190,7 @@ export namespace Prisma {
     currency?: string
     status?: string
     note?: string | null
+    receiptUrl?: string | null
     transactionId?: string | null
     requestedAt?: Date | string
     processedAt?: Date | string | null
@@ -41232,6 +44208,7 @@ export namespace Prisma {
     currency?: string
     status?: string
     note?: string | null
+    receiptUrl?: string | null
     transactionId?: string | null
     requestedAt?: Date | string
     processedAt?: Date | string | null
@@ -41245,6 +44222,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -41262,6 +44240,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -41277,6 +44256,7 @@ export namespace Prisma {
     currency?: string
     status?: string
     note?: string | null
+    receiptUrl?: string | null
     transactionId?: string | null
     requestedAt?: Date | string
     processedAt?: Date | string | null
@@ -41290,6 +44270,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -41305,6 +44286,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -41417,6 +44399,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -41458,6 +44441,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -41495,6 +44479,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -41536,6 +44521,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -41575,6 +44561,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -41608,6 +44595,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -41643,6 +44631,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -41665,7 +44654,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -41687,7 +44678,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -41703,7 +44696,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -41725,7 +44720,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -41744,7 +44741,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -41760,7 +44759,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -41779,7 +44780,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -41833,6 +44836,83 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     creatorVideoId?: StringFieldUpdateOperationsInput | string
     viewerProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatMessageCreateInput = {
+    id?: string
+    kind: string
+    channelId: string
+    name: string
+    handle: string
+    text: string
+    reactions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type ChatMessageUncheckedCreateInput = {
+    id?: string
+    kind: string
+    channelId: string
+    name: string
+    handle: string
+    text: string
+    reactions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type ChatMessageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    handle?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    reactions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatMessageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    handle?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    reactions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatMessageCreateManyInput = {
+    id?: string
+    kind: string
+    channelId: string
+    name: string
+    handle: string
+    text: string
+    reactions: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type ChatMessageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    handle?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    reactions?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatMessageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    handle?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    reactions?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -42066,6 +45146,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42132,6 +45213,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42196,6 +45278,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42262,6 +45345,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42327,6 +45411,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42385,6 +45470,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42444,6 +45530,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42547,6 +45634,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
@@ -42567,6 +45655,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
@@ -42585,6 +45674,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
@@ -42605,6 +45695,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
@@ -42624,6 +45715,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
@@ -42640,6 +45732,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
@@ -42657,6 +45750,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
@@ -42671,7 +45765,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -42692,7 +45788,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -42711,7 +45809,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -42732,7 +45832,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -42752,7 +45854,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -42769,7 +45873,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -42786,7 +45892,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -43944,6 +47052,74 @@ export namespace Prisma {
     _max?: NestedEnumSuperAdminSettingSectionFilter<$PrismaModel>
   }
 
+  export type EnterpriseRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    company?: SortOrder
+    contactPerson?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    website?: SortOrder
+    companySize?: SortOrder
+    industry?: SortOrder
+    address?: SortOrder
+    description?: SortOrder
+    requirements?: SortOrder
+    estimatedUsers?: SortOrder
+    budget?: SortOrder
+    timeline?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnterpriseRequestAvgOrderByAggregateInput = {
+    estimatedUsers?: SortOrder
+  }
+
+  export type EnterpriseRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    company?: SortOrder
+    contactPerson?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    website?: SortOrder
+    companySize?: SortOrder
+    industry?: SortOrder
+    address?: SortOrder
+    description?: SortOrder
+    requirements?: SortOrder
+    estimatedUsers?: SortOrder
+    budget?: SortOrder
+    timeline?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnterpriseRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    company?: SortOrder
+    contactPerson?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    website?: SortOrder
+    companySize?: SortOrder
+    industry?: SortOrder
+    address?: SortOrder
+    description?: SortOrder
+    requirements?: SortOrder
+    estimatedUsers?: SortOrder
+    budget?: SortOrder
+    timeline?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnterpriseRequestSumOrderByAggregateInput = {
+    estimatedUsers?: SortOrder
+  }
+
   export type ProfileScalarRelationFilter = {
     is?: ProfileWhereInput
     isNot?: ProfileWhereInput
@@ -44234,6 +47410,7 @@ export namespace Prisma {
     currency?: SortOrder
     status?: SortOrder
     note?: SortOrder
+    receiptUrl?: SortOrder
     transactionId?: SortOrder
     requestedAt?: SortOrder
     processedAt?: SortOrder
@@ -44253,6 +47430,7 @@ export namespace Prisma {
     currency?: SortOrder
     status?: SortOrder
     note?: SortOrder
+    receiptUrl?: SortOrder
     transactionId?: SortOrder
     requestedAt?: SortOrder
     processedAt?: SortOrder
@@ -44268,6 +47446,7 @@ export namespace Prisma {
     currency?: SortOrder
     status?: SortOrder
     note?: SortOrder
+    receiptUrl?: SortOrder
     transactionId?: SortOrder
     requestedAt?: SortOrder
     processedAt?: SortOrder
@@ -44368,6 +47547,7 @@ export namespace Prisma {
     rent24Price?: SortOrder
     rent48Price?: SortOrder
     purchasePrice?: SortOrder
+    amount?: SortOrder
     revenue?: SortOrder
     platformFee?: SortOrder
     tags?: SortOrder
@@ -44387,6 +47567,7 @@ export namespace Prisma {
     rent24Price?: SortOrder
     rent48Price?: SortOrder
     purchasePrice?: SortOrder
+    amount?: SortOrder
     revenue?: SortOrder
     platformFee?: SortOrder
     episodeIndex?: SortOrder
@@ -44415,6 +47596,7 @@ export namespace Prisma {
     rent24Price?: SortOrder
     rent48Price?: SortOrder
     purchasePrice?: SortOrder
+    amount?: SortOrder
     revenue?: SortOrder
     platformFee?: SortOrder
     packageName?: SortOrder
@@ -44449,6 +47631,7 @@ export namespace Prisma {
     rent24Price?: SortOrder
     rent48Price?: SortOrder
     purchasePrice?: SortOrder
+    amount?: SortOrder
     revenue?: SortOrder
     platformFee?: SortOrder
     packageName?: SortOrder
@@ -44467,6 +47650,7 @@ export namespace Prisma {
     rent24Price?: SortOrder
     rent48Price?: SortOrder
     purchasePrice?: SortOrder
+    amount?: SortOrder
     revenue?: SortOrder
     platformFee?: SortOrder
     episodeIndex?: SortOrder
@@ -44495,7 +47679,9 @@ export namespace Prisma {
     buyerPhone?: SortOrder
     purchaseType?: SortOrder
     accessCode?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     transactionId?: SortOrder
@@ -44505,7 +47691,9 @@ export namespace Prisma {
   }
 
   export type CreatorVideoPurchaseAvgOrderByAggregateInput = {
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
   }
 
   export type CreatorVideoPurchaseMaxOrderByAggregateInput = {
@@ -44518,7 +47706,9 @@ export namespace Prisma {
     buyerPhone?: SortOrder
     purchaseType?: SortOrder
     accessCode?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     transactionId?: SortOrder
@@ -44537,7 +47727,9 @@ export namespace Prisma {
     buyerPhone?: SortOrder
     purchaseType?: SortOrder
     accessCode?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     transactionId?: SortOrder
@@ -44547,7 +47739,9 @@ export namespace Prisma {
   }
 
   export type CreatorVideoPurchaseSumOrderByAggregateInput = {
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
   }
 
   export type CreatorVideoViewCountOrderByAggregateInput = {
@@ -44569,6 +47763,86 @@ export namespace Prisma {
     creatorVideoId?: SortOrder
     viewerProfileId?: SortOrder
     createdAt?: SortOrder
+  }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type ChatMessageCountOrderByAggregateInput = {
+    id?: SortOrder
+    kind?: SortOrder
+    channelId?: SortOrder
+    name?: SortOrder
+    handle?: SortOrder
+    text?: SortOrder
+    reactions?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ChatMessageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    kind?: SortOrder
+    channelId?: SortOrder
+    name?: SortOrder
+    handle?: SortOrder
+    text?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ChatMessageMinOrderByAggregateInput = {
+    id?: SortOrder
+    kind?: SortOrder
+    channelId?: SortOrder
+    name?: SortOrder
+    handle?: SortOrder
+    text?: SortOrder
+    createdAt?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type CreatorVideoLikeCreatorVideoIdLikerProfileIdCompoundUniqueInput = {
@@ -44786,6 +48060,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -44804,6 +48079,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
   }
 
@@ -44860,6 +48136,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -44918,6 +48195,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -44936,6 +48214,7 @@ export namespace Prisma {
     currentViewersCount?: SortOrder
     venueParticipantCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
   }
 
@@ -45093,6 +48372,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
     description?: SortOrder
     benefits?: SortOrder
@@ -45106,6 +48386,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
   }
 
@@ -45118,6 +48399,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
     description?: SortOrder
     status?: SortOrder
@@ -45134,6 +48416,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
     description?: SortOrder
     status?: SortOrder
@@ -45146,6 +48429,7 @@ export namespace Prisma {
     quantity?: SortOrder
     soldCount?: SortOrder
     revenue?: SortOrder
+    amount?: SortOrder
     platformFee?: SortOrder
   }
 
@@ -45193,7 +48477,9 @@ export namespace Prisma {
     buyerEmail?: SortOrder
     buyerPhone?: SortOrder
     quantity?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     transactionId?: SortOrder
@@ -45206,7 +48492,9 @@ export namespace Prisma {
 
   export type CreatorEventTicketPurchaseAvgOrderByAggregateInput = {
     quantity?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
   }
 
   export type CreatorEventTicketPurchaseMaxOrderByAggregateInput = {
@@ -45216,7 +48504,9 @@ export namespace Prisma {
     buyerEmail?: SortOrder
     buyerPhone?: SortOrder
     quantity?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     transactionId?: SortOrder
@@ -45234,7 +48524,9 @@ export namespace Prisma {
     buyerEmail?: SortOrder
     buyerPhone?: SortOrder
     quantity?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     transactionId?: SortOrder
@@ -45247,7 +48539,9 @@ export namespace Prisma {
 
   export type CreatorEventTicketPurchaseSumOrderByAggregateInput = {
     quantity?: SortOrder
+    revenue?: SortOrder
     amount?: SortOrder
+    platformFee?: SortOrder
   }
 
   export type EnumCreatorEventTicketPurchaseStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -48089,6 +51383,29 @@ export namespace Prisma {
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
   }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedEnumCreatorEventStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.CreatorEventStatus | EnumCreatorEventStatusFieldRefInput<$PrismaModel>
@@ -48429,7 +51746,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -48449,7 +51768,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -48681,7 +52002,9 @@ export namespace Prisma {
     buyerPhone?: StringNullableFilter<"CreatorVideoPurchase"> | string | null
     purchaseType?: StringFilter<"CreatorVideoPurchase"> | string
     accessCode?: StringFilter<"CreatorVideoPurchase"> | string
+    revenue?: IntFilter<"CreatorVideoPurchase"> | number
     amount?: IntFilter<"CreatorVideoPurchase"> | number
+    platformFee?: IntFilter<"CreatorVideoPurchase"> | number
     currency?: StringFilter<"CreatorVideoPurchase"> | string
     status?: StringFilter<"CreatorVideoPurchase"> | string
     transactionId?: StringFilter<"CreatorVideoPurchase"> | string
@@ -48963,6 +52286,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -49002,6 +52326,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -49038,7 +52363,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -49058,7 +52385,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -49164,6 +52493,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49228,6 +52558,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49349,6 +52680,7 @@ export namespace Prisma {
     currency?: string
     status?: string
     note?: string | null
+    receiptUrl?: string | null
     transactionId?: string | null
     requestedAt?: Date | string
     processedAt?: Date | string | null
@@ -49364,6 +52696,7 @@ export namespace Prisma {
     currency?: string
     status?: string
     note?: string | null
+    receiptUrl?: string | null
     transactionId?: string | null
     requestedAt?: Date | string
     processedAt?: Date | string | null
@@ -49535,6 +52868,7 @@ export namespace Prisma {
     rent24Price?: IntNullableFilter<"CreatorVideo"> | number | null
     rent48Price?: IntNullableFilter<"CreatorVideo"> | number | null
     purchasePrice?: IntNullableFilter<"CreatorVideo"> | number | null
+    amount?: IntFilter<"CreatorVideo"> | number
     revenue?: IntFilter<"CreatorVideo"> | number
     platformFee?: IntFilter<"CreatorVideo"> | number
     tags?: StringNullableListFilter<"CreatorVideo">
@@ -49670,6 +53004,7 @@ export namespace Prisma {
     currentViewersCount?: IntFilter<"CreatorEvent"> | number
     venueParticipantCount?: IntFilter<"CreatorEvent"> | number
     revenue?: IntFilter<"CreatorEvent"> | number
+    amount?: IntFilter<"CreatorEvent"> | number
     platformFee?: IntFilter<"CreatorEvent"> | number
     createdAt?: DateTimeFilter<"CreatorEvent"> | Date | string
     updatedAt?: DateTimeFilter<"CreatorEvent"> | Date | string
@@ -49774,6 +53109,7 @@ export namespace Prisma {
     currency?: StringFilter<"CreatorPayoutRequest"> | string
     status?: StringFilter<"CreatorPayoutRequest"> | string
     note?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
+    receiptUrl?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
     transactionId?: StringNullableFilter<"CreatorPayoutRequest"> | string | null
     requestedAt?: DateTimeFilter<"CreatorPayoutRequest"> | Date | string
     processedAt?: DateTimeNullableFilter<"CreatorPayoutRequest"> | Date | string | null
@@ -50116,6 +53452,7 @@ export namespace Prisma {
     currency?: string
     status?: string
     note?: string | null
+    receiptUrl?: string | null
     transactionId?: string | null
     requestedAt?: Date | string
     processedAt?: Date | string | null
@@ -50131,6 +53468,7 @@ export namespace Prisma {
     currency?: string
     status?: string
     note?: string | null
+    receiptUrl?: string | null
     transactionId?: string | null
     requestedAt?: Date | string
     processedAt?: Date | string | null
@@ -50446,6 +53784,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -50485,6 +53824,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -50734,7 +54074,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -50754,7 +54096,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -51007,6 +54351,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -51047,6 +54392,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -51233,6 +54579,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -51273,6 +54620,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -51398,6 +54746,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -51438,6 +54787,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -51490,6 +54840,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -51530,6 +54881,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -51566,6 +54918,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -51606,6 +54959,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -51741,6 +55095,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -51781,6 +55136,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -51941,6 +55297,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -52006,6 +55363,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -52168,6 +55526,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52233,6 +55592,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52350,6 +55710,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -52390,6 +55751,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -52442,6 +55804,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -52482,6 +55845,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -52587,6 +55951,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
@@ -52605,6 +55970,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
@@ -52902,6 +56268,7 @@ export namespace Prisma {
     quantity?: IntFilter<"CreatorEventTicket"> | number
     soldCount?: IntFilter<"CreatorEventTicket"> | number
     revenue?: IntFilter<"CreatorEventTicket"> | number
+    amount?: IntFilter<"CreatorEventTicket"> | number
     platformFee?: IntFilter<"CreatorEventTicket"> | number
     description?: StringNullableFilter<"CreatorEventTicket"> | string | null
     benefits?: StringNullableListFilter<"CreatorEventTicket">
@@ -53065,6 +56432,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -53130,6 +56498,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -53209,6 +56578,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53274,6 +56644,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53337,6 +56708,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -53402,6 +56774,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -53423,7 +56796,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -53442,7 +56817,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -53561,6 +56938,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53626,6 +57004,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53662,7 +57041,9 @@ export namespace Prisma {
     buyerEmail?: StringFilter<"CreatorEventTicketPurchase"> | string
     buyerPhone?: StringNullableFilter<"CreatorEventTicketPurchase"> | string | null
     quantity?: IntFilter<"CreatorEventTicketPurchase"> | number
+    revenue?: IntFilter<"CreatorEventTicketPurchase"> | number
     amount?: IntFilter<"CreatorEventTicketPurchase"> | number
+    platformFee?: IntFilter<"CreatorEventTicketPurchase"> | number
     currency?: StringFilter<"CreatorEventTicketPurchase"> | string
     status?: EnumCreatorEventTicketPurchaseStatusFilter<"CreatorEventTicketPurchase"> | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFilter<"CreatorEventTicketPurchase"> | string
@@ -53712,6 +57093,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
@@ -53731,6 +57113,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
@@ -53883,6 +57266,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
@@ -53902,6 +57286,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
@@ -54006,7 +57391,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -54026,7 +57413,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -54051,6 +57440,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
@@ -54070,6 +57460,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
@@ -54152,7 +57543,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -54172,7 +57565,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -54203,6 +57598,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
@@ -54222,6 +57618,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
@@ -54386,6 +57783,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -54451,6 +57849,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -54472,7 +57871,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -54492,7 +57893,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -54745,6 +58148,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54810,6 +58214,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54937,6 +58342,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -55002,6 +58408,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -55186,6 +58593,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55251,6 +58659,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55612,6 +59021,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -55677,6 +59087,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -55749,7 +59160,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -55769,7 +59182,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -55850,6 +59265,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55915,6 +59331,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55999,7 +59416,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -56019,7 +59438,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -56242,7 +59663,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -56348,7 +59771,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -56368,7 +59793,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -56386,7 +59813,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -56414,6 +59843,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -56438,7 +59868,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -56511,6 +59943,7 @@ export namespace Prisma {
     currentViewersCount?: number
     venueParticipantCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -56555,6 +59988,7 @@ export namespace Prisma {
     currency?: string
     status?: string
     note?: string | null
+    receiptUrl?: string | null
     transactionId?: string | null
     requestedAt?: Date | string
     processedAt?: Date | string | null
@@ -56588,6 +60022,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -56627,6 +60062,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -56665,6 +60101,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -56687,7 +60124,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -56707,7 +60146,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -56725,7 +60166,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -56822,6 +60265,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -56886,6 +60330,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -56950,6 +60395,7 @@ export namespace Prisma {
     currentViewersCount?: IntFieldUpdateOperationsInput | number
     venueParticipantCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -57067,6 +60513,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -57082,6 +60529,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -57096,6 +60544,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -57134,6 +60583,7 @@ export namespace Prisma {
     currency?: string
     status?: string
     note?: string | null
+    receiptUrl?: string | null
     transactionId?: string | null
     requestedAt?: Date | string
     processedAt?: Date | string | null
@@ -57147,6 +60597,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -57162,6 +60613,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -57176,6 +60628,7 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -57202,6 +60655,7 @@ export namespace Prisma {
     rent24Price?: number | null
     rent48Price?: number | null
     purchasePrice?: number | null
+    amount?: number
     revenue?: number
     platformFee?: number
     tags?: CreatorVideoCreatetagsInput | string[]
@@ -57235,6 +60689,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -57274,6 +60729,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -57312,6 +60768,7 @@ export namespace Prisma {
     rent24Price?: NullableIntFieldUpdateOperationsInput | number | null
     rent48Price?: NullableIntFieldUpdateOperationsInput | number | null
     purchasePrice?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     tags?: CreatorVideoUpdatetagsInput | string[]
@@ -57357,7 +60814,9 @@ export namespace Prisma {
     buyerPhone?: string | null
     purchaseType: string
     accessCode: string
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: string
     transactionId: string
@@ -57436,7 +60895,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -57456,7 +60917,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -57474,7 +60937,9 @@ export namespace Prisma {
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
     accessCode?: StringFieldUpdateOperationsInput | string
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -57503,6 +60968,7 @@ export namespace Prisma {
     quantity?: number
     soldCount?: number
     revenue?: number
+    amount?: number
     platformFee?: number
     description?: string | null
     benefits?: CreatorEventTicketCreatebenefitsInput | string[]
@@ -57612,6 +61078,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
@@ -57630,6 +61097,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
@@ -57648,6 +61116,7 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     soldCount?: IntFieldUpdateOperationsInput | number
     revenue?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     benefits?: CreatorEventTicketUpdatebenefitsInput | string[]
@@ -57845,7 +61314,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -57873,7 +61344,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -57892,7 +61365,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -57911,7 +61386,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -58058,7 +61535,9 @@ export namespace Prisma {
     buyerEmail: string
     buyerPhone?: string | null
     quantity?: number
-    amount: number
+    revenue?: number
+    amount?: number
+    platformFee?: number
     currency?: string
     status?: $Enums.CreatorEventTicketPurchaseStatus
     transactionId: string
@@ -58115,7 +61594,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -58135,7 +61616,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string
@@ -58154,7 +61637,9 @@ export namespace Prisma {
     buyerEmail?: StringFieldUpdateOperationsInput | string
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    platformFee?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: EnumCreatorEventTicketPurchaseStatusFieldUpdateOperationsInput | $Enums.CreatorEventTicketPurchaseStatus
     transactionId?: StringFieldUpdateOperationsInput | string

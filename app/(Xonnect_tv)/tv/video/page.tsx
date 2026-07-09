@@ -182,6 +182,7 @@ export default function VideoPage() {
                   viewers={video.viewers}
                   isLive={video.isLive}
                   category={video.category}
+                  type={video.type}
                   duration={video.duration ?? undefined}
                   pricing={video.pricing}
                   onWatch={() => router.push(buildWatchHref(video))}

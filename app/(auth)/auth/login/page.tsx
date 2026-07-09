@@ -144,15 +144,7 @@ export default function LoginPage() {
       title="Sign in"
       subtitle="Use email first, then password or OTP depending on your account state"
     >
-      <div className="mb-6 rounded-2xl border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-        <div className="flex items-center gap-2 text-foreground">
-          <Sparkles className="h-4 w-4" />
-          <span className="font-medium">Frictionless access</span>
-        </div>
-        <p className="mt-2">
-          New accounts use magic links. Returning accounts can use OTP or password if available.
-        </p>
-      </div>
+     
 
       {step === "email" && (
         <form onSubmit={handleEmailSubmit} className="space-y-5">

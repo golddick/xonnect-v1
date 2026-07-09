@@ -100,14 +100,14 @@ const DetailModal = ({ selectedItem, activeTab, onClose }: DetailModalProps) => 
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
             <div className="bg-muted p-4 rounded-lg text-center">
               <Users className="w-6 h-6 text-blue-400 mx-auto mb-2" />
               <p className="text-sm text-muted-foreground">
                 {activeTab === "events" ? "Current Viewers" : "Total Views"}
               </p>
               <p className="font-bold">
-                {activeTab === "events" 
+                {activeTab === "events"
                   ? (selectedItem as Event).viewers.toLocaleString()
                   : (selectedItem as Video).views.toLocaleString()
                 }
@@ -122,16 +122,14 @@ const DetailModal = ({ selectedItem, activeTab, onClose }: DetailModalProps) => 
             )}
             <div className="bg-muted p-4 rounded-lg text-center">
               <DollarSign className="w-6 h-6 text-green-400 mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">Revenue</p>
-              <p className="font-bold text-green-400">{selectedItem.revenue}</p>
+              <p className="text-sm text-muted-foreground">Platform Revenue</p>
+              <p className="font-bold text-green-400">{(selectedItem as any).platformRevenue || selectedItem.revenue}</p>
             </div>
-            {activeTab === "events" && (selectedItem as Event).isPaid && (
-              <div className="bg-muted p-4 rounded-lg text-center">
-                <Crown className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
-                <p className="text-sm text-muted-foreground">Fee</p>
-                <p className="font-bold text-yellow-400">{(selectedItem as Event).Fee}</p>
-              </div>
-            )}
+            <div className="bg-muted p-4 rounded-lg text-center">
+              <Crown className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">Creator Revenue</p>
+              <p className="font-bold text-yellow-400">{(selectedItem as any).creatorRevenue || selectedItem.revenue}</p>
+            </div>
           </div>
 
           {activeTab === "events" && (selectedItem as Event).tags && (selectedItem as Event).tags.length > 0 && (

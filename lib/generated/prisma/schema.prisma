@@ -153,6 +153,29 @@ model SuperAdminSetting {
   @@map("superadmin_settings")
 }
 
+model EnterpriseRequest {
+  id             String  @id @default(cuid())
+  company        String
+  contactPerson  String  @map("contact_person")
+  email          String
+  phone          String?
+  website        String?
+  companySize    String? @map("company_size")
+  industry       String?
+  address        String?
+  description    String?
+  requirements   String?
+  estimatedUsers Int?    @map("estimated_users")
+  budget         String?
+  timeline       String?
+  status         String  @default("pending")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("enterprise_requests")
+}
+
 model AuthCredential {
   email        String   @id
   passwordHash String   @map("password_hash")
@@ -258,6 +281,7 @@ model CreatorPayoutRequest {
   currency      String  @default("NGN")
   status        String  @default("pending")
   note          String?
+  receiptUrl    String? @map("receipt_url")
   transactionId String? @map("transaction_id")
 
   requestedAt DateTime  @default(now()) @map("requested_at")
@@ -321,6 +345,7 @@ model CreatorVideo {
   rent24Price   Int? @map("rent24_price")
   rent48Price   Int? @map("rent48_price")
   purchasePrice Int? @map("purchase_price")
+  amount        Int  @default(0) @map("amount_paid")
   revenue       Int  @default(0) @map("revenue_share")
   platformFee   Int  @default(0) @map("platform_fee")
 
@@ -373,7 +398,9 @@ model CreatorVideoPurchase {
   purchaseType String  @map("purchase_type")
   accessCode   String  @unique @map("access_code")
 
-  amount          Int
+  revenue         Int       @default(0) @map("revenue_made")
+  amount          Int       @default(0) @map("amount_paid")
+  platformFee     Int       @default(0) @map("platform_fee")
   currency        String    @default("NGN")
   status          String    @default("PENDING")
   transactionId   String    @unique @map("transaction_id")
@@ -390,16 +417,29 @@ model CreatorVideoPurchase {
 }
 
 model CreatorVideoView {
-  id             String       @id
-  creatorVideoId String       @map("creator_video_id")
-  creatorVideo   CreatorVideo @relation(fields: [creatorVideoId], references: [id], onDelete: Cascade)
-
-  viewerProfileId String? @map("viewer_profile_id")
+  id              String       @id
+  creatorVideoId  String       @map("creator_video_id")
+  creatorVideo    CreatorVideo @relation(fields: [creatorVideoId], references: [id], onDelete: Cascade)
+  viewerProfileId String?      @map("viewer_profile_id")
 
   createdAt DateTime @default(now()) @map("created_at")
 
   @@index([creatorVideoId])
   @@map("creator_video_views")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  kind      String
+  channelId String   @map("channel_id")
+  name      String
+  handle    String
+  text      String
+  reactions Json
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([kind, channelId])
+  @@map("chat_messages")
 }
 
 model CreatorVideoLike {
@@ -518,7 +558,8 @@ model CreatorEvent {
   peakViewersCount      Int @default(0) @map("peak_viewers_count")
   currentViewersCount   Int @default(0) @map("current_viewers_count")
   venueParticipantCount Int @default(0) @map("venue_participant_count")
-  revenue               Int @default(0)
+  revenue               Int @default(0) @map("revenue_made")
+  amount                Int @default(0) @map("amount_paid")
   platformFee           Int @default(0) @map("platform_fee")
 
   restrictedLocations   CreatorEventLocationRestriction[]
@@ -566,7 +607,8 @@ model CreatorEventTicket {
   price       Int                          @default(0)
   quantity    Int                          @default(0)
   soldCount   Int                          @default(0) @map("sold_count")
-  revenue     Int                          @default(0)
+  revenue     Int                          @default(0) @map("revenue_made")
+  amount      Int                          @default(0) @map("amount_paid")
   platformFee Int                          @default(0) @map("platform_fee")
   description String?
   benefits    String[]                     @default([])
@@ -594,7 +636,9 @@ model CreatorEventTicketPurchase {
   buyerPhone String? @map("buyer_phone")
   quantity   Int     @default(1)
 
-  amount        Int
+  revenue       Int                              @default(0) @map("revenue_made")
+  amount        Int                              @default(0) @map("amount_paid")
+  platformFee   Int                              @default(0) @map("platform_fee")
   currency      String                           @default("NGN")
   status        CreatorEventTicketPurchaseStatus @default(COMPLETED)
   transactionId String                           @unique @map("transaction_id")

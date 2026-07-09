@@ -30,7 +30,7 @@ export default function LiveEventPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [showScheduled, setShowScheduled] = useState(false)
+  const [activeTab, setActiveTab] = useState<"scheduled" | "ended" | "live">("scheduled")
   const [loading, setLoading] = useState(true)
   const [payload, setPayload] = useState<any>(null)
 
@@ -61,17 +61,29 @@ export default function LiveEventPage() {
 
   const liveEvents: TvCard[] = payload?.live ?? []
   const scheduledEvents: TvCard[] = payload?.scheduled ?? []
+  const endedEvents: TvCard[] = payload?.ended ?? []
 
   const filteredEvents = useMemo(() => {
-    const source = showScheduled ? scheduledEvents : liveEvents
+    const source =
+      activeTab === "scheduled"
+        ? scheduledEvents
+        : activeTab === "ended"
+        ? endedEvents
+        : liveEvents
+
     const query = searchQuery.trim().toLowerCase()
     if (!query) return source
     return source.filter((event) =>
       [event.title, event.channelName, event.category].some((value) => value.toLowerCase().includes(query))
     )
-  }, [liveEvents, scheduledEvents, searchQuery, showScheduled])
+  }, [liveEvents, scheduledEvents, endedEvents, searchQuery, activeTab])
 
-  const headerLabel = showScheduled ? "Scheduled" : "Live Now"
+  const headerLabel =
+    activeTab === "scheduled"
+      ? "Scheduled"
+      : activeTab === "ended"
+      ? "Ended"
+      : "Live Now"
 
   if (loading) {
     return <TvLoadingState variant="section" />
@@ -91,24 +103,32 @@ export default function LiveEventPage() {
             </div>
 
             <div className="flex flex-col md:flex-row justify-between gap-4 p-4">
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 <button
-                  onClick={() => setShowScheduled(false)}
+                  onClick={() => setActiveTab("scheduled")}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                    !showScheduled ? "bg-red-600 text-foreground" : "bg-white/10 text-muted-foreground hover:bg-white/20"
-                  }`}
-                >
-                  <span className="w-2 h-2 bg-current rounded-full animate-pulse" />
-                  <span className="text-sm font-semibold">Live Now</span>
-                </button>
-                <button
-                  onClick={() => setShowScheduled(true)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                    showScheduled ? "bg-red-600 text-foreground" : "bg-white/10 text-muted-foreground hover:bg-white/20"
+                    activeTab === "scheduled" ? "bg-red-600 text-foreground" : "bg-white/10 text-muted-foreground hover:bg-white/20"
                   }`}
                 >
                   <Clock className="w-4 h-4" />
                   <span className="text-sm font-semibold">Scheduled</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab("ended")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    activeTab === "ended" ? "bg-red-600 text-foreground" : "bg-white/10 text-muted-foreground hover:bg-white/20"
+                  }`}
+                >
+                  <span className="text-sm font-semibold">Ended</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab("live")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    activeTab === "live" ? "bg-red-600 text-foreground" : "bg-white/10 text-muted-foreground hover:bg-white/20"
+                  }`}
+                >
+                  <span className="w-2 h-2 bg-current rounded-full animate-pulse" />
+                  <span className="text-sm font-semibold">Live Now</span>
                 </button>
               </div>
 
@@ -180,6 +200,7 @@ export default function LiveEventPage() {
                     channelAvatar={event.channelAvatar}
                     viewers={event.viewers}
                     isLive={event.isLive}
+                    type={event.type}
                     category={event.category}
                     duration={event.duration ?? undefined}
                     onWatch={() => router.push(buildWatchHref(event))}

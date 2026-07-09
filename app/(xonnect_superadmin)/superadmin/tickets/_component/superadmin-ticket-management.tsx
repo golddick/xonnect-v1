@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { AnimatePresence } from "framer-motion"
 import { TicketRecord, Transaction } from "@/lib/type/superadmin-ticket"
 import TicketHeader from "./TicketHeader"
@@ -16,98 +16,57 @@ export default function SuperAdminTicketManagement() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedTicket, setSelectedTicket] = useState<TicketRecord | null>(null)
   const [showDetailsModal, setShowDetailsModal] = useState(false)
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [ticketRecords, setTicketRecords] = useState<TicketRecord[]>([])
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [loading, setLoading] = useState(true)
 
-  // Mock ticket records
-  const [ticketRecords] = useState<TicketRecord[]>([
-    {
-      id: "TKT-ADMIN-001",
-      creator: "ProGamer Mike",
-      access: "Stream Access",
-      creatorEmail: "mike@xonnect.com",
-      eventName: "Gaming Tournament Finals",
-      ticketType: "VIP Access",
-      totalIssued: 500,
-      totalSold: 450,
-      revenue: 2250000,
-      createdDate: "2024-01-10",
-      status: "active",
-      platform: "streaming",
-    },
-    {
-      id: "TKT-ADMIN-002",
-      creator: "Beat Maker Pro",
-      access: "Venue Access",
-      creatorEmail: "beat@xonnect.com",
-      eventName: "Music Production Workshop",
-      ticketType: "General Admission",
-      totalIssued: 300,
-      totalSold: 287,
-      revenue: 430500,
-      createdDate: "2024-01-15",
-      status: "active",
-      platform: "physical",
-    },
-    {
-      id: "TKT-ADMIN-003",
-      creator: "Chef Amara",
-      access: "Venue Access",
-      creatorEmail: "chef@xonnect.com",
-      eventName: "Culinary Masterclass",
-      ticketType: "Standard",
-      totalIssued: 200,
-      totalSold: 156,
-      revenue: 234000,
-      createdDate: "2024-01-05",
-      status: "inactive",
-      platform: "hybrid",
-    },
-  ])
+  useEffect(() => {
+    const loadTickets = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch("/api/superadmin/tickets")
+        const data = await response.json()
 
-  // Mock transaction data
-  const [transactions] = useState<Transaction[]>([
-    {
-      id: "TRX-001",
-      creator: "ProGamer Mike",
-      buyer: "Chukwu Adams",
-      amount: 5000,
-      ticketType: "VIP Access",
-      date: "2024-01-20",
-      status: "completed",
-      transactionId: "TXN-2024-001",
-    },
-    {
-      id: "TRX-002",
-      creator: "Beat Maker Pro",
-      buyer: "Ngozi Okafor",
-      amount: 1500,
-      ticketType: "Standard",
-      date: "2024-01-21",
-      status: "completed",
-      transactionId: "TXN-2024-002",
-    },
-    {
-      id: "TRX-003",
-      creator: "Chef Amara",
-      buyer: "Tunde Johnson",
-      amount: 1500,
-      ticketType: "General Admission",
-      date: "2024-01-22",
-      status: "pending",
-      transactionId: "TXN-2024-003",
-    },
-  ])
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load tickets")
+        }
 
-  const filteredRecords = ticketRecords.filter(
-    (r) =>
-      r.creator.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.eventName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.id.toLowerCase().includes(searchTerm.toLowerCase()),
+        setTicketRecords(data.records || [])
+        setTransactions((data.records || []).flatMap((record: TicketRecord) =>
+          (record.purchases || []).map((purchase) => ({
+            id: purchase.id,
+            creator: record.creator,
+            buyer: purchase.buyer,
+            amount: purchase.amount,
+            ticketType: record.ticketType,
+            date: new Date(purchase.date).toLocaleDateString("en-NG"),
+            status: purchase.status as "completed" | "pending" | "failed",
+            transactionId: purchase.transactionId,
+          }))
+        ))
+      } catch (error) {
+        console.error("Failed to load ticket management data:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadTickets()
+  }, [])
+
+  const filteredRecords = useMemo(() =>
+    ticketRecords.filter(
+      (r) =>
+        r.creator.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.eventName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.id.toLowerCase().includes(searchTerm.toLowerCase()),
+    ),
+    [ticketRecords, searchTerm]
   )
 
   const totalRevenue = ticketRecords.reduce((sum, r) => sum + r.revenue, 0)
   const totalTicketsSold = ticketRecords.reduce((sum, r) => sum + r.totalSold, 0)
-  const avgTicketsPerEvent = Math.round(totalTicketsSold / ticketRecords.length)
+  const avgTicketsPerEvent = ticketRecords.length ? Math.round(totalTicketsSold / ticketRecords.length) : 0
   const activeTickets = ticketRecords.filter((r) => r.status === "active").length
 
   const openTicketDetails = (ticket: TicketRecord) => {
@@ -123,8 +82,8 @@ export default function SuperAdminTicketManagement() {
     },
     { label: "Tickets Sold", value: totalTicketsSold.toString(), color: "text-blue-400" },
     { label: "Active Tickets", value: activeTickets.toString(), color: "text-red-400" },
-    { label: "Streaming Tickets", value: avgTicketsPerEvent.toString(), color: "text-purple-400" },
-    { label: "Venue Tickets", value: avgTicketsPerEvent.toString(), color: "text-yellow-400" },
+    { label: "Streaming Tickets", value: ticketRecords.filter((item) => item.access === "Stream").length.toString(), color: "text-purple-400" },
+    { label: "Venue Tickets", value: ticketRecords.filter((item) => item.access === "Venue").length.toString(), color: "text-yellow-400" },
   ]
 
   return (
@@ -144,6 +103,7 @@ export default function SuperAdminTicketManagement() {
                 <OverviewTab 
                   ticketRecords={ticketRecords}
                   totalRevenue={totalRevenue}
+                  loading={loading}
                 />
               )}
               
@@ -153,6 +113,7 @@ export default function SuperAdminTicketManagement() {
                   searchTerm={searchTerm}
                   setSearchTerm={setSearchTerm}
                   openTicketDetails={openTicketDetails}
+                  loading={loading}
                 />
               )}
               

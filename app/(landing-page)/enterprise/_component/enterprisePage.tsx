@@ -15,7 +15,7 @@ interface ButtonData {
   variant: "default" | "outline" | "link" | "destructive" | "secondary" | "ghost";
   className: string;
   link: string;
-}
+} 
 
 interface BenefitCard {
   icon: LucideIcon;

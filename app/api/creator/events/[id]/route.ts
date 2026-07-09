@@ -211,35 +211,45 @@ export async function PUT(
     }
 
     const now = new Date()
-    if (event.status === "LIVE" || event.status === "ENDED") {
+    const isRecordingOnlyUpdate = Object.keys(body).every((key) =>
+      [
+        "recordedVideoUrl",
+        "recordedVideoFileId",
+        "recordingEnabled",
+        "recordingStatus",
+        "recordingUrl",
+      ].includes(key)
+    )
+
+    if ((event.status === "LIVE" || (event.status === "ENDED" && !isRecordingOnlyUpdate))) {
       return NextResponse.json(
         { message: "Live or ended events cannot be edited" },
         { status: 409 }
       )
     }
 
-    if (event.scheduledAt && event.scheduledAt <= now) {
+    if (!isRecordingOnlyUpdate && event.scheduledAt && event.scheduledAt <= now) {
       return NextResponse.json(
         { message: "Past events cannot be edited" },
         { status: 409 }
       )
     }
 
-    if (typeof body.title !== "string") {
+    if (!isRecordingOnlyUpdate && typeof body.title !== "string") {
       return NextResponse.json({ message: "Title is required" }, { status: 400 })
     }
 
-    const title = body.title.trim()
-    if (title.length === 0) {
+    const title = isRecordingOnlyUpdate ? event.title : body.title?.trim() ?? ""
+    if (!isRecordingOnlyUpdate && title.length === 0) {
       return NextResponse.json({ message: "Title is required" }, { status: 400 })
     }
 
     const scheduledAt = body.scheduledAt ? new Date(body.scheduledAt) : event.scheduledAt
-    if (scheduledAt && Number.isNaN(scheduledAt.getTime())) {
+    if (!isRecordingOnlyUpdate && scheduledAt && Number.isNaN(scheduledAt.getTime())) {
       return NextResponse.json({ message: "scheduledAt must be a valid date" }, { status: 400 })
     }
 
-    if (scheduledAt && scheduledAt <= now) {
+    if (!isRecordingOnlyUpdate && scheduledAt && scheduledAt <= now) {
       return NextResponse.json(
         { message: "Scheduled time must stay in the future" },
         { status: 400 }

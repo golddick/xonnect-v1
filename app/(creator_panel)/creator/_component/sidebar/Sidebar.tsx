@@ -5,6 +5,7 @@ import {
   BarChart3,
   Calendar,
   DollarSign,
+  Link,
   Play,
   Settings,
   Ticket,
@@ -14,6 +15,7 @@ import {
 } from "lucide-react"
 import { useRouter, usePathname } from "next/navigation"
 import { sidebarItems } from "@/lib/constant"
+import Logo from "@/components/nav/logo"
 
 const Sidebar = () => {
   const router = useRouter()
@@ -31,10 +33,10 @@ const Sidebar = () => {
   return (
     <aside className="hidden lg:fixed lg:left-0 lg:top-0 lg:h-full lg:w-64 bg-background lg:border-r lg:border-border lg:block">
       <div className="flex items-center space-x-2 p-4 border-b border-border">
-        <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
-          <Zap className="w-5 h-5 text-white" />
-        </div>
-        <span className="text-xl font-bold text-foreground">Xonnect</span>
+        <Link href="/" className="flex items-center space-x-2 group">
+           <Logo/>
+            <span className="text-xl font-bold text-foreground md:hidden lg:block">Xonnect</span>
+          </Link>
       </div>
 
       <nav className="p-4 space-y-2">

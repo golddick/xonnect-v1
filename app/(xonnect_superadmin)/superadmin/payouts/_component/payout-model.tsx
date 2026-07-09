@@ -1,188 +1,286 @@
-import React, { useState } from 'react';
-import { 
-  X, 
-  DollarSign, 
-  PieChart, 
-  Banknote, 
-  CreditCard, 
-  Calendar, 
-  CheckCircle, 
-  XCircle, 
+"use client"
+
+import { useState } from "react"
+import {
+  X,
+  DollarSign,
+  PieChart,
+  Banknote,
+  CreditCard,
+  Calendar,
+  CheckCircle,
+  XCircle,
   Download,
   User,
   Mail,
   Phone,
-  AlertCircle
-} from 'lucide-react';
+  AlertCircle,
+  FileText,
+  Eye,
+} from "lucide-react"
+import { toast } from "sonner"
 
-interface PayoutData {
-  id: string;
-  creatorName: string;
-  creatorEmail: string;
-  creatorAvatar?: string;
-  creatorPhone?: string;
-  amount: number;
-  platformFee: number;
-  creatorEarnings: number;
-  paymentMethod: string;
-  requestDate: string;
-  processedDate?: string;
-  status: 'pending' | 'approved' | 'rejected' | 'processed';
+type PayoutData = {
+  id: string
+  creatorId: string
+  creatorName: string
+  creatorEmail: string
+  creatorAvatar?: string
+  amount: number
+  status: string
+  note?: string | null
+  receiptUrl?: string | null
+  transactionId?: string | null
+  requestDate: string
+  processedDate?: string | null
+  paymentMethod: string
   bankDetails?: {
-    bankName: string;
-    accountNumber: string;
-    accountName: string;
-    accountType: string;
-    isVerified: boolean;
-  };
-  payoutNote?: string;
+    bankName: string
+    accountNumber: string
+    accountName: string
+    accountType: string
+    isVerified: boolean
+  }
 }
 
 interface PayoutModalProps {
-  payout: PayoutData | null;
-  onClose: () => void;
-//   onApprove: (payoutId: string, note?: string) => Promise<void>;
-//   onReject: (payoutId: string, note?: string) => Promise<void>;
-//   onDownload: (payoutId: string) => void;
+  payout: PayoutData | null
+  onClose: () => void
+  onRefresh: () => void
 }
 
-const PayoutModal: React.FC<PayoutModalProps> = ({ 
-  payout, 
-  onClose, 
-//   onApprove, 
-//   onReject, 
-//   onDownload 
-}) => {
-  const [showApproveModal, setShowApproveModal] = useState(false);
-  const [showRejectModal, setShowRejectModal] = useState(false);
-  const [approvalNote, setApprovalNote] = useState('');
-  const [rejectionNote, setRejectionNote] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState('');
+const PayoutModal: React.FC<PayoutModalProps> = ({ payout, onClose, onRefresh }) => {
+  const [showApproveModal, setShowApproveModal] = useState(false)
+  const [showRejectModal, setShowRejectModal] = useState(false)
+  const [showCompleteModal, setShowCompleteModal] = useState(false)
+  const [showAccountDetails, setShowAccountDetails] = useState(false)
+  const [approvalNote, setApprovalNote] = useState("")
+  const [rejectionNote, setRejectionNote] = useState("")
+  const [completionNote, setCompletionNote] = useState("")
+  const [receiptFile, setReceiptFile] = useState<File | null>(null)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [error, setError] = useState("")
 
-  if (!payout) return null;
+  if (!payout) return null
 
-  console.log('Payout Data:', payout);
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+      maximumFractionDigits: 0,
+    }).format(value)
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-600/20 text-yellow-400';
-      case 'approved':
-        return 'bg-blue-600/20 text-blue-400';
-      case 'rejected':
-        return 'bg-red-600/20 text-red-400';
-      case 'processed':
-        return 'bg-green-600/20 text-green-400';
+      case "pending":
+        return "bg-yellow-600/20 text-yellow-400"
+      case "processing":
+        return "bg-blue-600/20 text-blue-400"
+      case "rejected":
+        return "bg-red-600/20 text-red-400"
+      case "completed":
+        return "bg-green-600/20 text-green-400"
       default:
-        return 'bg-gray-600/20 text-muted-foreground';
+        return "bg-gray-600/20 text-muted-foreground"
     }
-  };
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pending':
-        return <AlertCircle className="w-5 h-5 text-yellow-400" />;
-      case 'approved':
-        return <CheckCircle className="w-5 h-5 text-blue-400" />;
-      case 'rejected':
-        return <XCircle className="w-5 h-5 text-red-400" />;
-      case 'processed':
-        return <CheckCircle className="w-5 h-5 text-green-400" />;
+      case "pending":
+        return <AlertCircle className="w-5 h-5 text-yellow-400" />
+      case "processing":
+        return <CheckCircle className="w-5 h-5 text-blue-400" />
+      case "rejected":
+        return <XCircle className="w-5 h-5 text-red-400" />
+      case "completed":
+        return <CheckCircle className="w-5 h-5 text-green-400" />
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   const handleApproveClick = () => {
-    setShowApproveModal(true);
-    setError('');
-  };
+    setShowApproveModal(true)
+    setError("")
+  }
 
   const handleRejectClick = () => {
-    setShowRejectModal(true);
-    setError('');
-  };
+    setShowRejectModal(true)
+    setError("")
+  }
+
+  const handleCompleteClick = () => {
+    setShowCompleteModal(true)
+    setError("")
+    setReceiptFile(null)
+  }
 
   const submitApproval = async () => {
-    if (!approvalNote.trim()) {
-      setError('Please add a note for approval');
-      return;
-    }
+    setIsProcessing(true)
+    setError("")
 
-    setIsProcessing(true);
     try {
-    //   await onApprove(payout.id, approvalNote);
-      setShowApproveModal(false);
-      setApprovalNote('');
+      const response = await fetch(`/api/superadmin/payouts/${payout.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "approve", note: approvalNote || "Payout approved and is being processed." }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to approve payout")
+      }
+
+      toast.success("Payout approved")
+      onRefresh()
+      onClose()
     } catch (err) {
-      setError('Failed to approve payout. Please try again.');
+      setError(err instanceof Error ? err.message : "Failed to approve payout")
     } finally {
-      setIsProcessing(false);
+      setIsProcessing(false)
     }
-  };
+  }
 
   const submitRejection = async () => {
-    if (!rejectionNote.trim()) {
-      setError('Please add a note for rejection');
-      return;
+    setIsProcessing(true)
+    setError("")
+
+    try {
+      const response = await fetch(`/api/superadmin/payouts/${payout.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "reject", note: rejectionNote || "Payout request rejected." }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to reject payout")
+      }
+
+      toast.success("Payout rejected")
+      onRefresh()
+      onClose()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to reject payout")
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  const submitCompletion = async () => {
+    setIsProcessing(true)
+    setError("")
+
+    try {
+      let receiptUrl = payout.receiptUrl
+
+      if (!receiptUrl && receiptFile) {
+        const formData = new FormData()
+        formData.append("receipt", receiptFile)
+
+        const uploadResponse = await fetch(`/api/superadmin/payouts/${payout.id}`, {
+          method: "POST",
+          body: formData,
+        })
+
+        const uploadData = await uploadResponse.json()
+        if (!uploadResponse.ok) {
+          throw new Error(uploadData?.message || "Receipt upload failed")
+        }
+
+        receiptUrl = uploadData.receiptUrl
+      }
+
+      if (!receiptUrl) {
+        throw new Error("Please upload a receipt before completing this payout")
+      }
+
+      const response = await fetch(`/api/superadmin/payouts/${payout.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "complete", note: completionNote || "Payout completed.", receiptUrl }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to complete payout")
+      }
+
+      toast.success("Payout completed")
+      onRefresh()
+      onClose()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to complete payout")
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  const handleUploadReceipt = async () => {
+    if (!receiptFile) {
+      setError("Select a receipt file to upload")
+      return
     }
 
-    setIsProcessing(true);
+    setIsProcessing(true)
+    setError("")
+
     try {
-    //   await onReject(payout.id, rejectionNote);
-      setShowRejectModal(false);
-      setRejectionNote('');
+      const formData = new FormData()
+      formData.append("receipt", receiptFile)
+
+      const response = await fetch(`/api/superadmin/payouts/${payout.id}`, {
+        method: "POST",
+        body: formData,
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data?.message || "Receipt upload failed")
+      }
+
+      toast.success("Receipt uploaded")
+      onRefresh()
+      onClose()
     } catch (err) {
-      setError('Failed to reject payout. Please try again.');
+      setError(err instanceof Error ? err.message : "Receipt upload failed")
     } finally {
-      setIsProcessing(false);
+      setIsProcessing(false)
     }
-  };
+  }
 
   return (
     <>
-      {/* Main Payout Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-        <div className="bg-card border border-border rounded-2xl w-full max-w-3xl max-h-[90vh] hidden-scrollbar overflow-hidden m-4">
-          {/* Header */}
+        <div className="bg-card border border-border rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden m-4">
           <div className="p-6 border-b border-border">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-bold text-foreground">Payout Details</h3>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-muted rounded-lg transition-colors"
-              >
+              <button onClick={onClose} className="p-2 hover:bg-muted rounded-lg transition-colors">
                 <X className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
           </div>
 
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
-            {/* Creator Information */}
             <div className="bg-muted/30 rounded-xl p-6 mb-6">
               <h4 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <User className="w-5 h-5 text-blue-400" />
                 Creator Information
               </h4>
-              
+
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
                     {payout.creatorAvatar ? (
-                      <img
-                        src={payout.creatorAvatar}
-                        alt={payout.creatorName}
-                        className="w-full h-full rounded-full object-cover"
-                      />
+                      <img src={payout.creatorAvatar} alt={payout.creatorName} className="w-full h-full rounded-full object-cover" />
                     ) : (
-                      <span className="text-foreground font-bold text-2xl">
-                        {payout.creatorName.charAt(0)}
-                      </span>
+                      <span className="text-foreground font-bold text-2xl">{payout.creatorName.charAt(0)}</span>
                     )}
                   </div>
                 </div>
-                
+
                 <div className="flex-1">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -196,15 +294,6 @@ const PayoutModal: React.FC<PayoutModalProps> = ({
                         <p className="text-foreground font-semibold">{payout.creatorEmail}</p>
                       </div>
                     </div>
-                    {payout.creatorPhone && (
-                      <div>
-                        <p className="text-muted-foreground text-sm">Phone</p>
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-muted-foreground" />
-                          <p className="text-foreground font-semibold">{payout.creatorPhone}</p>
-                        </div>
-                      </div>
-                    )}
                     <div>
                       <p className="text-muted-foreground text-sm">Status</p>
                       <div className="flex items-center gap-2">
@@ -214,65 +303,54 @@ const PayoutModal: React.FC<PayoutModalProps> = ({
                         </span>
                       </div>
                     </div>
+                    <div>
+                      <p className="text-muted-foreground text-sm">Transaction ID</p>
+                      <p className="text-foreground font-semibold font-mono text-sm">{payout.transactionId || payout.id}</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Bank Account Details */}
             {payout.bankDetails && (
               <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-600/30 rounded-xl p-6 mb-6">
-                <h4 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <Banknote className="w-5 h-5 text-green-400" />
-                  Payout Account Details
-                </h4>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <p className="text-muted-foreground text-sm">Bank Name</p>
-                    <p className="text-foreground font-semibold text-lg">{payout.bankDetails.bankName}</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground text-sm">Account Number</p>
-                    <p className="text-foreground font-semibold text-lg font-mono">
-                      ••••••••{payout.bankDetails.accountNumber.slice(-4)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground text-sm">Account Name</p>
-                    <p className="text-foreground font-semibold text-lg">{payout.bankDetails.accountName}</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground text-sm">Account Type</p>
-                    <div className="flex items-center gap-2">
-                      <span className={`px-3 py-1 rounded-full text-sm ${
-                        payout.bankDetails.isVerified 
-                          ? 'bg-green-600/20 text-green-400' 
-                          : 'bg-yellow-600/20 text-yellow-400'
-                      }`}>
-                        {payout.bankDetails.accountType}
-                      </span>
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        payout.bankDetails.isVerified 
-                          ? 'bg-green-600/20 text-green-400' 
-                          : 'bg-yellow-600/20 text-yellow-400'
-                      }`}>
-                        {payout.bankDetails.isVerified ? 'VERIFIED' : 'PENDING'}
-                      </span>
-                    </div>
-                  </div>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                    <Banknote className="w-5 h-5 text-green-400" />
+                    Payout Account Details
+                  </h4>
+                  <button onClick={() => setShowAccountDetails((value) => !value)} className="text-sm text-blue-400">
+                    {showAccountDetails ? "Hide" : "View account details"}
+                  </button>
                 </div>
-                
-                {payout.bankDetails.isVerified && (
-                  <div className="mt-4 flex items-center gap-2 text-green-400">
-                    <CheckCircle className="w-4 h-4" />
-                    <p className="text-sm">This account has been verified for payouts</p>
+
+                {showAccountDetails && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <p className="text-muted-foreground text-sm">Bank Name</p>
+                      <p className="text-foreground font-semibold text-lg">{payout.bankDetails.bankName}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-sm">Account Number</p>
+                      <p className="text-foreground font-semibold text-lg font-mono">••••••••{payout.bankDetails.accountNumber.slice(-4)}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-sm">Account Name</p>
+                      <p className="text-foreground font-semibold text-lg">{payout.bankDetails.accountName}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-sm">Account Type</p>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-3 py-1 rounded-full text-sm ${payout.bankDetails.isVerified ? "bg-green-600/20 text-green-400" : "bg-yellow-600/20 text-yellow-400"}`}>
+                          {payout.bankDetails.accountType}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
             )}
 
-            {/* Payout Breakdown */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="bg-muted/50 border border-border rounded-xl p-5">
                 <div className="flex items-center gap-3 mb-3">
@@ -281,7 +359,7 @@ const PayoutModal: React.FC<PayoutModalProps> = ({
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Total Amount</p>
-                    <p className="text-2xl font-bold text-foreground">${payout.amount.toFixed(2)}</p>
+                    <p className="text-2xl font-bold text-foreground">{formatCurrency(payout.amount)}</p>
                   </div>
                 </div>
               </div>
@@ -293,7 +371,7 @@ const PayoutModal: React.FC<PayoutModalProps> = ({
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Platform Fee (10%)</p>
-                    <p className="text-2xl font-bold text-red-400">${payout.platformFee.toFixed(2)}</p>
+                    <p className="text-2xl font-bold text-red-400">{formatCurrency(Math.round(payout.amount * 0.1))}</p>
                   </div>
                 </div>
               </div>
@@ -305,13 +383,12 @@ const PayoutModal: React.FC<PayoutModalProps> = ({
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Creator Earnings (90%)</p>
-                    <p className="text-2xl font-bold text-green-400">${payout.creatorEarnings.toFixed(2)}</p>
+                    <p className="text-2xl font-bold text-green-400">{formatCurrency(Math.round(payout.amount * 0.9))}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Payment Timeline */}
             <div className="bg-muted/30 rounded-xl p-6 mb-6">
               <h4 className="text-lg font-semibold text-foreground mb-4">Payment Timeline</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -319,7 +396,7 @@ const PayoutModal: React.FC<PayoutModalProps> = ({
                   <p className="text-muted-foreground text-sm">Request Date</p>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-blue-400" />
-                    <p className="text-foreground font-semibold">{payout.requestDate}</p>
+                    <p className="text-foreground font-semibold">{new Date(payout.requestDate).toLocaleDateString()}</p>
                   </div>
                 </div>
                 {payout.processedDate && (
@@ -327,7 +404,7 @@ const PayoutModal: React.FC<PayoutModalProps> = ({
                     <p className="text-muted-foreground text-sm">Processed Date</p>
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-green-400" />
-                      <p className="text-foreground font-semibold">{payout.processedDate}</p>
+                      <p className="text-foreground font-semibold">{new Date(payout.processedDate).toLocaleDateString()}</p>
                     </div>
                   </div>
                 )}
@@ -338,51 +415,57 @@ const PayoutModal: React.FC<PayoutModalProps> = ({
                     <p className="text-foreground font-semibold">{payout.paymentMethod}</p>
                   </div>
                 </div>
-                <div>
-                  <p className="text-muted-foreground text-sm">Transaction ID</p>
-                  <p className="text-foreground font-semibold font-mono text-sm">
-                    {payout.id}
-                  </p>
-                </div>
               </div>
             </div>
 
-            {/* Existing Note */}
-            {payout.payoutNote && (
+            {payout.note && (
               <div className="bg-yellow-600/10 border border-yellow-600/30 rounded-xl p-4 mb-6">
                 <h4 className="text-yellow-400 font-semibold mb-2 flex items-center gap-2">
                   <AlertCircle className="w-4 h-4" />
                   Admin Note
                 </h4>
-                <p className="text-yellow-300">{payout.payoutNote}</p>
+                <p className="text-yellow-300">{payout.note}</p>
               </div>
             )}
 
-            {/* Action Buttons */}
+            {error && (
+              <div className="bg-red-600/10 border border-red-600/30 rounded-xl p-4 mb-6">
+                <p className="text-red-400 text-sm">{error}</p>
+              </div>
+            )}
+
             <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6 border-t border-border">
               <button
-                // onClick={() => onDownload(payout.id)}
-                className="flex items-center gap-2 px-4 py-2 border border-gray-600 text-muted-foreground hover:text-foreground hover:border-gray-500 rounded-lg transition-colors"
+                onClick={() => payout.receiptUrl && window.open(payout.receiptUrl, "_blank")}
+                disabled={!payout.receiptUrl}
+                className="flex items-center gap-2 px-4 py-2 border border-gray-600 text-muted-foreground hover:text-foreground hover:border-gray-500 rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Download className="w-4 h-4" />
-                Download Receipt
+                View Receipt
               </button>
-              
-              {payout.status === 'pending' && (
+
+              {payout.status === "pending" && (
                 <>
-                  <button
-                    onClick={handleRejectClick}
-                    className="flex items-center gap-2 px-4 py-2 border border-red-600 text-red-400 hover:bg-red-600/10 rounded-lg transition-colors"
-                  >
+                  <button onClick={handleRejectClick} className="flex items-center gap-2 px-4 py-2 border border-red-600 text-red-400 hover:bg-red-600/10 rounded-lg transition-colors">
                     <XCircle className="w-4 h-4" />
                     Reject Payout
                   </button>
-                  <button
-                    onClick={handleApproveClick}
-                    className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-foreground rounded-lg transition-colors"
-                  >
+                  <button onClick={handleApproveClick} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-foreground rounded-lg transition-colors">
                     <CheckCircle className="w-4 h-4" />
                     Approve Payout
+                  </button>
+                </>
+              )}
+
+              {payout.status === "processing" && (
+                <>
+                  <button onClick={handleUploadReceipt} className="flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-400 hover:bg-blue-600/10 rounded-lg transition-colors">
+                    <FileText className="w-4 h-4" />
+                    Upload Receipt
+                  </button>
+                  <button onClick={handleCompleteClick} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-foreground rounded-lg transition-colors">
+                    <CheckCircle className="w-4 h-4" />
+                    Complete Payout
                   </button>
                 </>
               )}
@@ -391,133 +474,93 @@ const PayoutModal: React.FC<PayoutModalProps> = ({
         </div>
       </div>
 
-      {/* Approve Payout Modal */}
       {showApproveModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/90 backdrop-blur-sm">
           <div className="bg-card border border-border rounded-2xl w-full max-w-md p-6 m-4">
             <h4 className="text-lg font-semibold text-foreground mb-2">Approve Payout</h4>
-            <p className="text-muted-foreground text-sm mb-6">
-              Add a note for approving this payout to ${payout.creatorName}
-            </p>
-            
-            {error && (
-              <div className="bg-red-600/10 border border-red-600/30 rounded-xl p-4 mb-4">
-                <p className="text-red-400 text-sm">{error}</p>
-              </div>
-            )}
-            
+            <p className="text-muted-foreground text-sm mb-6">Add a note for approving this payout to {payout.creatorName}.</p>
+
             <div className="mb-6">
-              <label className="block text-muted-foreground text-sm mb-2">
-                Approval Note <span className="text-red-400">*</span>
-              </label>
+              <label className="block text-muted-foreground text-sm mb-2">Approval Note</label>
               <textarea
                 value={approvalNote}
                 onChange={(e) => setApprovalNote(e.target.value)}
-                placeholder="Enter a note explaining why you're approving this payout..."
+                placeholder="Optional note to send to the creator"
                 className="w-full h-32 bg-muted border border-border rounded-xl px-4 py-3 text-foreground placeholder-gray-400 focus:outline-none focus:border-green-500 resize-none"
-                required
               />
-              <p className="text-gray-500 text-xs mt-2">This note will be visible to the creator</p>
             </div>
-            
+
             <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setShowApproveModal(false);
-                  setApprovalNote('');
-                  setError('');
-                }}
-                className="flex-1 px-4 py-2 border border-gray-600 text-muted-foreground hover:text-foreground hover:border-gray-500 rounded-lg transition-colors"
-                disabled={isProcessing}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={submitApproval}
-                disabled={isProcessing || !approvalNote.trim()}
-                className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-foreground rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                {isProcessing ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle className="w-4 h-4" />
-                    Confirm Approval
-                  </>
-                )}
+              <button onClick={() => { setShowApproveModal(false); setApprovalNote("") }} className="flex-1 px-4 py-2 border border-gray-600 text-muted-foreground hover:text-foreground hover:border-gray-500 rounded-lg transition-colors" disabled={isProcessing}>Cancel</button>
+              <button onClick={submitApproval} disabled={isProcessing} className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-foreground rounded-lg transition-colors flex items-center justify-center gap-2">
+                {isProcessing ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+                Confirm Approval
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Reject Payout Modal */}
       {showRejectModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/90 backdrop-blur-sm">
           <div className="bg-card border border-border rounded-2xl w-full max-w-md p-6 m-4">
             <h4 className="text-lg font-semibold text-foreground mb-2">Reject Payout</h4>
-            <p className="text-muted-foreground text-sm mb-6">
-              Add a note for rejecting this payout to ${payout.creatorName}
-            </p>
-            
-            {error && (
-              <div className="bg-red-600/10 border border-red-600/30 rounded-xl p-4 mb-4">
-                <p className="text-red-400 text-sm">{error}</p>
-              </div>
-            )}
-            
+            <p className="text-muted-foreground text-sm mb-6">Add a note explaining why this payout is being rejected.</p>
+
             <div className="mb-6">
-              <label className="block text-muted-foreground text-sm mb-2">
-                Rejection Reason <span className="text-red-400">*</span>
-              </label>
+              <label className="block text-muted-foreground text-sm mb-2">Rejection Reason</label>
               <textarea
                 value={rejectionNote}
                 onChange={(e) => setRejectionNote(e.target.value)}
-                placeholder="Explain why you're rejecting this payout..."
+                placeholder="Optional note to send to the creator"
                 className="w-full h-32 bg-muted border border-border rounded-xl px-4 py-3 text-foreground placeholder-gray-400 focus:outline-none focus:border-red-500 resize-none"
-                required
               />
-              <p className="text-gray-500 text-xs mt-2">This note will be visible to the creator</p>
             </div>
-            
+
             <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setShowRejectModal(false);
-                  setRejectionNote('');
-                  setError('');
-                }}
-                className="flex-1 px-4 py-2 border border-gray-600 text-muted-foreground hover:text-foreground hover:border-gray-500 rounded-lg transition-colors"
-                disabled={isProcessing}
-              >
-                Cancel
+              <button onClick={() => { setShowRejectModal(false); setRejectionNote("") }} className="flex-1 px-4 py-2 border border-gray-600 text-muted-foreground hover:text-foreground hover:border-gray-500 rounded-lg transition-colors" disabled={isProcessing}>Cancel</button>
+              <button onClick={submitRejection} disabled={isProcessing} className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-foreground rounded-lg transition-colors flex items-center justify-center gap-2">
+                {isProcessing ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <XCircle className="w-4 h-4" />}
+                Confirm Rejection
               </button>
-              <button
-                onClick={submitRejection}
-                disabled={isProcessing || !rejectionNote.trim()}
-                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-foreground rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                {isProcessing ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <XCircle className="w-4 h-4" />
-                    Confirm Rejection
-                  </>
-                )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showCompleteModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/90 backdrop-blur-sm">
+          <div className="bg-card border border-border rounded-2xl w-full max-w-md p-6 m-4">
+            <h4 className="text-lg font-semibold text-foreground mb-2">Complete Payout</h4>
+            <p className="text-muted-foreground text-sm mb-6">Upload the transfer receipt and mark the payout completed.</p>
+
+            <div className="mb-4">
+              <label className="block text-muted-foreground text-sm mb-2">Receipt File</label>
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => setReceiptFile(e.target.files?.[0] || null)} className="w-full text-sm text-muted-foreground" />
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-muted-foreground text-sm mb-2">Completion Note</label>
+              <textarea
+                value={completionNote}
+                onChange={(e) => setCompletionNote(e.target.value)}
+                placeholder="Optional note to send to the creator"
+                className="w-full h-28 bg-muted border border-border rounded-xl px-4 py-3 text-foreground placeholder-gray-400 focus:outline-none focus:border-green-500 resize-none"
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <button onClick={() => { setShowCompleteModal(false); setCompletionNote(""); setReceiptFile(null); setError("") }} className="flex-1 px-4 py-2 border border-gray-600 text-muted-foreground hover:text-foreground hover:border-gray-500 rounded-lg transition-colors" disabled={isProcessing}>Cancel</button>
+              <button onClick={submitCompletion} disabled={isProcessing} className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-foreground rounded-lg transition-colors flex items-center justify-center gap-2">
+                {isProcessing ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+                Mark Completed
               </button>
             </div>
           </div>
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
 export default PayoutModal;

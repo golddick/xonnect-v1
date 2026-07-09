@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Search, Filter } from "lucide-react"
+import { Search, Filter, Loader2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { TicketRecord } from "@/lib/type/superadmin-ticket"
 
@@ -10,13 +10,15 @@ interface TicketsTabProps {
   searchTerm: string
   setSearchTerm: (term: string) => void
   openTicketDetails: (ticket: TicketRecord) => void
+  loading?: boolean
 }
 
 export default function TicketsTab({ 
   filteredRecords, 
   searchTerm, 
   setSearchTerm, 
-  openTicketDetails 
+  openTicketDetails,
+  loading = false,
 }: TicketsTabProps) {
   return (
     <motion.div
@@ -44,6 +46,12 @@ export default function TicketsTab({
         </button>
       </div>
 
+      {loading ? (
+        <div className="flex items-center justify-center py-10 text-muted-foreground">
+          <Loader2 className="w-5 h-5 animate-spin mr-2" />
+          Loading tickets...
+        </div>
+      ) : (
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
@@ -110,6 +118,7 @@ export default function TicketsTab({
           </tbody>
         </table>
       </div>
+      )}
     </motion.div>
   )
 }

@@ -67,6 +67,13 @@ interface CreatorStats {
   creatorRevenue: number
 }
 
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(value || 0)
+
 const emailTemplates = [
   {
     label: "Suspension Notice",
@@ -382,8 +389,8 @@ const CreatorManagement = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-muted-foreground text-sm">Platform Payout</p>
-                      <p className="text-2xl font-bold">${stats.platformRevenue.toLocaleString()}</p>
+                      <p className="text-muted-foreground text-sm">Platform Revenue</p>
+                      <p className="text-2xl font-bold">{formatCurrency(stats.platformRevenue)}</p>
                     </div>
                     <DollarSign className="w-8 h-8 text-yellow-500" />
                   </div>
@@ -394,8 +401,8 @@ const CreatorManagement = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-muted-foreground text-sm">Total Revenue</p>
-                      <p className="text-2xl font-bold">$2.8M</p>
+                      <p className="text-muted-foreground text-sm">Creator Total Revenue</p>
+                      <p className="text-2xl font-bold">{formatCurrency(stats.creatorRevenue)}</p>
                     </div>
                     <DollarSign className="w-8 h-8 text-red-500" />
                   </div>
@@ -487,7 +494,7 @@ const CreatorManagement = () => {
                           </div>
                         </td>
                         <td className="p-4">
-                          <p className="font-semibold text-green-400">{creator.totalRevenue}</p>
+                          <p className="font-semibold text-green-400">{formatCurrency(creator.totalRevenue)}</p>
                         </td>
                         <td className="p-4">
                           <p className="font-semibold">{creator.followersCount.toLocaleString()}</p>
@@ -611,11 +618,23 @@ const CreatorManagement = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                 <div className="bg-muted p-4 rounded-lg text-center">
                   <DollarSign className="w-6 h-6 text-green-400 mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">Revenue</p>
-                  <p className="font-bold text-green-400">{selectedCreator.totalRevenue}</p>
+                  <p className="text-sm text-muted-foreground">Total Revenue</p>
+                  <p className="font-bold text-green-400">{formatCurrency(selectedCreator.totalRevenue)}</p>
+                </div>
+                <div className="bg-muted p-4 rounded-lg text-center">
+                  <TrendingUp className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">Platform Revenue</p>
+                  <p className="font-bold text-yellow-400">{formatCurrency(selectedCreator.platformRevenue)}</p>
+                </div>
+                <div className="bg-muted p-4 rounded-lg text-center">
+                  <DollarSign className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">Creator Payout</p>
+                  <p className="font-bold text-cyan-400">
+                    {formatCurrency(Math.max(selectedCreator.totalRevenue - selectedCreator.platformRevenue, 0))}
+                  </p>
                 </div>
                 <div className="bg-muted p-4 rounded-lg text-center">
                   <Users className="w-6 h-6 text-blue-400 mx-auto mb-2" />
@@ -626,11 +645,6 @@ const CreatorManagement = () => {
                   <Video className="w-6 h-6 text-purple-400 mx-auto mb-2" />
                   <p className="text-sm text-muted-foreground">Videos</p>
                   <p className="font-bold">{selectedCreator.videos}</p>
-                </div>
-                <div className="bg-muted p-4 rounded-lg text-center">
-                  <TrendingUp className="w-6 h-6 text-red-400 mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">Events</p>
-                  <p className="font-bold">{selectedCreator.events}</p>
                 </div>
               </div>
 

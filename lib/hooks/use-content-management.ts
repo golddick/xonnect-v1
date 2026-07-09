@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { mockStreams, mockVideos } from '../data/mock-content';
 import { Event, EventsResponse, Video, VideosResponse } from '../type/content';
 
 export const useContentManagement = () => {
@@ -12,39 +11,40 @@ export const useContentManagement = () => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Mock fetch events
   const fetchEvents = useCallback(async () => {
     try {
       setRefreshing(true);
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      let filtered = [...mockStreams];
-      
-      // Apply search filter
+
+      const response = await fetch('/api/superadmin/content');
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to load events');
+      }
+
+      let filtered = [...(data.events || [])] as Event[];
+
       if (searchTerm) {
-        filtered = filtered.filter(event =>
+        filtered = filtered.filter((event) =>
           event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           event.creator.toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
-      
-      // Apply status filter
+
       if (filterStatus !== 'all') {
-        filtered = filtered.filter(event => event.status === filterStatus);
+        filtered = filtered.filter((event) => event.status === filterStatus);
       }
-      
+
       const mockResponse: EventsResponse = {
         event: filtered,
         pagination: {
           page: 1,
           limit: 50,
           total: filtered.length,
-          totalPages: 1
-        }
+          totalPages: 1,
+        },
       };
-      
+
       setEvents(mockResponse.event);
       return mockResponse;
     } catch (error) {
@@ -55,34 +55,36 @@ export const useContentManagement = () => {
     }
   }, [searchTerm, filterStatus]);
 
-  // Mock fetch videos
   const fetchVideos = useCallback(async () => {
     try {
       setRefreshing(true);
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      let filtered = [...mockVideos];
-      
-      // Apply search filter
+
+      const response = await fetch('/api/superadmin/content');
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to load videos');
+      }
+
+      let filtered = [...(data.videos || [])] as Video[];
+
       if (searchTerm) {
-        filtered = filtered.filter(video =>
+        filtered = filtered.filter((video) =>
           video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           video.creator.toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
-      
+
       const mockResponse: VideosResponse = {
         videos: filtered,
         pagination: {
           page: 1,
           limit: 50,
           total: filtered.length,
-          totalPages: 1
-        }
+          totalPages: 1,
+        },
       };
-      
+
       setVideos(mockResponse.videos);
       return mockResponse;
     } catch (error) {
@@ -93,12 +95,11 @@ export const useContentManagement = () => {
     }
   }, [searchTerm]);
 
-  // Load initial data
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       try {
-        if (activeTab === "events") {
+        if (activeTab === 'events') {
           await fetchEvents();
         } else {
           await fetchVideos();
@@ -113,10 +114,9 @@ export const useContentManagement = () => {
     loadData();
   }, [activeTab, fetchEvents, fetchVideos]);
 
-  // Handle refresh
   const handleRefresh = useCallback(async () => {
     try {
-      if (activeTab === "events") {
+      if (activeTab === 'events') {
         await fetchEvents();
       } else {
         await fetchVideos();
@@ -128,8 +128,8 @@ export const useContentManagement = () => {
 
   const handleTabChange = useCallback((tab: string) => {
     setActiveTab(tab);
-    setSearchTerm("");
-    setFilterStatus("all");
+    setSearchTerm('');
+    setFilterStatus('all');
   }, []);
 
   return {

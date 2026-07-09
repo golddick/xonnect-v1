@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth/auth"
 import { sendOtp } from "@/lib/auth/dropaphi-client"
 import { prisma } from "@/lib/db/prisma"
-import { Role } from "@/lib/generated/prisma"
+import { CreatorEventTicketAccessType, Role, SuperAdminSettingSection } from "@/lib/generated/prisma"
+import { normalizeRevenueSettings } from "@/lib/superadmin-settings"
 
 function normalizeEmail(email: string | null | undefined) {
   return typeof email === "string" ? email.toLowerCase().trim() : null
@@ -42,15 +43,42 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Selected payout account is invalid" }, { status: 404 })
     }
 
-    const summary = await prisma.creatorVideo.findMany({ where: { creatorId: creator.id }, select: { revenue: true } })
-    const eventRevenue = await prisma.creatorEvent.findMany({ where: { creatorId: creator.id }, select: { revenue: true } })
-    const pendingPayouts = await prisma.creatorPayoutRequest.findMany({ where: { creatorId: creator.id, status: { in: ["pending", "processing"] } }, select: { amount: true } })
+    const [videoPurchases, ticketPurchases, pendingPayouts, payoutSettings] = await Promise.all([
+      prisma.creatorVideoPurchase.findMany({
+        where: { creatorId: creator.id, status: "COMPLETED" },
+        select: { revenue: true },
+      }),
+      prisma.creatorEventTicketPurchase.findMany({
+        where: { ticket: { event: { creatorId: creator.id } }, status: "COMPLETED" },
+        select: {
+          revenue: true,
+          ticket: { select: { access: true } },
+        },
+      }),
+      prisma.creatorPayoutRequest.findMany({
+        where: { creatorId: creator.id, status: { in: ["pending", "processing"] } },
+        select: { amount: true },
+      }),
+      prisma.superAdminSetting.findFirst({
+        where: { section: SuperAdminSettingSection.REVENUE },
+        select: { minimumPayoutAmount: true },
+      }),
+    ])
 
-    const totalRevenue = summary.reduce((sum, row) => sum + Number(row.revenue ?? 0), 0) + eventRevenue.reduce((sum, row) => sum + Number(row.revenue ?? 0), 0)
+    const videoRevenue = videoPurchases.reduce((sum, row) => sum + Number(row.revenue ?? 0), 0)
+    const streamRevenue = ticketPurchases
+      .filter((row) => row.ticket?.access === CreatorEventTicketAccessType.STREAM)
+      .reduce((sum, row) => sum + Number(row.revenue ?? 0), 0)
+    const venueRevenue = ticketPurchases
+      .filter((row) => row.ticket?.access === CreatorEventTicketAccessType.VENUE)
+      .reduce((sum, row) => sum + Number(row.revenue ?? 0), 0)
+    const totalRevenue = videoRevenue + streamRevenue + venueRevenue
     const unavailable = pendingPayouts.reduce((sum, row) => sum + Number(row.amount ?? 0), 0)
+    const minimumPayoutAmount = normalizeRevenueSettings(payoutSettings).minimumPayoutAmount
+    const availableForPayout = Math.max(totalRevenue - unavailable, 0)
 
-    if (!Number.isFinite(amount) || amount <= 0 || amount > totalRevenue - unavailable) {
-      return NextResponse.json({ message: "Requested amount is not allowed" }, { status: 400 })
+    if (!Number.isFinite(amount) || amount <= 0 || amount > availableForPayout || amount < minimumPayoutAmount) {
+      return NextResponse.json({ message: `Requested amount is not allowed. Minimum payout amount is ₦${minimumPayoutAmount}.` }, { status: 400 })
     }
 
     const result = await sendOtp(session.user.email, {

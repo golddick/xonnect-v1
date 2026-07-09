@@ -43,10 +43,7 @@ const ContentManagement = () => {
   // Move useState INSIDE the component
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
 
-//   const currentUser = {
-//     role: "primus",
-//     name: "Admin User",
-//   }
+
 
   const {
     searchTerm,
@@ -213,7 +210,7 @@ const ContentManagement = () => {
                         {activeTab === "events" ? "Scheduled" : "Uploads This Month"}
                       </p>
                       <p className="text-2xl font-bold text-foreground">
-                        {activeTab === "events" ? scheduledEvents : "12"}
+                        {activeTab === "events" ? scheduledEvents : "0"}
                       </p>
                     </div>
                     <Calendar className="w-8 h-8 text-yellow-500" />

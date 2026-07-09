@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { ArrowLeft, Calendar, Clapperboard, Clock, Eye, Film, Library, MessageSquare, Play, Radio, Settings, Share2 } from "lucide-react"
 
@@ -11,6 +11,7 @@ import WatchChatPanel from "@/components/tv/watch/watch-chat-panel"
 import WatchPartsPanel from "@/components/tv/watch/watch-parts-panel"
 import { FollowButton, LikeButton } from "@/components/tv/follow-like-buttons"
 import { type WatchFolder, type WatchPart } from "@/lib/tv/watch-folder"
+import LoadingSplash from "@/components/splash_screen/loading-splash"
 
 type WatchContentKind = "event" | "folder"
 type PurchaseType = "rent24" | "rent48" | "purchase"
@@ -23,6 +24,7 @@ type ChatMessage = {
   time: string
   text: string
   reactions: Record<ChatReaction, number>
+  failed?: boolean
 }
 
 type WatchPageProps = {
@@ -38,57 +40,8 @@ const CHAT_REACTIONS: ChatReaction[] = [
   "\u{1F44F}",
 ]
 
-const DEMO_CHAT_MESSAGES: ChatMessage[] = [
-  {
-    id: "msg-1",
-    name: "Tunde",
-    handle: "@tunde_live",
-    time: "2m ago",
-    text: "The teaser already looks polished. Waiting for the live drop.",
-    reactions: {
-      "\u{1F44D}": 4,
-      "\u{2764}\u{FE0F}": 2,
-      "\u{1F525}": 6,
-      "\u{1F602}": 0,
-      "\u{1F44F}": 3,
-    },
-  },
-  {
-    id: "msg-2",
-    name: "Amina",
-    handle: "@amina_oke",
-    time: "1m ago",
-    text: "Audio check looks good. The preview video is a nice touch.",
-    reactions: {
-      "\u{1F44D}": 3,
-      "\u{2764}\u{FE0F}": 1,
-      "\u{1F525}": 2,
-      "\u{1F602}": 1,
-      "\u{1F44F}": 2,
-    },
-  },
-  {
-    id: "msg-3",
-    name: "Xonnect Crew",
-    handle: "@host",
-    time: "Now",
-    text: "Stream opens when the event goes live. Preview is available for now.",
-    reactions: {
-      "\u{1F44D}": 6,
-      "\u{2764}\u{FE0F}": 4,
-      "\u{1F525}": 8,
-      "\u{1F602}": 0,
-      "\u{1F44F}": 5,
-    },
-  },
-]
-
-function cloneDemoChatMessages() {
-  return DEMO_CHAT_MESSAGES.map((message) => ({
-    ...message,
-    reactions: { ...message.reactions },
-  }))
-}
+// Live chat: fetch recent messages and subscribe over WebSocket.
+// Anonymous users will send messages with name "Unknown" and handle "@unknown".
 
 export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const router = useRouter()
@@ -111,12 +64,13 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const [buyerPhone, setBuyerPhone] = useState("")
   const [message, setMessage] = useState<string | null>(null)
   const [busy, setBusy] = useState<PurchaseType | "code" | null>(null)
-  const [chatVisible, setChatVisible] = useState(true)
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(cloneDemoChatMessages)
+  const [chatVisible, setChatVisible] = useState(false)
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatDraft, setChatDraft] = useState("")
   const [eventLikesCount, setEventLikesCount] = useState(0)
   const [eventIsLiked, setEventIsLiked] = useState(false)
   const [creatorIsFollowed, setCreatorIsFollowed] = useState(false)
+  const eventSourceRef = useRef<EventSource | null>(null)
 
   useEffect(() => {
     setAccessCode(codeParam)
@@ -137,9 +91,59 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   }, [watchId, kind, codeParam])
 
   useEffect(() => {
+    // show chat by default and clear draft, then fetch recent messages
     setChatVisible(true)
-    setChatMessages(cloneDemoChatMessages())
     setChatDraft("")
+
+    let cancelled = false
+    async function loadRecent() {
+      try {
+        const res = await fetch(`/api/tv/watch/chat/${watchId}?kind=${encodeURIComponent(kind)}`)
+        if (!res.ok) return
+        const data = await res.json()
+        if (cancelled) return
+        setChatMessages(Array.isArray(data?.messages) ? data.messages : [])
+      } catch (err) {
+        console.error("Failed to load recent chat messages:", err)
+      }
+    }
+
+    if (watchId) loadRecent()
+
+    // connect to SSE for live updates
+    if (typeof window !== "undefined") {
+      const sseUrl = `/api/tv/watch/sse/${watchId}?kind=${encodeURIComponent(kind)}`
+      const es = new EventSource(sseUrl)
+      eventSourceRef.current = es
+
+      es.addEventListener("message", (ev) => {
+        try {
+          const payload = JSON.parse(ev.data)
+          if (payload?.message) {
+            setChatMessages((current) => [...current, payload.message])
+          }
+        } catch (e) {
+          // ignore
+        }
+      })
+
+      es.addEventListener("ping", () => {
+        // heartbeat
+      })
+
+      es.addEventListener("error", (e) => {
+        console.error("SSE error", e)
+        es.close()
+      })
+    }
+
+    return () => {
+      cancelled = true
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close()
+        eventSourceRef.current = null
+      }
+    }
   }, [watchId, kind])
 
   useEffect(() => {
@@ -291,25 +295,85 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     const trimmed = chatDraft.trim()
     if (!trimmed) return
 
-    setChatMessages((current) => [
-      ...current,
-      {
-        id: `demo-${Date.now()}`,
-        name: "You",
-        handle: "@you",
-        time: "Just now",
-        text: trimmed,
-        reactions: {
-          "\u{1F44D}": 0,
-          "\u{2764}\u{FE0F}": 0,
-          "\u{1F525}": 0,
-          "\u{1F602}": 0,
-          "\u{1F44F}": 0,
-        },
+    // Optimistic message append
+    const tempId = `local-${Date.now()}`
+    const anon = { name: "Unknown", handle: "@unknown" }
+    const optimistic: ChatMessage = {
+      id: tempId,
+      name: anon.name,
+      handle: anon.handle,
+      time: "Just now",
+      text: trimmed,
+      reactions: {
+        "\u{1F44D}": 0,
+        "\u{2764}\u{FE0F}": 0,
+        "\u{1F525}": 0,
+        "\u{1F602}": 0,
+        "\u{1F44F}": 0,
       },
-    ])
+    }
+
+    setChatMessages((current) => [...current, optimistic])
     setChatDraft("")
+
+    // send to API (server should broadcast to WS subscribers)
+    ;(async () => {
+      try {
+        const res = await fetch(`/api/tv/watch/chat/${watchId}?kind=${encodeURIComponent(kind)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: trimmed }),
+        })
+
+        if (!res.ok) {
+          console.error("Failed to send chat message")
+          // mark optimistic message as failed for UI
+          setChatMessages((current) => current.map((m) => (m.id === tempId ? { ...m, failed: true } : m)))
+          return
+        }
+
+        const data = await res.json()
+        // server may return canonical message with id/timestamp
+        if (data?.message) {
+          setChatMessages((current) =>
+            current.map((m) => (m.id === tempId ? data.message : m))
+          )
+        }
+      } catch (err) {
+        console.error("Chat send error:", err)
+        setChatMessages((current) => current.map((m) => (m.id === tempId ? { ...m, failed: true } : m)))
+      }
+    })()
   }
+
+  const handleRetry = async (messageId: string) => {
+    const message = chatMessages.find((m) => m.id === messageId)
+    if (!message) return
+
+    // optimistic: clear failed
+    setChatMessages((current) => current.map((m) => (m.id === messageId ? { ...m, failed: false } : m)))
+
+    try {
+      const res = await fetch(`/api/tv/watch/chat/${watchId}?kind=${encodeURIComponent(kind)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: message.text }),
+      })
+      if (!res.ok) {
+        setChatMessages((current) => current.map((m) => (m.id === messageId ? { ...m, failed: true } : m)))
+        return
+      }
+      const data = await res.json()
+      if (data?.message) {
+        setChatMessages((current) => current.map((m) => (m.id === messageId ? data.message : m)))
+      }
+    } catch (err) {
+      console.error("Retry send error:", err)
+      setChatMessages((current) => current.map((m) => (m.id === messageId ? { ...m, failed: true } : m)))
+    }
+  }
+
+  // SSE connection is handled earlier in the chat setup effect.
 
   const watchFolder = kind === "folder" ? folderData : null
 
@@ -410,7 +474,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   if (loading) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        Loading...
+        
+        <LoadingSplash />
       </div>
     )
   }
@@ -509,60 +574,19 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1.5">
-                      <Eye className="w-4 h-4" />
-                      {eventData.currentViewersCount ?? 0} viewers
-                    </span>
+                    <p className="mt-1 text-sm font-semibold text-foreground">
+                      {eventData.access?.locked ? "Locked" : "Unlocked"}
+                    </p>
                     <span className="flex items-center gap-1.5">
                       <Calendar className="w-4 h-4" />
                       {eventData.scheduledAt ? new Date(eventData.scheduledAt).toLocaleDateString() : "N/A"}
                     </span>
+                    
                     <span className="flex items-center gap-1.5">
-                      <Clock className="w-4 h-4" />
-                      {eventData.durationMinutes ?? 0} mins
+                        {eventData.access?.premium ? "Premium" : "Free"}
                     </span>
-                    <span className="flex items-center gap-1.5">
-                        {eventData.access?.premium ? "Premium" : "Open"}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-6 bg-muted/20 rounded-2xl border border-border/50 space-y-4">
-                  <div>
-                    <h3 className="font-semibold mb-2">Description</h3>
-                    <p className="text-muted-foreground leading-relaxed text-sm">
-                      {eventData.description || "No description available"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {chatVisible ? (
-              <WatchChatPanel
-                messages={chatMessages}
-                reactions={CHAT_REACTIONS}
-                draft={chatDraft}
-                onReaction={handleChatReaction}
-                onDraftChange={setChatDraft}
-                onSend={handleChatSend}
-                onQuickReaction={(reaction) => setChatDraft((value) => `${value}${reaction}`)}
-              />
-            ) : null}
-          </div>
-
-          <div className="mt-8 space-y-4">
-            <div className="space-y-4">
-              <div className="rounded-2xl border border-border bg-muted/20 p-5 space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
-                    <Radio className="h-5 w-5" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm text-muted-foreground">Hosted by</p>
-                    <p className="font-semibold truncate">{eventData.creator?.name || "Xonnect Creator"}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
+                    
+                    <div className="flex items-center gap-2">
                     <FollowButton
                       creatorId={eventData.creator?.id}
                       isFollowing={creatorIsFollowed}
@@ -580,48 +604,41 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                       }}
                     />
                   </div>
+
+
+                  </div>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="rounded-xl border border-border bg-background/60 p-4">
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Access</p>
-                    <p className="mt-1 text-sm font-semibold text-foreground">
-                      {eventData.access?.locked ? "Locked" : "Unlocked"}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-border bg-background/60 p-4">
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Schedule</p>
-                    <p className="mt-1 text-sm font-semibold text-foreground">
-                      {eventData.scheduledAt ? new Date(eventData.scheduledAt).toLocaleString() : "Not scheduled"}
+                {eventData.description  && (
+                <div className="p-6 bg-muted/20 rounded-2xl border border-border/50 space-y-4">
+                  <div>
+                    <h3 className="font-semibold mb-2">Description</h3>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
+                      {eventData.description || "No description available"}
                     </p>
                   </div>
                 </div>
+                )}
+
+                
               </div>
-
-              {/* {eventData.tickets?.length > 0 ? (
-                <div className="rounded-2xl border border-border bg-muted/20 p-5 space-y-3">
-                  <h3 className="font-bold text-lg">Tickets</h3>
-                  <div className="space-y-3">
-                    {eventData.tickets.map((ticket: any) => (
-                      <div key={ticket.id} className="rounded-xl border border-border bg-background/60 p-4">
-                        <div className="flex items-center justify-between gap-4">
-                          <div className="min-w-0">
-                            <p className="font-semibold truncate">{ticket.ticketType}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {ticket.remaining} remaining
-                            </p>
-                          </div>
-                          <span className="text-sm font-semibold text-foreground">
-                            NGN {Number(ticket.price || 0).toLocaleString()}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : null} */}
             </div>
+
+            {chatVisible ? (
+              <WatchChatPanel
+                messages={chatMessages}
+                reactions={CHAT_REACTIONS}
+                draft={chatDraft}
+                onReaction={handleChatReaction}
+                onDraftChange={setChatDraft}
+                onSend={handleChatSend}
+                onRetry={handleRetry}
+                onQuickReaction={(reaction) => setChatDraft((value) => `${value}${reaction}`)}
+              />
+            ) : null}
           </div>
+
+          
         </main>
       </div>
     )
@@ -657,13 +674,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => router.push(`/tv/${watchFolder.contentType}`)}
-              className="hidden md:flex items-center gap-2 bg-muted hover:bg-muted/80 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
-            >
-              <Settings className="w-4 h-4" />
-              More {watchFolder.contentType}
-            </button>
+            
             <button className="p-2 hover:bg-muted rounded-full transition-colors">
               <Share2 className="w-5 h-5" />
             </button>
@@ -703,18 +714,31 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                     <Calendar className="w-4 h-4" />
                     {currentPart?.uploadDate ? new Date(currentPart.uploadDate).toLocaleDateString() : "N/A"}
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4" />
-                    {currentPart?.duration ?? "N/A"}
-                  </span>
+
+                   <FollowButton
+                    creatorId={watchFolder.creator?.id || ""}
+                    isFollowing={creatorIsFollowed}
+                    isSelf={watchFolder.creator?.isSelf ?? false}
+                    onFollowChange={() => setCreatorIsFollowed(!creatorIsFollowed)}
+                  />
+                 
                 </div>
               </div>
 
               <div className="p-6 bg-muted/20 rounded-2xl border border-border/50">
-                <h3 className="font-semibold mb-2">Description</h3>
-                <p className="text-muted-foreground leading-relaxed text-sm">
-                  {currentPart?.description || watchFolder.description || "No description available"}
-                </p>
+                
+                {
+                  currentPart?.description || watchFolder.description && (
+                    <div>
+                      <h3 className="font-semibold mb-2">Description</h3><h3 className="font-semibold mb-2">Description</h3>
+                      <p className="text-muted-foreground leading-relaxed text-sm">
+                        {currentPart?.description || watchFolder.description || "No description available"}
+                      </p>
+                    </div>
+                  )
+                }
+                
+                
                 {currentPart?.tags && currentPart.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-4">
                     {currentPart.tags.map((tag) => (
@@ -741,25 +765,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               }}
             />
 
-            <div className="rounded-2xl border border-border bg-muted/20 p-5 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600/15 text-blue-500">
-                  <Play className="h-5 w-5" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm text-muted-foreground">By</p>
-                  <p className="font-semibold truncate">{watchFolder.creator?.name || "Xonnect Creator"}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FollowButton
-                    creatorId={watchFolder.creator?.id || ""}
-                    isFollowing={creatorIsFollowed}
-                    isSelf={watchFolder.creator?.isSelf ?? false}
-                    onFollowChange={() => setCreatorIsFollowed(!creatorIsFollowed)}
-                  />
-                </div>
-              </div>
-            </div>
+            
           </div>
         </div>
       </main>

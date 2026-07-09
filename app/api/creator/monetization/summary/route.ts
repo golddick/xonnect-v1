@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
-import { Role } from "@/lib/generated/prisma"
+import { CreatorEventTicketAccessType, Role, SuperAdminSettingSection } from "@/lib/generated/prisma"
+import { normalizeRevenueSettings } from "@/lib/superadmin-settings"
 
 function normalizeEmail(email: string | null | undefined) {
   return typeof email === "string" ? email.toLowerCase().trim() : null
@@ -14,50 +15,57 @@ export async function GET() {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
     }
 
-    const email = normalizeEmail(session.user.email)
+    const normalizedEmail = normalizeEmail(session.user.email)
+    if (typeof normalizedEmail !== "string") {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    const email: string = normalizedEmail
     const creator = await prisma.creator.findFirst({
       where: { profile: { email } },
-      select: {
-        id: true,
-        videoPayoutPercent: true,
-        eventStreamPayout: true,
-        eventVenuePayout: true,
-      },
+      select: { id: true },
     })
 
     if (!creator) {
       return NextResponse.json({ message: "Creator profile not found" }, { status: 404 })
     }
 
-    const [videoRevenueRows, ticketRows, pendingPayoutsRows] = await Promise.all([
-      prisma.creatorVideo.findMany({
-        where: { creatorId: creator.id },
+    const [videoPurchases, ticketPurchases, pendingPayoutsRows, payoutSettings] = await Promise.all([
+      prisma.creatorVideoPurchase.findMany({
+        where: { creatorId: creator.id, status: "COMPLETED" },
         select: { revenue: true },
       }),
-      prisma.creatorEventTicket.findMany({
-        where: { event: { creatorId: creator.id } },
+      prisma.creatorEventTicketPurchase.findMany({
+        where: { ticket: { event: { creatorId: creator.id } }, status: "COMPLETED" },
         select: {
-          access: true,
           revenue: true,
-          platformFee: true,
+          ticket: {
+            select: { access: true },
+          },
         },
       }),
       prisma.creatorPayoutRequest.findMany({
         where: { creatorId: creator.id, status: { in: ["pending", "processing"] } },
         select: { amount: true },
       }),
+      prisma.superAdminSetting.findFirst({
+        where: { section: SuperAdminSettingSection.REVENUE },
+        select: { minimumPayoutAmount: true },
+      }),
     ])
 
-    const videoRevenue = videoRevenueRows.reduce((sum, row) => sum + Number(row.revenue ?? 0), 0)
-    const streamRevenue = ticketRows
-      .filter((row) => row.access === "STREAM")
-      .reduce((sum, row) => sum + Math.max(Number(row.revenue ?? 0) - Number(row.platformFee ?? 0), 0), 0)
-    const venueRevenue = ticketRows
-      .filter((row) => row.access === "VENUE")
-      .reduce((sum, row) => sum + Math.max(Number(row.revenue ?? 0) - Number(row.platformFee ?? 0), 0), 0)
+    const videoRevenue = videoPurchases.reduce((sum, row) => sum + Number(row.revenue ?? 0), 0)
+    const streamRevenue = ticketPurchases
+      .filter((row) => row.ticket?.access === CreatorEventTicketAccessType.STREAM)
+      .reduce((sum, row) => sum + Number(row.revenue ?? 0), 0)
+    const venueRevenue = ticketPurchases
+      .filter((row) => row.ticket?.access === CreatorEventTicketAccessType.VENUE)
+      .reduce((sum, row) => sum + Number(row.revenue ?? 0), 0)
     const pendingPayouts = pendingPayoutsRows.reduce((sum, row) => sum + Number(row.amount ?? 0), 0)
 
     const totalRevenue = videoRevenue + streamRevenue + venueRevenue
+    const minimumPayoutAmount = normalizeRevenueSettings(payoutSettings).minimumPayoutAmount
+    const availableForPayout = Math.max(totalRevenue - pendingPayouts, 0)
 
     return NextResponse.json({
       summary: {
@@ -65,8 +73,9 @@ export async function GET() {
         streamRevenue,
         venueRevenue,
         videoRevenue,
-        availableForPayout: totalRevenue - pendingPayouts,
+        availableForPayout,
         pendingPayouts,
+        minimumPayoutAmount,
       },
     })
   } catch (error) {
