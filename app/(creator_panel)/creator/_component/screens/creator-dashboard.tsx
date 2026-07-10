@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { useSession } from "next-auth/react"
+// import { useSession } from "next-auth/react"
 import {
   BarChart3,
   Calendar,
@@ -40,7 +40,6 @@ import {
   Legend,
 } from "chart.js"
 import { sidebarItems } from "@/lib/constant"
-import Sidebar from "@/app/(creator_panel)/creator/_component/sidebar/Sidebar"
 import UserAvatar from "@/components/common_component/userAvatar"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend)
@@ -75,7 +74,7 @@ const defaultRevenueChartData = {
 export default function CreatorDashboard() {
   const router = useRouter()
   const pathname = usePathname()
-  const { data: session, status } = useSession()
+  // const { data: session, status } = useSession()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [stats, setStats] = useState({
     totalRevenue: 0,
@@ -88,32 +87,32 @@ export default function CreatorDashboard() {
   })
   const [recentStreams, setRecentStreams] = useState<any[]>([])
   const [payoutSplit, setPayoutSplit] = useState({
-    videoPayoutPercent: 70,
-    eventStreamPayout: 70,
-    eventVenuePayout: 70,
+    videoPayoutPercent: 0,
+    eventStreamPayout: 0,
+    eventVenuePayout: 0,
   })
   const [showPayoutSplit, setShowPayoutSplit] = useState(false)
   const [loading, setLoading] = useState(true)
   const [revenueChartData, setRevenueChartData] = useState(defaultRevenueChartData)
 
-  const userName = session?.user?.name || session?.user?.email || "Creator"
-  const profileImage = session?.user?.image || ""
-  const isCreator = session?.user?.role === "CREATOR"
+  // const userName = session?.user?.name || session?.user?.email || "Creator"
+  // const profileImage = session?.user?.image || ""
+  // const isCreator = session?.user?.role === "CREATOR"
 
   useEffect(() => {
-    if (status === "loading") return
+    // if (status === "loading") return
 
-    if (status === "unauthenticated" || !isCreator) {
-      router.replace("/tv")
-      setLoading(false)
-      return
-    }
+    // if (status === "unauthenticated" || !isCreator) {
+    //   router.replace("/tv")
+    //   setLoading(false)
+    //   return
+    // }
 
     const loadDashboard = async () => {
       try {
         const response = await fetch("/api/creator/dashboard", { cache: "no-store" })
 
-        if (response.status === 401 || response.status === 403) {
+        if (response.status === 401 ) {
           router.replace("/tv")
           return
         }
@@ -134,7 +133,7 @@ export default function CreatorDashboard() {
     }
 
     loadDashboard()
-  }, [isCreator, router, status])
+  }, [ ])
 
   const chartOptions = {
     responsive: true,
@@ -220,9 +219,10 @@ export default function CreatorDashboard() {
                 <Menu className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">
-                  Creator Dashboard
-                </h1>
+               <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                Creator
+                <span className="hidden md:inline">Dashboard</span>
+              </h1>
               </div>
             </div>
 
@@ -240,7 +240,7 @@ export default function CreatorDashboard() {
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-600 rounded-full"></div>
               </button>
               <ThemeToggle />
-              <UserAvatar name={userName} image={profileImage} />
+              {/* <UserAvatar name={userName} image={profileImage} /> */}
             </div>
           </div>
         </div>

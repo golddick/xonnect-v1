@@ -169,7 +169,7 @@ const EnterprisePartnership = () => {
                       )}
                     </div>
                     {index < steps.length - 1 && (
-                      <div className={`w-16 h-0.5 mx-2 ${currentStep > step.number ? "bg-red-600" : "bg-gray-600"}`} />
+                      <div className={`hidden md:block w-16 h-0.5 mx-2 ${currentStep > step.number ? "bg-red-600" : "bg-gray-600"}`} />
                     )}
                   </div>
                 ))}
