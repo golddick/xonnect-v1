@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 
 import VideoViewPanel from "@/components/common_component/video-view-panel"
+import LoadingSplash from "@/components/splash_screen/loading-splash"
 
 export default function VideoViewPage() {
   const params = useParams()
@@ -74,15 +75,15 @@ export default function VideoViewPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        Loading...
-      </div>
+        <LoadingSplash />
+      </div> 
     )
   }
 
   if (!folderData) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        Video folder not found
+        Video not found
       </div>
     )
   }

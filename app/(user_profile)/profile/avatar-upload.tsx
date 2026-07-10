@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { uploadFile } from "@/lib/auth/dropaphi-upload"
+import { uploadFileRaw } from "@/lib/auth/dropaphi-upload"
+
 
 export default function AvatarUpload({
   initialUrl,
@@ -20,7 +21,7 @@ export default function AvatarUpload({
     setIsUploading(true)
     setError(null)
     try {
-      const result = await uploadFile( file, file.name  )
+      const result = await uploadFileRaw( file  )
       
       if (!result.ok || !result.url) {
         throw new Error(result.message ?? "Upload failed")

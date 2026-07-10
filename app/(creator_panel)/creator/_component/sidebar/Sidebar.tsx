@@ -1,21 +1,10 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import {
-  BarChart3,
-  Calendar,
-  DollarSign,
-  Link,
-  Play,
-  Settings,
-  Ticket,
-  Users,
-  Video,
-  Zap,
-} from "lucide-react"
 import { useRouter, usePathname } from "next/navigation"
 import { sidebarItems } from "@/lib/constant"
 import Logo from "@/components/nav/logo"
+import Link from "next/link"
 
 const Sidebar = () => {
   const router = useRouter()

@@ -24,12 +24,12 @@ const Navigation = () => {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0  z-50 transition-all duration-300 ${
         scrolled ? "bg-background/90 backdrop-blur-md border-b border-border " : "bg-transparent"
       }`}
     >
       <div className="  w-full mx-auto px-6 md:px-8">
-        <div className="flex items-center justify-between p-4 h-20">
+        <div className="flex items-center justify-between px-4 py-6 h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
            <Logo/>
@@ -64,7 +64,7 @@ const Navigation = () => {
             
             <Link
               href="/tv"
-              className="bg-black hover:bg-red-700 border border-red-600 text-red-500 px-6 py-2 rounded-lg transition-colors"
+              className="bg-black hover:bg-red-700 border border-red-600 text-white px-6 py-2 rounded-lg transition-colors"
             >
               Tv
             </Link>
@@ -72,7 +72,7 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center space-x-2 md:hidden">
+          <div className="flex items-center space-x-2 py-4 md:hidden">
             <ThemeToggle />
             <button onClick={() => setIsOpen(!isOpen)} className="text-white bg-red-600 rounded p-2">
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -136,7 +136,7 @@ const Navigation = () => {
                   </Link>
                    <Link
                     href="/tv"
-                    className="bg-black hover:bg-red-700 border border-red-600 text-primary-foreground px-6 py-2 rounded-lg transition-colors text-center"
+                    className="bg-black hover:bg-red-700 border border-red-600 text-white px-6 py-2 rounded-lg transition-colors text-center"
                     onClick={() => setIsOpen(false)}
                   >
                     Tv

@@ -157,7 +157,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     const payload = await file.arrayBuffer()
-    const uploadResult = await uploadFileRaw(payload, file.type || "application/octet-stream")
+    const uploadResult = await uploadFileRaw(file, )
 
     if (!uploadResult.ok || !uploadResult.url) {
       return NextResponse.json({ message: uploadResult.message ?? "Receipt upload failed" }, { status: 400 })
