@@ -206,7 +206,8 @@
 
 
 // lib/auth/dropaphi-upload.ts
-const BASE = 'https://dropaphi.xyz/api'
+// const BASE = 'https://dropaphi.xyz/api'
+const BASE = 'http://localhost:3003/api'
 
 function getPublicDropAphiApiKey() {
   const apiKey = process.env.NEXT_PUBLIC_DROPAPHI_API_KEY
@@ -240,6 +241,8 @@ export async function uploadFileRaw(file: File): Promise<UploadResult> {
     }
 
     const apiKey = getPublicDropAphiApiKey()
+
+    console.log(apiKey,)
     
     // Build FormData - API expects 'file' field
     const formData = new FormData()
@@ -251,7 +254,7 @@ export async function uploadFileRaw(file: File): Promise<UploadResult> {
       folder: 'thumbnails'
     }))
 
-    const res = await fetch(`${BASE}/v1/storage/upload`, {
+    const res = await fetch(`${BASE}/v1/files/upload`, {
       method: 'POST',
       headers: {
         'drop-api-key': apiKey,
