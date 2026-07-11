@@ -10,7 +10,7 @@ function getPublicDropAphiApiKey() {
   if (!apiKey || apiKey.trim() === '') {
     throw new Error("Missing NEXT_PUBLIC_DROPAPHI_API_KEY")
   }
-  return apiKey
+  return apiKey 
 }
 
 export interface UploadResult {

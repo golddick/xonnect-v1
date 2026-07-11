@@ -213,10 +213,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
       return
     }
 
-    if (!eventData.thumbnail) {
-      alert("Please upload a thumbnail image")
-      return
-    }
+
 
     // Check if date/time is in the future
     const scheduledDateTime = new Date(`${eventData.scheduledDate}T${eventData.scheduledTime}`)
@@ -263,9 +260,9 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
         <div className="flex items-center justify-between p-6 border-b border-border">
           <div>
             <h2 className="text-2xl font-bold text-foreground">
-              Schedule Live Event
+              Schedule  Event
             </h2>
-            <p className="text-muted-foreground text-sm">Set up your upcoming live event</p>
+            <p className="text-muted-foreground text-sm hidden md:block">Set up your upcoming live event</p>
           </div>
           <button onClick={onClose} className="bg-muted hover:bg-muted/80 rounded-lg p-2 transition-colors">
             <X className="w-5 h-5 text-muted-foreground" />
@@ -309,7 +306,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                   value={eventData.title}
                   onChange={handleInputChange}
                   placeholder="Enter event title"
-                  className="w-full border border-gray-700 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className="w-full border border-border bg-transparent rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
                   required
                 />
               </div>
@@ -322,7 +319,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                   onChange={handleInputChange}
                   placeholder="Describe your event"
                   rows={4}
-                  className="w-full border border-gray-700 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className="w-full border  border-border bg-transparent  rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
                 />
               </div>
 
@@ -333,10 +330,10 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                     name="category"
                     value={eventData.category}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-700 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
+                    className="w-full border border-border bg-transparent rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
                   >
                     {categories.map((cat) => (
-                      <option key={cat} value={cat}>
+                      <option className="text-mute-foreground" key={cat} value={cat}>
                         {cat.charAt(0).toUpperCase() + cat.slice(1)}
                       </option>
                     ))}
@@ -352,7 +349,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                         setLocationModalMode('event-location')
                         setShowLocationModal(true)
                       }}
-                      className="w-full border border-gray-700 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600 hover:bg-gray-700/50 transition-colors text-left flex items-center justify-between group"
+                      className="w-full border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600 hover:bg-gray-700/50 transition-colors text-left flex items-center justify-between group"
                     >
                       {eventData.location ? (
                         <div className="flex items-center gap-3">
@@ -403,7 +400,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                   value={eventData.address}
                   onChange={handleInputChange}
                   placeholder="Enter venue address"
-                  className="w-full border border-gray-700 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className="w-full border border-border bg-transparent rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
                 />
               </div>
 
@@ -469,7 +466,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
               {/* Video Upload using UploadThing */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Intro Video (Optional)</label>
-                <div className="border-2 border-dashed border-gray-700 rounded-xl p-6 text-center hover:border-red-600 transition-colors">
+                <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-red-600 transition-colors">
                   {!eventData.video ? (
                     <UploadButton
                       endpoint="creatorVideoUploader"
@@ -537,7 +534,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                     value={currentTag}
                     onChange={(e) => setCurrentTag(e.target.value)}
                     placeholder="Add tags"
-                    className="flex-1 border border-gray-700 rounded-lg px-4 py-2 text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600"
+                    className="flex-1 border border-border bg-transparent rounded-lg px-4 py-2 text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600"
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                   />
                   <button
@@ -589,7 +586,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                     value={eventData.scheduledDate}
                     onChange={handleInputChange}
                     min={new Date().toISOString().split("T")[0]}
-                    className="w-full border border-gray-700 rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                    className="w-full border border-border bg-transparent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
                     required
                   />
                 </div>
@@ -601,7 +598,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                     name="scheduledTime"
                     value={eventData.scheduledTime}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-700 rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                    className="w-full border border-border bg-transparent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
                     required
                   />
                 </div>
@@ -613,10 +610,10 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                   name="timezone"
                   value={eventData.timezone}
                   onChange={handleInputChange}
-                  className="w-full border border-gray-700 rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                  className="w-full border border-border bg-transparent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
                 >
                   {timezones.map((tz) => (
-                    <option key={tz.value} value={tz.value} className="bg-gray-800">
+                    <option key={tz.value} value={tz.value} className="bg-background text-foreground">
                       {tz.label}
                     </option>
                   ))}
@@ -632,7 +629,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                   onChange={handleInputChange}
                   min="15"
                   max="480"
-                  className="w-full border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                  className="w-full border border-border bg-transparent rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
                 />
                 <p className="text-gray-500 text-xs mt-1">Minimum 15 minutes, maximum 8 hours</p>
               </div>
