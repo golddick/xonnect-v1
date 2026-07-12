@@ -1,7 +1,7 @@
 "use client"
 
 import type { FormEvent } from "react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
@@ -19,13 +19,14 @@ type LookupResult = {
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [otp, setOtp] = useState("")
   const [step, setStep] = useState<"email" | "password" | "otp">("email")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [fullName, setFullName] = useState<string | null>(null)
+  const emailRef = useRef<HTMLInputElement>(null)
+  const passwordRef = useRef<HTMLInputElement>(null)
+  const otpRef = useRef<HTMLInputElement>(null)
 
   const lookupAccount = async (value: string) => {
     const response = await fetch("/api/auth/login", {
@@ -44,11 +45,13 @@ export default function LoginPage() {
 
   const handleEmailSubmit = async (event: FormEvent) => {
     event.preventDefault()
+    const emailValue = emailRef.current?.value.trim() ?? ""
+    setEmail(emailValue)
     setError("")
     setIsLoading(true)
 
     try {
-      const result = await lookupAccount(email.trim())
+      const result = await lookupAccount(emailValue)
       if (!result.exists) {
         setError("No account found for that email. Create one from the signup page.")
         return
@@ -61,7 +64,7 @@ export default function LoginPage() {
         const sendResponse = await fetch("/api/auth/otp/send", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ email }),
+          body: JSON.stringify({ email: emailValue }),
         })
 
         if (!sendResponse.ok) {
@@ -80,13 +83,14 @@ export default function LoginPage() {
 
   const handlePasswordLogin = async (event: FormEvent) => {
     event.preventDefault()
+    const passwordValue = passwordRef.current?.value ?? ""
     setError("")
     setIsLoading(true)
 
     try {
       const result = await signIn("credentials", {
         email,
-        password,
+        password: passwordValue,
         redirect: false,
         callbackUrl: "/tv?welcomeBack=1",
       })
@@ -105,6 +109,7 @@ export default function LoginPage() {
 
   const handleOtpLogin = async (event: FormEvent) => {
     event.preventDefault()
+    const otpValue = otpRef.current?.value ?? ""
     setError("")
     setIsLoading(true)
 
@@ -112,7 +117,7 @@ export default function LoginPage() {
       const response = await fetch("/api/auth/otp/verify", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email, code: otp }),
+        body: JSON.stringify({ email, code: otpValue }),
       })
 
       const payload = (await response.json()) as { error?: string; loginToken?: string }
@@ -153,9 +158,9 @@ export default function LoginPage() {
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground/60" />
               <input
+                ref={emailRef}
                 type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                defaultValue={email}
                 placeholder="you@example.com"
                 className="w-full rounded-xl border border-border bg-background px-10 py-3 text-foreground outline-none transition focus:border-foreground/30"
                 required
@@ -198,9 +203,8 @@ export default function LoginPage() {
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground/60" />
               <input
+                ref={passwordRef}
                 type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
                 placeholder="Enter your password"
                 className="w-full rounded-xl border border-border bg-background px-10 py-3 text-foreground outline-none transition focus:border-foreground/30"
                 required
@@ -252,10 +256,9 @@ export default function LoginPage() {
           <div className="space-y-2">
             <label className="block text-sm font-medium text-muted-foreground">One-time code</label>
             <input
+              ref={otpRef}
               type="text"
               inputMode="numeric"
-              value={otp}
-              onChange={(event) => setOtp(event.target.value)}
               placeholder="123456"
               className="w-full rounded-xl border border-border bg-background px-4 py-3 text-center text-lg tracking-[0.4em] text-foreground outline-none transition focus:border-foreground/30"
               maxLength={6}

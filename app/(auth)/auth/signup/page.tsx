@@ -1,7 +1,7 @@
 "use client"
 
 import type { FormEvent } from "react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
@@ -11,13 +11,15 @@ import AuthLayout from "@/components/auth-layout"
 
 export default function SignupPage() {
   const router = useRouter()
-  const [fullName, setFullName] = useState("")
-  const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const fullNameRef = useRef<HTMLInputElement>(null)
+  const emailRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
+    const fullNameValue = fullNameRef.current?.value.trim() ?? ""
+    const emailValue = emailRef.current?.value.trim() ?? ""
     setError("")
     setIsLoading(true)
 
@@ -25,7 +27,7 @@ export default function SignupPage() {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ fullName, email }),
+        body: JSON.stringify({ fullName: fullNameValue, email: emailValue }),
       })
 
       const payload = (await response.json()) as { error?: string }
@@ -34,7 +36,7 @@ export default function SignupPage() {
       }
 
       const result = await signIn("email", {
-        email,
+        email: emailValue,
         redirect: false,
         callbackUrl: "/profile?welcome=1",
       })
@@ -59,9 +61,8 @@ export default function SignupPage() {
           <div className="relative">
             <User className="absolute left-3 top-3 h-5 w-5 text-muted-foreground/60" />
             <input
+              ref={fullNameRef}
               type="text"
-              value={fullName}
-              onChange={(event) => setFullName(event.target.value)}
               placeholder="John Doe"
               className="w-full rounded-xl border border-border bg-background px-10 py-3 text-foreground outline-none transition focus:border-foreground/30"
               required
@@ -74,9 +75,8 @@ export default function SignupPage() {
           <div className="relative">
             <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground/60" />
             <input
+              ref={emailRef}
               type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
               placeholder="you@example.com"
               className="w-full rounded-xl border border-border bg-background px-10 py-3 text-foreground outline-none transition focus:border-foreground/30"
               required
