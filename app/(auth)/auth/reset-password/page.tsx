@@ -1,29 +1,31 @@
 "use client"
 
 import type { FormEvent } from "react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import Link from "next/link"
 import { Lock } from "lucide-react"
 
 import AuthLayout from "@/components/auth-layout"
 
 export default function ResetPasswordPage() {
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
+  const passwordRef = useRef<HTMLInputElement>(null)
+  const confirmPasswordRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
+    const passwordValue = passwordRef.current?.value ?? ""
+    const confirmPasswordValue = confirmPasswordRef.current?.value ?? ""
     setError("")
 
-    if (password !== confirmPassword) {
+    if (passwordValue !== confirmPasswordValue) {
       setError("Passwords do not match")
       return
     }
 
-    if (password.length < 8) {
+    if (passwordValue.length < 8) {
       setError("Password must be at least 8 characters")
       return
     }
@@ -34,7 +36,7 @@ export default function ResetPasswordPage() {
       const response = await fetch("/api/auth/password/set", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password: passwordValue }),
       })
 
       const payload = (await response.json()) as { error?: string }
@@ -59,9 +61,8 @@ export default function ResetPasswordPage() {
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground/60" />
               <input
+                ref={passwordRef}
                 type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
                 placeholder="Create a password"
                 className="w-full rounded-xl border border-border bg-background px-10 py-3 text-foreground outline-none transition focus:border-foreground/30"
                 required
@@ -74,9 +75,8 @@ export default function ResetPasswordPage() {
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground/60" />
               <input
+                ref={confirmPasswordRef}
                 type="password"
-                value={confirmPassword}
-                onChange={(event) => setConfirmPassword(event.target.value)}
                 placeholder="Confirm password"
                 className="w-full rounded-xl border border-border bg-background px-10 py-3 text-foreground outline-none transition focus:border-foreground/30"
                 required

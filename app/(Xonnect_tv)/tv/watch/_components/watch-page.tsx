@@ -290,6 +290,17 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const previewExpired = Boolean(currentPart?.id && previewExpiredPartId === currentPart.id)
   const shouldShowAccessOverlay = Boolean(currentPart?.isLocked || currentPart?.previewOnly || previewExpired)
 
+  const resolveBuyerEmailForPayment = (fallbackEmail: string) => {
+    const trimmed = fallbackEmail.trim()
+    if (trimmed) return trimmed
+
+    const promptEmail = window.prompt("Enter your email to continue payment", "")?.trim()
+    if (!promptEmail) return null
+
+    setBuyerEmail(promptEmail)
+    return promptEmail
+  }
+
   useEffect(() => {
     if (!currentPart?.previewOnly) {
       setPreviewExpiredPartId(null)
@@ -457,14 +468,15 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       onPurchase={async (purchaseType) => {
         if (!currentPart) return
 
-        if (!watchFolder.access.loggedIn && !buyerEmail.trim()) {
-          setMessage("Add an email address before starting payment.")
+        const resolvedEmail = resolveBuyerEmailForPayment(buyerEmail)
+        if (!resolvedEmail) {
+          setMessage("Email is required to continue payment.")
           return
         }
 
         try {
           setBusy(purchaseType)
-          setMessage(null)
+          setMessage("Redirecting you to secure payment...")
           const res = await fetch(`/api/tv/watch/${currentPart.id}/purchase`, {
             method: "POST",
             headers: {
@@ -473,7 +485,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
             body: JSON.stringify({
               purchaseType,
               buyerName: buyerName.trim() || undefined,
-              buyerEmail: buyerEmail.trim() || undefined,
+              buyerEmail: resolvedEmail,
               buyerPhone: buyerPhone.trim() || undefined,
             }),
           })
@@ -486,7 +498,13 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
           setPaymentAccessCode("")
           setPaymentUrl(data.authorizationUrl)
-          setMessage("Payment initialized. Complete the purchase to activate access, and we’ll verify it automatically when you return.")
+
+          if (data.authorizationUrl) {
+            window.location.assign(data.authorizationUrl)
+            return
+          }
+
+          setMessage("Payment initialization did not return a checkout link.")
         } catch (error) {
           console.error("Failed to start purchase:", error)
           setMessage("Unable to initialize payment.")
@@ -561,18 +579,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
             return
           }
 
-          const fallbackEmail = buyerEmail.trim()
-          let resolvedEmail = fallbackEmail
-          if (!eventData.access?.loggedIn && !resolvedEmail) {
-            const promptEmail = window.prompt("Enter your email to continue payment", "")?.trim()
-            if (!promptEmail) {
-              setMessage("Email is required to continue payment.")
-              return
-            }
-            resolvedEmail = promptEmail
-            setBuyerEmail(resolvedEmail)
-          }
-
+          const resolvedEmail = resolveBuyerEmailForPayment(buyerEmail)
           if (!resolvedEmail) {
             setMessage("Email is required to continue payment.")
             return
@@ -580,7 +587,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
           try {
             setBusy("purchase")
-            setMessage(null)
+            setMessage("Redirecting you to secure payment...")
             const res = await fetch(`/api/tickets/${eventData.id}`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -601,7 +608,13 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
             setPaymentAccessCode(data.payment?.access_code ?? "")
             setPaymentUrl(data.payment?.authorization_url ?? "")
-            setMessage("Payment initialized. Continue to complete your ticket purchase.")
+
+            if (data.payment?.authorization_url) {
+              window.location.assign(data.payment.authorization_url)
+              return
+            }
+
+            setMessage("Payment initialization did not return a checkout link.")
           } catch (error) {
             console.error("Failed to start event ticket purchase:", error)
             setMessage("Unable to initialize payment.")

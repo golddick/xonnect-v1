@@ -1,7 +1,7 @@
 "use client"
 
 import type { FormEvent } from "react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
@@ -11,14 +11,16 @@ import AuthLayout from "@/components/auth-layout"
 
 export default function SuperadminLoginPage() {
   const router = useRouter()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const emailRef = useRef<HTMLInputElement>(null)
+  const passwordRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
+    const emailValue = emailRef.current?.value.trim() ?? ""
+    const passwordValue = passwordRef.current?.value ?? ""
     setError("")
     setIsLoading(true)
 
@@ -26,7 +28,7 @@ export default function SuperadminLoginPage() {
       const response = await fetch("/api/auth/superadmin/login", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: emailValue, password: passwordValue }),
       })
 
       const payload = (await response.json()) as {
@@ -39,7 +41,7 @@ export default function SuperadminLoginPage() {
       }
 
       const result = await signIn("credentials", {
-        email,
+        email: emailValue,
         loginToken: payload.loginToken,
         redirect: false,
         callbackUrl: "/superadmin/dashboard",
@@ -69,9 +71,8 @@ export default function SuperadminLoginPage() {
           <div className="relative">
             <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground/60" />
             <input
+              ref={emailRef}
               type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
               placeholder="admin@xonnect.com"
               className="w-full rounded-xl border border-border bg-background px-10 py-3 text-foreground outline-none transition focus:border-foreground/30"
               required
@@ -84,9 +85,8 @@ export default function SuperadminLoginPage() {
           <div className="relative">
             <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground/60" />
             <input
+              ref={passwordRef}
               type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
               placeholder="Enter your password"
               className="w-full rounded-xl border border-border bg-background px-10 py-3 pr-10 text-foreground outline-none transition focus:border-foreground/30"
               required
