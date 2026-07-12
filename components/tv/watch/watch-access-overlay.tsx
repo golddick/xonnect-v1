@@ -38,6 +38,7 @@ type WatchAccessOverlayProps = {
   onContinueToPayment?: () => void
   secondaryActionLabel?: string
   secondaryActionHref?: string
+  showAccessCodeInput?: boolean
 }
 
 const PURCHASE_LABELS: Record<PurchaseType, string> = {
@@ -73,6 +74,7 @@ export default function WatchAccessOverlay({
   onContinueToPayment,
   secondaryActionLabel,
   secondaryActionHref,
+  showAccessCodeInput = true,
 }: WatchAccessOverlayProps) {
   return (
     <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/72 backdrop-blur-sm p-4">
@@ -87,26 +89,32 @@ export default function WatchAccessOverlay({
           </div>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
-          <label className="space-y-2 text-sm">
-            <span className="text-muted-foreground">Access code</span>
-            <input
-              value={accessCode}
-              onChange={(event) => onAccessCodeChange(event.target.value)}
-              placeholder={accessCodePlaceholder}
-              className="w-full rounded-xl border border-border bg-transparent px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
-            />
-          </label>
+        {showAccessCodeInput ? (
+          <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
+            <label className="space-y-2 text-sm">
+              <span className="text-muted-foreground">Access code</span>
+              <input
+                value={accessCode}
+                onChange={(event) => onAccessCodeChange(event.target.value)}
+                placeholder={accessCodePlaceholder}
+                className="w-full rounded-xl border border-border bg-transparent px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
+              />
+            </label>
 
-          <button
-            type="button"
-            onClick={onUnlock}
-            className="rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-foreground hover:bg-red-700 disabled:opacity-50"
-            disabled={isUnlocking}
-          >
-            {isUnlocking ? "Checking..." : primaryActionLabel}
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={onUnlock}
+              className="rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-foreground hover:bg-red-700 disabled:opacity-50"
+              disabled={isUnlocking}
+            >
+              {isUnlocking ? "Checking..." : primaryActionLabel}
+            </button>
+          </div>
+        ) : (
+          <div className="rounded-xl border border-border/60 bg-muted/20 p-3 text-sm text-muted-foreground">
+            You’re signed in. We’ll verify your purchase automatically and unlock this video as soon as access is available.
+          </div>
+        )}
 
         {showBuyerFields && !loggedIn && (
           <>

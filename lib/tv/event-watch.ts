@@ -28,6 +28,7 @@ export type EventWatchData = {
   requireTicket: boolean
   thumbnail: string | null
   thumbnailVideoUrl: string | null
+  recordedVideoUrl: string | null
   scheduledAt: string | null
   durationMinutes: number
   maxViewers: number | null
@@ -108,6 +109,7 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
       requireTicket: true,
       thumbnailUrl: true,
       thumbnailVideoUrl: true,
+      recordedVideoUrl: true,
       scheduledAt: true,
       durationMinutes: true,
       maxViewers: true,
@@ -248,6 +250,7 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
       requireTicket: event.requireTicket,
       thumbnail: event.thumbnailUrl,
       thumbnailVideoUrl: event.thumbnailVideoUrl,
+      recordedVideoUrl: event.recordedVideoUrl,
       scheduledAt: event.scheduledAt?.toISOString() ?? null,
       durationMinutes: event.durationMinutes,
       maxViewers: event.maxViewers,

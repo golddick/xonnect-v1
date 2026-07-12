@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server"
+
+import { auth } from "@/lib/auth/auth"
 import { getMessages, pushMessage } from "@/app/api/tv/watch/_chatStore"
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -23,11 +25,15 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const text = String(body?.text ?? "").trim()
     if (!text) return NextResponse.json({ message: "Empty message" }, { status: 400 })
 
+    const session = await auth()
+    const userName = session?.user?.name || session?.user?.email || "Unknown"
+    const userHandle = userName === "Unknown" ? "@unknown" : `@${String(userName).toLowerCase().replace(/\s+/g, "")}`
+    const clientId = typeof body?.clientId === "string" ? body.clientId : undefined
     const now = new Date().toISOString()
     const message = {
-      id: `msg-${Date.now()}`,
-      name: "Unknown",
-      handle: "@unknown",
+      id: clientId ?? `msg-${Date.now()}`,
+      name: userName,
+      handle: userHandle,
       time: now,
       text,
       reactions: { "👍": 0, "❤️": 0, "🔥": 0, "😂": 0, "👏": 0 },

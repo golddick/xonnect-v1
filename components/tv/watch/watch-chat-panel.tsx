@@ -25,6 +25,26 @@ type WatchChatPanelProps = {
   onQuickReaction: (reaction: ChatReaction) => void
 }
 
+function formatRelativeTime(value: string | Date | null | undefined) {
+  if (!value) return "just now"
+
+  const date = value instanceof Date ? value : new Date(value)
+  if (Number.isNaN(date.getTime())) return "just now"
+
+  const diffMs = Date.now() - date.getTime()
+  const diffSeconds = Math.max(1, Math.floor(diffMs / 1000))
+  const diffMinutes = Math.floor(diffSeconds / 60)
+  const diffHours = Math.floor(diffMinutes / 60)
+  const diffDays = Math.floor(diffHours / 24)
+
+  if (diffMinutes < 1) return "just now"
+  if (diffMinutes < 60) return `${diffMinutes}m ago`
+  if (diffHours < 24) return `${diffHours}h ago`
+  if (diffDays < 7) return `${diffDays}d ago`
+
+  return date.toLocaleDateString()
+}
+
 export default function WatchChatPanel({
   messages,
   reactions,
@@ -36,7 +56,7 @@ export default function WatchChatPanel({
   onQuickReaction,
 }: WatchChatPanelProps) {
   return (
-    <aside className="space-y-4 xl:sticky xl:top-24 h-fit">
+    <aside className="space-y-4 xl:sticky xl:top-24 h-full xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto" hidden-scrollbar>
       <div className="rounded-2xl border border-border bg-muted/20 p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -56,7 +76,7 @@ export default function WatchChatPanel({
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-foreground">{message.name}</p>
                   <p className="text-[11px] text-muted-foreground">
-                    {message.handle} <span className="px-1">-</span> {message.time}
+                    {message.handle} <span className="px-1">-</span> {formatRelativeTime(message.time)}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

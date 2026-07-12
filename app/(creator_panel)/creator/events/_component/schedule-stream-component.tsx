@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import {
@@ -26,6 +25,7 @@ import {
   Plus,
 } from "lucide-react"
 import { LocationData } from "@/lib/type/location"
+import { toast } from "sonner"
 import LocationSearchModal from "./LocationSearchModal"
 import { UploadButton } from "@/lib/utils/uploadthing"
 import { uploadFileRaw } from "@/lib/auth/dropaphi-upload"
@@ -37,6 +37,10 @@ interface ScheduleEventProps {
 export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+  
   const [eventData, setEventData] = useState({
     title: "",
     description: "",
@@ -45,6 +49,8 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
     thumbnailPreview: "",
     video: "", 
     videoPreview: "",
+    thumbnailVideoUrl: "",
+    thumbnailVideoPreview: "",
     tags: [] as string[],
     scheduledDate: "",
     scheduledTime: "",
@@ -106,26 +112,30 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target
+    const target = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    const { name } = target
+    const value = target.type === "checkbox"
+      ? (target as HTMLInputElement).checked
+      : target.type === "number"
+        ? Number(target.value)
+        : target.value
+
     setEventData(prev => ({
       ...prev,
-      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+      [name]: value,
     }))
   }
 
-  // Thumbnail upload using DropAphi
   const handleThumbnailUpload = async (file: File) => {
-    // Validate image
     if (!file.type.startsWith('image/')) {
-      alert("Please upload an image file")
+      toast.error("Please upload an image file")
       return
     }
     if (file.size > 5 * 1024 * 1024) {
-      alert("Thumbnail image must be less than 5MB")
+      toast.error("Thumbnail image must be less than 5MB")
       return
     }
 
-    // Show preview immediately
     const reader = new FileReader()
     reader.onload = (e) => {
       setEventData(prev => ({ 
@@ -135,7 +145,6 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
     }
     reader.readAsDataURL(file)
 
-    // Upload to DropAphi
     setIsUploadingThumbnail(true)
     setUploadProgress(prev => ({ ...prev, thumbnail: 10 }))
 
@@ -148,7 +157,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
         thumbnail: result.url as string
       }))
     } else {
-      alert(`Upload failed: ${result.message}`)
+      toast.error(`Upload failed: ${result.message}`)
       setEventData(prev => ({ 
         ...prev, 
         thumbnail: "",
@@ -172,7 +181,9 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
     setEventData(prev => ({ 
       ...prev, 
       video: "",
-      videoPreview: "" 
+      videoPreview: "",
+      thumbnailVideoUrl: "",
+      thumbnailVideoPreview: ""
     }))
     setUploadProgress(prev => ({ ...prev, video: 0 }))
   }
@@ -194,56 +205,127 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitError(null)
+    setSubmitSuccess(false)
 
-    // Validation
     if (!eventData.title.trim()) {
-      alert("Please enter an event title")
+      const message = "Please enter an event title"
+      setSubmitError(message)
+      toast.error(message)
+      return
+    }
+
+    if (!eventData.thumbnail) {
+      const message = "Please upload a thumbnail image"
+      setSubmitError(message)
+      toast.error(message)
+      return
+    }
+
+    if (!eventData.location) {
+      const message = "Please select an event location"
+      setSubmitError(message)
+      toast.error(message)
       return
     }
 
     if (eventData.enableLocationRestriction && eventData.restrictedLocations.length === 0) {
-      alert("Please add at least one location for location restriction, or disable location restriction.")
+      const message = "Please add at least one location for location restriction, or disable location restriction."
+      setSubmitError(message)
+      toast.error(message)
       return
     }
 
     if (!eventData.scheduledDate || !eventData.scheduledTime) {
-      alert("Please select date and time")
+      const message = "Please select date and time"
+      setSubmitError(message)
+      toast.error(message)
       return
     }
 
-
-
-    // Check if date/time is in the future
     const scheduledDateTime = new Date(`${eventData.scheduledDate}T${eventData.scheduledTime}`)
     if (scheduledDateTime <= new Date()) {
-      alert("Please select a future date and time")
+      const message = "Please select a future date and time"
+      setSubmitError(message)
+      toast.error(message)
       return
     }
 
-    const streamWithDateTime = {
-      ...eventData,
-      scheduledDateTime: scheduledDateTime.toISOString(),
-      id: Date.now(),
-      status: "scheduled",
-      createdAt: new Date().toISOString(),
-      city: eventData.location?.name || '',
-      locationRestrictions: eventData.enableLocationRestriction ? {
-        enabled: true,
-        type: eventData.locationRestrictionType,
-        locations: eventData.restrictedLocations,
-      } : {
-        enabled: false,
-        type: null,
-        locations: [],
+    setIsSubmitting(true)
+
+    try {
+      const payload = {
+        title: eventData.title.trim(),
+        description: eventData.description.trim() || null,
+        category: eventData.category,
+        status: "scheduled",
+        isPrivate: eventData.isPrivate,
+        isPaid: eventData.requireTicket,
+        requireTicket: eventData.requireTicket,
+        enableDonations: eventData.enableDonations,
+        enableLocationRestriction: eventData.enableLocationRestriction,
+        locationRestrictionType: eventData.locationRestrictionType,
+        address: eventData.address.trim() || null,
+        locationName: eventData.location?.name || null,
+        locationCountry: eventData.location?.country || null,
+        locationState: eventData.location?.state || null,
+        locationType: eventData.location?.type || null,
+        locationLat: eventData.location?.lat ?? null,
+        locationLon: eventData.location?.lon ?? null,
+        locationFullAddress: eventData.location?.fullAddress || eventData.address.trim() || null,
+        thumbnailUrl: eventData.thumbnail || null,
+        thumbnailVideoUrl: eventData.thumbnailVideoUrl.trim() || eventData.video.trim() || null,
+        timezone: eventData.timezone,
+        scheduledAt: scheduledDateTime.toISOString(),
+        durationMinutes: Number(eventData.duration) || 60,
+        maxViewers: eventData.maxViewers > 0 ? eventData.maxViewers : null,
+        tags: eventData.tags,
+        restrictedLocations: eventData.enableLocationRestriction ? eventData.restrictedLocations.map((location) => ({
+          name: location.name,
+          country: location.country,
+          state: location.state || null,
+          lat: location.lat ?? null,
+          lon: location.lon ?? null,
+          type: location.type,
+          fullAddress: location.fullAddress || null,
+        })) : [],
       }
-    }
-    
-    console.log("Event Data:", streamWithDateTime)
-    
-    if (onClose) {
-      onClose()
+
+      const response = await fetch("/api/creator/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        const message = data?.message || "Failed to schedule event. Please try again."
+        setSubmitError(message)
+        toast.error(message)
+        return
+      }
+
+      setSubmitSuccess(true)
+      toast.success("Event scheduled successfully")
+
+      setTimeout(() => {
+        if (onClose) {
+          onClose()
+        }
+        router.push('/dashboard/creator/events')
+      }, 1200)
+    } catch (error) {
+      console.error("Error submitting event:", error)
+      const message = error instanceof Error ? error.message : "Failed to schedule event. Please try again."
+      setSubmitError(message)
+      toast.error(message)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -260,7 +342,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
         <div className="flex items-center justify-between p-6 border-b border-border">
           <div>
             <h2 className="text-2xl font-bold text-foreground">
-              Schedule  Event
+              Schedule Event
             </h2>
             <p className="text-muted-foreground text-sm hidden md:block">Set up your upcoming live event</p>
           </div>
@@ -292,6 +374,28 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
           </div>
         </div>
 
+        {/* Error Message */}
+        {submitError && (
+          <div className="mx-6 mt-4 p-4 bg-red-600/20 border border-red-600/30 rounded-xl flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+            <p className="text-red-400 text-sm">{submitError}</p>
+            <button 
+              onClick={() => setSubmitError(null)}
+              className="ml-auto text-red-400 hover:text-red-300"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        {/* Success Message */}
+        {submitSuccess && (
+          <div className="mx-6 mt-4 p-4 bg-green-600/20 border border-green-600/30 rounded-xl flex items-center gap-3">
+            <Check className="w-5 h-5 text-green-400 flex-shrink-0" />
+            <p className="text-green-400 text-sm">Event scheduled successfully!</p>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="p-6">
           {/* Step 1: Details */}
           {currentStep === 1 && (
@@ -319,7 +423,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                   onChange={handleInputChange}
                   placeholder="Describe your event"
                   rows={4}
-                  className="w-full border  border-border bg-transparent  rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className="w-full border border-border bg-transparent rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
                 />
               </div>
 
@@ -341,7 +445,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Event Location</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Event Location *</label>
                   <div className="space-y-3">
                     <button
                       type="button"
@@ -463,36 +567,56 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                 )}
               </div>
 
-              {/* Video Upload using UploadThing */}
+              {/* Thumbnail Video Upload */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Intro Video (Optional)</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Thumbnail Video (Optional)</label>
                 <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-red-600 transition-colors">
-                  {!eventData.video ? (
-                    <UploadButton
-                      endpoint="creatorVideoUploader"
-                      onClientUploadComplete={(res) => {
-                        if (res && res.length > 0) {
-                          const url = res[0].url
-                          setEventData(prev => ({ 
-                            ...prev, 
-                            video: url,
-                            videoPreview: url 
+                  {!eventData.thumbnailVideoUrl ? (
+                    <div className="space-y-4">
+                      <UploadButton
+                        endpoint="creatorVideoUploader"
+                        onClientUploadComplete={(res) => {
+                          if (res && res.length > 0) {
+                            const url = res[0].url
+                            setEventData(prev => ({
+                              ...prev,
+                              thumbnailVideoUrl: url,
+                              thumbnailVideoPreview: url,
+                              video: url,
+                              videoPreview: url,
+                            }))
+                            setUploadProgress(prev => ({ ...prev, video: 100 }))
+                          }
+                        }}
+                        onUploadProgress={(progress) => {
+                          setUploadProgress(prev => ({ ...prev, video: progress }))
+                        }}
+                        onUploadError={(error) => {
+                          toast.error(`Upload failed: ${error.message}`)
+                        }}
+                        className="uploadthing-button"
+                      />
+                      <input
+                        type="url"
+                        value={eventData.thumbnailVideoUrl}
+                        onChange={(e) => {
+                          const value = e.target.value
+                          setEventData(prev => ({
+                            ...prev,
+                            thumbnailVideoUrl: value,
+                            thumbnailVideoPreview: value,
+                            video: value,
+                            videoPreview: value,
                           }))
-                          setUploadProgress(prev => ({ ...prev, video: 100 }))
-                        }
-                      }}
-                      onUploadProgress={(progress) => {
-                        setUploadProgress(prev => ({ ...prev, video: progress }))
-                      }}
-                      onUploadError={(error) => {
-                        alert(`Upload failed: ${error.message}`)
-                      }}
-                      className="uploadthing-button"
-                    />
+                        }}
+                        placeholder="Or paste a video URL"
+                        className="w-full border border-border bg-transparent rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
+                      />
+                    </div>
                   ) : (
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-300">Video uploaded</span>
+                        <span className="text-sm text-gray-300">Thumbnail video ready</span>
                         <button
                           type="button"
                           onClick={removeVideo}
@@ -516,7 +640,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                         </div>
                       )}
                       <video
-                        src={eventData.videoPreview}
+                        src={eventData.thumbnailVideoUrl || eventData.videoPreview}
                         controls
                         className="w-full h-48 object-cover rounded-lg mt-2"
                       />
@@ -1001,10 +1125,20 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                 </button>
                 <button
                   type="submit"
-                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl transition-colors flex items-center gap-2"
+                  disabled={isSubmitting}
+                  className="bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-xl transition-colors flex items-center gap-2"
                 >
-                  <Save className="w-4 h-4" />
-                  Schedule Stream
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Scheduling...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4" />
+                      Schedule Stream
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -1051,9 +1185,6 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
     </div>
   )
 }
-
-
-
 
 
 

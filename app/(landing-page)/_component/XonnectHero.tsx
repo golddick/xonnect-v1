@@ -6,7 +6,7 @@ import { Play, Info, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
-const heroVideo = "/video/Video Generation-ed197f34041ca4cc924cb0b5.mp4"
+const heroVideo = "/video/xonnect-hero-video.mp4"
 
 export default function XonnectHero() {
   const [email, setEmail] = useState("")

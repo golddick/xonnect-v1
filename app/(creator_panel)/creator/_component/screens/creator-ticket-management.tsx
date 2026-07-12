@@ -40,7 +40,7 @@ export default function CreatorTicketsManagement() {
     const loadEvents = async () => {
       try {
         setLoading(true)
-        const response = await fetch("/api/creator/events", { cache: "no-store" })
+        const response = await fetch("/api/creator/events?ticketed=true", { cache: "no-store" })
         const data = await response.json()
 
         if (!response.ok) {

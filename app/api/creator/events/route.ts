@@ -216,8 +216,13 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get("status")
     const search = searchParams.get("search")?.trim()
+    const onlyTicketed = searchParams.get("ticketed") === "true"
 
     const where: any = { creatorId: creatorResult.creatorId }
+
+    if (onlyTicketed) {
+      where.requireTicket = true
+    }
 
     if (status && status.toLowerCase() !== "all") {
       where.status = toEventStatus(status)

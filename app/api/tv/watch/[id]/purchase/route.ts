@@ -96,7 +96,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       `/tv/watch/folder/${video.folderId}`,
       process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
     )
-    callbackUrl.searchParams.set("accessCode", pendingPurchase.accessCode)
     callbackUrl.searchParams.set("part", video.id)
 
     const payment = await initializePaystackTransaction({

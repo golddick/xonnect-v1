@@ -16,6 +16,8 @@ type VideoViewPanelProps = {
   overlay?: ReactNode
   emptyLabel?: string
   onPreviewExpired?: () => void
+  onReportView?: () => void
+  reportAfterSeconds?: number | null
 }
 
 export default function VideoViewPanel({
@@ -29,10 +31,13 @@ export default function VideoViewPanel({
   overlay,
   emptyLabel = "Video not available",
   onPreviewExpired,
+  onReportView,
+  reportAfterSeconds = null,
 }: VideoViewPanelProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [previewExpired, setPreviewExpired] = useState(false)
+  const reportedRef = useRef(false)
   const playableMedia = useMemo(() => resolvePlayableMediaSource(videoUrl), [videoUrl])
   const isYouTubeVideo = playableMedia?.kind === "youtube"
 
@@ -56,17 +61,31 @@ export default function VideoViewPanel({
   }
 
   const handleTimeUpdate = () => {
-    if (locked || previewSeconds === null || previewSeconds === undefined || previewExpired) return
+    if (locked) return
+
     const currentTime = videoRef.current?.currentTime ?? 0
-    if (currentTime >= previewSeconds) {
-      videoRef.current?.pause()
-      setIsPlaying(false)
-      setPreviewExpired(true)
-      onPreviewExpired?.()
+
+    if (!previewExpired && previewSeconds !== null && previewSeconds !== undefined) {
+      if (currentTime >= previewSeconds) {
+        videoRef.current?.pause()
+        setIsPlaying(false)
+        setPreviewExpired(true)
+        onPreviewExpired?.()
+      }
+    }
+
+    const reportAfter = reportAfterSeconds ?? 30
+    if (!reportedRef.current && reportAfter && currentTime >= reportAfter) {
+      reportedRef.current = true
+      try {
+        onReportView?.()
+      } catch (e) {
+        // ignore
+      }
     }
   }
 
-  const shouldShowOverlay = locked || showOverlay || previewExpired
+  const shouldShowOverlay = Boolean(overlay) && (locked || showOverlay || previewExpired)
 
   return (
     <div className="aspect-video bg-black rounded-3xl overflow-hidden relative group border border-border">
@@ -120,7 +139,7 @@ export default function VideoViewPanel({
             </div>
           )}
 
-          {shouldShowOverlay && overlay ? <div className="absolute inset-0">{overlay}</div> : null}
+          {shouldShowOverlay && overlay ? <div className="absolute inset-0 z-20 pointer-events-auto">{overlay}</div> : null}
         </div>
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-black">
@@ -133,7 +152,7 @@ export default function VideoViewPanel({
           ) : null}
           <Video className="w-16 h-16 text-gray-600 mb-4" />
           <p className="text-gray-400 text-center">{emptyLabel}</p>
-          {shouldShowOverlay && overlay ? <div className="absolute inset-0">{overlay}</div> : null}
+          {shouldShowOverlay && overlay ? <div className="absolute inset-0 z-20 pointer-events-auto">{overlay}</div> : null}
         </div>
       )}
     </div>
