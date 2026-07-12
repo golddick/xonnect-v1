@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { ArrowLeft, Calendar, Clapperboard, Clock, Eye, Film, Library, MessageSquare, Play, Radio, Settings, Share2 } from "lucide-react"
+import { useSession } from "next-auth/react"
+import { ArrowLeft, Banknote, Calendar, Clapperboard, Clock, Eye, Film, Handshake, Library, Lock, LockOpen, MessageSquare, Play, Radio, Settings, Share2 } from "lucide-react"
 
 import EventStreamPlayer from "@/components/common_component/event-stream-player"
 import VideoViewPanel from "@/components/common_component/video-view-panel"
@@ -48,6 +49,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const searchParams = useSearchParams()
   const partParam = searchParams.get("part")
   const codeParam = searchParams.get("accessCode") ?? ""
+  const { data: session } = useSession()
 
   const [loading, setLoading] = useState(true)
   const [folderData, setFolderData] = useState<WatchFolder | null>(null)
@@ -71,6 +73,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const [eventIsLiked, setEventIsLiked] = useState(false)
   const [creatorIsFollowed, setCreatorIsFollowed] = useState(false)
   const eventSourceRef = useRef<EventSource | null>(null)
+  const sessionKey = `${session?.user?.email ?? ""}:${session?.user?.id ?? ""}`
 
   useEffect(() => {
     setAccessCode(codeParam)
@@ -89,6 +92,32 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     setMessage(null)
     setSubmittedAccessCode(codeParam)
   }, [watchId, kind, codeParam])
+
+  useEffect(() => {
+    if (!watchId || !kind) return
+
+    const recheckAccess = () => {
+      setCodeNonce((value) => value + 1)
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        recheckAccess()
+      }
+    }
+
+    recheckAccess()
+
+    if (typeof window === "undefined") return
+
+    window.addEventListener("focus", recheckAccess)
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+
+    return () => {
+      window.removeEventListener("focus", recheckAccess)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+    }
+  }, [sessionKey, watchId, kind])
 
   useEffect(() => {
     // show chat by default and clear draft, then fetch recent messages
@@ -120,7 +149,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         try {
           const payload = JSON.parse(ev.data)
           if (payload?.message) {
-            setChatMessages((current) => [...current, payload.message])
+            setChatMessages((current) => {
+              if (current.some((message) => message.id === payload.message.id)) {
+                return current.map((message) => (message.id === payload.message.id ? payload.message : message))
+              }
+              return [...current, payload.message]
+            })
           }
         } catch (e) {
           // ignore
@@ -254,7 +288,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const currentThumbnail = currentPart?.thumbnail || folderData?.thumbnail || null
   const currentType = folderData?.contentType ?? "video"
   const previewExpired = Boolean(currentPart?.id && previewExpiredPartId === currentPart.id)
-  const shouldShowAccessOverlay = Boolean(currentPart?.isLocked || previewExpired)
+  const shouldShowAccessOverlay = Boolean(currentPart?.isLocked || currentPart?.previewOnly || previewExpired)
 
   useEffect(() => {
     if (!currentPart?.previewOnly) {
@@ -297,12 +331,13 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
     // Optimistic message append
     const tempId = `local-${Date.now()}`
-    const anon = { name: "Unknown", handle: "@unknown" }
+    const userName = session?.user?.name || session?.user?.email || "Unknown"
+    const userHandle = userName === "Unknown" ? "@unknown" : `@${String(userName).toLowerCase().replace(/\s+/g, "")}`
     const optimistic: ChatMessage = {
       id: tempId,
-      name: anon.name,
-      handle: anon.handle,
-      time: "Just now",
+      name: userName,
+      handle: userHandle,
+      time: new Date().toISOString(),
       text: trimmed,
       reactions: {
         "\u{1F44D}": 0,
@@ -322,7 +357,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         const res = await fetch(`/api/tv/watch/chat/${watchId}?kind=${encodeURIComponent(kind)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: trimmed }),
+          body: JSON.stringify({ text: trimmed, clientId: tempId }),
         })
 
         if (!res.ok) {
@@ -357,7 +392,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       const res = await fetch(`/api/tv/watch/chat/${watchId}?kind=${encodeURIComponent(kind)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: message.text }),
+        body: JSON.stringify({ text: message.text, clientId: message.id }),
       })
       if (!res.ok) {
         setChatMessages((current) => current.map((m) => (m.id === messageId ? { ...m, failed: true } : m)))
@@ -399,7 +434,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       message={message}
       primaryActionLabel="Unlock"
       loggedIn={watchFolder.access.loggedIn}
-      showBuyerFields
+      showAccessCodeInput={!watchFolder.access.loggedIn}
+      showBuyerFields={!watchFolder.access.loggedIn}
       buyerName={buyerName}
       buyerEmail={buyerEmail}
       buyerPhone={buyerPhone}
@@ -448,9 +484,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
             return
           }
 
-          setPaymentAccessCode(data.accessCode)
+          setPaymentAccessCode("")
           setPaymentUrl(data.authorizationUrl)
-          setMessage(`Access code generated: ${data.accessCode}. Complete payment to activate it.`)
+          setMessage("Payment initialized. Complete the purchase to activate access, and we’ll verify it automatically when you return.")
         } catch (error) {
           console.error("Failed to start purchase:", error)
           setMessage("Unable to initialize payment.")
@@ -465,8 +501,11 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         if (paymentUrl) window.location.href = paymentUrl
       }}
       onUsePaymentCode={() => {
-        setAccessCode(paymentAccessCode)
-        setMessage("Access code copied into the unlock field.")
+        const nextAccessCode = paymentAccessCode.trim()
+        setAccessCode(nextAccessCode)
+        setSubmittedAccessCode(nextAccessCode)
+        setCodeNonce((value) => value + 1)
+        setMessage(nextAccessCode ? "Access code copied into the unlock field and the video is being verified." : "Access code copied into the unlock field.")
       }}
     />
   ) : null
@@ -489,17 +528,18 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       )
     }
 
+    const streamTicket = (eventData.tickets ?? []).find((ticket: any) => ticket.access === "STREAM")
     const eventLockOverlay = eventData.access?.locked ? (
-    <WatchAccessOverlay
-      title={eventData.status === "LIVE" ? "Premium event locked" : "Ticket code required"}
-      description={
-        eventData.access?.loggedIn
-          ? "Enter the ticket code from your purchase to unlock the stream."
-          : "Sign in or enter your ticket code to unlock the stream."
-      }
-      accessCode={accessCode}
-      accessCodePlaceholder="Enter ticket code"
-      onAccessCodeChange={setAccessCode}
+      <WatchAccessOverlay
+        title={eventData.status === "LIVE" ? "Premium event locked" : "Get your event ticket"}
+        description={
+          eventData.access?.loggedIn
+            ? "Enter the ticket code from your purchase to unlock the stream."
+            : "Buy your stream ticket now and unlock access before the event starts."
+        }
+        accessCode={accessCode}
+        accessCodePlaceholder="Enter ticket code"
+        onAccessCodeChange={setAccessCode}
         onUnlock={() => {
           if (!accessCode.trim()) return
           setBusy("code")
@@ -507,19 +547,88 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           setSubmittedAccessCode(accessCode.trim())
           setCodeNonce((value) => value + 1)
         }}
-      isUnlocking={busy === "code"}
-      message={message}
-      primaryActionLabel="Unlock"
-      loggedIn={eventData.access?.loggedIn ?? false}
-      secondaryActionLabel="Get access"
-      secondaryActionHref={`/tickets/${eventData.id}`}
-    />
-  ) : null
+        isUnlocking={busy === "code"}
+        message={message}
+        primaryActionLabel="Unlock"
+        loggedIn={eventData.access?.loggedIn ?? false}
+        showAccessCodeInput={!(eventData.access?.loggedIn ?? false)}
+        showBuyerFields={!(eventData.access?.loggedIn ?? false)}
+        purchaseOptions={streamTicket && streamTicket.price > 0 ? [{ type: "purchase", label: "Buy ticket", price: streamTicket.price }] : []}
+        onPurchase={async () => {
+          const selectedTicket = streamTicket
+          if (!selectedTicket) {
+            setMessage("No stream tickets are available for this event.")
+            return
+          }
+
+          const fallbackEmail = buyerEmail.trim()
+          let resolvedEmail = fallbackEmail
+          if (!eventData.access?.loggedIn && !resolvedEmail) {
+            const promptEmail = window.prompt("Enter your email to continue payment", "")?.trim()
+            if (!promptEmail) {
+              setMessage("Email is required to continue payment.")
+              return
+            }
+            resolvedEmail = promptEmail
+            setBuyerEmail(resolvedEmail)
+          }
+
+          if (!resolvedEmail) {
+            setMessage("Email is required to continue payment.")
+            return
+          }
+
+          try {
+            setBusy("purchase")
+            setMessage(null)
+            const res = await fetch(`/api/tickets/${eventData.id}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ticketId: selectedTicket.id,
+                buyerName: buyerName.trim() || undefined,
+                buyerEmail: resolvedEmail,
+                buyerPhone: buyerPhone.trim() || undefined,
+                quantity: 1,
+              }),
+            })
+
+            const data = await res.json()
+            if (!res.ok) {
+              setMessage(data?.message ?? "Unable to start payment.")
+              return
+            }
+
+            setPaymentAccessCode(data.payment?.access_code ?? "")
+            setPaymentUrl(data.payment?.authorization_url ?? "")
+            setMessage("Payment initialized. Continue to complete your ticket purchase.")
+          } catch (error) {
+            console.error("Failed to start event ticket purchase:", error)
+            setMessage("Unable to initialize payment.")
+          } finally {
+            setBusy(null)
+          }
+        }}
+        isPurchasing={busy === "purchase" ? "purchase" : null}
+        paymentAccessCode={paymentAccessCode}
+        paymentUrl={paymentUrl}
+        onContinueToPayment={() => {
+          if (paymentUrl) window.location.href = paymentUrl
+        }}
+        onUsePaymentCode={() => {
+          const nextAccessCode = paymentAccessCode.trim()
+          setAccessCode(nextAccessCode)
+          setSubmittedAccessCode(nextAccessCode)
+          setCodeNonce((value) => value + 1)
+          setMessage(nextAccessCode ? "Access code copied into the unlock field and the event is being verified." : "Access code copied into the unlock field.")
+        }}
+      />
+    ) : null
 
     return (
-      <div className="min-h-screen bg-background text-foreground pb-20">
+      <div className="min-h-screen w-full hidden-scrollbar bg-background text-foreground pb-20">
         <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4 lg:px-8 py-4">
-          <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex items-center justify-between w-full p-4">
             <div className="flex items-center gap-4 min-w-0">
               <button onClick={() => router.back()} className="p-2 hover:bg-muted rounded-full transition-colors">
                 <ArrowLeft className="w-5 h-5" />
@@ -553,8 +662,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           </div>
         </div>
 
-        <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6">
-          <div className={`grid grid-cols-1 gap-8 ${chatVisible ? "xl:grid-cols-[minmax(0,1fr)_380px]" : ""}`}>
+        <main className="w-full px-4 lg:px-8 py-6">
+          <div className={`grid grid-cols-1 gap-8 ${chatVisible ? "xl:grid-cols-[minmax(0,1fr)_350px]" : ""}`}>
             <div className="space-y-6">
               <EventStreamPlayer
                 eventId={eventData.id}
@@ -562,20 +671,23 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 subtitle={eventData.description}
                 poster={eventData.thumbnail}
                 previewVideoUrl={eventData.thumbnailVideoUrl}
+                recordedVideoUrl={eventData.recordedVideoUrl}
                 scheduledAt={eventData.scheduledAt}
                 status={eventData.status}
                 wsUrl={eventData.livekitWsUrl}
                 accessCode={submittedAccessCode}
                 locked={Boolean(eventData.access?.locked && eventData.status === "LIVE")}
                 viewers={eventData.currentViewersCount ?? 0}
-                overlay={eventData.status === "LIVE" && eventData.access?.locked ? eventLockOverlay : null}
+                overlay={eventData.access?.locked ? eventLockOverlay : null}
               />
 
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                    <p className="mt-1 text-sm font-semibold text-foreground">
-                      {eventData.access?.locked ? "Locked" : "Unlocked"}
+                  <div className="flex w-full justify-between items-center gap-6 text-sm text-muted-foreground">
+                   
+                    <div className="flex items-center gap-2">
+                      <p className="mt-1 text-sm font-semibold text-foreground">
+                      {eventData.access?.locked ? <Lock /> : <LockOpen />}
                     </p>
                     <span className="flex items-center gap-1.5">
                       <Calendar className="w-4 h-4" />
@@ -583,8 +695,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                     </span>
                     
                     <span className="flex items-center gap-1.5">
-                        {eventData.access?.premium ? "Premium" : "Free"}
+                        {eventData.access?.premium ? <Banknote /> : <Handshake />}
                     </span>
+                     </div> 
                     
                     <div className="flex items-center gap-2">
                     <FollowButton
@@ -653,9 +766,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20">
+    <div className="min-h-screen w-full bg-background text-foreground pb-20">
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4 lg:px-8 py-4">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
+        <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-4 min-w-0">
             <button onClick={() => router.back()} className="p-2 hover:bg-muted rounded-full transition-colors">
               <ArrowLeft className="w-5 h-5" />
@@ -682,7 +795,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6">
+      <main className="w-full  px-4 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <VideoViewPanel
@@ -691,10 +804,29 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               poster={currentThumbnail}
               title={currentPart?.title ?? watchFolder.title}
               subtitle={currentPart?.description ?? watchFolder.description}
-              locked={Boolean(currentPart?.isLocked)}
+              locked={Boolean(currentPart?.isLocked || currentPart?.previewOnly)}
               previewSeconds={currentPart?.previewOnly ? 30 : null}
               showOverlay={shouldShowAccessOverlay}
               overlay={lockOverlay}
+              reportAfterSeconds={30}
+              onReportView={() => {
+                if (!currentPart?.id) return
+                ;(async () => {
+                  try {
+                    const res = await fetch(`/api/tv/watch/${currentPart.id}/view`, { method: "POST" })
+                    if (!res.ok) return
+                    setFolderData((prev) => {
+                      if (!prev) return prev
+                      return {
+                        ...prev,
+                        parts: prev.parts.map((p) => (p.id === currentPart.id ? { ...p, views: (p.views ?? 0) + 1 } : p)),
+                      }
+                    })
+                  } catch (err) {
+                    // ignore
+                  }
+                })()
+              }}
               emptyLabel="Premium video locked"
               onPreviewExpired={() => {
                 if (currentPart?.id) {
@@ -705,15 +837,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
             <div className="space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                <div className="flex w-full justify-between items-center gap-6 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5">
                     <Eye className="w-4 h-4" />
                     {currentPart?.views ?? 0} views
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4" />
-                    {currentPart?.uploadDate ? new Date(currentPart.uploadDate).toLocaleDateString() : "N/A"}
-                  </span>
+                  
 
                    <FollowButton
                     creatorId={watchFolder.creator?.id || ""}

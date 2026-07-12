@@ -2,8 +2,8 @@
 
 
 // lib/auth/dropaphi-upload.ts
-const BASE = 'https://dropaphi.xyz/api'
-// const BASE = 'http://localhost:3003/api'
+const BASE = 'https://www.dropaphi.xyz/api'
+// const BASE = 'http://localhost:3002/api'
 
 function getPublicDropAphiApiKey() {
   const apiKey = process.env.NEXT_PUBLIC_DROPAPHI_API_KEY
@@ -47,7 +47,6 @@ export async function uploadFileRaw(file: File): Promise<UploadResult> {
     // Add metadata
     formData.append('metadata', JSON.stringify({
       visibility: 'PUBLIC',
-      folder: 'thumbnails'
     }))
 
     const res = await fetch(`${BASE}/v1/files/upload`, {

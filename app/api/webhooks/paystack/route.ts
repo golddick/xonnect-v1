@@ -4,6 +4,8 @@ import { prisma } from "@/lib/db/prisma"
 import { isValidPaystackSignature, verifyPaystackTransaction } from "@/lib/paystack"
 import { completePurchase } from "@/lib/ticket-purchases"
 import { completeVideoPurchase } from "@/lib/video-purchases"
+import { sendEmail } from "@/lib/auth/dropaphi-client"
+import { creatorPlatformNotificationTemplate } from "@/emails/templates/creator-platform-notification"
 
 const db = prisma as any
 
@@ -126,6 +128,8 @@ export async function POST(request: NextRequest) {
           rent24Price: true,
           rent48Price: true,
           purchasePrice: true,
+          folderId: true,
+          title: true,
         },
       })
 
@@ -188,14 +192,41 @@ export async function POST(request: NextRequest) {
 
         throw settlementError
       }
+      try {
+        const accessCode = result.accessCode
+        const buyer = buyerEmail
+        const watchUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/tv/watch/folder/${video.folderId}`
 
-      return NextResponse.json(
-        {
-          message: result.alreadyCompleted ? "Video purchase already settled" : "Video purchase settled",
-          reference: verified.reference,
-        },
-        { status: 200 }
-      )
+        if (buyer) {
+          await sendEmail({
+            to: buyer,
+            subject: `Your access for ${video.title} is ready`,
+            html: creatorPlatformNotificationTemplate({
+              fullName: buyerName,
+              message: `Thank you for your purchase.\n\nAccess code: ${accessCode}\n\nWatch here: ${watchUrl}?part=${video.id}&accessCode=${accessCode}`,
+            }),
+            fromName: process.env.DROPAPHI_FROM_NAME || "Xonnect",
+            fromEmail: process.env.DROPAPHI_FROM_EMAIL || "auth@xonnect.net",
+          })
+        }
+
+        return NextResponse.json(
+          {
+            message: result.alreadyCompleted ? "Video purchase already settled" : "Video purchase settled",
+            reference: verified.reference,
+          },
+          { status: 200 }
+        )
+      } catch (err) {
+        console.error("Failed to send video purchase email:", err)
+        return NextResponse.json(
+          {
+            message: result.alreadyCompleted ? "Video purchase settled" : "Video purchase settled",
+            reference: verified.reference,
+          },
+          { status: 200 }
+        )
+      }
     }
 
     const purchase = ids.purchaseId

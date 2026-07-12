@@ -23,6 +23,7 @@ type EventStreamPlayerProps = {
   subtitle?: string | null
   poster?: string | null
   previewVideoUrl?: string | null
+  recordedVideoUrl?: string | null
   scheduledAt?: string | null
   status: string
   wsUrl?: string | null
@@ -53,6 +54,7 @@ export default function EventStreamPlayer({
   subtitle,
   poster,
   previewVideoUrl,
+  recordedVideoUrl,
   scheduledAt,
   status,
   wsUrl,
@@ -76,12 +78,15 @@ export default function EventStreamPlayer({
   const [audioPlaybackReady, setAudioPlaybackReady] = useState(false)
 
   const isLive = status.toUpperCase() === "LIVE"
-  const previewMedia = useMemo(() => resolvePlayableMediaSource(previewVideoUrl), [previewVideoUrl])
-  const hasPreviewVideo = Boolean(previewMedia) && !isLive
+  const isEnded = status.toUpperCase() === "ENDED"
+  const previewMedia = useMemo(() => resolvePlayableMediaSource(!isEnded ? previewVideoUrl : null), [previewVideoUrl, isEnded])
+  const recordedMedia = useMemo(() => resolvePlayableMediaSource(isEnded ? recordedVideoUrl : null), [recordedVideoUrl, isEnded])
+  const activePlaybackMedia = isEnded ? recordedMedia : previewMedia
+  const hasPlaybackVideo = Boolean(activePlaybackMedia) && !isLive
   const scheduledLabel = useMemo(() => formatDateTime(scheduledAt), [scheduledAt])
   const canConnect = Boolean(isLive && !locked)
   const shouldShowBackdrop =
-    (!isLive && !hasPreviewVideo) || (isLive && locked) || isConnecting || Boolean(connectionError) || Boolean(overlay)
+    (!isLive && !hasPlaybackVideo) || (isLive && locked) || isConnecting || Boolean(connectionError) || Boolean(overlay)
 
   useEffect(() => {
     if (audioRef.current) {
@@ -308,10 +313,10 @@ export default function EventStreamPlayer({
         <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-950 to-black" />
       )}
 
-      {hasPreviewVideo && previewMedia ? (
-        previewMedia.kind === "youtube" ? (
+      {hasPlaybackVideo && activePlaybackMedia ? (
+        activePlaybackMedia.kind === "youtube" ? (
           <iframe
-            src={previewMedia.embedUrl}
+            src={activePlaybackMedia.embedUrl}
             title={title}
             className="absolute inset-0 h-full w-full border-0 bg-black"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -322,7 +327,7 @@ export default function EventStreamPlayer({
         ) : (
           <video
             ref={previewVideoRef}
-            src={previewMedia.src}
+            src={activePlaybackMedia.src}
             poster={poster ?? undefined}
             className="absolute inset-0 h-full w-full bg-black object-contain"
             controls
@@ -365,15 +370,15 @@ export default function EventStreamPlayer({
               ) : null}
             </div>
 
-            <div className="max-w-3xl space-y-2">
+            {/* <div className="max-w-3xl space-y-2">
               <h2 className="text-2xl font-bold text-white md:text-3xl">{title}</h2>
               {subtitle ? <p className="text-sm text-white/75 md:text-base">{subtitle}</p> : null}
-            </div>
+            </div> */}
 
-            {!isLive && !hasPreviewVideo ? (
+            {!isLive && !hasPlaybackVideo ? (
               <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-white/80">
                 <Clock3 className="h-4 w-4 text-red-400" />
-                The broadcaster will connect the room when the event goes live.
+                OFFLINE
               </div>
             ) : null}
 
@@ -387,7 +392,7 @@ export default function EventStreamPlayer({
             {isConnecting ? (
               <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-white/80">
                 <Loader2 className="h-4 w-4 animate-spin text-red-400" />
-                Connecting to the event stream...
+                Connecting...
               </div>
             ) : null}
 
@@ -407,13 +412,13 @@ export default function EventStreamPlayer({
         </div>
       ) : null}
 
-      {hasPreviewVideo ? (
+      {hasPlaybackVideo ? (
         <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-4 md:p-6">
           <div className="max-w-3xl space-y-2 text-white">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">
                 <Play className="h-3.5 w-3.5" />
-                Preview available
+                {isEnded ? "Recording available" : "Preview available"}
               </span>
               {scheduledLabel ? (
                 <span className="rounded-full bg-black/55 px-3 py-1 text-xs text-white/80">
@@ -422,7 +427,7 @@ export default function EventStreamPlayer({
               ) : null}
             </div>
             <p className="max-w-2xl text-sm text-white/80 md:text-base">
-              Watch the event teaser while the stream is still offline.
+              {isEnded ? "Watch the event recording now." : "Watch the event teaser while the stream is still offline."}
             </p>
           </div>
         </div>
@@ -431,7 +436,7 @@ export default function EventStreamPlayer({
       {isLive && !locked && !connectionError ? (
         <div className="absolute left-4 top-4 z-10 flex items-center gap-2 rounded-full bg-black/70 px-3 py-2 text-xs font-semibold text-white">
           <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
-          Live stream
+          Live 
         </div>
       ) : null}
 

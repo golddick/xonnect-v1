@@ -217,13 +217,15 @@ export default function EventEditPage() {
     }
   }, [eventId])
 
-  const isRecordingEditable = eventStatus === "ENDED"
+  const normalizedEventStatus = (eventStatus || "").toUpperCase()
+  const isRecordingEditable = normalizedEventStatus === "ENDED"
+  const isLiveEvent = normalizedEventStatus === "LIVE"
 
   const canEdit = useMemo(() => {
     const scheduledAt = state.scheduledDate && state.scheduledTime ? new Date(`${state.scheduledDate}T${state.scheduledTime}`) : null
     const passed = scheduledAt ? scheduledAt <= new Date() : false
-    return eventStatus !== "LIVE" && eventStatus !== "ENDED" && !passed
-  }, [eventStatus, state.scheduledDate, state.scheduledTime])
+    return !isLiveEvent && !isRecordingEditable && !passed
+  }, [isLiveEvent, isRecordingEditable, state.scheduledDate, state.scheduledTime])
 
   const canSave = canEdit || isRecordingEditable
 
@@ -530,30 +532,36 @@ export default function EventEditPage() {
             </div>
             <p className="text-sm text-muted-foreground">
               {isRecordingEditable
-                ? "Ended events can still attach a recording file or paste a direct URL."
-                : "Add a recording link for this event."}
+                ? "Only ended events can accept a creator-added recording file or direct URL."
+                : "Recording attachments are only available after the event has ended."}
             </p>
             <div className="rounded-2xl border border-dashed border-border p-4">
-              <UploadButton
-                endpoint="creatorVideoUploader"
-                onUploadBegin={() => {
-                  setError("")
-                  setUploadingRecording(true)
-                }}
-                onClientUploadComplete={(res) => {
-                  const uploaded = res?.[0] as any
-                  const videoUrl = uploaded?.ufsUrl || uploaded?.url || ""
-                  const videoFileId = uploaded?.key || ""
-                  if (!videoUrl) return
-                  update("recordedVideoUrl", videoUrl)
-                  update("recordedVideoFileId", videoFileId)
-                  setUploadingRecording(false)
-                }}
-                onUploadError={(uploadError: Error) => {
-                  setUploadingRecording(false)
-                  setError(uploadError.message)
-                }}
-              />
+              {isRecordingEditable ? (
+                <UploadButton
+                  endpoint="creatorVideoUploader"
+                  onUploadBegin={() => {
+                    setError("")
+                    setUploadingRecording(true)
+                  }}
+                  onClientUploadComplete={(res) => {
+                    const uploaded = res?.[0] as any
+                    const videoUrl = uploaded?.ufsUrl || uploaded?.url || ""
+                    const videoFileId = uploaded?.key || ""
+                    if (!videoUrl) return
+                    update("recordedVideoUrl", videoUrl)
+                    update("recordedVideoFileId", videoFileId)
+                    setUploadingRecording(false)
+                  }}
+                  onUploadError={(uploadError: Error) => {
+                    setUploadingRecording(false)
+                    setError(uploadError.message)
+                  }}
+                />
+              ) : (
+                <div className="rounded-xl border border-border/70 bg-muted/20 p-3 text-sm text-muted-foreground">
+                  Recording attachment is unavailable while the event is still live or upcoming.
+                </div>
+              )}
             </div>
             {uploadingRecording && (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -565,7 +573,7 @@ export default function EventEditPage() {
               type="url"
               value={state.recordedVideoUrl}
               onChange={(e) => update("recordedVideoUrl", e.target.value)}
-              disabled={!canEdit && !isRecordingEditable}
+              disabled={!isRecordingEditable}
               placeholder="https://youtube.com/watch?v=..."
               className="w-full rounded-xl border border-border bg-transparent px-4 py-3 disabled:opacity-50"
             />
@@ -762,9 +770,8 @@ export default function EventEditPage() {
               <input
                 type="url"
                 value={recordingUrl}
-                onChange={(e) => setRecordingUrl(e.target.value)}
-                disabled={!canEdit}
-                className="w-full rounded-xl border border-border bg-transparent px-4 py-3 disabled:opacity-50"
+                readOnly
+                className="w-full rounded-xl border border-border bg-transparent px-4 py-3 opacity-80"
                 placeholder="Filled automatically by LiveKit webhook"
               />
             </div>
