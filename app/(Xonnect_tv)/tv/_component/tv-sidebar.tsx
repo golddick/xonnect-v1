@@ -6,6 +6,7 @@ import { ChevronDown, Menu, X, Home, Video, Film, Trophy, Tv, Gamepad2, MicVocal
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import Logo from "@/components/nav/logo"
+import { CreatorProfilePopup } from "@/components/tv/creator-profile-popup"
 
 
 interface TvSidebarProps {
@@ -16,6 +17,7 @@ interface TvFollower {
   id: string
   name: string
   avatarUrl: string | null
+  isFollowing?: boolean
 }
 
 const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
@@ -28,6 +30,8 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
     topChannels: true,
   })
   const [followingCreators, setFollowingCreators] = useState<TvFollower[]>([])
+  const [selectedCreator, setSelectedCreator] = useState<TvFollower | null>(null)
+  const [profilePopupOpen, setProfilePopupOpen] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -178,20 +182,36 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
                     exit={{ opacity: 0, height: 0 }}
                     className="space-y-2 mt-2"
                   >
-                    {followingCreators.map((creator) => (
-                      <Link
-                        key={creator.id}
-                        href={`/tv/watch/${creator.id}`}
-                        className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors group"
-                      >
-                        <span className="text-lg flex-shrink-0">{creator.avatarUrl ? "👤" : "👤"}</span>
-                        {!isCollapsed && (
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm text-muted-foreground group-hover:text-foreground truncate">{creator.name}</p>
+                    {followingCreators.map((creator) => {
+                      const getInitials = (name: string) => {
+                        return name
+                          .split(' ')
+                          .map((n) => n[0])
+                          .join('')
+                          .toUpperCase()
+                          .slice(0, 2)
+                      }
+
+                      return (
+                        <button
+                          key={creator.id}
+                          onClick={() => {
+                            setSelectedCreator(creator)
+                            setProfilePopupOpen(true)
+                          }}
+                          className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors group w-full"
+                        >
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-600/20 to-red-600/10 flex items-center justify-center flex-shrink-0 text-sm font-semibold text-red-500">
+                            {creator.avatarUrl ? "👤" : getInitials(creator.name)}
                           </div>
-                        )}
-                      </Link>
-                    ))}
+                          {!isCollapsed && (
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm text-muted-foreground group-hover:text-foreground truncate text-left">{creator.name}</p>
+                            </div>
+                          )}
+                        </button>
+                      )
+                    })}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -279,9 +299,28 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
           </div> */}
         </div>
       </motion.div>
+
+      {selectedCreator && (
+        <CreatorProfilePopup
+          creatorId={selectedCreator.id}
+          creatorName={selectedCreator.name}
+          creatorImage={selectedCreator.avatarUrl}
+          isFollowing={selectedCreator.isFollowing ?? false}
+          onFollowChange={() => {
+            setFollowingCreators((prev) =>
+              prev.map((creator) =>
+                creator.id === selectedCreator.id
+                  ? { ...creator, isFollowing: !creator.isFollowing }
+                  : creator
+              )
+            )
+          }}
+          open={profilePopupOpen}
+          onOpenChange={setProfilePopupOpen}
+        />
+      )}
     </div>
   )
 }
 
 export default TvSidebar
-

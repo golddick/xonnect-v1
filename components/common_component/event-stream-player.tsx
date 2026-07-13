@@ -356,18 +356,18 @@ export default function EventStreamPlayer({
                 }`}
               >
                 <Radio className="h-3.5 w-3.5" />
-                {isLive ? "Live" : "Scheduled"}
+                {isLive ? "Live" : "Coming up"}
               </span>
               {viewers > 0 ? (
                 <span className="rounded-full bg-black/60 px-3 py-1 text-xs text-white/80">
                   {viewers.toLocaleString()} watching
                 </span>
               ) : null}
-              {scheduledLabel ? (
+              {/* {scheduledLabel ? (
                 <span className="rounded-full bg-black/60 px-3 py-1 text-xs text-white/80">
                   {scheduledLabel}
                 </span>
-              ) : null}
+              ) : null} */}
             </div>
 
             {/* <div className="max-w-3xl space-y-2">
@@ -426,9 +426,6 @@ export default function EventStreamPlayer({
                 </span>
               ) : null}
             </div>
-            <p className="max-w-2xl text-sm text-white/80 md:text-base">
-              {isEnded ? "Watch the event recording now." : "Watch the event teaser while the stream is still offline."}
-            </p>
           </div>
         </div>
       ) : null}

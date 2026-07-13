@@ -74,7 +74,7 @@ export default function VideoViewPanel({
       }
     }
 
-    const reportAfter = reportAfterSeconds ?? 30
+    const reportAfter = reportAfterSeconds ?? 60
     if (!reportedRef.current && reportAfter && currentTime >= reportAfter) {
       reportedRef.current = true
       try {
@@ -128,14 +128,14 @@ export default function VideoViewPanel({
                   onClick={handlePlay}
                   className="pointer-events-auto w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform"
                 >
-                  <Play className="w-10 h-10 text-white fill-white ml-1" />
+                  <Play className="w-5 h-5 text-white fill-white ml-1" />
                 </button>
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
+              {/* <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
                 <p className="text-white text-sm font-medium mb-1">Click to Play</p>
                 <h2 className="text-white text-2xl font-bold">{title}</h2>
                 {subtitle ? <p className="text-white/70 text-sm mt-1">{subtitle}</p> : null}
-              </div>
+              </div> */}
             </div>
           )}
 

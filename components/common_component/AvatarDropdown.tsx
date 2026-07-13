@@ -22,7 +22,7 @@ export function AvatarDropdownMenu() {
   const isLoggedIn = status === "authenticated" && !!session?.user
 
   const handleLogout = () => {
-    signOut({ callbackUrl: "/tv" })
+    signOut({ callbackUrl: "/tv" }) 
   }
 
   const handleLogin = () => {

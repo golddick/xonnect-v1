@@ -234,11 +234,7 @@ export default function TvPage() {
                   />
                 ))}
               </div>
-            ) : (
-              <div className="rounded-2xl border border-border bg-muted/20 p-6 text-sm text-muted-foreground">
-                No content available
-              </div>
-            )}
+            ) : null }
           </div>
 
           <div className="space-y-4">
@@ -266,11 +262,7 @@ export default function TvPage() {
                   />
                 ))}
               </div>
-            ) : (
-              <div className="rounded-2xl border border-border bg-muted/20 p-6 text-sm text-muted-foreground">
-                No content available
-              </div>
-            )}
+            ) : null }
           </div>
         </div>
       </div>
