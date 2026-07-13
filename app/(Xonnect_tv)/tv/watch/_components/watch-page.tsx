@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { ArrowLeft, Banknote, Calendar, Clapperboard, Clock, Eye, Film, Handshake, Library, Lock, LockOpen, MessageSquare, Play, Radio, Settings, Share2 } from "lucide-react"
+import { ArrowLeft, Banknote, Calendar, Clapperboard, Clock, Eye, Film, Handshake, Heart, Library, Lock, LockOpen, MessageSquare, Play, Radio, Settings, Share2 } from "lucide-react"
 
 import EventStreamPlayer from "@/components/common_component/event-stream-player"
 import VideoViewPanel from "@/components/common_component/video-view-panel"
@@ -11,6 +11,11 @@ import WatchAccessOverlay from "@/components/tv/watch/watch-access-overlay"
 import WatchChatPanel from "@/components/tv/watch/watch-chat-panel"
 import WatchPartsPanel from "@/components/tv/watch/watch-parts-panel"
 import { FollowButton, LikeButton } from "@/components/tv/follow-like-buttons"
+import { ExpandableDescription } from "@/components/tv/expandable-description"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Textarea } from "@/components/ui/textarea"
 import { type WatchFolder, type WatchPart } from "@/lib/tv/watch-folder"
 import LoadingSplash from "@/components/splash_screen/loading-splash"
 
@@ -31,6 +36,17 @@ type ChatMessage = {
 type WatchPageProps = {
   kind: WatchContentKind
   watchId: string
+}
+
+type WatchComment = {
+  id: string
+  author: string
+  authorEmail: string
+  text: string
+  createdAt: string
+  likes: number
+  likedBy?: string[] // Track who liked this comment
+  replies: WatchComment[]
 }
 
 const CHAT_REACTIONS: ChatReaction[] = [
@@ -71,9 +87,24 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const [chatDraft, setChatDraft] = useState("")
   const [eventLikesCount, setEventLikesCount] = useState(0)
   const [eventIsLiked, setEventIsLiked] = useState(false)
+  const [videoLikesCount, setVideoLikesCount] = useState(0)
+  const [videoIsLiked, setVideoIsLiked] = useState(false)
   const [creatorIsFollowed, setCreatorIsFollowed] = useState(false)
+  const [comments, setComments] = useState<WatchComment[]>([])
+  const [commentDraft, setCommentDraft] = useState("")
+  const [commentEmailInput, setCommentEmailInput] = useState("")
+  const [commentEmailError, setCommentEmailError] = useState("")
+  const [commentSheetOpen, setCommentSheetOpen] = useState(false)
+  const [replyingToId, setReplyingToId] = useState<string | null>(null)
+  const [likedComments, setLikedComments] = useState<Set<string>>(new Set())
   const eventSourceRef = useRef<EventSource | null>(null)
   const sessionKey = `${session?.user?.email ?? ""}:${session?.user?.id ?? ""}`
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      setCommentEmailInput(session.user.email)
+    }
+  }, [session?.user?.email])
 
   useEffect(() => {
     setAccessCode(codeParam)
@@ -177,6 +208,84 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         eventSourceRef.current.close()
         eventSourceRef.current = null
       }
+    }
+  }, [watchId, kind])
+
+  useEffect(() => {
+    // Only load comments for videos/folders, not events
+    if (kind !== "folder" || !watchId) {
+      setComments([])
+      return
+    }
+
+    let cancelled = false
+
+    async function loadComments() {
+      try {
+        const response = await fetch(`/api/tv/watch/comments/${watchId}`)
+        if (!response.ok) {
+          // Fall back to demo comments if API fails
+          setComments([
+            // {
+            //   id: "demo-comment-1",
+            //   author: "Ada",
+            //   authorEmail: "ada@example.com",
+            //   text: "The pacing is perfect and the production quality is amazing.",
+            //   createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
+            //   likes: 12,
+            //   replies: [
+            //     {
+            //       id: "demo-reply-1",
+            //       author: "Mina",
+            //       authorEmail: "mina@example.com",
+            //       text: "Absolutely. This feels like a premium stream.",
+            //       createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+            //       likes: 5,
+            //       replies: [],
+            //     },
+            //   ],
+            // },
+          ])
+          return
+        }
+
+        const data = await response.json()
+        if (!cancelled && Array.isArray(data.comments)) {
+          setComments(data.comments)
+        }
+      } catch (error) {
+        console.error("Failed to load comments:", error)
+        // Fall back to demo comments
+        if (!cancelled) {
+          setComments([
+            {
+              id: "demo-comment-1",
+              author: "Ada",
+              authorEmail: "ada@example.com",
+              text: "The pacing is perfect and the production quality is amazing.",
+              createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
+              likes: 12,
+              replies: [
+                {
+                  id: "demo-reply-1",
+                  author: "Mina",
+                  authorEmail: "mina@example.com",
+                  text: "Absolutely. This feels like a premium stream.",
+                  createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+                  likes: 5,
+                  replies: [],
+                },
+              ],
+            },
+          ])
+        }
+      }
+    }
+
+    loadComments()
+
+    return () => {
+      cancelled = true
     }
   }, [watchId, kind])
 
@@ -285,6 +394,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
   const currentPart = folderData?.parts?.[activePart] ?? null
   const currentVideoUrl = currentPart?.videoUrl ?? null
+  useEffect(() => {
+    if (currentPart?.id) {
+      setVideoLikesCount(currentPart.likes ?? 0)
+      setVideoIsLiked(false)
+    }
+  }, [currentPart?.id, currentPart?.likes])
   const currentThumbnail = currentPart?.thumbnail || folderData?.thumbnail || null
   const currentType = folderData?.contentType ?? "video"
   const previewExpired = Boolean(currentPart?.id && previewExpiredPartId === currentPart.id)
@@ -319,6 +434,163 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         return <Play className="w-5 h-5 text-red-500" />
     }
   }, [currentType])
+
+  const isValidEmail = (value: string) => /^\S+@\S+\.\S+$/.test(value.trim())
+
+  const formatTimeAgo = (value: string) => {
+    const diffMs = Date.now() - new Date(value).getTime()
+    const seconds = Math.floor(diffMs / 1000)
+    if (seconds < 60) return "just now"
+
+    const minutes = Math.floor(seconds / 60)
+    if (minutes < 60) return `${minutes} minute${minutes === 1 ? "" : "s"} ago`
+
+    const hours = Math.floor(minutes / 60)
+    if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`
+
+    const days = Math.floor(hours / 24)
+    if (days < 7) return `${days} day${days === 1 ? "" : "s"} ago`
+
+    return new Date(value).toLocaleDateString()
+  }
+
+  const appendCommentToTree = (items: WatchComment[], parentId: string | null, newComment: WatchComment): WatchComment[] => {
+    if (!parentId) {
+      return [newComment, ...items]
+    }
+
+    return items.map((item) => {
+      if (item.id === parentId) {
+        return { ...item, replies: [newComment, ...item.replies] }
+      }
+
+      if (item.replies.length > 0) {
+        return { ...item, replies: appendCommentToTree(item.replies, parentId, newComment) }
+      }
+
+      return item
+    })
+  }
+
+  const updateCommentLikes = (items: WatchComment[], commentId: string, deltaLikes: number): WatchComment[] => {
+    return items.map((item) => {
+      if (item.id === commentId) {
+        return { ...item, likes: Math.max(0, item.likes + deltaLikes) }
+      }
+      if (item.replies.length > 0) {
+        return { ...item, replies: updateCommentLikes(item.replies, commentId, deltaLikes) }
+      }
+      return item
+    })
+  }
+
+  const handleCommentLike = (commentId: string) => {
+    const isLiked = likedComments.has(commentId)
+    
+    // Optimistic update
+    if (isLiked) {
+      setLikedComments((prev) => {
+        const next = new Set(prev)
+        next.delete(commentId)
+        return next
+      })
+      setComments((current) => updateCommentLikes(current, commentId, -1))
+    } else {
+      setLikedComments((prev) => new Set(prev).add(commentId))
+      setComments((current) => updateCommentLikes(current, commentId, 1))
+    }
+
+    // Send to API
+    ;(async () => {
+      try {
+        await fetch(`/api/tv/watch/comments/${currentPart?.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            commentId,
+            like: !isLiked,
+          }),
+        })
+      } catch (error) {
+        console.error("Failed to like/unlike comment:", error)
+        // Revert optimistic update on error
+        if (isLiked) {
+          setLikedComments((prev) => new Set(prev).add(commentId))
+          setComments((current) => updateCommentLikes(current, commentId, 1))
+        } else {
+          setLikedComments((prev) => {
+            const next = new Set(prev)
+            next.delete(commentId)
+            return next
+          })
+          setComments((current) => updateCommentLikes(current, commentId, -1))
+        }
+      }
+    })()
+  }
+
+  const handleCommentSubmit = (parentId?: string | null) => {
+    const trimmed = commentDraft.trim()
+    if (!trimmed) return
+
+    const resolvedEmail = (session?.user?.email ?? commentEmailInput).trim()
+    if (!resolvedEmail) {
+      setCommentEmailError("Email is required to publish a comment.")
+      setCommentSheetOpen(true)
+      return
+    }
+
+    if (!isValidEmail(resolvedEmail)) {
+      setCommentEmailError("Please enter a valid email address.")
+      setCommentSheetOpen(true)
+      return
+    }
+
+    const authorName = session?.user?.name?.trim() || resolvedEmail.split("@")[0] || "Unknown"
+    
+    // Only submit if we have a video ID (folder view)
+    if (!currentPart?.id) return
+
+    ;(async () => {
+      try {
+        const response = await fetch(`/api/tv/watch/comments/${currentPart.id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: trimmed,
+            authorEmail: resolvedEmail,
+            authorName,
+            parentCommentId: parentId || null,
+          }),
+        })
+
+        if (!response.ok) {
+          setCommentEmailError("Failed to post comment. Please try again.")
+          return
+        }
+
+        const data = await response.json()
+        const newComment: WatchComment = {
+          id: data.comment.id,
+          author: data.comment.author,
+          authorEmail: data.comment.authorEmail,
+          text: data.comment.text,
+          createdAt: data.comment.createdAt,
+          likes: 0,
+          replies: [],
+        }
+
+        setComments((current) => appendCommentToTree(current, parentId ?? null, newComment))
+        setCommentDraft("")
+        setReplyingToId(null)
+        setCommentEmailError("")
+        setCommentSheetOpen(false)
+      } catch (error) {
+        console.error("Failed to post comment:", error)
+        setCommentEmailError("Failed to post comment. Please try again.")
+      }
+    })()
+  }
 
   const handleChatReaction = (messageId: string, reaction: ChatReaction) => {
     setChatMessages((current) =>
@@ -422,6 +694,126 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   // SSE connection is handled earlier in the chat setup effect.
 
   const watchFolder = kind === "folder" ? folderData : null
+
+  const renderCommentThread = (items: WatchComment[], depth = 0) => (
+    <div className="space-y-4">
+      {items.map((comment) => {
+        const isLiked = likedComments.has(comment.id)
+        return (
+          <div key={comment.id} className="rounded-2xl border border-border/50 bg-background/80 p-4 hover:bg-background/90 transition-colors">
+            <div className="flex items-start gap-3">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-600/20 to-red-600/10 text-sm font-semibold text-red-500 flex-shrink-0">
+                {comment.author.slice(0, 2).toUpperCase()}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className=" w-full flex items-center justify-between gap-2">
+                  <div>
+                    <span className="font-semibold text-foreground text-sm">{comment.author}</span>
+                    <span className="text-xs text-muted-foreground truncate">{formatTimeAgo(comment.createdAt)}</span>
+                
+                   </div> 
+                
+                <div className="flex flex-wrap items-center gap-4 text-xs">
+                  <button
+                    type="button"
+                    className="font-medium text-foreground/70 hover:text-foreground transition-colors"
+                    onClick={() => {
+                      setReplyingToId(comment.id)
+                      setCommentSheetOpen(false)
+                    }}
+                  >
+                    Reply
+                  </button>
+                  <button
+                    type="button"
+                    className={`flex items-center gap-1.5 font-medium transition-colors ${
+                      isLiked 
+                        ? "text-red-500 hover:text-red-600" 
+                        : "text-foreground/70 hover:text-foreground"
+                    }`}
+                    onClick={() => handleCommentLike(comment.id)}
+                  >
+                    <Heart className={`h-4 w-4 ${isLiked ? "fill-red-500" : ""}`} />
+                    <span>{comment.likes > 0 ? comment.likes : ""}</span>
+                  </button>
+                  {comment.replies.length > 0 && depth === 0 ? (
+                    <span className="font-medium text-foreground/70">
+                      {comment.replies.length} {comment.replies.length === 1 ? "reply" : "replies"}
+                    </span>
+                  ) : null}
+                </div>
+                
+                </div>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground whitespace-pre-wrap break-words">{comment.text}</p>
+                {/* <div className="flex flex-wrap items-center gap-4 text-xs">
+                  <button
+                    type="button"
+                    className="font-medium text-foreground/70 hover:text-foreground transition-colors"
+                    onClick={() => {
+                      setReplyingToId(comment.id)
+                      setCommentSheetOpen(false)
+                    }}
+                  >
+                    Reply
+                  </button>
+                  <button
+                    type="button"
+                    className={`flex items-center gap-1.5 font-medium transition-colors ${
+                      isLiked 
+                        ? "text-red-500 hover:text-red-600" 
+                        : "text-foreground/70 hover:text-foreground"
+                    }`}
+                    onClick={() => handleCommentLike(comment.id)}
+                  >
+                    <Heart className={`h-4 w-4 ${isLiked ? "fill-red-500" : ""}`} />
+                    <span>{comment.likes > 0 ? comment.likes : ""}</span>
+                  </button>
+                  {comment.replies.length > 0 && depth === 0 ? (
+                    <span className="font-medium text-foreground/70">
+                      {comment.replies.length} {comment.replies.length === 1 ? "reply" : "replies"}
+                    </span>
+                  ) : null}
+                </div> */}
+
+                {replyingToId === comment.id ? (
+                  <div className="mt-3 rounded-xl border border-border/50 bg-muted/20 p-3">
+                    <Textarea
+                      value={commentDraft}
+                      onChange={(event) => setCommentDraft(event.target.value)}
+                      placeholder="Write a reply..."
+                      rows={2}
+                      className="min-h-[10px] resize"
+                    />
+                    <div className="mt-3 flex items-center justify-between gap-3">
+                      <button
+                        type="button"
+                        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                        onClick={() => setReplyingToId(null)}
+                      >
+                        Cancel
+                      </button>
+                      <Button 
+                        size="sm" 
+                        onClick={() => handleCommentSubmit(comment.id)}
+                        disabled={!commentDraft.trim()}
+                      >
+                         Reply
+                      </Button>
+                    </div>
+                  </div>
+                ) : null}
+                {comment.replies.length > 0 ? (
+                  <div className={`mt-4 ${depth === 0 ? "ml-4 border-l border-border/50 pl-4" : "ml-2"}`}>
+                    {renderCommentThread(comment.replies, depth + 1)}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
 
   const lockOverlay = shouldShowAccessOverlay && watchFolder ? (
     <WatchAccessOverlay
@@ -640,16 +1032,16 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
     return (
       <div className="min-h-screen w-full hidden-scrollbar bg-background text-foreground pb-20">
-        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4 lg:px-8 py-4">
-          <div className="flex items-center justify-between w-full p-4">
+        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4  py-4">
+          <div className="flex items-center justify-between w-full ">
             <div className="flex items-center gap-4 min-w-0">
               <button onClick={() => router.back()} className="p-2 hover:bg-muted rounded-full transition-colors">
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <Radio className="w-5 h-5 text-red-500" />
-                  <h1 className="text-lg font-bold truncate max-w-[200px] md:max-w-md">{eventData.title}</h1>
+                  <Radio className="w-5 h-5 text-red-500 hidden lg:block" />
+                  <h1 className="text-lg font-bold truncate max-w-[200px] capitalize md:max-w-md">{eventData.title}</h1>
                 </div>
                 <p className="text-xs text-muted-foreground flex items-center gap-2">
                   <span>{eventData.category}</span>
@@ -699,13 +1091,16 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                   <div className="flex w-full justify-between items-center gap-6 text-sm text-muted-foreground">
                    
                     <div className="flex items-center gap-2">
-                      <p className="mt-1 text-sm font-semibold text-foreground">
-                      {eventData.access?.locked ? <Lock /> : <LockOpen />}
-                    </p>
+
                     <span className="flex items-center gap-1.5">
                       <Calendar className="w-4 h-4" />
                       {eventData.scheduledAt ? new Date(eventData.scheduledAt).toLocaleDateString() : "N/A"}
                     </span>
+
+                      <p className="mt-1 text-sm font-semibold text-foreground">
+                      {eventData.access?.locked ? <Lock /> : <LockOpen />}
+                    </p>
+                    
                     
                     <span className="flex items-center gap-1.5">
                         {eventData.access?.premium ? <Banknote /> : <Handshake />}
@@ -736,17 +1131,16 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 </div>
 
                 {eventData.description  && (
-                <div className="p-6 bg-muted/20 rounded-2xl border border-border/50 space-y-4">
+                <div className=" bg-muted/20 rounded-2xl border border-border/50 space-y-4">
                   <div>
                     <h3 className="font-semibold mb-2">Description</h3>
-                    <p className="text-muted-foreground leading-relaxed text-sm">
-                      {eventData.description || "No description available"}
-                    </p>
+                    <ExpandableDescription
+                      text={eventData.description}
+                      maxLines={22}
+                    />
                   </div>
                 </div>
                 )}
-
-                
               </div>
             </div>
 
@@ -780,7 +1174,78 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
   return (
     <div className="min-h-screen w-full bg-background text-foreground pb-20">
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4 lg:px-8 py-4">
+      <Sheet open={commentSheetOpen} onOpenChange={setCommentSheetOpen}>
+        <SheetContent side="bottom" className="rounded-t-2xl">
+          <SheetHeader>
+            <SheetTitle className="text-lg">
+              {session?.user?.email ? "Verify your email to comment" : "Share your email to comment"}
+            </SheetTitle>
+            <SheetDescription>
+              {session?.user?.email 
+                ? "Your email is pre-filled from your account. You can edit it if needed."
+                : "To post a comment, please provide your email address. We'll use it to identify your comments."}
+            </SheetDescription>
+          </SheetHeader>
+          <div className="mt-6 space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Email Address</label>
+              <Input
+                type="email"
+                value={commentEmailInput}
+                onChange={(event) => {
+                  setCommentEmailInput(event.target.value)
+                  if (commentEmailError) setCommentEmailError("")
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && commentEmailInput.trim() && isValidEmail(commentEmailInput.trim())) {
+                    setCommentEmailError("")
+                    setCommentSheetOpen(false)
+                    handleCommentSubmit(replyingToId)
+                  }
+                }}
+                placeholder="name@example.com"
+                autoFocus
+                className="rounded-lg"
+              />
+              <p className="text-xs text-muted-foreground">
+                {isValidEmail(commentEmailInput.trim()) 
+                  ? "✓ Valid email" 
+                  : commentEmailInput.trim() 
+                    ? "✗ Please enter a valid email"
+                    : ""}
+              </p>
+            </div>
+            {commentEmailError ? (
+              <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3">
+                <p className="text-sm text-red-600">{commentEmailError}</p>
+              </div>
+            ) : null}
+            <Button
+              className="w-full rounded-lg"
+              onClick={() => {
+                const emailValue = commentEmailInput.trim()
+                if (!emailValue) {
+                  setCommentEmailError("Email is required to publish a comment.")
+                  return
+                }
+
+                if (!isValidEmail(emailValue)) {
+                  setCommentEmailError("Please enter a valid email address.")
+                  return
+                }
+
+                setCommentEmailError("")
+                setCommentSheetOpen(false)
+                handleCommentSubmit(replyingToId)
+              }}
+              disabled={!commentEmailInput.trim() || !isValidEmail(commentEmailInput.trim())}
+            >
+              Continue
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4 py-4">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-4 min-w-0">
             <button onClick={() => router.back()} className="p-2 hover:bg-muted rounded-full transition-colors">
@@ -818,10 +1283,10 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               title={currentPart?.title ?? watchFolder.title}
               subtitle={currentPart?.description ?? watchFolder.description}
               locked={Boolean(currentPart?.isLocked || currentPart?.previewOnly)}
-              previewSeconds={currentPart?.previewOnly ? 30 : null}
+              previewSeconds={currentPart?.previewOnly ? 60 : null}
               showOverlay={shouldShowAccessOverlay}
               overlay={lockOverlay}
-              reportAfterSeconds={30}
+              reportAfterSeconds={60}
               onReportView={() => {
                 if (!currentPart?.id) return
                 ;(async () => {
@@ -857,32 +1322,45 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                   </span>
                   
 
-                   <FollowButton
+                  <div className="flex items-center gap-4">
+                        <FollowButton
                     creatorId={watchFolder.creator?.id || ""}
                     isFollowing={creatorIsFollowed}
                     isSelf={watchFolder.creator?.isSelf ?? false}
                     onFollowChange={() => setCreatorIsFollowed(!creatorIsFollowed)}
                   />
+                  <LikeButton
+                    kind="video"
+                    itemId={currentPart?.id ?? watchFolder.id}
+                    isLiked={videoIsLiked}
+                    count={videoLikesCount}
+                    onLikeChange={(count) => {
+                      setVideoIsLiked(!videoIsLiked)
+                      setVideoLikesCount(count)
+                    }}
+                  />
+                  </div>
                  
                 </div>
               </div>
 
-              <div className="p-6 bg-muted/20 rounded-2xl border border-border/50">
+              <div className="p-4 bg-muted/20 rounded-2xl border border-border/50">
                 
                 {
-                  currentPart?.description || watchFolder.description && (
-                    <div>
-                      <h3 className="font-semibold mb-2">Description</h3><h3 className="font-semibold mb-2">Description</h3>
-                      <p className="text-muted-foreground leading-relaxed text-sm">
-                        {currentPart?.description || watchFolder.description || "No description available"}
-                      </p>
+                  (currentPart?.description || watchFolder.description) && (
+                    <div className="space-y-4">
+                      <h3 className="font-semibold">Description</h3>
+                      <ExpandableDescription
+                        text={currentPart?.description || watchFolder.description || "No description available"}
+                        maxLines={10}
+                      />
                     </div>
                   )
                 }
                 
                 
                 {currentPart?.tags && currentPart.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-4">
+                  <div className={`flex flex-wrap gap-2 ${(currentPart?.description || watchFolder.description) ? 'mt-4 pt-4 border-t border-border/50' : ''}`}>
                     {currentPart.tags.map((tag) => (
                       <span
                         key={tag}
@@ -893,6 +1371,44 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                     ))}
                   </div>
                 )}
+              </div>
+
+              <div className="rounded-2xl border border-border/50 bg-muted/20 p-6 gap-2">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <h3 className="font-semibold text-foreground">Comments</h3>
+                  </div>
+                </div>
+
+                <div className=" rounded-2xl border border-border/50 bg-background/70 p-4 space-y-3">
+
+                  <Textarea
+                    value={commentDraft}
+                    onChange={(event) => setCommentDraft(event.target.value)}
+                    placeholder={session?.user?.email 
+                      ? "Write your comment here..." 
+                      : "Write your comment here... (you'll be asked for your email)"}
+                    rows={2}
+                    className="resize"
+                  />
+                  <div className="flex items-center justify-between gap-3">
+                    <Button 
+                      onClick={() => {
+                        if (!commentDraft.trim()) return
+                        if (!session?.user?.email && !commentEmailInput.trim()) {
+                          setCommentSheetOpen(true)
+                        } else {
+                          handleCommentSubmit(null)
+                        }
+                      }}
+                      disabled={!commentDraft.trim()}
+                    >
+                      Comment
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="mt-6 space-y-4">{renderCommentThread(comments)}</div>
               </div>
             </div>
           </div>

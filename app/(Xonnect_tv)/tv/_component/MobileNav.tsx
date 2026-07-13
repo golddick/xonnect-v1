@@ -30,9 +30,9 @@ export function MobileNav() {
 
   return (
     <Sheet>
-      <div className="flex w-full px-4 py-2 justify-between items-center">
+      <div className="flex w-full p-2 justify-between items-center">
         <SheetTrigger asChild>
-          <Button variant='ghost' className="p-1 border bg-red-600 text-white border-white/10">
+          <Button variant='ghost' className="p-4 border bg-red-600 text-white border-white/10">
             <MenuIcon className="w-10 h-10 text-foreground"/>
           </Button>
         </SheetTrigger>
@@ -41,7 +41,7 @@ export function MobileNav() {
       
       <SheetContent side="left" className=" w-[200px] bg-background text-foreground p-0">
         <SheetHeader className="p-6 border-b border-white/10">
-          <SheetTitle className="text-2xl font-bold text-foreground">Xonnect TV</SheetTitle>
+          <SheetTitle className="text-2xl font-bold text-foreground">Xonnect</SheetTitle>
           <SheetDescription className="text-muted-foreground">
             Bringing the world experience to you! 
           </SheetDescription>

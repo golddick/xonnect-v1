@@ -25,8 +25,8 @@ export default function TvLoadingState({ variant = "landing" }: TvLoadingStatePr
     return (
       <div className="flex-1 p-4 md:p-6 space-y-6">
         <div className="flex items-center justify-between gap-4">
-          <Skeleton className="h-7 w-40" />
-          <Skeleton className="h-9 w-32 rounded-lg" />
+          <Skeleton className="h-7 w-30" />
+          <Skeleton className="h-9 w-30 rounded-lg" />
         </div>
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {Array.from({ length: 8 }).map((_, index) => (
@@ -40,7 +40,7 @@ export default function TvLoadingState({ variant = "landing" }: TvLoadingStatePr
   return (
     <div className="flex h-full flex-col gap-6 p-4 md:p-6">
       <div className="flex items-center justify-between gap-4">
-        <Skeleton className="h-7 w-36" />
+        <Skeleton className="h-7 w-30" />
         <div className="flex items-center gap-3">
           <Skeleton className="h-10 w-72 rounded-lg" />
           <Skeleton className="h-10 w-10 rounded-lg" />
@@ -62,7 +62,7 @@ export default function TvLoadingState({ variant = "landing" }: TvLoadingStatePr
         </div>
 
         <div className="space-y-4">
-          <Skeleton className="h-6 w-24" />
+          <Skeleton className="h-6 w-20" />
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
               <CardSkeleton key={index} />
