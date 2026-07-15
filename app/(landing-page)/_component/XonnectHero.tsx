@@ -28,7 +28,7 @@ export default function XonnectHero() {
       </div>
 
       <div className="relative z-10 flex flex-col justify-center flex-1 px-6 sm:px-10 md:px-16 pt-24 pb-10 max-w-7xl mx-auto w-full">
-        <div className="max-w-2xl">
+        <div className="max-w-7xl">
           <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
@@ -47,7 +47,7 @@ export default function XonnectHero() {
             transition={{ delay: 0.1 }}
             className="text-white/70 text-sm font-medium uppercase tracking-[0.3em] mb-3"
           >
-            Xonnect · Watch. Connect. Belong.
+            Xonnect · Watch. Belong.
           </motion.p>
 
           <motion.h1
@@ -59,14 +59,14 @@ export default function XonnectHero() {
             Your next favorite live moment starts here.
           </motion.h1>
 
-          {/* <motion.p
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="text-white/80 text-base sm:text-lg leading-relaxed mb-8 max-w-xl"
           >
-            Step into cinematic live events, creator streams, and premium experiences built for viewers who want more than passive scrolling.
-          </motion.p> */}
+            Step into cinematic premium experiences built for all.
+          </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}

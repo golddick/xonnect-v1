@@ -51,13 +51,13 @@ export default function VideoViewPanel({
   }, [videoUrl, previewSeconds, locked])
 
   useEffect(() => {
-    if (!videoUrl) {
+    if (!videoUrl || !playableMedia) {
       setIsMediaLoading(false)
       return
     }
 
     setIsMediaLoading(true)
-  }, [videoUrl, playableMedia?.src])
+  }, [videoUrl, playableMedia])
 
   useEffect(() => {
     videoRef.current?.pause()
@@ -107,7 +107,7 @@ export default function VideoViewPanel({
 
   const shouldShowOverlay = Boolean(overlay) && (locked || showOverlay || previewExpired)
   const handleMediaReady = () => setIsMediaLoading(false)
-  const shouldShowMediaActionButton = !isYouTubeVideo && !isMediaLoading && !isPlaying && !shouldShowOverlay
+  const shouldShowMediaActionButton = !shouldShowOverlay && (showPurchaseButton || Boolean(playableMedia && !isYouTubeVideo && !isMediaLoading && !isPlaying))
   const shouldShowLoadingIndicator = !shouldShowOverlay && isMediaLoading && !isPlaying && !videoRef.current?.currentTime
 
   return (
@@ -151,7 +151,6 @@ export default function VideoViewPanel({
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 pointer-events-none">
               <div className="flex items-center gap-2 rounded-full border border-white/15 bg-black/50 px-3 py-2 text-xs font-medium text-white/90 shadow-lg backdrop-blur-sm">
                 <Loader2 className="h-4 w-4 animate-spin text-red-500" />
-                <span>Loading…</span>
               </div>
             </div>
           ) : null}
@@ -165,7 +164,7 @@ export default function VideoViewPanel({
                   onClick={showPurchaseButton ? onRequestAccess : handlePlay}
                   className="pointer-events-auto min-w-[7.5rem] rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white shadow-2xl transition-transform hover:scale-110"
                 >
-                  {showPurchaseButton ? purchaseButtonLabel : <div className="flex items-center justify-center gap-2"><Play className="h-5 w-5 fill-white" /><span>Play</span></div>}
+                  {showPurchaseButton ? purchaseButtonLabel : <div className="flex items-center justify-center gap-2"><Play className="h-3.5 w-3.5 fill-white" /></div>}
                 </button>
               </div>
             </div>
@@ -184,7 +183,6 @@ export default function VideoViewPanel({
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 pointer-events-none">
               <div className="flex items-center gap-2 rounded-full border border-white/15 bg-black/50 px-3 py-2 text-xs font-medium text-white/90 shadow-lg backdrop-blur-sm">
                 <Loader2 className="h-4 w-4 animate-spin text-red-500" />
-                <span>Loading…</span>
               </div>
             </div>
           ) : null}

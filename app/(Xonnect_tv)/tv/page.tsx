@@ -112,7 +112,7 @@ export default function TvPage() {
 
   return (
     <div className="flex h-screen bg-background overflow-hidden hidden-scrollbar flex-col lg:flex-row">
-      <div className="flex-1 overflow-y-auto hidden-scrollbar flex flex-col">
+      <div className="flex-1 overflow-y-auto hidden-scrollbar flex flex-col p-2">
         <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border">
           <div className="hidden lg:flex items-center justify-between gap-4 px-4 md:px-6 py-3">
             <h1 className="text-xl md:text-2xl font-bold text-foreground">Discover</h1>

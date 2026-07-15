@@ -87,11 +87,11 @@ function clearStoredGuestAccess(kind: WatchContentKind, watchId: string) {
   }
 }
 
-function readStoredAccessGrant(kind: WatchContentKind, watchId: string) {
-  if (typeof window === "undefined") return false
+function readStoredAccessGrant(kind: WatchContentKind, watchId: string, partId?: string | null) {
+  if (typeof window === "undefined" || !partId) return false
 
   try {
-    const stored = window.localStorage.getItem(`${ACCESS_GRANT_STORAGE_PREFIX}:${kind}:${watchId}`)
+    const stored = window.localStorage.getItem(`${ACCESS_GRANT_STORAGE_PREFIX}:${kind}:${watchId}:${partId}`)
     if (!stored) return false
     if (stored === "1") return true
 
@@ -99,7 +99,7 @@ function readStoredAccessGrant(kind: WatchContentKind, watchId: string) {
     if (parsed?.granted !== true) return false
 
     if (parsed?.expiresAt && new Date(parsed.expiresAt).getTime() <= Date.now()) {
-      clearStoredAccessGrant(kind, watchId)
+      clearStoredAccessGrant(kind, watchId, partId)
       return false
     }
 
@@ -109,29 +109,30 @@ function readStoredAccessGrant(kind: WatchContentKind, watchId: string) {
   }
 }
 
-function persistAccessGrant(kind: WatchContentKind, watchId: string, expiresAt?: string | null) {
-  if (typeof window === "undefined") return
+function persistAccessGrant(kind: WatchContentKind, watchId: string, partId?: string | null, expiresAt?: string | null) {
+  if (typeof window === "undefined" || !partId) return
 
   try {
     const payload = { granted: true, expiresAt: expiresAt ?? null }
-    window.localStorage.setItem(`${ACCESS_GRANT_STORAGE_PREFIX}:${kind}:${watchId}`, JSON.stringify(payload))
+    window.localStorage.setItem(`${ACCESS_GRANT_STORAGE_PREFIX}:${kind}:${watchId}:${partId}`, JSON.stringify(payload))
   } catch {
     // ignore storage errors
   }
 }
 
-function clearStoredAccessGrant(kind: WatchContentKind, watchId: string) {
+function clearStoredAccessGrant(kind: WatchContentKind, watchId: string, partId?: string | null) {
   if (typeof window === "undefined") return
 
   try {
-    window.localStorage.removeItem(`${ACCESS_GRANT_STORAGE_PREFIX}:${kind}:${watchId}`)
+    const storageKey = partId ? `${ACCESS_GRANT_STORAGE_PREFIX}:${kind}:${watchId}:${partId}` : `${ACCESS_GRANT_STORAGE_PREFIX}:${kind}:${watchId}`
+    window.localStorage.removeItem(storageKey)
   } catch {
     // ignore storage errors
   }
 }
 
-function clearStoredAccessState(kind: WatchContentKind, watchId: string) {
-  clearStoredAccessGrant(kind, watchId)
+function clearStoredAccessState(kind: WatchContentKind, watchId: string, partId?: string | null) {
+  clearStoredAccessGrant(kind, watchId, partId)
   clearStoredGuestAccess(kind, watchId)
 }
 
@@ -166,7 +167,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const [paymentAccessCode, setPaymentAccessCode] = useState("")
   const [paymentUrl, setPaymentUrl] = useState("")
   const [accessOverlayDismissed, setAccessOverlayDismissed] = useState(false)
-  const [accessGranted, setAccessGranted] = useState(() => readStoredAccessGrant(kind, watchId))
+  const [accessGranted, setAccessGranted] = useState(false)
   const [accessGrantExpiryNotified, setAccessGrantExpiryNotified] = useState(false)
   const [buyerName, setBuyerName] = useState("")
   const [buyerEmail, setBuyerEmail] = useState("")
@@ -205,7 +206,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     const nextAccessCode = codeParam || readStoredGuestAccess(kind, watchId) || ""
     setAccessCode(nextAccessCode)
     setSubmittedAccessCode(nextAccessCode)
-    setAccessGranted(readStoredAccessGrant(kind, watchId))
+    setAccessGranted(false)
     if (nextAccessCode) {
       setCodeNonce((value) => value + 1)
     }
@@ -239,7 +240,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     if (!watchId || !kind) return
 
     const recheckAccess = () => {
-      setAccessGranted(readStoredAccessGrant(kind, watchId))
+      setAccessGranted(readStoredAccessGrant(kind, watchId, currentPart?.id ?? watchId))
       setCodeNonce((value) => value + 1)
     }
 
@@ -496,9 +497,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           setEventLikesCount(data.event.likesCount ?? 0)
           setEventIsLiked(data.event.isLiked ?? false)
           setCreatorIsFollowed(data.event.creator?.isFollowing ?? false)
-          // Auto-grant access for logged-in users if server marks the event unlocked
+          // Auto-grant access for logged-in users if the server marks the event unlocked
           if (session?.user && !data.event.access?.locked) {
-            persistAccessGrant(kind, watchId, data.event.access?.accessExpiresAt ?? null)
+            persistAccessGrant(kind, watchId, watchId, data.event.access?.accessExpiresAt ?? null)
             setAccessGranted(true)
             setAccessOverlayDismissed(false)
           }
@@ -507,12 +508,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
             const accessAccepted = !data.event.access?.locked
             if (accessAccepted) {
               persistGuestAccess(kind, watchId, submittedAccessCode)
-              persistAccessGrant(kind, watchId)
+              persistAccessGrant(kind, watchId, watchId, data.event.access?.accessExpiresAt ?? null)
               setAccessGranted(true)
               setAccessOverlayDismissed(false)
             } else {
               clearStoredGuestAccess(kind, watchId)
-              clearStoredAccessGrant(kind, watchId)
+              clearStoredAccessGrant(kind, watchId, watchId)
               setAccessGranted(false)
             }
             setMessage(
@@ -542,7 +543,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
             const hasServerAccess = Boolean(targetPart && !targetPart.isLocked && !accessExpired && !targetPart.previewOnly)
 
             if (accessGranted && targetPart && (accessExpired || targetPart.isLocked || targetPart.previewOnly)) {
-              clearStoredAccessGrant(kind, watchId)
+              clearStoredAccessGrant(kind, watchId, targetPart.id)
               setAccessGranted(false)
               setMessage("This access has expired. Please purchase or rent again.")
             }
@@ -551,7 +552,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
             // grant access locally so they don't need to enter an access code.
             if (session?.user) {
               if (hasServerAccess) {
-                persistAccessGrant(kind, watchId, serverAccessExpiresAt)
+                persistAccessGrant(kind, watchId, targetPart?.id ?? null, serverAccessExpiresAt)
                 setAccessGranted(true)
                 setAccessOverlayDismissed(false)
               }
@@ -560,12 +561,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               const accessAccepted = Boolean(targetPart && !targetPart.isLocked && !accessExpired)
               if (accessAccepted) {
                 persistGuestAccess(kind, watchId, submittedAccessCode)
-                persistAccessGrant(kind, watchId, serverAccessExpiresAt)
+                persistAccessGrant(kind, watchId, targetPart?.id ?? null, serverAccessExpiresAt)
                 setAccessGranted(true)
                 setAccessOverlayDismissed(false)
               } else {
                 clearStoredGuestAccess(kind, watchId)
-                clearStoredAccessGrant(kind, watchId)
+                clearStoredAccessGrant(kind, watchId, targetPart?.id ?? null)
                 setAccessGranted(false)
               }
               setMessage(
@@ -616,8 +617,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const previewExpired = Boolean(currentPart?.id && previewExpiredPartId === currentPart.id)
   const accessGrantExpiresAt = currentPart?.accessExpiresAt ?? null
   const accessGrantExpired = Boolean(accessGrantExpiresAt && new Date(accessGrantExpiresAt).getTime() <= Date.now())
-  const hasAccessRestriction = Boolean(currentPart?.isLocked || currentPart?.previewOnly || previewExpired)
-  const hasUnlockedAccess = (accessGranted && !accessGrantExpired) || Boolean(currentPart && !currentPart.isLocked && !currentPart.previewOnly && !previewExpired)
+  const isPreviewActive = Boolean(currentPart?.previewOnly && !previewExpired)
+  const hasAccessRestriction = Boolean(currentPart?.isLocked || (currentPart?.previewOnly && previewExpired) || previewExpired)
+  const hasUnlockedAccess = (accessGranted && !accessGrantExpired) || Boolean(currentPart && !currentPart.isLocked && (!currentPart.previewOnly || isPreviewActive))
   const shouldShowAccessOverlay = !loading && !accessOverlayDismissed && !hasUnlockedAccess && hasAccessRestriction
   const isContentLocked = !loading && !hasUnlockedAccess && hasAccessRestriction
 
@@ -632,7 +634,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         setAccessGrantExpiryNotified(true)
       }
       setAccessGranted(false)
-      clearStoredAccessState(kind, watchId)
+      clearStoredAccessState(kind, watchId, currentPart?.id ?? null)
       setMessage("This access has expired. Please purchase or rent again.")
     }
   }, [accessGranted, accessGrantExpiresAt, accessGrantExpiryNotified, kind, watchId])
@@ -651,7 +653,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
     const timeoutId = window.setTimeout(() => {
       setAccessGranted(false)
-      clearStoredAccessState(kind, watchId)
+      clearStoredAccessState(kind, watchId, currentPart?.id ?? null)
       toast.error("Access expired", {
         description: "Your stored access grant has expired. Please purchase or rent again to continue watching.",
       })
@@ -817,13 +819,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const syncAccessCodeInUrl = (nextCode: string) => {
     if (typeof window === "undefined") return
 
-    const trimmed = nextCode.trim()
     const params = new URLSearchParams(searchParams.toString())
+    params.delete("accessCode")
 
+    const trimmed = nextCode.trim()
     if (trimmed) {
-      params.set("accessCode", trimmed)
-    } else {
-      params.delete("accessCode")
+      persistGuestAccess(kind, watchId, trimmed)
     }
 
     const queryString = params.toString()
@@ -1108,7 +1109,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   }
 
   const renderCommentThread = (items: WatchComment[], depth = 0) => (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {items.map((comment) => {
         const isLiked = likedComments.has(comment.id)
         const hasReplies = comment.replies.length > 0
@@ -1157,16 +1158,14 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                   {hasReplies && depth === 0 ? (
                     <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-foreground/70">
                       <span>{replyCountLabel}</span>
-                      {showAllComments ? (
-                        <button
-                          type="button"
-                          className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-                          onClick={() => toggleReplyExpansion(comment.id)}
-                        >
-                          {isReplyExpanded ? "Hide replies" : `Show ${Math.min(VISIBLE_REPLY_COUNT, comment.replies.length)} of ${comment.replies.length}`}
-                          <ChevronDown className={`h-3.5 w-3.5 transition-transform ${isReplyExpanded ? "rotate-180" : ""}`} />
-                        </button>
-                      ) : null}
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                        onClick={() => toggleReplyExpansion(comment.id)}
+                      >
+                        {isReplyExpanded ? "Hide replies" : `Show ${Math.min(VISIBLE_REPLY_COUNT, comment.replies.length)} of ${comment.replies.length}`}
+                        <ChevronDown className={`h-3.5 w-3.5 transition-transform ${isReplyExpanded ? "rotate-180" : ""}`} />
+                      </button>
                     </div>
                   ) : null}
                 </div>
@@ -1242,8 +1241,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         setBusy("code")
         setMessage(null)
         persistGuestAccess(kind, watchId, nextCode)
-        persistAccessGrant(kind, watchId, currentPart?.accessExpiresAt ?? null)
-        setAccessGranted(true)
+        persistAccessGrant(kind, watchId, currentPart?.id ?? null, currentPart?.accessExpiresAt ?? null)
         setAccessGranted(true)
         setAccessOverlayDismissed(false)
         setSubmittedAccessCode(nextCode)
@@ -1291,14 +1289,15 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       onPurchase={(purchaseType) => {
         if (!currentPart) return
 
-        if (!watchFolder.access.loggedIn && !buyerEmail.trim()) {
+        const resolvedBuyerEmail = watchFolder.access.loggedIn && session?.user?.email ? session.user.email : buyerEmail.trim()
+        if (!watchFolder.access.loggedIn && !resolvedBuyerEmail) {
           setPendingPurchaseAction(() => (email: string) => handleFolderPurchase(purchaseType, email))
           setShowGuestEmailPrompt(true)
           setMessage("Enter your email to continue checkout.")
           return
         }
 
-        void handleFolderPurchase(purchaseType, buyerEmail)
+        void handleFolderPurchase(purchaseType, resolvedBuyerEmail)
       }}
       isPurchasing={busy === "code" ? "purchase" : busy}
       paymentAccessCode={paymentAccessCode}
@@ -1345,11 +1344,11 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     const streamTicket = (eventData.tickets ?? []).find((ticket: any) => ticket.access === "STREAM")
     const eventLockOverlay = eventData.access?.locked ? (
       <WatchAccessOverlay
-        title={eventData.status === "LIVE" ? "Premium event locked" : "Get your event ticket"}
+        title={eventData.status === "LIVE" ? "locked" : "Get access"}
         description={
           eventData.access?.loggedIn
-            ? "Enter the ticket code from your purchase to unlock the stream."
-            : "Buy your stream ticket now and unlock access before the event starts."
+            ? "Enter the ticket code to unlock the stream."
+            : "Buy your stream ticket now and unlock access."
         }
         accessCode={accessCode}
         accessCodePlaceholder="Enter ticket code"
@@ -1359,7 +1358,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           setBusy("code")
           setMessage(null)
           persistGuestAccess(kind, watchId, accessCode.trim())
-          persistAccessGrant(kind, watchId, null)
+          persistAccessGrant(kind, watchId, watchId, null)
           setAccessGranted(true)
           setAccessOverlayDismissed(false)
           setSubmittedAccessCode(accessCode.trim())
@@ -1373,14 +1372,15 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         showBuyerFields={false}
         purchaseOptions={streamTicket && streamTicket.price > 0 ? [{ type: "purchase", label: "Buy ticket", price: streamTicket.price }] : []}
         onPurchase={() => {
-          if (!eventData.access?.loggedIn && !buyerEmail.trim()) {
+          const resolvedBuyerEmail = eventData.access?.loggedIn && session?.user?.email ? session.user.email : buyerEmail.trim()
+          if (!eventData.access?.loggedIn && !resolvedBuyerEmail) {
             setPendingPurchaseAction(() => (email: string) => handleEventPurchase(email))
             setShowGuestEmailPrompt(true)
             setMessage("Enter your email to continue checkout.")
             return
           }
 
-          void handleEventPurchase(buyerEmail)
+          void handleEventPurchase(resolvedBuyerEmail)
         }}
         isPurchasing={busy === "purchase" ? "purchase" : null}
         paymentAccessCode={paymentAccessCode}
@@ -1420,7 +1420,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
     return (
       <div className="min-h-screen w-full hidden-scrollbar bg-background text-foreground pb-20">
-        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4  py-4">
+        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md  px-4  py-4">
           <div className="flex items-center justify-between w-full ">
             <div className="flex items-center gap-4 min-w-0">
               <button onClick={() => router.back()} className="p-2 hover:bg-muted rounded-full transition-colors">
@@ -1448,14 +1448,14 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 <MessageSquare className="h-4 w-4" />
                 <span>{chatVisible ? "Hide chat" : "Show chat"}</span>
               </button>
-              <button className="p-2 hover:bg-muted rounded-full transition-colors">
+              {/* <button className="p-2 hover:bg-muted rounded-full transition-colors">
                 <Share2 className="w-5 h-5" />
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
 
-        <main className="w-full px-4 lg:px-8 py-6">
+        <main className="w-full px-2 lg:px-8 py-6">
           <div className={`grid grid-cols-1 gap-8 ${chatVisible ? "xl:grid-cols-[minmax(0,1fr)_350px]" : ""}`}>
             <div className="space-y-6">
               <EventStreamPlayer
@@ -1486,12 +1486,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                     </span>
 
                       <p className="mt-1 text-sm font-semibold text-foreground">
-                      {eventData.access?.locked ? <Lock /> : <LockOpen />}
+                      {eventData.access?.locked ? <Lock /> : null}
                     </p>
                     
                     
                     <span className="flex items-center gap-1.5">
-                        {eventData.access?.premium ? <Banknote /> : <Handshake />}
+                        {eventData.access?.premium ? <Banknote /> : null}
                     </span>
                      </div> 
                     
@@ -1519,12 +1519,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 </div>
 
                 {eventData.description  && (
-                <div className=" bg-muted/20 rounded-2xl border border-border/50 space-y-4">
+                <div className="  rounded-2xl  space-y-4">
                   <div>
                     <h3 className="font-semibold mb-2">Description</h3>
                     <ExpandableDescription
                       text={eventData.description}
-                      maxLines={22}
+                      maxLines={12}
                     />
                   </div>
                 </div>
@@ -1562,7 +1562,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
   return (
     <div className="min-h-screen w-full bg-background text-foreground pb-20">
-      <Sheet open={commentSheetOpen} onOpenChange={setCommentSheetOpen}>
+      
+      {/* <Sheet open={commentSheetOpen} onOpenChange={setCommentSheetOpen}>
         <SheetContent side="bottom" className="rounded-t-2xl">
           <SheetHeader>
             <SheetTitle className="text-lg">
@@ -1632,7 +1633,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
             </Button>
           </div>
         </SheetContent>
-      </Sheet>
+      </Sheet> */}
+
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4 py-4">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-4 min-w-0">
@@ -1737,7 +1739,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 </div>
               </div>
 
-              <div className="p-4 bg-muted/20 rounded-2xl border border-border/50">
+              <div className=" ">
                 
                 {
                   (currentPart?.description || watchFolder.description) && (
@@ -1766,7 +1768,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 )}
               </div>
 
-              <div className="rounded-2xl border border-border/50 bg-muted/20 p-6 gap-2">
+              {/* <div className="rounded-2xl border border-border/50 bg-muted/20 p-6 gap-2">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <h3 className="font-semibold text-foreground">Comments</h3>
@@ -1817,7 +1819,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                     </div>
                   ) : null}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 

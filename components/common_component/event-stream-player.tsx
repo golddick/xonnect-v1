@@ -333,6 +333,7 @@ export default function EventStreamPlayer({
 
   const toggleFullscreen = async () => {
     const element = playerContainerRef.current
+    const activeVideoElement = videoRef.current ?? previewVideoRef.current
     if (!element) return
 
     const fullscreenElement =
@@ -340,28 +341,46 @@ export default function EventStreamPlayer({
       (document as Document & { webkitFullscreenElement?: Element | null }).webkitFullscreenElement ??
       (document as Document & { mozFullScreenElement?: Element | null }).mozFullScreenElement
 
-    if (fullscreenElement === element) {
-      if (document.exitFullscreen) {
-        await document.exitFullscreen()
-      } else if ((document as Document & { webkitExitFullscreen?: () => Promise<void> }).webkitExitFullscreen) {
-        await (document as Document & { webkitExitFullscreen?: () => Promise<void> }).webkitExitFullscreen?.()
-      } else if ((document as Document & { mozCancelFullScreen?: () => Promise<void> }).mozCancelFullScreen) {
-        await (document as Document & { mozCancelFullScreen?: () => Promise<void> }).mozCancelFullScreen?.()
+    if (fullscreenElement === element || fullscreenElement === activeVideoElement) {
+      try {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen()
+        } else if ((document as Document & { webkitExitFullscreen?: () => Promise<void> }).webkitExitFullscreen) {
+          await (document as Document & { webkitExitFullscreen?: () => Promise<void> }).webkitExitFullscreen?.()
+        } else if ((document as Document & { mozCancelFullScreen?: () => Promise<void> }).mozCancelFullScreen) {
+          await (document as Document & { mozCancelFullScreen?: () => Promise<void> }).mozCancelFullScreen?.()
+        }
+      } catch (error) {
+        console.error("Failed to exit fullscreen:", error)
       }
       return
     }
 
-    if (element.requestFullscreen) {
-      await element.requestFullscreen()
-    } else if ((element as HTMLElement & { webkitRequestFullscreen?: () => Promise<void> }).webkitRequestFullscreen) {
-      await (element as HTMLElement & { webkitRequestFullscreen?: () => Promise<void> }).webkitRequestFullscreen?.()
-    } else if ((element as HTMLElement & { msRequestFullscreen?: () => Promise<void> }).msRequestFullscreen) {
-      await (element as HTMLElement & { msRequestFullscreen?: () => Promise<void> }).msRequestFullscreen?.()
+    try {
+      if (element.requestFullscreen) {
+        await element.requestFullscreen()
+      } else if ((element as HTMLElement & { webkitRequestFullscreen?: () => Promise<void> }).webkitRequestFullscreen) {
+        await (element as HTMLElement & { webkitRequestFullscreen?: () => Promise<void> }).webkitRequestFullscreen?.()
+      } else if ((element as HTMLElement & { msRequestFullscreen?: () => Promise<void> }).msRequestFullscreen) {
+        await (element as HTMLElement & { msRequestFullscreen?: () => Promise<void> }).msRequestFullscreen?.()
+      } else if ((activeVideoElement as HTMLVideoElement & { webkitEnterFullscreen?: () => void } | null)?.webkitEnterFullscreen) {
+        ;(activeVideoElement as HTMLVideoElement & { webkitEnterFullscreen?: () => void }).webkitEnterFullscreen?.()
+      }
+    } catch (error) {
+      if ((activeVideoElement as HTMLVideoElement & { webkitEnterFullscreen?: () => void } | null)?.webkitEnterFullscreen) {
+        try {
+          ;(activeVideoElement as HTMLVideoElement & { webkitEnterFullscreen?: () => void }).webkitEnterFullscreen?.()
+        } catch (fallbackError) {
+          console.error("Failed to enter fullscreen with iOS fallback:", fallbackError)
+        }
+      } else {
+        console.error("Failed to enter fullscreen:", error)
+      }
     }
   }
 
   return (
-    <div ref={playerContainerRef} className="relative aspect-video overflow-hidden rounded-3xl border border-border bg-black">
+    <div ref={playerContainerRef} className="relative aspect-video overflow-hidden rounded-2xl border border-border bg-black">
       {poster ? (
         <img
           src={poster}
@@ -414,8 +433,8 @@ export default function EventStreamPlayer({
                   isLive ? "bg-red-600 text-white" : "bg-white/10 text-white"
                 }`}
               >
-                <Radio className="h-3.5 w-3.5" />
-                {isLive ? "Live" : "Coming up"}
+
+                {isLive ? "Live" : null}
               </span>
               {viewers > 0 ? (
                 <span className="rounded-full bg-black/60 px-3 py-1 text-xs text-white/80">
@@ -471,7 +490,7 @@ export default function EventStreamPlayer({
         </div>
       ) : null}
 
-      {shouldRenderPlaybackMedia ? (
+      {/* {shouldRenderPlaybackMedia ? (
         <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-4 md:p-6">
           <div className="max-w-3xl space-y-2 text-white">
             <div className="flex flex-wrap items-center gap-2">
@@ -487,12 +506,11 @@ export default function EventStreamPlayer({
             </div>
           </div>
         </div>
-      ) : null}
+      ) : null} */}
 
       {isLive && !locked && !connectionError ? (
         <div className="absolute left-4 top-4 z-10 flex items-center gap-2 rounded-full bg-black/70 px-3 py-2 text-xs font-semibold text-white">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
-          Live 
+          <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" /> 
         </div>
       ) : null}
 
@@ -504,7 +522,7 @@ export default function EventStreamPlayer({
           title={isFullscreen ? "Exit full screen" : "Enter full screen"}
         >
           {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-          {isFullscreen ? "Exit full screen" : "Full screen"}
+         <span className=" hidden lg:block">{isFullscreen ? "Exit full screen" : "Full screen"}</span>
         </button>
 
         {isLive ? (
@@ -527,7 +545,9 @@ export default function EventStreamPlayer({
               title={isMuted ? "Unmute audio" : "Mute audio"}
             >
               {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              <span className="hidden lg:block">
               {isMuted ? "Muted" : "Sound on"}
+              </span>
             </button>
           </>
         ) : null}
@@ -536,7 +556,7 @@ export default function EventStreamPlayer({
       {audioPlaybackReady && !audioPlaybackBlocked ? (
         <div className="absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-black/70 px-3 py-2 text-xs font-semibold text-white/80">
           <MicOff className="h-4 w-4" />
-          Audio connected
+          <span className="hidden lg:block">Audio connected</span>
         </div>
       ) : null}
     </div>

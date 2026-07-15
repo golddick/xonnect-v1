@@ -6,7 +6,7 @@ type WatchCardLike = {
 
 export function buildWatchHref(card: WatchCardLike) {
   const targetId = card.watchId ?? card.id
-  return card.type === "live" || card.type === "scheduled"
+  return card.type === "live" || card.type === "scheduled" || card.type === "ended"
     ? `/tv/watch/event/${targetId}`
     : `/tv/watch/folder/${targetId}`
 }
