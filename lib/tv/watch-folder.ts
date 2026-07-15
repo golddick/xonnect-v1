@@ -191,10 +191,20 @@ export async function loadWatchFolderData(
       })
 
       for (const purchase of purchases) {
-        purchaseAccessMap.set(purchase.creatorVideoId, {
-          accessExpiresAt: purchase.accessExpiresAt,
-          purchaseType: purchase.purchaseType,
-        })
+        const resolvedAccessExpiresAt = purchase.accessExpiresAt ? new Date(purchase.accessExpiresAt) : null
+        const isExpired = Boolean(resolvedAccessExpiresAt && resolvedAccessExpiresAt.getTime() <= Date.now())
+
+        if (isExpired) {
+          continue
+        }
+
+        const existingAccess = purchaseAccessMap.get(purchase.creatorVideoId)
+        if (!existingAccess || !existingAccess.accessExpiresAt || (resolvedAccessExpiresAt && resolvedAccessExpiresAt.getTime() > existingAccess.accessExpiresAt.getTime())) {
+          purchaseAccessMap.set(purchase.creatorVideoId, {
+            accessExpiresAt: resolvedAccessExpiresAt,
+            purchaseType: purchase.purchaseType,
+          })
+        }
       }
     }
   }
@@ -210,6 +220,7 @@ export async function loadWatchFolderData(
           : false
     const canView = canBypassAccess || isFree || hasTimedAccess
     const previewOnly = !canView && Boolean(video.videoUrl)
+    const shouldExposeMediaUrl = Boolean(video.videoUrl)
 
     return {
       id: video.id,
@@ -221,7 +232,7 @@ export async function loadWatchFolderData(
       comments: video.commentsCount ?? 0,
       revenue: video.revenue ?? 0,
       thumbnail: video.thumbnailUrl,
-      videoUrl: canView ? video.videoUrl : null,
+      videoUrl: shouldExposeMediaUrl ? video.videoUrl : null,
       episodeIndex: video.episodeIndex,
       status: video.status,
       category: video.category,

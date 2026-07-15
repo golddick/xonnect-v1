@@ -18067,7 +18067,7 @@ export namespace Prisma {
     buyerEmail: string | null
     buyerPhone: string | null
     purchaseType: string
-    accessCode: string
+    accessCode: string | null
     revenue: number
     amount: number
     platformFee: number
@@ -18224,7 +18224,7 @@ export namespace Prisma {
       buyerEmail: string | null
       buyerPhone: string | null
       purchaseType: string
-      accessCode: string
+      accessCode: string | null
       revenue: number
       amount: number
       platformFee: number
@@ -41539,7 +41539,7 @@ export namespace Prisma {
     buyerEmail?: StringNullableFilter<"CreatorVideoPurchase"> | string | null
     buyerPhone?: StringNullableFilter<"CreatorVideoPurchase"> | string | null
     purchaseType?: StringFilter<"CreatorVideoPurchase"> | string
-    accessCode?: StringFilter<"CreatorVideoPurchase"> | string
+    accessCode?: StringNullableFilter<"CreatorVideoPurchase"> | string | null
     revenue?: IntFilter<"CreatorVideoPurchase"> | number
     amount?: IntFilter<"CreatorVideoPurchase"> | number
     platformFee?: IntFilter<"CreatorVideoPurchase"> | number
@@ -41563,7 +41563,7 @@ export namespace Prisma {
     buyerEmail?: SortOrderInput | SortOrder
     buyerPhone?: SortOrderInput | SortOrder
     purchaseType?: SortOrder
-    accessCode?: SortOrder
+    accessCode?: SortOrderInput | SortOrder
     revenue?: SortOrder
     amount?: SortOrder
     platformFee?: SortOrder
@@ -41614,7 +41614,7 @@ export namespace Prisma {
     buyerEmail?: SortOrderInput | SortOrder
     buyerPhone?: SortOrderInput | SortOrder
     purchaseType?: SortOrder
-    accessCode?: SortOrder
+    accessCode?: SortOrderInput | SortOrder
     revenue?: SortOrder
     amount?: SortOrder
     platformFee?: SortOrder
@@ -41643,7 +41643,7 @@ export namespace Prisma {
     buyerEmail?: StringNullableWithAggregatesFilter<"CreatorVideoPurchase"> | string | null
     buyerPhone?: StringNullableWithAggregatesFilter<"CreatorVideoPurchase"> | string | null
     purchaseType?: StringWithAggregatesFilter<"CreatorVideoPurchase"> | string
-    accessCode?: StringWithAggregatesFilter<"CreatorVideoPurchase"> | string
+    accessCode?: StringNullableWithAggregatesFilter<"CreatorVideoPurchase"> | string | null
     revenue?: IntWithAggregatesFilter<"CreatorVideoPurchase"> | number
     amount?: IntWithAggregatesFilter<"CreatorVideoPurchase"> | number
     platformFee?: IntWithAggregatesFilter<"CreatorVideoPurchase"> | number
@@ -44653,7 +44653,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -44677,7 +44677,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -44695,7 +44695,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -44719,7 +44719,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -44740,7 +44740,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -44758,7 +44758,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -44779,7 +44779,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -51745,7 +51745,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -51767,7 +51767,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -52001,7 +52001,7 @@ export namespace Prisma {
     buyerEmail?: StringNullableFilter<"CreatorVideoPurchase"> | string | null
     buyerPhone?: StringNullableFilter<"CreatorVideoPurchase"> | string | null
     purchaseType?: StringFilter<"CreatorVideoPurchase"> | string
-    accessCode?: StringFilter<"CreatorVideoPurchase"> | string
+    accessCode?: StringNullableFilter<"CreatorVideoPurchase"> | string | null
     revenue?: IntFilter<"CreatorVideoPurchase"> | number
     amount?: IntFilter<"CreatorVideoPurchase"> | number
     platformFee?: IntFilter<"CreatorVideoPurchase"> | number
@@ -52362,7 +52362,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -52384,7 +52384,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -54073,7 +54073,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -54095,7 +54095,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -59662,7 +59662,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -59770,7 +59770,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -59792,7 +59792,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -59812,7 +59812,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -59867,7 +59867,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -60123,7 +60123,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -60145,7 +60145,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -60165,7 +60165,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -60813,7 +60813,7 @@ export namespace Prisma {
     buyerEmail?: string | null
     buyerPhone?: string | null
     purchaseType: string
-    accessCode: string
+    accessCode?: string | null
     revenue?: number
     amount?: number
     platformFee?: number
@@ -60894,7 +60894,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -60916,7 +60916,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number
@@ -60936,7 +60936,7 @@ export namespace Prisma {
     buyerEmail?: NullableStringFieldUpdateOperationsInput | string | null
     buyerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseType?: StringFieldUpdateOperationsInput | string
-    accessCode?: StringFieldUpdateOperationsInput | string
+    accessCode?: NullableStringFieldUpdateOperationsInput | string | null
     revenue?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     platformFee?: IntFieldUpdateOperationsInput | number

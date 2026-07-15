@@ -188,7 +188,7 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
           access: "STREAM",
         },
       },
-      select: { id: true },
+      select: { id: true, purchasedAt: true },
     })
 
     accessGranted = Boolean(codeMatch)
@@ -204,7 +204,7 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
           access: "STREAM",
         },
       },
-      select: { id: true },
+      select: { id: true, purchasedAt: true },
     })
 
     accessGranted = Boolean(emailMatch)

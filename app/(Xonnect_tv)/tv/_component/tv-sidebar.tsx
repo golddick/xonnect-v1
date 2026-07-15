@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import Logo from "@/components/nav/logo"
 import { CreatorProfilePopup } from "@/components/tv/creator-profile-popup"
+import Image from "next/image"
 
 
 interface TvSidebarProps {
@@ -201,14 +202,32 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
                           }}
                           className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors group w-full"
                         >
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-600/20 to-red-600/10 flex items-center justify-center flex-shrink-0 text-sm font-semibold text-red-500">
-                            {creator.avatarUrl ? "👤" : getInitials(creator.name)}
+                          {/* Avatar - always visible */}
+                          <div className="relative h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-red-600/20 to-red-600/10 flex items-center justify-center overflow-hidden">
+                            {creator.avatarUrl ? (
+                              <Image
+                                src={creator.avatarUrl}
+                                alt={creator.name || "Creator avatar"}
+                                fill
+                                className="rounded-full object-cover"
+                                sizes="32px"
+                              />
+                            ) : (
+                              <span className="text-sm font-semibold text-red-500 select-none">
+                                {creator.name?.charAt(0).toUpperCase() || "👤"}
+                              </span>
+                            )}
                           </div>
-                          {!isCollapsed && (
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm text-muted-foreground group-hover:text-foreground truncate text-left">{creator.name}</p>
-                            </div>
-                          )}
+
+                        {/* Name - hidden when collapsed */}
+                        {!isCollapsed && (
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-left text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                              {creator.name || "Anonymous"}
+                            </p>
+                          </div>
+                        )}
+                          )
                         </button>
                       )
                     })}

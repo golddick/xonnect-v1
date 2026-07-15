@@ -396,7 +396,7 @@ model CreatorVideoPurchase {
   buyerEmail   String? @map("buyer_email")
   buyerPhone   String? @map("buyer_phone")
   purchaseType String  @map("purchase_type")
-  accessCode   String  @unique @map("access_code")
+  accessCode   String? @unique @map("access_code")
 
   revenue         Int       @default(0) @map("revenue_made")
   amount          Int       @default(0) @map("amount_paid")

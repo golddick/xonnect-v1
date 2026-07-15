@@ -92,7 +92,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       },
     })
 
-  const callbackUrl = new URL(
+    const callbackUrl = new URL(
       `/tv/watch/folder/${video.folderId}`,
       process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
     )
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         creatorVideoId: video.id,
         folderId: video.folderId,
         purchaseType,
-        accessCode: pendingPurchase.accessCode,
+        accessCode: null,
         buyerName,
         buyerEmail,
         buyerProfileId: profileId ?? null,
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json(
       {
         authorizationUrl: payment.authorization_url,
-        accessCode: pendingPurchase.accessCode,
+        accessCode: null,
         reference: pendingPurchase.reference,
         purchaseType,
         amount,

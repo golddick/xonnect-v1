@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { ArrowLeft, Banknote, Calendar, Clapperboard, Clock, Eye, Film, Handshake, Heart, Library, Lock, LockOpen, MessageSquare, Play, Radio, Settings, Share2 } from "lucide-react"
+import { toast } from "sonner"
+import { ArrowLeft, Banknote, Calendar, Clapperboard, ChevronDown, Clock, Eye, Film, Handshake, Heart, Library, Lock, LockOpen, MessageSquare, Play, Radio, Settings, Share2 } from "lucide-react"
 
 import EventStreamPlayer from "@/components/common_component/event-stream-player"
 import VideoViewPanel from "@/components/common_component/video-view-panel"
@@ -49,6 +50,91 @@ type WatchComment = {
   replies: WatchComment[]
 }
 
+const GUEST_ACCESS_STORAGE_PREFIX = "xonnect-watch-guest-access"
+const ACCESS_GRANT_STORAGE_PREFIX = "xonnect-watch-access-grant"
+
+function readStoredGuestAccess(kind: WatchContentKind, watchId: string) {
+  if (typeof window === "undefined") return ""
+
+  try {
+    const stored = window.sessionStorage.getItem(`${GUEST_ACCESS_STORAGE_PREFIX}:${kind}:${watchId}`)
+    return typeof stored === "string" ? stored.trim() : ""
+  } catch {
+    return ""
+  }
+}
+
+function persistGuestAccess(kind: WatchContentKind, watchId: string, accessCode: string) {
+  if (typeof window === "undefined") return
+
+  const trimmed = accessCode.trim()
+  if (!trimmed) return
+
+  try {
+    window.sessionStorage.setItem(`${GUEST_ACCESS_STORAGE_PREFIX}:${kind}:${watchId}`, trimmed)
+  } catch {
+    // ignore storage errors
+  }
+}
+
+function clearStoredGuestAccess(kind: WatchContentKind, watchId: string) {
+  if (typeof window === "undefined") return
+
+  try {
+    window.sessionStorage.removeItem(`${GUEST_ACCESS_STORAGE_PREFIX}:${kind}:${watchId}`)
+  } catch {
+    // ignore storage errors
+  }
+}
+
+function readStoredAccessGrant(kind: WatchContentKind, watchId: string) {
+  if (typeof window === "undefined") return false
+
+  try {
+    const stored = window.localStorage.getItem(`${ACCESS_GRANT_STORAGE_PREFIX}:${kind}:${watchId}`)
+    if (!stored) return false
+    if (stored === "1") return true
+
+    const parsed = JSON.parse(stored) as { granted?: boolean; expiresAt?: string | null }
+    if (parsed?.granted !== true) return false
+
+    if (parsed?.expiresAt && new Date(parsed.expiresAt).getTime() <= Date.now()) {
+      clearStoredAccessGrant(kind, watchId)
+      return false
+    }
+
+    return true
+  } catch {
+    return false
+  }
+}
+
+function persistAccessGrant(kind: WatchContentKind, watchId: string, expiresAt?: string | null) {
+  if (typeof window === "undefined") return
+
+  try {
+    const payload = { granted: true, expiresAt: expiresAt ?? null }
+    window.localStorage.setItem(`${ACCESS_GRANT_STORAGE_PREFIX}:${kind}:${watchId}`, JSON.stringify(payload))
+  } catch {
+    // ignore storage errors
+  }
+}
+
+function clearStoredAccessGrant(kind: WatchContentKind, watchId: string) {
+  if (typeof window === "undefined") return
+
+  try {
+    window.localStorage.removeItem(`${ACCESS_GRANT_STORAGE_PREFIX}:${kind}:${watchId}`)
+  } catch {
+    // ignore storage errors
+  }
+}
+
+function clearStoredAccessState(kind: WatchContentKind, watchId: string) {
+  clearStoredAccessGrant(kind, watchId)
+  clearStoredGuestAccess(kind, watchId)
+}
+
 const CHAT_REACTIONS: ChatReaction[] = [
   "\u{1F44D}",
   "\u{2764}\u{FE0F}",
@@ -65,22 +151,29 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const searchParams = useSearchParams()
   const partParam = searchParams.get("part")
   const codeParam = searchParams.get("accessCode") ?? ""
+  const trxrefParam = searchParams.get("trxref") ?? ""
+  const referenceParam = searchParams.get("reference") ?? ""
   const { data: session } = useSession()
 
   const [loading, setLoading] = useState(true)
   const [folderData, setFolderData] = useState<WatchFolder | null>(null)
   const [eventData, setEventData] = useState<any>(null)
   const [activePart, setActivePart] = useState(0)
-  const [accessCode, setAccessCode] = useState("")
-  const [submittedAccessCode, setSubmittedAccessCode] = useState(codeParam)
+  const [accessCode, setAccessCode] = useState(() => codeParam || readStoredGuestAccess(kind, watchId) || "")
+  const [submittedAccessCode, setSubmittedAccessCode] = useState(() => codeParam || readStoredGuestAccess(kind, watchId) || "")
   const [codeNonce, setCodeNonce] = useState(0)
   const [previewExpiredPartId, setPreviewExpiredPartId] = useState<string | null>(null)
   const [paymentAccessCode, setPaymentAccessCode] = useState("")
   const [paymentUrl, setPaymentUrl] = useState("")
+  const [accessOverlayDismissed, setAccessOverlayDismissed] = useState(false)
+  const [accessGranted, setAccessGranted] = useState(() => readStoredAccessGrant(kind, watchId))
+  const [accessGrantExpiryNotified, setAccessGrantExpiryNotified] = useState(false)
   const [buyerName, setBuyerName] = useState("")
   const [buyerEmail, setBuyerEmail] = useState("")
   const [buyerPhone, setBuyerPhone] = useState("")
   const [message, setMessage] = useState<string | null>(null)
+  const [showGuestEmailPrompt, setShowGuestEmailPrompt] = useState(false)
+  const [pendingPurchaseAction, setPendingPurchaseAction] = useState<((email: string) => Promise<void> | void) | null>(null)
   const [busy, setBusy] = useState<PurchaseType | "code" | null>(null)
   const [chatVisible, setChatVisible] = useState(false)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
@@ -96,6 +189,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const [commentEmailError, setCommentEmailError] = useState("")
   const [commentSheetOpen, setCommentSheetOpen] = useState(false)
   const [replyingToId, setReplyingToId] = useState<string | null>(null)
+  const [showAllComments, setShowAllComments] = useState(false)
+  const [expandedReplies, setExpandedReplies] = useState<Set<string>>(new Set())
   const [likedComments, setLikedComments] = useState<Set<string>>(new Set())
   const eventSourceRef = useRef<EventSource | null>(null)
   const sessionKey = `${session?.user?.email ?? ""}:${session?.user?.id ?? ""}`
@@ -107,12 +202,27 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   }, [session?.user?.email])
 
   useEffect(() => {
-    setAccessCode(codeParam)
-    setSubmittedAccessCode(codeParam)
-    if (codeParam) {
+    const nextAccessCode = codeParam || readStoredGuestAccess(kind, watchId) || ""
+    setAccessCode(nextAccessCode)
+    setSubmittedAccessCode(nextAccessCode)
+    setAccessGranted(readStoredAccessGrant(kind, watchId))
+    if (nextAccessCode) {
       setCodeNonce((value) => value + 1)
     }
-  }, [codeParam])
+  }, [codeParam, kind, watchId])
+
+  useEffect(() => {
+    if (!trxrefParam && !referenceParam) return
+
+    const pendingAccessCode = codeParam.trim()
+    if (pendingAccessCode) {
+      persistGuestAccess(kind, watchId, pendingAccessCode)
+      setSubmittedAccessCode(pendingAccessCode)
+      setAccessCode(pendingAccessCode)
+      setCodeNonce((value) => value + 1)
+      setMessage("Your payment is being confirmed. We’ll unlock the video once it settles.")
+    }
+  }, [kind, watchId, codeParam, trxrefParam, referenceParam])
 
   useEffect(() => {
     setEventData(null)
@@ -121,6 +231,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     setActivePart(0)
     setPreviewExpiredPartId(null)
     setMessage(null)
+    setAccessOverlayDismissed(false)
     setSubmittedAccessCode(codeParam)
   }, [watchId, kind, codeParam])
 
@@ -128,6 +239,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     if (!watchId || !kind) return
 
     const recheckAccess = () => {
+      setAccessGranted(readStoredAccessGrant(kind, watchId))
       setCodeNonce((value) => value + 1)
     }
 
@@ -210,6 +322,56 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       }
     }
   }, [watchId, kind])
+
+  useEffect(() => {
+    if (!watchId || !kind || kind !== "event") {
+      return
+    }
+
+    const normalizedStatus = String(eventData?.status ?? "").toUpperCase()
+    const shouldPoll = normalizedStatus !== "ENDED" && normalizedStatus !== "FINISHED" && normalizedStatus !== "COMPLETED"
+
+    if (!shouldPoll) {
+      return
+    }
+
+    const pollForStatus = async () => {
+      try {
+        const query = new URLSearchParams()
+        if (submittedAccessCode) {
+          query.set("accessCode", submittedAccessCode)
+        }
+
+        const response = await fetch(`/api/tv/watch/event/${watchId}${query.toString() ? `?${query.toString()}` : ""}`)
+        if (!response.ok) return
+
+        const data = await response.json()
+        if (data?.kind !== "event" || !data?.event) return
+
+        setEventData(data.event)
+
+        setEventLikesCount(data.event.likesCount ?? 0)
+        setEventIsLiked(data.event.isLiked ?? false)
+        setCreatorIsFollowed(data.event.creator?.isFollowing ?? false)
+
+        if (submittedAccessCode) {
+          setMessage(
+            data.event.access?.locked
+              ? "Ticket code did not unlock this event."
+              : "Ticket code accepted."
+          )
+        }
+      } catch (error) {
+        console.error("Failed to refresh event status:", error)
+      }
+    }
+
+    const intervalId = window.setInterval(() => {
+      void pollForStatus()
+    }, 10000)
+
+    return () => window.clearInterval(intervalId)
+  }, [eventData?.status, submittedAccessCode, watchId, kind])
 
   useEffect(() => {
     // Only load comments for videos/folders, not events
@@ -334,8 +496,25 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           setEventLikesCount(data.event.likesCount ?? 0)
           setEventIsLiked(data.event.isLiked ?? false)
           setCreatorIsFollowed(data.event.creator?.isFollowing ?? false)
+          // Auto-grant access for logged-in users if server marks the event unlocked
+          if (session?.user && !data.event.access?.locked) {
+            persistAccessGrant(kind, watchId, data.event.access?.accessExpiresAt ?? null)
+            setAccessGranted(true)
+            setAccessOverlayDismissed(false)
+          }
           setFolderData(null)
           if (submittedAccessCode) {
+            const accessAccepted = !data.event.access?.locked
+            if (accessAccepted) {
+              persistGuestAccess(kind, watchId, submittedAccessCode)
+              persistAccessGrant(kind, watchId)
+              setAccessGranted(true)
+              setAccessOverlayDismissed(false)
+            } else {
+              clearStoredGuestAccess(kind, watchId)
+              clearStoredAccessGrant(kind, watchId)
+              setAccessGranted(false)
+            }
             setMessage(
               data.event.access?.locked
                 ? "Ticket code did not unlock this event."
@@ -357,12 +536,44 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               : -1
             const initialIndex = matchedIndex >= 0 ? matchedIndex : 0
             setActivePart(initialIndex)
+            const targetPart = nextFolder.parts[initialIndex]
+            const serverAccessExpiresAt = targetPart?.accessExpiresAt ?? null
+            const accessExpired = Boolean(serverAccessExpiresAt && new Date(serverAccessExpiresAt).getTime() <= Date.now())
+            const hasServerAccess = Boolean(targetPart && !targetPart.isLocked && !accessExpired && !targetPart.previewOnly)
+
+            if (accessGranted && targetPart && (accessExpired || targetPart.isLocked || targetPart.previewOnly)) {
+              clearStoredAccessGrant(kind, watchId)
+              setAccessGranted(false)
+              setMessage("This access has expired. Please purchase or rent again.")
+            }
+
+            // If the user is logged in and the server already marks the part as unlocked
+            // grant access locally so they don't need to enter an access code.
+            if (session?.user) {
+              if (hasServerAccess) {
+                persistAccessGrant(kind, watchId, serverAccessExpiresAt)
+                setAccessGranted(true)
+                setAccessOverlayDismissed(false)
+              }
+            }
             if (submittedAccessCode) {
-              const targetPart = nextFolder.parts[initialIndex]
+              const accessAccepted = Boolean(targetPart && !targetPart.isLocked && !accessExpired)
+              if (accessAccepted) {
+                persistGuestAccess(kind, watchId, submittedAccessCode)
+                persistAccessGrant(kind, watchId, serverAccessExpiresAt)
+                setAccessGranted(true)
+                setAccessOverlayDismissed(false)
+              } else {
+                clearStoredGuestAccess(kind, watchId)
+                clearStoredAccessGrant(kind, watchId)
+                setAccessGranted(false)
+              }
               setMessage(
-                targetPart && !targetPart.isLocked
-                  ? "Access code accepted."
-                  : "Access code did not unlock this video."
+                accessExpired
+                  ? "This access has expired. Please purchase or rent again."
+                  : accessAccepted
+                    ? "Access code accepted."
+                    : "Access code did not unlock this video."
               )
             }
           } else {
@@ -403,17 +614,183 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const currentThumbnail = currentPart?.thumbnail || folderData?.thumbnail || null
   const currentType = folderData?.contentType ?? "video"
   const previewExpired = Boolean(currentPart?.id && previewExpiredPartId === currentPart.id)
-  const shouldShowAccessOverlay = Boolean(currentPart?.isLocked || currentPart?.previewOnly || previewExpired)
+  const accessGrantExpiresAt = currentPart?.accessExpiresAt ?? null
+  const accessGrantExpired = Boolean(accessGrantExpiresAt && new Date(accessGrantExpiresAt).getTime() <= Date.now())
+  const hasAccessRestriction = Boolean(currentPart?.isLocked || currentPart?.previewOnly || previewExpired)
+  const hasUnlockedAccess = (accessGranted && !accessGrantExpired) || Boolean(currentPart && !currentPart.isLocked && !currentPart.previewOnly && !previewExpired)
+  const shouldShowAccessOverlay = !loading && !accessOverlayDismissed && !hasUnlockedAccess && hasAccessRestriction
+  const isContentLocked = !loading && !hasUnlockedAccess && hasAccessRestriction
+
+  useEffect(() => {
+    if (!accessGranted || !accessGrantExpiresAt) return
+
+    if (new Date(accessGrantExpiresAt).getTime() <= Date.now()) {
+      if (!accessGrantExpiryNotified) {
+        toast.error("Access expired", {
+          description: "Your stored access grant has expired. Please purchase or rent again to continue watching.",
+        })
+        setAccessGrantExpiryNotified(true)
+      }
+      setAccessGranted(false)
+      clearStoredAccessState(kind, watchId)
+      setMessage("This access has expired. Please purchase or rent again.")
+    }
+  }, [accessGranted, accessGrantExpiresAt, accessGrantExpiryNotified, kind, watchId])
+
+  useEffect(() => {
+    if (!accessGrantExpiresAt || !accessGranted) {
+      setAccessGrantExpiryNotified(false)
+      return
+    }
+
+    const expiryTime = new Date(accessGrantExpiresAt).getTime()
+    if (expiryTime <= Date.now()) {
+      setAccessGrantExpiryNotified(false)
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setAccessGranted(false)
+      clearStoredAccessState(kind, watchId)
+      toast.error("Access expired", {
+        description: "Your stored access grant has expired. Please purchase or rent again to continue watching.",
+      })
+      setMessage("This access has expired. Please purchase or rent again.")
+    }, Math.max(0, expiryTime - Date.now()))
+
+    return () => window.clearTimeout(timeoutId)
+  }, [accessGranted, accessGrantExpiresAt, kind, watchId])
+
+  const deriveBuyerNameFromEmail = (email: string) => {
+    const localPart = email.split("@")[0]?.trim() ?? ""
+    if (!localPart) return "Guest"
+
+    return localPart
+      .replace(/[._-]+/g, " ")
+      .replace(/\b\w/g, (character) => character.toUpperCase())
+      .trim() || "Guest"
+  }
 
   const resolveBuyerEmailForPayment = (fallbackEmail: string) => {
     const trimmed = fallbackEmail.trim()
-    if (trimmed) return trimmed
+    if (trimmed) {
+      const derivedName = deriveBuyerNameFromEmail(trimmed)
+      if (!buyerName.trim()) setBuyerName(derivedName)
+      return trimmed
+    }
 
-    const promptEmail = window.prompt("Enter your email to continue payment", "")?.trim()
-    if (!promptEmail) return null
+    return null
+  }
 
-    setBuyerEmail(promptEmail)
-    return promptEmail
+  const handleFolderPurchase = async (purchaseType: PurchaseType, email: string) => {
+    if (!currentPart) return
+
+    const normalizedEmail = email.trim()
+    if (!normalizedEmail) {
+      setMessage("Email is required to continue payment.")
+      return
+    }
+
+    const derivedName = deriveBuyerNameFromEmail(normalizedEmail)
+    setBuyerName(derivedName)
+    setBuyerEmail(normalizedEmail)
+
+    try {
+      setBusy(purchaseType)
+      setMessage("Redirecting you to secure payment...")
+      setShowGuestEmailPrompt(false)
+      setPendingPurchaseAction(null)
+      const res = await fetch(`/api/tv/watch/${currentPart.id}/purchase`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          purchaseType,
+          buyerName: derivedName,
+          buyerEmail: normalizedEmail,
+          buyerPhone: buyerPhone.trim() || undefined,
+        }),
+      })
+
+      const data = await res.json()
+      if (!res.ok) {
+        setMessage(data?.message ?? "Unable to start payment.")
+        return
+      }
+
+      setPaymentAccessCode("")
+      setPaymentUrl(data.authorizationUrl)
+
+      if (data.authorizationUrl) {
+        window.location.assign(data.authorizationUrl)
+        return
+      }
+
+      setMessage("Payment initialization did not return a checkout link.")
+    } catch (error) {
+      console.error("Failed to start purchase:", error)
+      setMessage("Unable to initialize payment.")
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  const handleEventPurchase = async (email: string) => {
+    const selectedTicket = (eventData?.tickets ?? []).find((ticket: any) => ticket.access === "STREAM")
+    if (!selectedTicket) {
+      setMessage("No stream tickets are available for this event.")
+      return
+    }
+
+    const normalizedEmail = email.trim()
+    if (!normalizedEmail) {
+      setMessage("Email is required to continue payment.")
+      return
+    }
+
+    const derivedName = deriveBuyerNameFromEmail(normalizedEmail)
+    setBuyerName(derivedName)
+    setBuyerEmail(normalizedEmail)
+
+    try {
+      setBusy("purchase")
+      setMessage("Redirecting you to secure payment...")
+      setShowGuestEmailPrompt(false)
+      setPendingPurchaseAction(null)
+      const res = await fetch(`/api/tickets/${eventData.id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ticketId: selectedTicket.id,
+          buyerName: derivedName,
+          buyerEmail: normalizedEmail,
+          buyerPhone: buyerPhone.trim() || undefined,
+          quantity: 1,
+        }),
+      })
+
+      const data = await res.json()
+      if (!res.ok) {
+        setMessage(data?.message ?? "Unable to start payment.")
+        return
+      }
+
+      setPaymentAccessCode(data.payment?.access_code ?? "")
+      setPaymentUrl(data.payment?.authorization_url ?? "")
+
+      if (data.payment?.authorization_url) {
+        window.location.assign(data.payment.authorization_url)
+        return
+      }
+
+      setMessage("Payment initialization did not return a checkout link.")
+    } catch (error) {
+      console.error("Failed to start event ticket purchase:", error)
+      setMessage("Unable to initialize payment.")
+    } finally {
+      setBusy(null)
+    }
   }
 
   useEffect(() => {
@@ -436,6 +813,23 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   }, [currentType])
 
   const isValidEmail = (value: string) => /^\S+@\S+\.\S+$/.test(value.trim())
+
+  const syncAccessCodeInUrl = (nextCode: string) => {
+    if (typeof window === "undefined") return
+
+    const trimmed = nextCode.trim()
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (trimmed) {
+      params.set("accessCode", trimmed)
+    } else {
+      params.delete("accessCode")
+    }
+
+    const queryString = params.toString()
+    const nextPath = `${window.location.pathname}${queryString ? `?${queryString}` : ""}`
+    router.replace(nextPath, { scroll: false })
+  }
 
   const formatTimeAgo = (value: string) => {
     const diffMs = Date.now() - new Date(value).getTime()
@@ -695,10 +1089,34 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
   const watchFolder = kind === "folder" ? folderData : null
 
+  const VISIBLE_COMMENT_COUNT = 3
+  const VISIBLE_REPLY_COUNT = 5
+
+  const visibleComments = showAllComments ? comments : comments.slice(0, VISIBLE_COMMENT_COUNT)
+  const hiddenCommentCount = Math.max(0, comments.length - VISIBLE_COMMENT_COUNT)
+
+  const toggleReplyExpansion = (commentId: string) => {
+    setExpandedReplies((current) => {
+      const next = new Set(current)
+      if (next.has(commentId)) {
+        next.delete(commentId)
+      } else {
+        next.add(commentId)
+      }
+      return next
+    })
+  }
+
   const renderCommentThread = (items: WatchComment[], depth = 0) => (
     <div className="space-y-4">
       {items.map((comment) => {
         const isLiked = likedComments.has(comment.id)
+        const hasReplies = comment.replies.length > 0
+        const replyCountLabel = `${comment.replies.length} ${comment.replies.length === 1 ? "reply" : "replies"}`
+        const isReplyExpanded = expandedReplies.has(comment.id)
+        const repliesToRender = isReplyExpanded ? comment.replies : comment.replies.slice(0, VISIBLE_REPLY_COUNT)
+        const showReplies = depth === 0 ? isReplyExpanded : true
+
         return (
           <div key={comment.id} className="rounded-2xl border border-border/50 bg-background/80 p-4 hover:bg-background/90 transition-colors">
             <div className="flex items-start gap-3">
@@ -736,44 +1154,25 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                     <Heart className={`h-4 w-4 ${isLiked ? "fill-red-500" : ""}`} />
                     <span>{comment.likes > 0 ? comment.likes : ""}</span>
                   </button>
-                  {comment.replies.length > 0 && depth === 0 ? (
-                    <span className="font-medium text-foreground/70">
-                      {comment.replies.length} {comment.replies.length === 1 ? "reply" : "replies"}
-                    </span>
+                  {hasReplies && depth === 0 ? (
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-foreground/70">
+                      <span>{replyCountLabel}</span>
+                      {showAllComments ? (
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={() => toggleReplyExpansion(comment.id)}
+                        >
+                          {isReplyExpanded ? "Hide replies" : `Show ${Math.min(VISIBLE_REPLY_COUNT, comment.replies.length)} of ${comment.replies.length}`}
+                          <ChevronDown className={`h-3.5 w-3.5 transition-transform ${isReplyExpanded ? "rotate-180" : ""}`} />
+                        </button>
+                      ) : null}
+                    </div>
                   ) : null}
                 </div>
                 
                 </div>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground whitespace-pre-wrap break-words">{comment.text}</p>
-                {/* <div className="flex flex-wrap items-center gap-4 text-xs">
-                  <button
-                    type="button"
-                    className="font-medium text-foreground/70 hover:text-foreground transition-colors"
-                    onClick={() => {
-                      setReplyingToId(comment.id)
-                      setCommentSheetOpen(false)
-                    }}
-                  >
-                    Reply
-                  </button>
-                  <button
-                    type="button"
-                    className={`flex items-center gap-1.5 font-medium transition-colors ${
-                      isLiked 
-                        ? "text-red-500 hover:text-red-600" 
-                        : "text-foreground/70 hover:text-foreground"
-                    }`}
-                    onClick={() => handleCommentLike(comment.id)}
-                  >
-                    <Heart className={`h-4 w-4 ${isLiked ? "fill-red-500" : ""}`} />
-                    <span>{comment.likes > 0 ? comment.likes : ""}</span>
-                  </button>
-                  {comment.replies.length > 0 && depth === 0 ? (
-                    <span className="font-medium text-foreground/70">
-                      {comment.replies.length} {comment.replies.length === 1 ? "reply" : "replies"}
-                    </span>
-                  ) : null}
-                </div> */}
 
                 {replyingToId === comment.id ? (
                   <div className="mt-3 rounded-xl border border-border/50 bg-muted/20 p-3">
@@ -802,9 +1201,20 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                     </div>
                   </div>
                 ) : null}
-                {comment.replies.length > 0 ? (
+                {hasReplies && showReplies ? (
                   <div className={`mt-4 ${depth === 0 ? "ml-4 border-l border-border/50 pl-4" : "ml-2"}`}>
-                    {renderCommentThread(comment.replies, depth + 1)}
+                    {renderCommentThread(repliesToRender, depth + 1)}
+                    {showAllComments && !isReplyExpanded && hasReplies && comment.replies.length > VISIBLE_REPLY_COUNT ? (
+                      <div className="mt-2">
+                        <button
+                          type="button"
+                          className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={() => toggleReplyExpansion(comment.id)}
+                        >
+                          Show {comment.replies.length - VISIBLE_REPLY_COUNT} more replies
+                        </button>
+                      </div>
+                    ) : null}
                   </div>
                 ) : null}
               </div>
@@ -827,24 +1237,45 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       accessCodePlaceholder="Enter access code"
       onAccessCodeChange={setAccessCode}
       onUnlock={() => {
-        if (!accessCode.trim()) return
+        const nextCode = accessCode.trim()
+        if (!nextCode) return
         setBusy("code")
         setMessage(null)
-        setSubmittedAccessCode(accessCode.trim())
+        persistGuestAccess(kind, watchId, nextCode)
+        persistAccessGrant(kind, watchId, currentPart?.accessExpiresAt ?? null)
+        setAccessGranted(true)
+        setAccessGranted(true)
+        setAccessOverlayDismissed(false)
+        setSubmittedAccessCode(nextCode)
+        syncAccessCodeInUrl(nextCode)
         setCodeNonce((value) => value + 1)
       }}
       isUnlocking={busy === "code"}
       message={message}
       primaryActionLabel="Unlock"
       loggedIn={watchFolder.access.loggedIn}
-      showAccessCodeInput={!watchFolder.access.loggedIn}
-      showBuyerFields={!watchFolder.access.loggedIn}
+      showAccessCodeInput
+      showBuyerFields={false}
       buyerName={buyerName}
       buyerEmail={buyerEmail}
       buyerPhone={buyerPhone}
       onBuyerNameChange={setBuyerName}
       onBuyerEmailChange={setBuyerEmail}
       onBuyerPhoneChange={setBuyerPhone}
+      showGuestEmailPrompt={showGuestEmailPrompt && !watchFolder.access.loggedIn}
+      guestEmail={buyerEmail}
+      onGuestEmailChange={setBuyerEmail}
+      onGuestEmailSubmit={() => {
+        const submittedEmail = buyerEmail.trim()
+        if (!submittedEmail) {
+          setMessage("Email is required to continue payment.")
+          return
+        }
+
+        if (pendingPurchaseAction) {
+          void pendingPurchaseAction(submittedEmail)
+        }
+      }}
       purchaseOptions={(["rent24", "rent48", "purchase"] as PurchaseType[])
         .map((purchaseType) => ({
           type: purchaseType,
@@ -857,56 +1288,22 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 : currentPart?.purchasePrice ?? null,
         }))
         .filter((option) => typeof option.price === "number" && option.price > 0)}
-      onPurchase={async (purchaseType) => {
+      onPurchase={(purchaseType) => {
         if (!currentPart) return
 
-        const resolvedEmail = resolveBuyerEmailForPayment(buyerEmail)
-        if (!resolvedEmail) {
-          setMessage("Email is required to continue payment.")
+        if (!watchFolder.access.loggedIn && !buyerEmail.trim()) {
+          setPendingPurchaseAction(() => (email: string) => handleFolderPurchase(purchaseType, email))
+          setShowGuestEmailPrompt(true)
+          setMessage("Enter your email to continue checkout.")
           return
         }
 
-        try {
-          setBusy(purchaseType)
-          setMessage("Redirecting you to secure payment...")
-          const res = await fetch(`/api/tv/watch/${currentPart.id}/purchase`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              purchaseType,
-              buyerName: buyerName.trim() || undefined,
-              buyerEmail: resolvedEmail,
-              buyerPhone: buyerPhone.trim() || undefined,
-            }),
-          })
-
-          const data = await res.json()
-          if (!res.ok) {
-            setMessage(data?.message ?? "Unable to start payment.")
-            return
-          }
-
-          setPaymentAccessCode("")
-          setPaymentUrl(data.authorizationUrl)
-
-          if (data.authorizationUrl) {
-            window.location.assign(data.authorizationUrl)
-            return
-          }
-
-          setMessage("Payment initialization did not return a checkout link.")
-        } catch (error) {
-          console.error("Failed to start purchase:", error)
-          setMessage("Unable to initialize payment.")
-        } finally {
-          setBusy(null)
-        }
+        void handleFolderPurchase(purchaseType, buyerEmail)
       }}
       isPurchasing={busy === "code" ? "purchase" : busy}
       paymentAccessCode={paymentAccessCode}
       paymentUrl={paymentUrl}
+      onDismiss={() => setAccessOverlayDismissed(true)}
       onContinueToPayment={() => {
         if (paymentUrl) window.location.href = paymentUrl
       }}
@@ -914,6 +1311,13 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         const nextAccessCode = paymentAccessCode.trim()
         setAccessCode(nextAccessCode)
         setSubmittedAccessCode(nextAccessCode)
+        if (nextAccessCode) {
+          persistGuestAccess(kind, watchId, nextAccessCode)
+          syncAccessCodeInUrl(nextAccessCode)
+        } else {
+          clearStoredGuestAccess(kind, watchId)
+          syncAccessCodeInUrl("")
+        }
         setCodeNonce((value) => value + 1)
         setMessage(nextAccessCode ? "Access code copied into the unlock field and the video is being verified." : "Access code copied into the unlock field.")
       }}
@@ -954,6 +1358,10 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           if (!accessCode.trim()) return
           setBusy("code")
           setMessage(null)
+          persistGuestAccess(kind, watchId, accessCode.trim())
+          persistAccessGrant(kind, watchId, null)
+          setAccessGranted(true)
+          setAccessOverlayDismissed(false)
           setSubmittedAccessCode(accessCode.trim())
           setCodeNonce((value) => value + 1)
         }}
@@ -961,62 +1369,37 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         message={message}
         primaryActionLabel="Unlock"
         loggedIn={eventData.access?.loggedIn ?? false}
-        showAccessCodeInput={!(eventData.access?.loggedIn ?? false)}
-        showBuyerFields={!(eventData.access?.loggedIn ?? false)}
+        showAccessCodeInput
+        showBuyerFields={false}
         purchaseOptions={streamTicket && streamTicket.price > 0 ? [{ type: "purchase", label: "Buy ticket", price: streamTicket.price }] : []}
-        onPurchase={async () => {
-          const selectedTicket = streamTicket
-          if (!selectedTicket) {
-            setMessage("No stream tickets are available for this event.")
+        onPurchase={() => {
+          if (!eventData.access?.loggedIn && !buyerEmail.trim()) {
+            setPendingPurchaseAction(() => (email: string) => handleEventPurchase(email))
+            setShowGuestEmailPrompt(true)
+            setMessage("Enter your email to continue checkout.")
             return
           }
 
-          const resolvedEmail = resolveBuyerEmailForPayment(buyerEmail)
-          if (!resolvedEmail) {
-            setMessage("Email is required to continue payment.")
-            return
-          }
-
-          try {
-            setBusy("purchase")
-            setMessage("Redirecting you to secure payment...")
-            const res = await fetch(`/api/tickets/${eventData.id}`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                ticketId: selectedTicket.id,
-                buyerName: buyerName.trim() || undefined,
-                buyerEmail: resolvedEmail,
-                buyerPhone: buyerPhone.trim() || undefined,
-                quantity: 1,
-              }),
-            })
-
-            const data = await res.json()
-            if (!res.ok) {
-              setMessage(data?.message ?? "Unable to start payment.")
-              return
-            }
-
-            setPaymentAccessCode(data.payment?.access_code ?? "")
-            setPaymentUrl(data.payment?.authorization_url ?? "")
-
-            if (data.payment?.authorization_url) {
-              window.location.assign(data.payment.authorization_url)
-              return
-            }
-
-            setMessage("Payment initialization did not return a checkout link.")
-          } catch (error) {
-            console.error("Failed to start event ticket purchase:", error)
-            setMessage("Unable to initialize payment.")
-          } finally {
-            setBusy(null)
-          }
+          void handleEventPurchase(buyerEmail)
         }}
         isPurchasing={busy === "purchase" ? "purchase" : null}
         paymentAccessCode={paymentAccessCode}
         paymentUrl={paymentUrl}
+        showGuestEmailPrompt={showGuestEmailPrompt && !(eventData.access?.loggedIn ?? false)}
+        guestEmail={buyerEmail}
+        onGuestEmailChange={setBuyerEmail}
+        onGuestEmailSubmit={() => {
+          const submittedEmail = buyerEmail.trim()
+          if (!submittedEmail) {
+            setMessage("Email is required to continue payment.")
+            return
+          }
+
+          if (pendingPurchaseAction) {
+            void pendingPurchaseAction(submittedEmail)
+          }
+        }}
+        onDismiss={() => setAccessOverlayDismissed(true)}
         onContinueToPayment={() => {
           if (paymentUrl) window.location.href = paymentUrl
         }}
@@ -1024,6 +1407,11 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           const nextAccessCode = paymentAccessCode.trim()
           setAccessCode(nextAccessCode)
           setSubmittedAccessCode(nextAccessCode)
+          if (nextAccessCode) {
+            persistGuestAccess(kind, watchId, nextAccessCode)
+          } else {
+            clearStoredGuestAccess(kind, watchId)
+          }
           setCodeNonce((value) => value + 1)
           setMessage(nextAccessCode ? "Access code copied into the unlock field and the event is being verified." : "Access code copied into the unlock field.")
         }}
@@ -1273,7 +1661,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         </div>
       </div>
 
-      <main className="w-full  px-4 lg:px-8 py-6">
+      <main className="w-full p-2  md:px-4 md:lg:px-8 md:py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <VideoViewPanel
@@ -1282,11 +1670,17 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               poster={currentThumbnail}
               title={currentPart?.title ?? watchFolder.title}
               subtitle={currentPart?.description ?? watchFolder.description}
-              locked={Boolean(currentPart?.isLocked || currentPart?.previewOnly)}
+              locked={isContentLocked}
               previewSeconds={currentPart?.previewOnly ? 60 : null}
               showOverlay={shouldShowAccessOverlay}
-              overlay={lockOverlay}
+              overlay={shouldShowAccessOverlay ? lockOverlay : null}
               reportAfterSeconds={60}
+              showPurchaseButton={Boolean(!loading && !hasUnlockedAccess && hasAccessRestriction && !shouldShowAccessOverlay)}
+              onRequestAccess={() => {
+                setAccessOverlayDismissed(false)
+                setMessage(null)
+              }}
+              purchaseButtonLabel="Unlock access"
               onReportView={() => {
                 if (!currentPart?.id) return
                 ;(async () => {
@@ -1305,7 +1699,6 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                   }
                 })()
               }}
-              emptyLabel="Premium video locked"
               onPreviewExpired={() => {
                 if (currentPart?.id) {
                   setPreviewExpiredPartId(currentPart.id)
@@ -1408,7 +1801,22 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                   </div>
                 </div>
 
-                <div className="mt-6 space-y-4">{renderCommentThread(comments)}</div>
+                            <div className="mt-6 space-y-4">
+                  {renderCommentThread(visibleComments)}
+
+                  {!showAllComments && hiddenCommentCount > 0 ? (
+                    <div className="text-center">
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-background/80 px-4 py-2 text-sm font-medium text-foreground/90 hover:bg-background transition-colors"
+                        onClick={() => setShowAllComments(true)}
+                      >
+                        Show {hiddenCommentCount} more comment{hiddenCommentCount === 1 ? "" : "s"}
+                        <ChevronDown className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
