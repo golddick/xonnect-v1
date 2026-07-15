@@ -225,7 +225,7 @@
 "use client"
 
 import Link from "next/link"
-import { BadgePercent, Lock } from "lucide-react"
+import { BadgePercent, Lock, X } from "lucide-react"
 
 type PurchaseType = "rent24" | "rent48" | "purchase"
 
@@ -263,6 +263,11 @@ type WatchAccessOverlayProps = {
   secondaryActionLabel?: string
   secondaryActionHref?: string
   showAccessCodeInput?: boolean
+  showGuestEmailPrompt?: boolean
+  guestEmail?: string
+  onGuestEmailChange?: (value: string) => void
+  onGuestEmailSubmit?: () => void
+  onDismiss?: () => void
 }
 
 const PURCHASE_LABELS: Record<PurchaseType, string> = {
@@ -299,10 +304,15 @@ export default function WatchAccessOverlay({
   secondaryActionLabel,
   secondaryActionHref,
   showAccessCodeInput = true,
+  showGuestEmailPrompt = false,
+  guestEmail = "",
+  onGuestEmailChange,
+  onGuestEmailSubmit,
+  onDismiss,
 }: WatchAccessOverlayProps) {
   return (
-    <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/72 backdrop-blur-sm p-3 sm:p-4">
-      <div className="w-full max-w-xl rounded-2xl border border-border/50 bg-background/95 p-4 sm:p-5 md:p-6 space-y-4 shadow-2xl max-h-[98vh] overflow-y-auto overscroll-contain">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 px-3 py-4 sm:px-4 sm:py-6 backdrop-blur-sm">
+      <div className="w-full max-w-[min(100%,32rem)] max-h-[min(92vh,44rem)] overflow-y-auto rounded-3xl border border-border/60 bg-background/95 p-4 shadow-2xl sm:p-5 md:p-6 space-y-4 overscroll-contain">
         {/* Header */}
         <div className="flex items-start gap-3 sm:items-center">
           <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full bg-red-600/15 text-red-500">
@@ -312,6 +322,16 @@ export default function WatchAccessOverlay({
             <p className="text-sm font-semibold text-foreground leading-tight">{title}</p>
             <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{description}</p>
           </div>
+          {onDismiss ? (
+            <button
+              type="button"
+              onClick={onDismiss}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+              aria-label="Close access prompt"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          ) : null}
         </div>
 
         {/* Access Code Input */}
@@ -324,18 +344,25 @@ export default function WatchAccessOverlay({
               <input
                 value={accessCode}
                 onChange={(event) => onAccessCodeChange(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault()
+                    onUnlock()
+                  }
+                }}
                 placeholder={accessCodePlaceholder}
                 className="w-full rounded-xl border border-border bg-transparent px-4 py-3.5 sm:py-3 text-foreground text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all"
                 autoCapitalize="characters"
                 autoCorrect="off"
                 spellCheck={false}
+                autoFocus
               />
             </label>
 
             <button
               type="button"
               onClick={onUnlock}
-              className="rounded-xl bg-red-600 px-6 py-3.5 sm:py-3 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors active:scale-[0.98] w-full sm:w-auto sm:min-w-[120px]"
+              className="w-full rounded-xl bg-red-600 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98] sm:w-auto sm:min-w-[128px] sm:py-3"
               disabled={isUnlocking}
             >
               {isUnlocking ? (
@@ -354,40 +381,30 @@ export default function WatchAccessOverlay({
           </div>
         )}
 
-        {/* Buyer Fields */}
-        {showBuyerFields && !loggedIn && (
-          <div className="space-y-3">
-            <div className="flex flex-col gap-3 sm:grid sm:grid-cols-3">
-              <label className="space-y-1.5 text-sm">
-                <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">Name</span>
-                <input
-                  value={buyerName}
-                  onChange={(event) => onBuyerNameChange?.(event.target.value)}
-                  placeholder="Full name"
-                  className="w-full rounded-xl border border-border bg-transparent px-4 py-3.5 sm:py-3 text-foreground text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all"
-                />
-              </label>
-              <label className="space-y-1.5 text-sm sm:col-span-2">
-                <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">Email</span>
-                <input
-                  value={buyerEmail}
-                  onChange={(event) => onBuyerEmailChange?.(event.target.value)}
-                  placeholder="Email address"
-                  type="email"
-                  className="w-full rounded-xl border border-border bg-transparent px-4 py-3.5 sm:py-3 text-foreground text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all"
-                />
-              </label>
+        {/* Guest email prompt */}
+        {showGuestEmailPrompt && !loggedIn && (
+          <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5 sm:p-4 space-y-3">
+            <div className="space-y-1.5">
+              <p className="text-sm font-semibold text-foreground">Continue with your email</p>
+              <p className="text-sm text-muted-foreground">We only need your email address to start checkout. We’ll use it to create your display name.</p>
             </div>
-            <label className="space-y-1.5 text-sm">
-              <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">Phone (optional)</span>
+            <label className="space-y-1.5 text-sm block">
+              <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">Email</span>
               <input
-                value={buyerPhone}
-                onChange={(event) => onBuyerPhoneChange?.(event.target.value)}
-                placeholder="Phone number"
-                type="tel"
+                value={guestEmail}
+                onChange={(event) => onGuestEmailChange?.(event.target.value)}
+                placeholder="Email address"
+                type="email"
                 className="w-full rounded-xl border border-border bg-transparent px-4 py-3.5 sm:py-3 text-foreground text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all"
               />
             </label>
+            <button
+              type="button"
+              onClick={onGuestEmailSubmit}
+              className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition-colors"
+            >
+              Continue to payment
+            </button>
           </div>
         )}
 

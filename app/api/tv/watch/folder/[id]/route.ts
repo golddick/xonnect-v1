@@ -19,7 +19,7 @@ export async function GET(
     }
 
     return NextResponse.json(
-      {
+      { 
         kind: "folder",
         folder: result.folder,
       },

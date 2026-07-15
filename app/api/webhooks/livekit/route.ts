@@ -97,33 +97,38 @@ export async function POST(request: NextRequest) {
       case "room_started":
         updates.status = "LIVE"
         updates.startedAt = now
+        updates.currentViewersCount = 0
         break
       case "room_finished":
         updates.status = "ENDED"
         updates.endedAt = now
+        updates.currentViewersCount = 0
+        break
+      case "participant_joined":
+        if (event.status === "LIVE") {
+          const joinedViewers = typeof webhookEvent.room?.numParticipants === "number" && webhookEvent.room.numParticipants >= 0
+            ? webhookEvent.room.numParticipants
+            : (event.currentViewersCount ?? 0) + 1
+
+          updates.currentViewersCount = joinedViewers
+          updates.viewsCount = (event.viewsCount ?? 0) + 1
+          updates.peakViewersCount = Math.max(event.peakViewersCount ?? 0, joinedViewers)
+        }
+        break
+      case "participant_left":
+      case "participant_connection_aborted":
+        if (event.status === "LIVE") {
+          const currentViewers = typeof webhookEvent.room?.numParticipants === "number" && webhookEvent.room.numParticipants >= 0
+            ? webhookEvent.room.numParticipants
+            : Math.max((event.currentViewersCount ?? 0) - 1, 0)
+
+          updates.currentViewersCount = currentViewers
+          updates.peakViewersCount = Math.max(event.peakViewersCount ?? 0, currentViewers)
+        }
         break
       case "egress_started":
-        updates.recordingEnabled = true
-        updates.recordingStatus = "RECORDING"
-        updates.recordingStartedAt = now
-        if (webhookEvent.egressInfo) {
-          updates.recordingAssetId = webhookEvent.egressInfo.egressId
-        }
-        break
       case "egress_updated":
-        updates.recordingEnabled = true
-        break
       case "egress_ended":
-        updates.recordingEnabled = true
-        updates.recordingStatus = "READY"
-        updates.hasRecordedVideo = true
-        updates.recordingEndedAt = now
-        if (webhookEvent.egressInfo) {
-          updates.recordingAssetId = webhookEvent.egressInfo.egressId
-          if (webhookEvent.egressInfo.fileResults.length > 0) {
-            updates.recordingUrl = webhookEvent.egressInfo.fileResults[0]?.location ?? null
-          }
-        }
         break
       default:
         break

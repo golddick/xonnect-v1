@@ -6,7 +6,9 @@ import {
   AlertCircle,
   Clock3,
   Loader2,
+  Maximize2,
   MicOff,
+  Minimize2,
   Radio,
   Play,
   Speaker,
@@ -66,6 +68,7 @@ export default function EventStreamPlayer({
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const previewVideoRef = useRef<HTMLVideoElement | null>(null)
+  const playerContainerRef = useRef<HTMLDivElement | null>(null)
   const roomRef = useRef<Room | null>(null)
   const videoTrackRef = useRef<RemoteTrack | null>(null)
   const audioTrackRef = useRef<RemoteTrack | null>(null)
@@ -76,23 +79,50 @@ export default function EventStreamPlayer({
   const [connectionError, setConnectionError] = useState<string | null>(null)
   const [audioPlaybackBlocked, setAudioPlaybackBlocked] = useState(false)
   const [audioPlaybackReady, setAudioPlaybackReady] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
-  const isLive = status.toUpperCase() === "LIVE"
-  const isEnded = status.toUpperCase() === "ENDED"
+  const normalizedStatus = (status ?? "").toUpperCase()
+  const isLive = normalizedStatus === "LIVE" || normalizedStatus === "STREAMING" || normalizedStatus === "LIVE_NOW"
+  const isEnded = normalizedStatus === "ENDED" || normalizedStatus === "FINISHED" || normalizedStatus === "COMPLETED"
+  const isScheduled = !isLive && !isEnded
   const previewMedia = useMemo(() => resolvePlayableMediaSource(!isEnded ? previewVideoUrl : null), [previewVideoUrl, isEnded])
   const recordedMedia = useMemo(() => resolvePlayableMediaSource(isEnded ? recordedVideoUrl : null), [recordedVideoUrl, isEnded])
-  const activePlaybackMedia = isEnded ? recordedMedia : previewMedia
-  const hasPlaybackVideo = Boolean(activePlaybackMedia) && !isLive
+  const fallbackPreviewMedia = useMemo(() => resolvePlayableMediaSource(previewVideoUrl), [previewVideoUrl])
+  const activePlaybackMedia = isEnded ? (recordedMedia ?? fallbackPreviewMedia ?? null) : isScheduled ? (previewMedia ?? null) : null
+  const shouldRenderPlaybackMedia = Boolean(activePlaybackMedia) && !isLive
   const scheduledLabel = useMemo(() => formatDateTime(scheduledAt), [scheduledAt])
   const canConnect = Boolean(isLive && !locked)
   const shouldShowBackdrop =
-    (!isLive && !hasPlaybackVideo) || (isLive && locked) || isConnecting || Boolean(connectionError) || Boolean(overlay)
+    (!isLive && !shouldRenderPlaybackMedia) || (isLive && locked) || isConnecting || Boolean(connectionError) || Boolean(overlay)
 
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.muted = isMuted
     }
   }, [isMuted])
+
+  useEffect(() => {
+    const updateFullscreenState = () => {
+      const fullscreenElement =
+        document.fullscreenElement ??
+        (document as Document & { webkitFullscreenElement?: Element | null }).webkitFullscreenElement ??
+        (document as Document & { mozFullScreenElement?: Element | null }).mozFullScreenElement
+
+      setIsFullscreen(fullscreenElement === playerContainerRef.current)
+    }
+
+    updateFullscreenState()
+
+    document.addEventListener("fullscreenchange", updateFullscreenState)
+    document.addEventListener("webkitfullscreenchange", updateFullscreenState)
+    document.addEventListener("mozfullscreenchange", updateFullscreenState)
+
+    return () => {
+      document.removeEventListener("fullscreenchange", updateFullscreenState)
+      document.removeEventListener("webkitfullscreenchange", updateFullscreenState)
+      document.removeEventListener("mozfullscreenchange", updateFullscreenState)
+    }
+  }, [])
 
   useEffect(() => {
     videoTrackRef.current = videoTrack
@@ -301,8 +331,37 @@ export default function EventStreamPlayer({
     }
   }
 
+  const toggleFullscreen = async () => {
+    const element = playerContainerRef.current
+    if (!element) return
+
+    const fullscreenElement =
+      document.fullscreenElement ??
+      (document as Document & { webkitFullscreenElement?: Element | null }).webkitFullscreenElement ??
+      (document as Document & { mozFullScreenElement?: Element | null }).mozFullScreenElement
+
+    if (fullscreenElement === element) {
+      if (document.exitFullscreen) {
+        await document.exitFullscreen()
+      } else if ((document as Document & { webkitExitFullscreen?: () => Promise<void> }).webkitExitFullscreen) {
+        await (document as Document & { webkitExitFullscreen?: () => Promise<void> }).webkitExitFullscreen?.()
+      } else if ((document as Document & { mozCancelFullScreen?: () => Promise<void> }).mozCancelFullScreen) {
+        await (document as Document & { mozCancelFullScreen?: () => Promise<void> }).mozCancelFullScreen?.()
+      }
+      return
+    }
+
+    if (element.requestFullscreen) {
+      await element.requestFullscreen()
+    } else if ((element as HTMLElement & { webkitRequestFullscreen?: () => Promise<void> }).webkitRequestFullscreen) {
+      await (element as HTMLElement & { webkitRequestFullscreen?: () => Promise<void> }).webkitRequestFullscreen?.()
+    } else if ((element as HTMLElement & { msRequestFullscreen?: () => Promise<void> }).msRequestFullscreen) {
+      await (element as HTMLElement & { msRequestFullscreen?: () => Promise<void> }).msRequestFullscreen?.()
+    }
+  }
+
   return (
-    <div className="relative aspect-video overflow-hidden rounded-3xl border border-border bg-black">
+    <div ref={playerContainerRef} className="relative aspect-video overflow-hidden rounded-3xl border border-border bg-black">
       {poster ? (
         <img
           src={poster}
@@ -313,7 +372,7 @@ export default function EventStreamPlayer({
         <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-950 to-black" />
       )}
 
-      {hasPlaybackVideo && activePlaybackMedia ? (
+      {shouldRenderPlaybackMedia && activePlaybackMedia ? (
         activePlaybackMedia.kind === "youtube" ? (
           <iframe
             src={activePlaybackMedia.embedUrl}
@@ -375,7 +434,7 @@ export default function EventStreamPlayer({
               {subtitle ? <p className="text-sm text-white/75 md:text-base">{subtitle}</p> : null}
             </div> */}
 
-            {!isLive && !hasPlaybackVideo ? (
+            {!isLive && !shouldRenderPlaybackMedia ? (
               <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-white/80">
                 <Clock3 className="h-4 w-4 text-red-400" />
                 OFFLINE
@@ -412,7 +471,7 @@ export default function EventStreamPlayer({
         </div>
       ) : null}
 
-      {hasPlaybackVideo ? (
+      {shouldRenderPlaybackMedia ? (
         <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-4 md:p-6">
           <div className="max-w-3xl space-y-2 text-white">
             <div className="flex flex-wrap items-center gap-2">
@@ -437,30 +496,42 @@ export default function EventStreamPlayer({
         </div>
       ) : null}
 
-      {isLive ? (
-        <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
-          {audioPlaybackBlocked ? (
+      <div className="absolute right-4 top-4 z-10 flex flex-wrap items-center justify-end gap-2">
+        <button
+          type="button"
+          onClick={toggleFullscreen}
+          className="inline-flex items-center gap-2 rounded-full bg-black/70 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-black/80"
+          title={isFullscreen ? "Exit full screen" : "Enter full screen"}
+        >
+          {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+          {isFullscreen ? "Exit full screen" : "Full screen"}
+        </button>
+
+        {isLive ? (
+          <>
+            {audioPlaybackBlocked ? (
+              <button
+                type="button"
+                onClick={handleEnableSound}
+                className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-semibold text-black transition-colors hover:bg-white/90"
+              >
+                <Speaker className="h-4 w-4" />
+                Enable sound
+              </button>
+            ) : null}
+
             <button
               type="button"
-              onClick={handleEnableSound}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-semibold text-black transition-colors hover:bg-white/90"
+              onClick={() => setIsMuted((value) => !value)}
+              className="inline-flex items-center gap-2 rounded-full bg-black/70 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-black/80"
+              title={isMuted ? "Unmute audio" : "Mute audio"}
             >
-              <Speaker className="h-4 w-4" />
-              Enable sound
+              {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              {isMuted ? "Muted" : "Sound on"}
             </button>
-          ) : null}
-
-          <button
-            type="button"
-            onClick={() => setIsMuted((value) => !value)}
-            className="inline-flex items-center gap-2 rounded-full bg-black/70 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-black/80"
-            title={isMuted ? "Unmute audio" : "Mute audio"}
-          >
-            {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-            {isMuted ? "Muted" : "Sound on"}
-          </button>
-        </div>
-      ) : null}
+          </>
+        ) : null}
+      </div>
 
       {audioPlaybackReady && !audioPlaybackBlocked ? (
         <div className="absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-black/70 px-3 py-2 text-xs font-semibold text-white/80">

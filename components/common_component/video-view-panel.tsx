@@ -1,7 +1,7 @@
 "use client"
 
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react"
-import { Play, Video } from "lucide-react"
+import { Loader2, Play } from "lucide-react"
 
 import { resolvePlayableMediaSource } from "@/lib/tv/media"
 
@@ -14,10 +14,12 @@ type VideoViewPanelProps = {
   previewSeconds?: number | null
   showOverlay?: boolean
   overlay?: ReactNode
-  emptyLabel?: string
   onPreviewExpired?: () => void
   onReportView?: () => void
   reportAfterSeconds?: number | null
+  showPurchaseButton?: boolean
+  onRequestAccess?: () => void
+  purchaseButtonLabel?: string
 }
 
 export default function VideoViewPanel({
@@ -29,13 +31,16 @@ export default function VideoViewPanel({
   previewSeconds = null,
   showOverlay = false,
   overlay,
-  emptyLabel = "Video not available",
   onPreviewExpired,
   onReportView,
   reportAfterSeconds = null,
+  showPurchaseButton = false,
+  onRequestAccess,
+  purchaseButtonLabel = "Purchase",
 }: VideoViewPanelProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isMediaLoading, setIsMediaLoading] = useState(Boolean(videoUrl))
   const [previewExpired, setPreviewExpired] = useState(false)
   const reportedRef = useRef(false)
   const playableMedia = useMemo(() => resolvePlayableMediaSource(videoUrl), [videoUrl])
@@ -46,9 +51,24 @@ export default function VideoViewPanel({
   }, [videoUrl, previewSeconds, locked])
 
   useEffect(() => {
+    if (!videoUrl) {
+      setIsMediaLoading(false)
+      return
+    }
+
+    setIsMediaLoading(true)
+  }, [videoUrl, playableMedia?.src])
+
+  useEffect(() => {
     videoRef.current?.pause()
     setIsPlaying(false)
   }, [videoUrl])
+
+  useEffect(() => {
+    if (!videoRef.current || locked || !videoUrl || isYouTubeVideo) return
+
+    videoRef.current.load()
+  }, [videoUrl, locked, isYouTubeVideo])
 
   const handlePlay = async () => {
     try {
@@ -86,6 +106,9 @@ export default function VideoViewPanel({
   }
 
   const shouldShowOverlay = Boolean(overlay) && (locked || showOverlay || previewExpired)
+  const handleMediaReady = () => setIsMediaLoading(false)
+  const shouldShowMediaActionButton = !isYouTubeVideo && !isMediaLoading && !isPlaying && !shouldShowOverlay
+  const shouldShowLoadingIndicator = !shouldShowOverlay && isMediaLoading && !isPlaying && !videoRef.current?.currentTime
 
   return (
     <div className="aspect-video bg-black rounded-3xl overflow-hidden relative group border border-border">
@@ -101,6 +124,7 @@ export default function VideoViewPanel({
               allowFullScreen
               loading="lazy"
               referrerPolicy="strict-origin-when-cross-origin"
+              onLoad={handleMediaReady}
             />
           ) : (
             <video
@@ -111,48 +135,75 @@ export default function VideoViewPanel({
               className="w-full h-full object-cover bg-black"
               controls
               playsInline
-              preload="metadata"
+              preload="auto"
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
               onEnded={() => setIsPlaying(false)}
+              onLoadedData={handleMediaReady}
+              onCanPlay={handleMediaReady}
+              onCanPlayThrough={handleMediaReady}
+              onWaiting={() => setIsMediaLoading(true)}
               onTimeUpdate={handleTimeUpdate}
             />
           )}
 
-          {!isYouTubeVideo && !isPlaying && !shouldShowOverlay && (
+          {shouldShowLoadingIndicator ? (
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 pointer-events-none">
+              <div className="flex items-center gap-2 rounded-full border border-white/15 bg-black/50 px-3 py-2 text-xs font-medium text-white/90 shadow-lg backdrop-blur-sm">
+                <Loader2 className="h-4 w-4 animate-spin text-red-500" />
+                <span>Loading…</span>
+              </div>
+            </div>
+          ) : null}
+
+          {shouldShowMediaActionButton ? (
             <div className="absolute inset-0">
               <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/15" />
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <button
                   type="button"
-                  onClick={handlePlay}
-                  className="pointer-events-auto w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform"
+                  onClick={showPurchaseButton ? onRequestAccess : handlePlay}
+                  className="pointer-events-auto min-w-[7.5rem] rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white shadow-2xl transition-transform hover:scale-110"
                 >
-                  <Play className="w-5 h-5 text-white fill-white ml-1" />
+                  {showPurchaseButton ? purchaseButtonLabel : <div className="flex items-center justify-center gap-2"><Play className="h-5 w-5 fill-white" /><span>Play</span></div>}
                 </button>
               </div>
-              {/* <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
-                <p className="text-white text-sm font-medium mb-1">Click to Play</p>
-                <h2 className="text-white text-2xl font-bold">{title}</h2>
-                {subtitle ? <p className="text-white/70 text-sm mt-1">{subtitle}</p> : null}
-              </div> */}
             </div>
-          )}
+          ) : null}
 
           {shouldShowOverlay && overlay ? <div className="absolute inset-0 z-20 pointer-events-auto">{overlay}</div> : null}
         </div>
       ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-black">
+        <div className="relative w-full h-full bg-black flex items-center justify-center">
           {poster ? (
-            <img
-              src={poster}
-            alt={title}
-            className="absolute inset-0 h-full w-full object-cover opacity-30"
-          />
+            <img src={poster} alt={title} className="w-full h-full object-cover" />
+          ) : (
+            <div className="text-white">No media available</div>
+          )}
+          {shouldShowLoadingIndicator ? (
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 pointer-events-none">
+              <div className="flex items-center gap-2 rounded-full border border-white/15 bg-black/50 px-3 py-2 text-xs font-medium text-white/90 shadow-lg backdrop-blur-sm">
+                <Loader2 className="h-4 w-4 animate-spin text-red-500" />
+                <span>Loading…</span>
+              </div>
+            </div>
           ) : null}
-          <Video className="w-16 h-16 text-gray-600 mb-4" />
-          <p className="text-gray-400 text-center">{emptyLabel}</p>
-          {shouldShowOverlay && overlay ? <div className="absolute inset-0 z-20 pointer-events-auto">{overlay}</div> : null}
+
+          {shouldShowOverlay && overlay ? (
+            <div className="absolute inset-0 z-20 pointer-events-auto">{overlay}</div>
+          ) : null}
+
+          {shouldShowMediaActionButton ? (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <button
+                type="button"
+                onClick={showPurchaseButton ? onRequestAccess : handlePlay}
+                className="pointer-events-auto min-w-[7.5rem] rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white shadow-2xl transition-transform hover:scale-110"
+              >
+                {showPurchaseButton ? purchaseButtonLabel : <div className="flex items-center justify-center gap-2"><Play className="h-5 w-5 fill-white" /><span>Play</span></div>}
+              </button>
+            </div>
+          ) : null}
         </div>
       )}
     </div>

@@ -5,15 +5,16 @@ import { dropid } from "dropid"
 
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     videoId: string
-  }
+  }>
 }
 
 // GET comments for a specific video
 export async function GET(request: Request, { params }: RouteParams) {
   try {
-    const { videoId } = params
+    const resolvedParams = await params
+    const { videoId } = resolvedParams
 
     if (!videoId) {
       return NextResponse.json(
@@ -60,7 +61,8 @@ export async function GET(request: Request, { params }: RouteParams) {
 // POST a new comment
 export async function POST(request: Request, { params }: RouteParams) {
   try {
-    const { videoId } = params
+    const resolvedParams = await params
+    const { videoId } = resolvedParams
     const session = await auth()
     const body = await request.json()
     const { text, authorEmail, authorName, parentCommentId } = body
@@ -138,12 +140,14 @@ export async function POST(request: Request, { params }: RouteParams) {
 // PATCH to like/unlike a comment
 export async function PATCH(request: Request, { params }: RouteParams) {
   try {
+    const resolvedParams = await params
+    const { videoId } = resolvedParams
     const body = await request.json()
     const { commentId, like } = body
 
-    if (!commentId || like === undefined) {
+    if (!videoId || !commentId || like === undefined) {
       return NextResponse.json(
-        { message: "commentId and like are required" },
+        { message: "videoId, commentId and like are required" },
         { status: 400 }
       )
     }

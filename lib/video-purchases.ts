@@ -57,11 +57,6 @@ export function createVideoAccessCode(videoId: string, reference: string) {
   return `XON-${videoId.slice(0, 4).toUpperCase()}-${suffix}`
 }
 
-function createPendingVideoAccessCode(reference: string) {
-  const normalizedReference = reference.replace(/[^a-zA-Z0-9]/g, "").toUpperCase()
-  return `PENDING-${normalizedReference.slice(0, 24) || "PAYMENT"}`
-}
-
 export function getVideoAccessExpiry(purchaseType: VideoPurchaseType) {
   if (purchaseType === "rent24") {
     return new Date(Date.now() + 24 * 60 * 60 * 1000)
@@ -84,7 +79,6 @@ export async function createPendingVideoPurchase(args: {
   currency?: string
 }) {
   const reference = args.reference ?? dropid("pay")
-  const accessCode = createPendingVideoAccessCode(reference)
 
   const purchase = await db.creatorVideoPurchase.create({
     data: {
@@ -96,7 +90,7 @@ export async function createPendingVideoPurchase(args: {
       buyerEmail: args.buyer.buyerEmail,
       buyerPhone: args.buyer.buyerPhone ?? null,
       purchaseType: args.purchaseType,
-      accessCode,
+      accessCode: null,
       amount: Math.max(Math.round(args.amount), 0),
       currency: args.currency ?? "NGN",
       status: "PENDING",
@@ -108,7 +102,7 @@ export async function createPendingVideoPurchase(args: {
   return {
     purchase,
     reference,
-    accessCode,
+    accessCode: null,
   }
 }
 
@@ -164,12 +158,24 @@ export async function completeVideoPurchase(args: {
   }
 
   const finalizedAccessCode = createVideoAccessCode(args.creatorVideoId, args.reference)
+  const normalizedBuyerProfileId = args.buyer.buyerProfileId && args.buyer.buyerProfileId.trim() ? args.buyer.buyerProfileId : null
 
   await db.$transaction(async (tx: any) => {
+    let linkedBuyerProfileId: string | null = null
+
+    if (normalizedBuyerProfileId) {
+      const buyerProfile = await tx.profile.findUnique({
+        where: { id: normalizedBuyerProfileId },
+        select: { id: true },
+      })
+
+      linkedBuyerProfileId = buyerProfile?.id ?? null
+    }
+
     await tx.creatorVideoPurchase.update({
       where: { id: existing.id },
       data: {
-        buyerProfileId: args.buyer.buyerProfileId ?? null,
+        buyerProfileId: linkedBuyerProfileId,
         buyerName: args.buyer.buyerName ?? null,
         buyerEmail: args.buyer.buyerEmail,
         buyerPhone: args.buyer.buyerPhone ?? null,
