@@ -12,40 +12,51 @@ function getPriority(depth: number): number {
 }
 
 function getPages(dir: string, basePath = "", depth = 0): string[] {
-  let pages: string[] = [];
+  const pages: string[] = [];
 
-  const files = fs.readdirSync(dir);
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
 
-  for (const file of files) {
-    const fullPath = path.join(dir, file);
-    const stat = fs.statSync(fullPath);
+  // Determine if this directory contains a page.tsx leaf (route)
+  const hasPageLeaf = entries.some((e) => {
+    if (!e.isFile()) return false;
+    const name = e.name.toLowerCase();
+    return name === "page.tsx" || name === "page.ts" || name === "page.jsx" || name === "page.js";
+  });
 
-    if (stat.isDirectory()) {
-      // Skip API folders
-      if (file.toLowerCase() === "api") continue;
+  // If directory is a route leaf, add route (directory path as URL segments)
+  if (hasPageLeaf) {
+    // basePath is already the URL path without trailing slash
+    const route = basePath || "/";
 
-      pages = pages.concat(getPages(fullPath, `${basePath}/${file}`, depth + 1));
-    } else if (file.endsWith(".tsx") || file.endsWith(".ts") || file.endsWith(".jsx") || file.endsWith(".js")) {
-      // Skip API routes
-      if (basePath.includes("/api")) continue;
-
-      let route = `${basePath}/${file.replace(/\.(tsx|ts|jsx|js)$/, "")}`;
-
-      // Handle index pages
-      if (route.endsWith("/index")) route = route.replace("/index", "");
-      if (route.includes("[") && route.includes("]")) {
-        // Optionally skip dynamic routes or replace with canonical example
-        continue; // skipping for sitemap
-      }
-
-      pages.push(route || "/");
+    // Preserve dynamic-route exclusion as applicable
+    if (!route.includes("[") && !route.includes("]")) {
+      pages.push(route);
     }
+  }
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+
+    const folderName = entry.name;
+
+    // Skip API folders
+    if (folderName.toLowerCase() === "api") continue;
+
+    // Skip route groups: (groupName) should not affect the URL segment
+    if (folderName.startsWith("(") && folderName.endsWith(")")) continue;
+
+    const nextBasePath = basePath ? `${basePath}/${folderName}` : `/${folderName}`;
+
+    pages.push(...getPages(path.join(dir, folderName), nextBasePath, depth + 1));
   }
 
   return pages;
 }
 
+
+
 export default function sitemap(): MetadataRoute.Sitemap {
+
   const pagesDir = path.join(process.cwd(), "app"); // or "pages"
   const routes = getPages(pagesDir);
 

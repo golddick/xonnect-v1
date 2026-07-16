@@ -188,7 +188,7 @@ export default function VideoViewPanel({
           ) : null}
 
           {shouldShowOverlay && overlay ? (
-            <div className="absolute inset-0 z-20 pointer-events-auto">{overlay}</div>
+            <div className=" z-20 pointer-events-auto">{overlay}</div>
           ) : null}
 
           {shouldShowMediaActionButton ? (

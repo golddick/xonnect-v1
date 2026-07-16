@@ -480,7 +480,7 @@ export default function EventStreamPlayer({
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 16 }}
-                  className="absolute inset-0 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+                  className=" flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
                 >
                   {overlay}
                 </motion.div>
