@@ -10,7 +10,7 @@ interface ExpandableDescriptionProps {
   className?: string
 }
 
-const LINE_HEIGHT_PIXELS = 14 // Adjust based on your text styles (roughly 1.5rem with leading-relaxed)
+const LINE_HEIGHT_PIXELS = 10 // Adjust based on your text styles (roughly 1.5rem with leading-relaxed)
 
 export function ExpandableDescription({
   text,

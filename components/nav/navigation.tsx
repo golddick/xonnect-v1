@@ -29,7 +29,7 @@ const Navigation = () => {
       }`}
     >
       <div className="  w-full mx-auto px-6 md:px-8">
-        <div className="flex items-center justify-between px-4 py-6 h-20">
+        <div className="flex items-center justify-between px-4 md:px-6 py-6 ">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
            <Logo/>
