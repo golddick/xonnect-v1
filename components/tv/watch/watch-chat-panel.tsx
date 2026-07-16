@@ -155,7 +155,6 @@ export default function WatchChatPanel({
               className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-red-700"
             >
               <Send className="h-4 w-4" />
-              Send
             </button>
           </div>
         </div>
