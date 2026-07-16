@@ -199,7 +199,19 @@ export async function loadWatchFolderData(
         }
 
         const existingAccess = purchaseAccessMap.get(purchase.creatorVideoId)
-        if (!existingAccess || !existingAccess.accessExpiresAt || (resolvedAccessExpiresAt && resolvedAccessExpiresAt.getTime() > existingAccess.accessExpiresAt.getTime())) {
+        if (!existingAccess) {
+          purchaseAccessMap.set(purchase.creatorVideoId, {
+            accessExpiresAt: resolvedAccessExpiresAt,
+            purchaseType: purchase.purchaseType,
+          })
+        } else if (existingAccess.accessExpiresAt === null) {
+          continue
+        } else if (resolvedAccessExpiresAt === null) {
+          purchaseAccessMap.set(purchase.creatorVideoId, {
+            accessExpiresAt: resolvedAccessExpiresAt,
+            purchaseType: purchase.purchaseType,
+          })
+        } else if (existingAccess.accessExpiresAt && resolvedAccessExpiresAt.getTime() > existingAccess.accessExpiresAt.getTime()) {
           purchaseAccessMap.set(purchase.creatorVideoId, {
             accessExpiresAt: resolvedAccessExpiresAt,
             purchaseType: purchase.purchaseType,

@@ -85,6 +85,9 @@ export async function POST(request: NextRequest) {
       updates.livekitRoomName = webhookEvent.ingressInfo.roomName
     }
 
+    const webhookTimestamp = now.getTime()
+    const isStaleWebhook = Boolean(event.updatedAt && webhookTimestamp < event.updatedAt.getTime())
+
     switch (webhookEvent.event) {
       case "ingress_started":
         updates.status = "LIVE"
@@ -95,29 +98,33 @@ export async function POST(request: NextRequest) {
         updates.endedAt = now
         break
       case "room_started":
-        updates.status = "LIVE"
-        updates.startedAt = now
-        updates.currentViewersCount = 0
+        if (!isStaleWebhook) {
+          updates.status = "LIVE"
+          updates.startedAt = now
+          updates.currentViewersCount = 0
+        }
         break
       case "room_finished":
-        updates.status = "ENDED"
-        updates.endedAt = now
-        updates.currentViewersCount = 0
+        if (!isStaleWebhook) {
+          updates.status = "ENDED"
+          updates.endedAt = now
+          updates.currentViewersCount = 0
+        }
         break
       case "participant_joined":
-        if (event.status === "LIVE") {
+        {
           const joinedViewers = typeof webhookEvent.room?.numParticipants === "number" && webhookEvent.room.numParticipants >= 0
             ? webhookEvent.room.numParticipants
             : (event.currentViewersCount ?? 0) + 1
 
           updates.currentViewersCount = joinedViewers
-          updates.viewsCount = (event.viewsCount ?? 0) + 1
+          updates.viewsCount = { increment: 1 }
           updates.peakViewersCount = Math.max(event.peakViewersCount ?? 0, joinedViewers)
         }
         break
       case "participant_left":
       case "participant_connection_aborted":
-        if (event.status === "LIVE") {
+        {
           const currentViewers = typeof webhookEvent.room?.numParticipants === "number" && webhookEvent.room.numParticipants >= 0
             ? webhookEvent.room.numParticipants
             : Math.max((event.currentViewersCount ?? 0) - 1, 0)

@@ -42,10 +42,9 @@ export default function TvLoadingState({ variant = "landing" }: TvLoadingStatePr
       <div className="flex items-center justify-between gap-4">
         <Skeleton className="h-7 w-30" />
         <div className="flex items-center gap-3">
-          <Skeleton className="h-10 w-72 rounded-lg" />
+          <Skeleton className="h-10 w-52 rounded-lg" />
           <Skeleton className="h-10 w-10 rounded-lg" />
           <Skeleton className="h-10 w-10 rounded-lg" />
-          <Skeleton className="h-10 w-10 rounded-full" />
         </div>
       </div>
 
