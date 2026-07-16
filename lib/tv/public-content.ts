@@ -497,7 +497,7 @@ export async function getTvLiveEventPayload(options?: {
   const [liveEvents, scheduledEvents, endedEvents] = await Promise.all([
     prisma.creatorEvent.findMany({
       where: { ...where, status: CreatorEventStatus.LIVE },
-      orderBy: [{ currentViewersCount: "desc" }, { peakViewersCount: "desc" }, { createdAt: "desc" }],
+      orderBy: [{ currentViewersCount: "desc" }, { viewsCount: "desc" }, { createdAt: "desc" }],
       take: limit,
       select: {
         id: true,
@@ -510,6 +510,7 @@ export async function getTvLiveEventPayload(options?: {
         scheduledAt: true,
         durationMinutes: true,
         currentViewersCount: true,
+        viewsCount: true,
         peakViewersCount: true,
         creator: {
           select: {
@@ -538,6 +539,7 @@ export async function getTvLiveEventPayload(options?: {
         scheduledAt: true,
         durationMinutes: true,
         currentViewersCount: true,
+        viewsCount: true,
         peakViewersCount: true,
         creator: {
           select: {
@@ -566,6 +568,7 @@ export async function getTvLiveEventPayload(options?: {
         scheduledAt: true,
         durationMinutes: true,
         currentViewersCount: true,
+        viewsCount: true,
         peakViewersCount: true,
         creator: {
           select: {

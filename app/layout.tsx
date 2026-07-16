@@ -7,13 +7,13 @@ import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import { Toaster } from "sonner";
-import XonnectSplash from "@/components/splash_screen/xonnect-splash";
+
 
 
 export const metadata: Metadata = {
   title: "XONNECT ",
   description:
-    " A pay on demand Premium Streaming platfrom for Organizations & Fans.",
+    " A pay on demand Premium Streaming platform for Organizations & Fans.",
   generator: "Next.js",
   keywords: [
     "Xonnect",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   publisher: "Xonnect",
   openGraph: {
     title: "Xonnect",
-    description: "A pay on demand Premium Streaming platfrom",
+    description: "A pay on demand Premium Streaming platform",
     url: "https://xonnect.net",
     siteName: "Xonnect",
     images: [
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "A pay on demand Streaming platfrom for Organizations & Fans",
+    title: "A pay on demand Streaming platform for Organizations & Fans",
     description: "Xonnect · Watch. Belong",
     images: ["https://xonnect.net/xonnect-logo.png"],
     creator: "@xonnecthq",
@@ -74,8 +74,8 @@ export default function RootLayout({
         <style>{`
           html {
             font-family: ${GeistSans.style.fontFamily};
-            --font-sans: ${GeistSans.variable};
-            --font-mono: ${GeistMono.variable};
+            --font-sans: var(--font-geist-sans);
+            --font-mono: var(--font-geist-mono);
           }
         `}</style>
 

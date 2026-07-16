@@ -40,7 +40,7 @@ export function ExpandableDescription({
         className={`overflow-hidden transition-all duration-300 ease-in-out ${className}`}
         style={{
           maxHeight: containerHeight,
-          lineHeight: '1.5rem',
+          lineHeight: '1rem',
         }}
       >
         <p className="text-muted-foreground leading-relaxed text-sm whitespace-pre-wrap break-words">
@@ -56,7 +56,7 @@ export function ExpandableDescription({
           className="text-red-500 hover:text-red-600 hover:bg-red-500/10 group"
         >
           <span className="flex items-center gap-2">
-            {isExpanded ? 'Show less' : 'Show more'}
+            {isExpanded ? ' less' : ' more'}
             <ChevronDown
               className={`w-4 h-4 transition-transform ${
                 isExpanded ? 'rotate-180' : ''

@@ -114,6 +114,7 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
       durationMinutes: true,
       maxViewers: true,
       currentViewersCount: true,
+      viewsCount: true,
       peakViewersCount: true,
       likesCount: true,
       creator: {
@@ -253,6 +254,7 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
       recordedVideoUrl: event.recordedVideoUrl,
       scheduledAt: event.scheduledAt?.toISOString() ?? null,
       durationMinutes: event.durationMinutes,
+      viewsCount:event.viewsCount,
       maxViewers: event.maxViewers,
       currentViewersCount: event.currentViewersCount,
       peakViewersCount: event.peakViewersCount,

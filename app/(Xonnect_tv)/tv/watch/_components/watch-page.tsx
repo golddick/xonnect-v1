@@ -1470,7 +1470,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 wsUrl={eventData.livekitWsUrl}
                 accessCode={submittedAccessCode}
                 locked={Boolean(eventData.access?.locked && eventData.status === "LIVE")}
-                viewers={eventData.currentViewersCount ?? 0}
+                viewers={eventData.viewsCount ?? 0}
                 overlay={eventData.access?.locked ? eventLockOverlay : null}
               />
 
