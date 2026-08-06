@@ -1,7 +1,7 @@
 import { dropid } from "dropid"
 
-import { prisma } from "@/lib/db/prisma"
-import { Role } from "@/lib/generated/prisma"
+import { prisma } from "../db/prisma"
+import { Role } from "../generated/prisma"
 
 export type ProfileRecord = {
   id: string

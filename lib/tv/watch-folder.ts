@@ -44,6 +44,7 @@ export type WatchFolder = {
     name: string
     avatarUrl: string | null
     avatarInitials: string
+    socialHandles: Array<{ network: string; handle: string }>
     followersCount: number
     followingCount: number
     isFollowing: boolean
@@ -113,6 +114,7 @@ export async function loadWatchFolderData(
             select: {
               fullName: true,
               avatarUrl: true,
+              socialHandles: true,
             },
           },
           followersCount: true,
@@ -267,6 +269,11 @@ export async function loadWatchFolderData(
   const folderIsLocked = parts.length > 0 && parts.every((part) => part.isLocked)
   const publicParts = parts.filter((part) => !part.isLocked)
   const creatorName = folder.creator.profile.fullName?.trim() || "Xonnect Creator"
+  const creatorSocialHandles = Array.isArray(folder.creator.profile.socialHandles)
+    ? folder.creator.profile.socialHandles.filter((handle: any) => {
+        return Boolean(handle && typeof handle.network === "string" && typeof handle.handle === "string")
+      })
+    : []
 
   const isFollowingCreator = Boolean(
     profileId &&
@@ -294,6 +301,10 @@ export async function loadWatchFolderData(
         name: creatorName,
         avatarUrl: folder.creator.profile.avatarUrl ?? null,
         avatarInitials: toInitials(creatorName),
+        socialHandles: creatorSocialHandles.map((handle: any) => ({
+          network: handle.network,
+          handle: handle.handle,
+        })),
         followersCount: folder.creator.followersCount ?? 0,
         followingCount: folder.creator.followingCount ?? 0,
         isFollowing: isFollowingCreator,

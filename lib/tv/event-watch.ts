@@ -42,6 +42,7 @@ export type EventWatchData = {
     avatarUrl: string | null
     avatarInitials: string
     isSelf: boolean
+    socialHandles: Array<{ network: string; handle: string }>
   }
   tickets: EventWatchTicket[]
   access: {
@@ -124,6 +125,7 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
             select: {
               fullName: true,
               avatarUrl: true,
+              socialHandles: true,
             },
           },
           followersCount: true,
@@ -213,6 +215,11 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
 
   const creatorName = event.creator.profile.fullName?.trim() || "Xonnect Creator"
   const creatorAvatarUrl = event.creator.profile.avatarUrl ?? null
+  const creatorSocialHandles = Array.isArray(event.creator.profile.socialHandles)
+    ? event.creator.profile.socialHandles.filter((handle: any) => {
+        return Boolean(handle && typeof handle.network === "string" && typeof handle.handle === "string")
+      })
+    : []
   const profileId = session?.user?.profileId ?? null
 
   const isFollowingCreator = Boolean(
@@ -265,6 +272,10 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
         avatarUrl: creatorAvatarUrl,
         avatarInitials: toInitials(creatorName),
         isSelf: Boolean(profileId && event.creator.profileId === profileId),
+        socialHandles: creatorSocialHandles.map((handle: any) => ({
+          network: handle.network,
+          handle: handle.handle,
+        })),
         followersCount: event.creator.followersCount ?? 0,
         followingCount: event.creator.followingCount ?? 0,
         isFollowing: isFollowingCreator,

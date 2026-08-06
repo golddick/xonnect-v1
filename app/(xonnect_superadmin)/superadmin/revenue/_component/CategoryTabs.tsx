@@ -12,7 +12,7 @@ export default function CategoryTabs({
   const tabs = [
     { id: "overview", label: "Overview" },
     { id: "events", label: "Events" },
-    { id: "videos", label: "Premium Videos" },
+    { id: "videos", label: " Videos" },
   ]
 
   return (

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
-import { ArrowLeft, Banknote, Calendar, Clapperboard, ChevronDown, Clock, Eye, Film, Handshake, Heart, Library, Lock, LockOpen, MessageSquare, Play, Radio, Settings, Share2 } from "lucide-react"
+import { ArrowLeft, Banknote, Calendar, Clapperboard, ChevronDown, Clock, Eye, Film, Globe2, Handshake, Heart, Instagram, Library, Link2, Lock, LockOpen, Linkedin, MessageSquare, Play, Radio, Settings, Share2, Twitter, Youtube } from "lucide-react"
 
 import EventStreamPlayer from "@/components/common_component/event-stream-player"
 import VideoViewPanel from "@/components/common_component/video-view-panel"
@@ -33,6 +33,11 @@ type ChatMessage = {
   text: string
   reactions: Record<ChatReaction, number>
   failed?: boolean
+}
+
+type CreatorSocialHandle = {
+  network: string
+  handle: string
 }
 
 type WatchPageProps = {
@@ -145,6 +150,74 @@ const CHAT_REACTIONS: ChatReaction[] = [
   "\u{1F44F}",
 ]
 
+function getSocialPlatformMeta(network: string) {
+  const normalized = network.toLowerCase()
+
+  if (normalized.includes("instagram")) {
+    return { label: "Instagram", icon: Instagram }
+  }
+
+  if (normalized.includes("twitter") || normalized.includes("x.com")) {
+    return { label: "Twitter", icon: Twitter }
+  }
+
+  if (normalized.includes("youtube") || normalized.includes("yt")) {
+    return { label: "YouTube", icon: Youtube }
+  }
+
+  if (normalized.includes("linkedin")) {
+    return { label: "LinkedIn", icon: Linkedin }
+  }
+
+  if (normalized.includes("tiktok")) {
+    return { label: "TikTok", icon: Link2 }
+  }
+
+  if (normalized.includes("facebook")) {
+    return { label: "Facebook", icon: Globe2 }
+  }
+
+  return { label: network || "Link", icon: Link2 }
+}
+
+function buildSocialUrl(network: string, handle: string) {
+  const trimmedHandle = handle.trim()
+  if (!trimmedHandle) return null
+
+  if (/^https?:\/\//i.test(trimmedHandle)) {
+    return trimmedHandle
+  }
+
+  const cleanHandle = trimmedHandle.replace(/^@/, "")
+  const normalized = network.toLowerCase()
+
+  if (normalized.includes("instagram")) {
+    return `https://instagram.com/${cleanHandle}`
+  }
+
+  if (normalized.includes("twitter") || normalized.includes("x.com")) {
+    return `https://x.com/${cleanHandle}`
+  }
+
+  if (normalized.includes("youtube") || normalized.includes("yt")) {
+    return `https://youtube.com/${cleanHandle.startsWith("@") ? cleanHandle : `@${cleanHandle}`}`
+  }
+
+  if (normalized.includes("linkedin")) {
+    return `https://linkedin.com/in/${cleanHandle}`
+  }
+
+  if (normalized.includes("tiktok")) {
+    return `https://www.tiktok.com/@${cleanHandle}`
+  }
+
+  if (normalized.includes("facebook")) {
+    return `https://facebook.com/${cleanHandle}`
+  }
+
+  return `https://${cleanHandle}`
+}
+
 // Live chat: fetch recent messages and subscribe over WebSocket.
 // Anonymous users will send messages with name "Unknown" and handle "@unknown".
 
@@ -177,7 +250,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const [showGuestEmailPrompt, setShowGuestEmailPrompt] = useState(false)
   const [pendingPurchaseAction, setPendingPurchaseAction] = useState<((email: string) => Promise<void> | void) | null>(null)
   const [busy, setBusy] = useState<PurchaseType | "code" | null>(null)
-  const [chatVisible, setChatVisible] = useState(false)
+  const [chatVisible, setChatVisible] = useState(true)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatDraft, setChatDraft] = useState("")
   const [eventLikesCount, setEventLikesCount] = useState(0)
@@ -1427,15 +1500,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                   <h1 className="text-lg font-bold truncate max-w-[200px] capitalize md:max-w-md">{eventData.title}</h1>
                 </div>
 
-                 <span className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4" />
-                    {eventData.scheduledAt ? new Date(eventData.scheduledAt).toLocaleDateString() : "N/A"}
-                  </span>
-                {/* <p className="text-xs text-muted-foreground flex items-center gap-2">
-                  <span>{eventData.category}</span>
-                  <span className="w-1 h-1 bg-muted-foreground rounded-full" />
+                <p className="text-xs text-muted-foreground flex items-center gap-2">
                   <span>{eventData.status}</span>
-                </p> */}
+                </p>
               </div>
             </div>
 
@@ -1456,7 +1523,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         </div>
 
         <main className="w-full px-2 lg:px-8 py-6">
-          <div className={`grid grid-cols-1 gap-8 ${chatVisible ? "xl:grid-cols-[minmax(0,1fr)_350px]" : ""}`}>
+          <div className={`grid grid-cols-1 gap-8 ${chatVisible ? "xl:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]" : ""}`}>
             <div className="space-y-6">
               <EventStreamPlayer
                 eventId={eventData.id}
@@ -1515,24 +1582,46 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                             })()}
                           </div>
                     
-                    <div className="flex items-center gap-2">
-                    <FollowButton
-                      creatorId={eventData.creator?.id}
-                      isFollowing={creatorIsFollowed}
-                      isSelf={eventData.creator?.isSelf ?? false}
-                      onFollowChange={() => setCreatorIsFollowed(!creatorIsFollowed)}
-                    />
-                    <LikeButton
-                      kind="event"
-                      itemId={eventData.id}
-                      isLiked={eventIsLiked}
-                      count={eventLikesCount}
-                      onLikeChange={(count) => {
-                        setEventIsLiked(!eventIsLiked)
-                        setEventLikesCount(count)
-                      }}
-                    />
-                  </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {Array.isArray(eventData.creator?.socialHandles) && eventData.creator.socialHandles.length > 0 ? (
+                        eventData.creator.socialHandles.map((socialHandle: CreatorSocialHandle, index: number) => {
+                          const href = buildSocialUrl(socialHandle.network, socialHandle.handle)
+                          if (!href) return null
+
+                          const socialMeta = getSocialPlatformMeta(socialHandle.network)
+                          const Icon = socialMeta.icon
+
+                          return (
+                            <a
+                              key={`${socialHandle.network}-${index}`}
+                              href={href}
+                              target="_blank"
+                              rel="noreferrer"
+                              title={socialMeta.label}
+                              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-muted/20 text-muted-foreground transition-colors hover:border-red-500/50 hover:text-foreground"
+                            >
+                              <Icon className="h-4 w-4" />
+                            </a>
+                          )
+                        })
+                      ) : null}
+                      <FollowButton
+                        creatorId={eventData.creator?.id}
+                        isFollowing={creatorIsFollowed}
+                        isSelf={eventData.creator?.isSelf ?? false}
+                        onFollowChange={() => setCreatorIsFollowed(!creatorIsFollowed)}
+                      />
+                      <LikeButton
+                        kind="event"
+                        itemId={eventData.id}
+                        isLiked={eventIsLiked}
+                        count={eventLikesCount}
+                        onLikeChange={(count) => {
+                          setEventIsLiked(!eventIsLiked)
+                          setEventLikesCount(count)
+                        }}
+                      />
+                    </div>
 
 
                   </div>
@@ -1740,23 +1829,45 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                   </span>
                   
 
-                  <div className="flex items-center gap-4">
-                        <FollowButton
-                    creatorId={watchFolder.creator?.id || ""}
-                    isFollowing={creatorIsFollowed}
-                    isSelf={watchFolder.creator?.isSelf ?? false}
-                    onFollowChange={() => setCreatorIsFollowed(!creatorIsFollowed)}
-                  />
-                  <LikeButton
-                    kind="video"
-                    itemId={currentPart?.id ?? watchFolder.id}
-                    isLiked={videoIsLiked}
-                    count={videoLikesCount}
-                    onLikeChange={(count) => {
-                      setVideoIsLiked(!videoIsLiked)
-                      setVideoLikesCount(count)
-                    }}
-                  />
+                  <div className="flex flex-wrap items-center gap-2">
+                    {Array.isArray(watchFolder.creator?.socialHandles) && watchFolder.creator.socialHandles.length > 0 ? (
+                      watchFolder.creator.socialHandles.map((socialHandle: CreatorSocialHandle, index: number) => {
+                        const href = buildSocialUrl(socialHandle.network, socialHandle.handle)
+                        if (!href) return null
+
+                        const socialMeta = getSocialPlatformMeta(socialHandle.network)
+                        const Icon = socialMeta.icon
+
+                        return (
+                          <a
+                            key={`${socialHandle.network}-${index}`}
+                            href={href}
+                            target="_blank"
+                            rel="noreferrer"
+                            title={socialMeta.label}
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-muted/20 text-muted-foreground transition-colors hover:border-red-500/50 hover:text-foreground"
+                          >
+                            <Icon className="h-4 w-4" />
+                          </a>
+                        )
+                      })
+                    ) : null}
+                    <FollowButton
+                      creatorId={watchFolder.creator?.id || ""}
+                      isFollowing={creatorIsFollowed}
+                      isSelf={watchFolder.creator?.isSelf ?? false}
+                      onFollowChange={() => setCreatorIsFollowed(!creatorIsFollowed)}
+                    />
+                    <LikeButton
+                      kind="video"
+                      itemId={currentPart?.id ?? watchFolder.id}
+                      isLiked={videoIsLiked}
+                      count={videoLikesCount}
+                      onLikeChange={(count) => {
+                        setVideoIsLiked(!videoIsLiked)
+                        setVideoLikesCount(count)
+                      }}
+                    />
                   </div>
                  
                 </div>

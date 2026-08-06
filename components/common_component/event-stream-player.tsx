@@ -491,11 +491,12 @@ export default function  EventStreamPlayer({
 
                 {isLive ? "Live" : null}
               </span>
-              {viewers > 0 ? (
+              {isLive &&  viewers > 0 ? (
                 <span className="rounded-full bg-black/60 px-3 py-1 text-xs text-white/80">
                   {viewers.toLocaleString()} watching
                 </span>
-              ) : null}
+              ) : null }
+              
               {/* {scheduledLabel ? (
                 <span className="rounded-full bg-black/60 px-3 py-1 text-xs text-white/80">
                   {scheduledLabel}

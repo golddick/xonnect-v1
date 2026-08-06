@@ -136,15 +136,15 @@ export default function CreatorLivePage() {
             const result = await uploadCreatorVideo(file, (pct) => {
               setUploadProgress(Math.round(pct))
             })
-            const uploadedUrl = result.videoUrl ?? result.ufsUrl
-            const uploadedFileId = result.key
+            const uploadedUrl = result.videoUrl ?? result.fileUrl ?? result.ufsUrl
+            const uploadedFileId = result.key ?? result.fileUrl ?? result.ufsUrl
 
-            if (!uploadedUrl || !uploadedFileId) {
-              throw new Error("Upload completed without a valid video URL or file ID")
+            if (!uploadedUrl) {
+              throw new Error("Upload completed without a valid video URL")
             }
 
             setRecordingUrl(uploadedUrl)
-            await fetch(`/api/creator/events/${eventId}`, {
+            const response = await fetch(`/api/creator/events/${eventId}`, {
               method: "PUT",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -153,6 +153,11 @@ export default function CreatorLivePage() {
                 recordingStatus: "ready",
               }),
             })
+
+            if (!response.ok) {
+              const data = await response.json().catch(() => null)
+              throw new Error(data?.message || "Failed to save recorded video to the event")
+            }
           } catch (err) {
             setError(err instanceof Error ? err.message : String(err))
           } finally {

@@ -3,7 +3,6 @@ import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { Role } from "@/lib/generated/prisma"
 import { sendCreatorPayoutStatusEmail } from "@/lib/auth/notifications"
-import { uploadFileRaw } from "@/lib/auth/dropaphi-upload"
 import { dropid } from "dropid"
 
 function assertAuthorized(role?: Role | null) {
@@ -149,18 +148,20 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     const { id } = await params
-    const formData = await request.formData()
-    const file = formData.get("receipt")
+    const contentType = request.headers.get("content-type") || ""
+    let receiptUrl: string | null = null
 
-    if (!(file instanceof File) || file.size === 0) {
-      return NextResponse.json({ message: "Receipt file is required" }, { status: 400 })
+    if (contentType.includes("application/json")) {
+      const body = await request.json().catch(() => ({}))
+      receiptUrl = typeof body?.receiptUrl === "string" ? body.receiptUrl.trim() : null
+    } else {
+      const formData = await request.formData()
+      const formReceiptUrl = formData.get("receiptUrl")
+      receiptUrl = typeof formReceiptUrl === "string" ? formReceiptUrl.trim() : null
     }
 
-    const payload = await file.arrayBuffer()
-    const uploadResult = await uploadFileRaw(file, )
-
-    if (!uploadResult.ok || !uploadResult.url) {
-      return NextResponse.json({ message: uploadResult.message ?? "Receipt upload failed" }, { status: 400 })
+    if (!receiptUrl) {
+      return NextResponse.json({ message: "Receipt URL is required" }, { status: 400 })
     }
 
     const payoutRequest = await prisma.creatorPayoutRequest.findUnique({ where: { id } })
@@ -171,12 +172,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const updated = await prisma.creatorPayoutRequest.update({
       where: { id },
       data: {
-        receiptUrl: uploadResult.url,
+        receiptUrl,
         transactionId: payoutRequest.transactionId ?? dropid("payout_receipt"),
       },
     })
 
-    return NextResponse.json({ payoutRequest: updated, receiptUrl: uploadResult.url }, { status: 200 })
+    return NextResponse.json({ payoutRequest: updated, receiptUrl }, { status: 200 })
   } catch (error) {
     console.error("Superadmin payout receipt upload error:", error)
     return NextResponse.json({ message: "Receipt upload failed" }, { status: 500 })

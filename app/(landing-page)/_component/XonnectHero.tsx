@@ -9,9 +9,9 @@ import WorldTreeGlobe from "@/components/common_component/worldGlobe"
 
 export default function XonnectHero() {
   const [email, setEmail] = useState("")
-
+ 
   return (
-    <section className="relative w-full min-h-[92vh] overflow-hidden ">
+    <section className="relative w-full  overflow-hidden ">
       
       <div className="relative z-10 w-full mx-auto px-6 sm:px-10 md:px-16 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
@@ -54,8 +54,8 @@ export default function XonnectHero() {
               className="flex flex-wrap gap-3 mb-8"
             >
               <Link href="/tv">
-                <Button size="lg" className="bg-muted-foreground text-black hover:bg-foreground font-bold px-8 gap-2 rounded-lg">
-                  <Play className="w-5 h-5 fill-black" /> Watch Now
+                <Button size="lg" className="bg-red-600 text-white hover:bg-foreground font-bold px-8 gap-2 rounded-lg">
+                  <Play className="w-5 h-5 fill-white" /> Watch Now
                 </Button>
               </Link>
               <Link href="/about">

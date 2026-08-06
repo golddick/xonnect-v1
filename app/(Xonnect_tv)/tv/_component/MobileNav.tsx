@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/sheet"
 import { MenuIcon } from "lucide-react"
 import { useRef } from "react"
+import Logo from "@/components/nav/logo"
+import Link from "next/link"
 
 export function MobileNav() {
   const sheetCloseRef = useRef<HTMLButtonElement>(null)
@@ -41,9 +43,14 @@ export function MobileNav() {
       
       <SheetContent side="left" className=" w-[200px] bg-background text-foreground p-0">
         <SheetHeader className="p-6 border-b border-white/10">
-          <SheetTitle className="text-2xl font-bold text-foreground">Xonnect</SheetTitle>
+          <SheetTitle className="text-2xl font-bold text-foreground">
+            <Link href="/" className="flex items-center space-x-2 group">
+               <Logo/>
+              <span className="text-xl font-bold text-foreground md:hidden ">Xonnect</span>
+            </Link>
+          </SheetTitle>
           <SheetDescription className="text-muted-foreground">
-            Bringing the world experience to you! 
+            Live experiences, on demand 
           </SheetDescription>
         </SheetHeader>
         
