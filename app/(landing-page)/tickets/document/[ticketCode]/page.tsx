@@ -36,7 +36,7 @@ export default async function TicketDocumentPage({
 }) {
   const { ticketCode } = await params
 
-  const purchase = await db.creatorEventTicketPurchase.findUnique({
+  let purchase = await db.creatorEventTicketPurchase.findUnique({
     where: { ticketCode },
     include: {
       ticket: {
@@ -52,11 +52,40 @@ export default async function TicketDocumentPage({
           },
         },
       },
+      ticketItems: true,
     },
   })
 
   if (!purchase) {
-    notFound()
+    const ticketItem = await db.creatorEventTicketItem.findUnique({
+      where: { ticketCode },
+      include: {
+        purchase: {
+          include: {
+            ticket: {
+              include: {
+                event: {
+                  include: {
+                    creator: {
+                      include: {
+                        profile: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            ticketItems: true,
+          },
+        },
+      },
+    })
+
+    if (!ticketItem) {
+      notFound()
+    }
+
+    purchase = ticketItem.purchase
   }
 
   const event = purchase.ticket.event
@@ -67,19 +96,28 @@ export default async function TicketDocumentPage({
     event.locationCountry ??
     "Online"
 
-  let qrImageDataUrl: string | null = null
+  const ticketCodes =
+    purchase.ticketItems && purchase.ticketItems.length > 0
+      ? purchase.ticketItems.map((item) => item.ticketCode)
+      : [purchase.ticketCode]
+
+  const qrImageDataUrls: string[] = []
 
   if (purchase.ticket.access === "VENUE") {
     try {
-      qrImageDataUrl = await createTicketQrDataUrl(
-        buildTicketPayload({
-          eventId: event.id,
-          ticketId: purchase.ticket.id,
-          purchaseId: purchase.id,
-          ticketCode: purchase.ticketCode,
-          quantity: purchase.quantity,
-        })
-      )
+      for (const ticketCodeItem of ticketCodes) {
+        const qrImageDataUrl = await createTicketQrDataUrl(
+          buildTicketPayload({
+            eventId: event.id,
+            ticketId: purchase.ticket.id,
+            purchaseId: purchase.id,
+            ticketCode: ticketCodeItem,
+            quantity: 1,
+          })
+        )
+
+        qrImageDataUrls.push(qrImageDataUrl)
+      }
     } catch (error) {
       console.error("Failed to build ticket QR image:", error)
     }
@@ -100,7 +138,8 @@ export default async function TicketDocumentPage({
             quantity={purchase.quantity}
             total={formatCurrency(purchase.amount)}
             ticketType={purchase.ticket.ticketType}
-            qrImageDataUrl={qrImageDataUrl}
+            ticketCodes={ticketCodes}
+            qrImageDataUrls={qrImageDataUrls}
           />
         </div>
 
@@ -151,24 +190,33 @@ export default async function TicketDocumentPage({
               <div className="rounded-lg border border-border bg-background p-4">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Ticket className="h-4 w-4" />
-                  <span>Ticket code</span>
+                  <span>{ticketCodes.length > 1 ? "Ticket codes" : "Ticket code"}</span>
                 </div>
-                <p className="mt-2 break-all text-xl font-semibold tracking-[0.18em]">{purchase.ticketCode}</p>
+                <div className="mt-3 space-y-2 text-sm font-semibold text-foreground">
+                  {ticketCodes.map((code) => (
+                    <p key={code} className="break-all">{code}</p>
+                  ))}
+                </div>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {purchase.ticket.access === "VENUE"
-                    ? "Present the QR ticket at the gate."
+                    ? "Present the QR ticket(s) at the gate."
                     : "Use this code for streaming access."}
                 </p>
               </div>
             </div>
 
             <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-background p-5">
-              {qrImageDataUrl ? (
-                <img
-                  src={qrImageDataUrl}
-                  alt="Ticket QR code"
-                  className="w-full max-w-[320px]"
-                />
+              {qrImageDataUrls.length > 0 ? (
+                <div className="grid gap-4 w-full">
+                  {qrImageDataUrls.map((url, index) => (
+                    <img
+                      key={`${url}-${index}`}
+                      src={url}
+                      alt={`Ticket QR code ${index + 1}`}
+                      className="w-full max-w-[320px]"
+                    />
+                  ))}
+                </div>
               ) : (
                 <div className="flex h-[320px] w-full max-w-[320px] items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted-foreground">
                   Streaming ticket document
@@ -176,7 +224,7 @@ export default async function TicketDocumentPage({
               )}
               <p className="mt-4 text-center text-sm text-muted-foreground">
                 {purchase.ticket.access === "VENUE"
-                  ? "This QR ticket includes the platform logo at the center for venue verification."
+                  ? "Each QR code is unique to a ticket and should be scanned individually at the venue gate."
                   : "This document stores your ticket code and purchase details."}
               </p>
             </div>

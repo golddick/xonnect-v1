@@ -35,20 +35,55 @@ export async function GET(request: Request, { params }: RouteParams) {
         content: true,
         createdAt: true,
         commenterProfileId: true,
+        commenterEmail: true,
+        parentCommentId: true,
       },
     })
 
-    const formattedComments = comments.map((comment) => ({
-      id: comment.id,
-      author: comment.commenterProfileId || "Anonymous",
-      authorEmail: null,
-      text: comment.content,
-      createdAt: comment.createdAt.toISOString(),
-      likes: 0,
-      replies: [],
-    }))
+    type CommentNode = {
+      id: string
+      author: string
+      authorEmail: string | null
+      text: string
+      createdAt: string
+      likes: number
+      replies: CommentNode[]
+      parentCommentId: string | null
+    }
 
-    return NextResponse.json({ comments: formattedComments })
+    const commentMap = new Map<string, CommentNode>()
+
+    comments.forEach((comment) => {
+      const emailLocalPart = comment.commenterEmail
+        ? String(comment.commenterEmail).split("@")[0].trim()
+        : null
+
+      commentMap.set(comment.id, {
+        id: comment.id,
+        author: emailLocalPart || comment.commenterProfileId || "Anonymous",
+        authorEmail: comment.commenterEmail ?? null,
+        text: comment.content,
+        createdAt: comment.createdAt.toISOString(),
+        likes: 0,
+        replies: [],
+        parentCommentId: comment.parentCommentId ?? null,
+      })
+    })
+
+    const rootComments: CommentNode[] = []
+
+    for (const comment of commentMap.values()) {
+      if (comment.parentCommentId && commentMap.has(comment.parentCommentId)) {
+        const parent = commentMap.get(comment.parentCommentId)
+        if (parent) {
+          parent.replies.push(comment)
+          continue
+        }
+      }
+      rootComments.push(comment)
+    }
+
+    return NextResponse.json({ comments: rootComments })
   } catch (error) {
     console.error("Failed to fetch comments:", error)
     return NextResponse.json(
@@ -102,6 +137,20 @@ export async function POST(request: Request, { params }: RouteParams) {
       )
     }
 
+    if (parentCommentId) {
+      const parentComment = await prisma.creatorVideoComment.findUnique({
+        where: { id: parentCommentId },
+        select: { id: true, creatorVideoId: true },
+      })
+
+      if (!parentComment || parentComment.creatorVideoId !== videoId) {
+        return NextResponse.json(
+          { message: "Invalid parent comment" },
+          { status: 400 }
+        )
+      }
+    }
+
     // Create comment
     const comment = await prisma.creatorVideoComment.create({
       data: {
@@ -109,18 +158,21 @@ export async function POST(request: Request, { params }: RouteParams) {
         creatorVideoId: videoId,
         content: textTrimmed,
         commenterProfileId: session?.user?.profileId || null,
+        commenterEmail: authorEmail,
+        parentCommentId: parentCommentId ?? undefined,
       },
       select: {
         id: true,
         content: true,
         createdAt: true,
+        commenterEmail: true,
       },
     })
 
     const formattedComment = {
       id: comment.id,
       author: authorName || "Anonymous",
-      authorEmail,
+      authorEmail: comment.commenterEmail ?? null,
       text: comment.content,
       createdAt: comment.createdAt.toISOString(),
       likes: 0,

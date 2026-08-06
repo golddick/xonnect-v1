@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 
 import { auth } from "@/lib/auth/auth"
-import { setPasswordForEmail } from "@/lib/auth/password"
+import { setPasswordForEmail, verifyPasswordForEmail } from "@/lib/auth/password"
 
 export async function PUT(request: NextRequest) {
   try {
@@ -13,12 +13,28 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json()
+    const currentPassword = body?.currentPassword
     const password = body?.password
 
-    if (typeof password !== "string" || password.length === 0) {
+    if (typeof currentPassword !== "string" || currentPassword.length === 0) {
       return NextResponse.json(
-        { message: "Password is required" },
+        { message: "Current password is required" },
         { status: 400 }
+      )
+    }
+
+    if (typeof password !== "string" || password.length < 8) {
+      return NextResponse.json(
+        { message: "New password must be at least 8 characters long" },
+        { status: 400 }
+      )
+    }
+
+    const passwordIsValid = await verifyPasswordForEmail(email, currentPassword)
+    if (!passwordIsValid) {
+      return NextResponse.json(
+        { message: "Current password is incorrect" },
+        { status: 401 }
       )
     }
 

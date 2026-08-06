@@ -4,8 +4,8 @@ import { prisma } from "@/lib/db/prisma"
 import { Role } from "@/lib/generated/prisma"
 import { uploadFileRaw } from "@/lib/auth/dropaphi-upload"
 
-function normalizeEmail(email: string | null | undefined) {
-  return typeof email === "string" ? email.toLowerCase().trim() : null
+function normalizeEmail(email: string | null | undefined): string | undefined {
+  return typeof email === "string" ? email.toLowerCase().trim() : undefined
 }
 
 export async function POST(request: NextRequest) {

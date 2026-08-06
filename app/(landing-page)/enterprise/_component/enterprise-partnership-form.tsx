@@ -114,7 +114,7 @@ const EnterprisePartnership = () => {
               />
             </div>
 
-      <div className="max-w-7xl mx-auto px-8 py-12">
+      <div className="w-full px-8 py-12">
         {/* Benefits Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -13,16 +13,17 @@ export type WatchPart = {
 }
 
 type WatchPartsPanelProps = {
+  title?: string
   parts: WatchPart[]
   activePart: number
   onSelectPart: (index: number) => void
 }
 
-export default function WatchPartsPanel({ parts, activePart, onSelectPart }: WatchPartsPanelProps) {
+export default function WatchPartsPanel({ title = "Parts", parts, activePart, onSelectPart }: WatchPartsPanelProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-lg">Parts</h3>
+        <h3 className="font-bold text-lg">{title}</h3>
         <span className="text-xs text-red-500 font-bold bg-red-500/10 px-2 py-1 rounded">
           {parts.length ? activePart + 1 : 0} / {parts.length}
         </span>

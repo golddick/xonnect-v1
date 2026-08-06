@@ -6,7 +6,7 @@ import React from 'react'
 const TestimonialSection = () => {
   return (
     <div>
-        <div className="max-w-6xl 2xl:max-w-[100rem]   mx-auto">
+        <div className="w-full">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

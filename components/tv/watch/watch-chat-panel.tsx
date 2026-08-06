@@ -1,6 +1,7 @@
 "use client"
 
 import { Send, Smile } from "lucide-react"
+import { useState } from "react"
 
 export type ChatReaction = "\u{1F44D}" | "\u{2764}\u{FE0F}" | "\u{1F525}" | "\u{1F602}" | "\u{1F44F}"
 
@@ -55,6 +56,8 @@ export default function WatchChatPanel({
   onRetry,
   onQuickReaction,
 }: WatchChatPanelProps) {
+  const [openReactionsFor, setOpenReactionsFor] = useState<string | null>(null)
+
   return (
     <aside className="space-y-4 xl:sticky xl:top-24 h-full xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto" hidden-scrollbar>
       <div className="rounded-2xl border border-border bg-muted/20 p-2 md:p4">
@@ -87,32 +90,37 @@ export default function WatchChatPanel({
                       Retry
                     </button>
                   )}
-                  {/* <button
+                  <button
                     type="button"
-                    onClick={() => onReaction(message.id, "\u{1F525}")}
+                    onClick={() => setOpenReactionsFor((current) => (current === message.id ? null : message.id))}
                     className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background/80 text-xs text-muted-foreground transition-colors hover:border-red-500/50 hover:text-foreground"
-                    title="React with fire"
+                    title="Open reactions"
                   >
                     <Smile className="h-3.5 w-3.5" />
-                  </button> */}
+                  </button>
                 </div>
               </div>
 
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{message.text}</p>
 
-              {/* <div className="mt-3 flex flex-wrap gap-2">
-                {reactions.map((reaction) => (
-                  <button
-                    key={reaction}
-                    type="button"
-                    onClick={() => onReaction(message.id, reaction)}
-                    className="inline-flex items-center gap-1 rounded-full border border-border bg-background/70 px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-red-500/50 hover:text-foreground"
-                  >
-                    <span>{reaction}</span>
-                    <span>{message.reactions[reaction] ?? 0}</span>
-                  </button>
-                ))}
-              </div> */}
+              {openReactionsFor === message.id ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {reactions.map((reaction) => (
+                    <button
+                      key={reaction}
+                      type="button"
+                      onClick={() => {
+                        onReaction(message.id, reaction)
+                        setOpenReactionsFor(null)
+                      }}
+                      className="inline-flex items-center gap-1 rounded-full border border-border bg-background/70 px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-red-500/50 hover:text-foreground"
+                    >
+                      <span>{reaction}</span>
+                      <span>{message.reactions[reaction] ?? 0}</span>
+                    </button>
+                  ))}
+                </div>
+              ) : null}
             </div>
           ))}
         </div>

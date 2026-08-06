@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
 import { auth } from "@/lib/auth/auth"
-import { getMessages, pushMessage } from "@/app/api/tv/watch/_chatStore"
+import { getMessages, pushMessage, updateMessageReaction } from "@/app/api/tv/watch/_chatStore"
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -45,5 +45,30 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   } catch (err) {
     console.error(err)
     return NextResponse.json({ message: "Failed to post message" }, { status: 500 })
+  }
+}
+
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const resolvedParams = await params
+    const { searchParams } = new URL(request.url)
+    const kind = searchParams.get("kind")?.trim() || "folder"
+    const body = await request.json()
+    const messageId = typeof body?.messageId === "string" ? body.messageId : ""
+    const reaction = typeof body?.reaction === "string" ? body.reaction : ""
+
+    if (!messageId || !reaction) {
+      return NextResponse.json({ message: "Missing messageId or reaction" }, { status: 400 })
+    }
+
+    const updatedMessage = await updateMessageReaction(kind, resolvedParams.id, messageId, reaction)
+    if (!updatedMessage) {
+      return NextResponse.json({ message: "Chat message not found" }, { status: 404 })
+    }
+
+    return NextResponse.json({ message: updatedMessage })
+  } catch (err) {
+    console.error(err)
+    return NextResponse.json({ message: "Failed to update reaction" }, { status: 500 })
   }
 }

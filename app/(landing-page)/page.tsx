@@ -59,12 +59,13 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
 
-      {/* 1. Full-screen Netflix-style Hero */}
+      {/* 1.  Hero */}
+      
       <XonnectHero />
 
       {/* 2. Stats Bar */}
       <section className="relative z-10  bg-card/50 backdrop-blur-sm py-6 px-4 sm:px-6 md:px-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full ">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x divide-border">
             {stats.map((stat, i) => (
               <motion.div
@@ -89,7 +90,7 @@ export default function HomePage() {
 
       {/* 4. Feature Highlight — split layout */}
       <section className="relative z-10 py-20 px-4 sm:px-6 md:px-8 overflow-hidden">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Image side */}
             <motion.div
@@ -158,7 +159,7 @@ export default function HomePage() {
 
       {/* 5. Viewer Feature — reversed */}
       <section className="relative z-10 py-20 px-4 sm:px-6 md:px-8 bg-card/30">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Text side */}
             <motion.div
@@ -221,7 +222,7 @@ export default function HomePage() {
 
       {/* 7. FAQ */}
       <section className="relative z-10 py-20 px-4 sm:px-6 md:px-8 bg-card/30">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -267,7 +268,7 @@ export default function HomePage() {
       <section className="relative z-10 py-24 px-4 sm:px-6 md:px-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-red-600/20 via-background to-background" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-red-600/10 rounded-full blur-3xl" />
-        <div className="relative z-10 max-w-3xl mx-auto text-center">
+        <div className="relative z-10 max-w-7xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -279,7 +280,7 @@ export default function HomePage() {
               Ready to Connect<br />with the World?
             </h2>
             <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto">
-              Whether you're here to create, watch, or both — Xonnect is your stage. Join thousands already streaming, earning, and connecting.
+              Whether you're here to create, watch, or both Xonnect is your stage. Join thousands already streaming, earning, and connecting.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/auth/signup">

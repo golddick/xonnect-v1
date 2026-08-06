@@ -220,7 +220,7 @@ export default function CreatorTicketsManagement() {
           {error && <div className="text-red-400">{error}</div>}
 
           {!loading && !error && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredTickets.map((ticket) => (
                 <div
                   key={ticket.id}

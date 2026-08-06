@@ -90,13 +90,7 @@ const Navigation = () => {
               className="md:hidden w-full bg-background/95 backdrop-blur-md border-t border-border"
             >
               <div className="px-4 py-6 space-y-4">
-                <Link
-                  href="/features"
-                  className="block text-muted-foreground hover:text-foreground transition-colors py-2"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Features
-                </Link>
+                
                 
                 <Link
                   href="/about"

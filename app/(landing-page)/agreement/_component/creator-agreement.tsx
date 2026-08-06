@@ -67,26 +67,11 @@ const CreatorAgreement = () => {
             iconTitle="Creator Agreement"
         />
       </div>
-      {/*<section className="pt-32 pb-16 px-6 md:px-8 bg-gradient-to-b from-red-900/50 to-background">*/}
-      {/*  <div className="max-w-4xl mx-auto text-center">*/}
-      {/*    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>*/}
-      {/*      <div className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6">*/}
-      {/*        <FileText className="w-8 h-8 text-white" />*/}
-      {/*      </div>*/}
-      {/*      <h1 className="text-4xl md:text-5xl font-bold mb-6">*/}
-      {/*        Creator <span className="text-red-500">Agreement</span>*/}
-      {/*      </h1>*/}
-      {/*      <p className="text-xl text-muted-foreground max-w-2xl mx-auto">*/}
-      {/*        Join the Xonnect Creator Community and start building your audience today. We're here to support your*/}
-      {/*        success every step of the way.*/}
-      {/*      </p>*/}
-      {/*    </motion.div>*/}
-      {/*  </div>*/}
-      {/*</section>*/}
+      
 
       {/* Agreement Content */}
       <section className="py-16 px-6 md:px-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="w-full">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Creator Support & Benefits */}
             <motion.div

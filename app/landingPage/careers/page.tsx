@@ -1,9 +1,9 @@
-import Navigation from "@/components/navigation"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { MapPin, Clock, Users, Heart, Zap, Globe, ArrowRight } from "lucide-react"
+import Navigation from "@/components/nav/navigation"
 
 const jobOpenings = [
   {

@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react"
 import { UploadButton } from "@/lib/utils/uploadthing"
+import LoadingSplash from "@/components/splash_screen/loading-splash"
 
 type CategoryOption = {
   id: string
@@ -342,16 +343,14 @@ export default function EventEditPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-6 text-foreground">
-        <div className="flex min-h-[60vh] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-red-500" />
-        </div>
+        <LoadingSplash />
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-background p-4 text-foreground md:p-6">
-      <div className="mx-auto max-w-5xl space-y-6">
+      <div className="w-full space-y-6">
         <div className="flex items-center justify-between gap-4">
           <button
             type="button"
@@ -367,7 +366,7 @@ export default function EventEditPage() {
 
         <div>
           <h1 className="text-3xl font-bold">Edit Event</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 hidden md:block text-sm text-muted-foreground">
             Changes are blocked once the event is live or the scheduled time has passed.
           </p>
         </div>
@@ -592,7 +591,7 @@ export default function EventEditPage() {
             )}
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-2">
             <label className="flex items-start gap-3 rounded-2xl border border-border p-4">
               <input
                 type="checkbox"
@@ -602,8 +601,8 @@ export default function EventEditPage() {
                 className="mt-1 h-4 w-4"
               />
               <span>
-                <span className="block font-medium">Private event</span>
-                <span className="block text-sm text-muted-foreground">Restrict access.</span>
+                <span className="block font-medium">Private <span className=" hidden md:block">event</span></span>
+                <span className=" text-sm text-muted-foreground hidden md:block">Restrict access.</span>
               </span>
             </label>
 
@@ -616,12 +615,12 @@ export default function EventEditPage() {
                 className="mt-1 h-4 w-4"
               />
               <span>
-                <span className="block font-medium">Require ticket</span>
-                <span className="block text-sm text-muted-foreground">Gate the stream behind ticketing.</span>
+                <span className="block font-medium">Premium</span>
+                <span className=" text-sm text-muted-foreground hidden md:block ">Gate the event behind ticketing.</span>
               </span>
             </label>
 
-            <label className="flex items-start gap-3 rounded-2xl border border-border p-4">
+            {/* <label className="flex items-start gap-3 rounded-2xl border border-border p-4">
               <input
                 type="checkbox"
                 checked={state.enableDonations}
@@ -633,9 +632,9 @@ export default function EventEditPage() {
                 <span className="block font-medium">Enable donations</span>
                 <span className="block text-sm text-muted-foreground">Allow gifts during the event.</span>
               </span>
-            </label>
+            </label> */}
 
-            <label className="flex items-start gap-3 rounded-2xl border border-border p-4">
+            {/* <label className="flex items-start gap-3 rounded-2xl border border-border p-4">
               <input
                 type="checkbox"
                 checked={state.recordingEnabled}
@@ -647,7 +646,7 @@ export default function EventEditPage() {
                 <span className="block font-medium">Recording enabled</span>
                 <span className="block text-sm text-muted-foreground">LiveKit will update the recording URL when egress completes.</span>
               </span>
-            </label>
+            </label> */}
           </div>
 
           <div className="flex gap-3">
@@ -748,7 +747,7 @@ export default function EventEditPage() {
 
           {currentStep === 3 && (
             <>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="mb-2 block text-sm font-medium">Recording Status</label>
               <select
@@ -775,7 +774,7 @@ export default function EventEditPage() {
                 placeholder="Filled automatically by LiveKit webhook"
               />
             </div>
-          </div>
+          </div> */}
 
           <div>
             <div className="mb-2 flex items-center justify-between">

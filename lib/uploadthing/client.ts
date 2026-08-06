@@ -1,29 +1,49 @@
 import { UploadThingError } from "uploadthing/server"
+import type { OurFileRouter } from "@/app/api/uploadthing/core"
 
 // UploadThing client helper: uploads a single file to the `video` file route
 // Route slug is defined in `app/api/uploadthing/route.ts`
 //
 // We intentionally don't use `useUploadThing`.
 
-export async function uploadCreatorVideo(file: File, onProgress?: (pct: number) => void) {
-  // uploadthing provides a default browser-side upload implementation via `fetch`
-  // but since this project uses the server route handler already, we use the uploadthing
-  // client SDK `uploadFiles`.
-  const { uploadFiles } = await import("uploadthing/client")
+type UploadCreatorVideoResult = {
+  videoUrl: string | null
+  fileUrl: string | null
+  ufsUrl: string
+  key: string
+  serverData: {
+    uploadedBy: string
+    videoUrl: string
+    fileUrl: string
+  }
+}
 
-  // uploadthing's client entrypoint exposes `uploadFiles` in this project.
-  const result = await (uploadFiles as any)({
-    // The route slug is `creatorVideoUploader` in `app/api/uploadthing/route.ts`
-    // uploadthing uses the object key as route name.
-    creatorVideoUploader: [file],
-    onUploadProgress: (progress: any) => {
+export async function uploadCreatorVideo(
+  file: File,
+  onProgress?: (pct: number) => void
+): Promise<UploadCreatorVideoResult> {
+  const { genUploader } = await import("uploadthing/client")
+  const uploader = genUploader<OurFileRouter>({
+    url: new URL("/api/uploadthing", window.location.origin),
+  })
+
+  const result = await uploader.uploadFiles("creatorVideoUploader", {
+    files: [file],
+    onUploadProgress: (progress) => {
       if (typeof progress?.progress === "number") onProgress?.(progress.progress)
-      else if (typeof progress?.percentage === "number") onProgress?.(progress.percentage)
+      else if (typeof progress?.totalProgress === "number") onProgress?.(progress.totalProgress)
     },
   })
 
-  if (!result?.[0]) throw new Error("Upload failed")
+  const uploaded = result?.[0]
+  if (!uploaded) throw new Error("Upload failed")
 
-  return result[0]
+  return {
+    videoUrl: uploaded.serverData.videoUrl ?? null,
+    fileUrl: uploaded.serverData.fileUrl ?? null,
+    ufsUrl: uploaded.ufsUrl,
+    key: uploaded.key,
+    serverData: uploaded.serverData,
+  }
 }
 

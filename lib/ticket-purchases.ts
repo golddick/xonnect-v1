@@ -8,7 +8,7 @@ import { sendTicketConfirmationEmail } from "@/lib/auth/notifications"
 const db = prisma as any
 
 export type TicketPurchaseParticipant = {
-  buyerName: string
+  buyerName: string 
   buyerEmail: string
   buyerPhone?: string | null
 }
@@ -213,28 +213,32 @@ export async function completePurchase(args: {
   })
 
   if (completedPurchase) {
-    sendTicketConfirmationEmail({
-      email: completedPurchase.buyerEmail,
-      fullName: completedPurchase.buyerName,
-      eventId: completedPurchase.ticket.event.id,
-      eventTitle: completedPurchase.ticket.event.title,
-      eventScheduledAt: completedPurchase.ticket.event.scheduledAt?.toISOString() ?? null,
-      location:
-        completedPurchase.ticket.event.locationFullAddress ??
-        completedPurchase.ticket.event.locationName ??
-        completedPurchase.ticket.event.address ??
-        null,
-      ticketId: completedPurchase.ticket.id,
-      ticketType: completedPurchase.ticket.ticketType,
-      access: completedPurchase.ticket.access,
-      quantity: completedPurchase.quantity,
-      amount: completedPurchase.amount,
-      ticketCode: completedPurchase.ticketCode,
-      purchaseId: completedPurchase.id,
-      ticketItemCodes: (completedPurchase.ticketItems as Array<{ ticketCode: string }>).map((item) => item.ticketCode),
-    }).catch((error) => {
+    try {
+      const documentUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/tickets/document/${completedPurchase.ticketCode}`
+      await sendTicketConfirmationEmail({
+        email: completedPurchase.buyerEmail,
+        fullName: completedPurchase.buyerName,
+        eventId: completedPurchase.ticket.event.id,
+        eventTitle: completedPurchase.ticket.event.title,
+        eventScheduledAt: completedPurchase.ticket.event.scheduledAt?.toISOString() ?? null,
+        location:
+          completedPurchase.ticket.event.locationFullAddress ??
+          completedPurchase.ticket.event.locationName ??
+          completedPurchase.ticket.event.address ??
+          null,
+        ticketId: completedPurchase.ticket.id,
+        ticketType: completedPurchase.ticket.ticketType,
+        access: completedPurchase.ticket.access,
+        quantity: completedPurchase.quantity,
+        amount: completedPurchase.amount,
+        ticketCode: completedPurchase.ticketCode,
+        purchaseId: completedPurchase.id,
+        ticketItemCodes: (completedPurchase.ticketItems as Array<{ ticketCode: string }>).map((item) => item.ticketCode),
+        documentUrl,
+      })
+    } catch (error) {
       console.error("Failed to send ticket confirmation email:", error)
-    })
+    }
   }
 
   return {

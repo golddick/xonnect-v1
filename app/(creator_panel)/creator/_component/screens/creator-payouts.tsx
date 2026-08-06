@@ -60,7 +60,7 @@ type RevenueSummary = {
 }
 
 const CreatorPayouts = () => {
-  const router = useRouter()
+  const router = useRouter() 
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [showRequestModal, setShowRequestModal] = useState(false)
@@ -77,7 +77,7 @@ const CreatorPayouts = () => {
     videoRevenue: 0,
     availableForPayout: 0,
     pendingPayouts: 0,
-    minimumPayoutAmount: 50,
+    minimumPayoutAmount: 500,
   })
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)

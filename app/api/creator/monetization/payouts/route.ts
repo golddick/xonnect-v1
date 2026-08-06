@@ -3,8 +3,8 @@ import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { Role } from "@/lib/generated/prisma"
 
-function normalizeEmail(email: string | null | undefined) {
-  return typeof email === "string" ? email.toLowerCase().trim() : null
+function normalizeEmail(email: string | null | undefined): string | undefined {
+  return typeof email === "string" ? email.toLowerCase().trim() : undefined
 }
 
 export async function GET() {
@@ -15,6 +15,10 @@ export async function GET() {
     }
 
     const email = normalizeEmail(session.user.email)
+    if (!email) {
+      return NextResponse.json({ message: "Invalid email" }, { status: 400 })
+    }
+
     const creator = await prisma.creator.findFirst({
       where: { profile: { email } },
       select: { id: true },
@@ -24,19 +28,10 @@ export async function GET() {
       return NextResponse.json({ message: "Creator profile not found" }, { status: 404 })
     }
 
+    // Option 1: Use only `select` (recommended)
     const payoutRequests = await prisma.creatorPayoutRequest.findMany({
       where: { creatorId: creator.id },
       orderBy: { createdAt: "desc" },
-      include: {
-        payoutAccount: {
-          select: {
-            bankName: true,
-            accountName: true,
-            accountNumber: true,
-            accountType: true,
-          },
-        },
-      },
       select: {
         id: true,
         amount: true,

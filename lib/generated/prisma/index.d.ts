@@ -3574,6 +3574,7 @@ export namespace Prisma {
     creatorFollows: number
     eventLikes: number
     videoLikes: number
+    videoComments: number
     session: number
     videoPurchases: number
   }
@@ -3582,6 +3583,7 @@ export namespace Prisma {
     creatorFollows?: boolean | ProfileCountOutputTypeCountCreatorFollowsArgs
     eventLikes?: boolean | ProfileCountOutputTypeCountEventLikesArgs
     videoLikes?: boolean | ProfileCountOutputTypeCountVideoLikesArgs
+    videoComments?: boolean | ProfileCountOutputTypeCountVideoCommentsArgs
     session?: boolean | ProfileCountOutputTypeCountSessionArgs
     videoPurchases?: boolean | ProfileCountOutputTypeCountVideoPurchasesArgs
   }
@@ -3616,6 +3618,13 @@ export namespace Prisma {
    */
   export type ProfileCountOutputTypeCountVideoLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CreatorVideoLikeWhereInput
+  }
+
+  /**
+   * ProfileCountOutputType without action
+   */
+  export type ProfileCountOutputTypeCountVideoCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorVideoCommentWhereInput
   }
 
   /**
@@ -3844,6 +3853,37 @@ export namespace Prisma {
    */
   export type CreatorVideoCountOutputTypeCountPurchasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CreatorVideoPurchaseWhereInput
+  }
+
+
+  /**
+   * Count Type CreatorVideoCommentCountOutputType
+   */
+
+  export type CreatorVideoCommentCountOutputType = {
+    replies: number
+  }
+
+  export type CreatorVideoCommentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    replies?: boolean | CreatorVideoCommentCountOutputTypeCountRepliesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CreatorVideoCommentCountOutputType without action
+   */
+  export type CreatorVideoCommentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorVideoCommentCountOutputType
+     */
+    select?: CreatorVideoCommentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CreatorVideoCommentCountOutputType without action
+   */
+  export type CreatorVideoCommentCountOutputTypeCountRepliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreatorVideoCommentWhereInput
   }
 
 
@@ -4207,6 +4247,7 @@ export namespace Prisma {
     bio: number
     website: number
     location: number
+    socialHandles: number
     profileVisibility: number
     showEmail: number
     showLocation: number
@@ -4320,6 +4361,7 @@ export namespace Prisma {
     bio?: true
     website?: true
     location?: true
+    socialHandles?: true
     profileVisibility?: true
     showEmail?: true
     showLocation?: true
@@ -4440,6 +4482,7 @@ export namespace Prisma {
     bio: string | null
     website: string | null
     location: string | null
+    socialHandles: JsonValue | null
     profileVisibility: string
     showEmail: boolean
     showLocation: boolean
@@ -4492,6 +4535,7 @@ export namespace Prisma {
     bio?: boolean
     website?: boolean
     location?: boolean
+    socialHandles?: boolean
     profileVisibility?: boolean
     showEmail?: boolean
     showLocation?: boolean
@@ -4515,6 +4559,7 @@ export namespace Prisma {
     creatorFollows?: boolean | Profile$creatorFollowsArgs<ExtArgs>
     eventLikes?: boolean | Profile$eventLikesArgs<ExtArgs>
     videoLikes?: boolean | Profile$videoLikesArgs<ExtArgs>
+    videoComments?: boolean | Profile$videoCommentsArgs<ExtArgs>
     credential?: boolean | Profile$credentialArgs<ExtArgs>
     session?: boolean | Profile$sessionArgs<ExtArgs>
     videoPurchases?: boolean | Profile$videoPurchasesArgs<ExtArgs>
@@ -4533,6 +4578,7 @@ export namespace Prisma {
     bio?: boolean
     website?: boolean
     location?: boolean
+    socialHandles?: boolean
     profileVisibility?: boolean
     showEmail?: boolean
     showLocation?: boolean
@@ -4566,6 +4612,7 @@ export namespace Prisma {
     bio?: boolean
     website?: boolean
     location?: boolean
+    socialHandles?: boolean
     profileVisibility?: boolean
     showEmail?: boolean
     showLocation?: boolean
@@ -4599,6 +4646,7 @@ export namespace Prisma {
     bio?: boolean
     website?: boolean
     location?: boolean
+    socialHandles?: boolean
     profileVisibility?: boolean
     showEmail?: boolean
     showLocation?: boolean
@@ -4620,12 +4668,13 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "role" | "fullName" | "firstName" | "lastName" | "avatarUrl" | "creatorName" | "bio" | "website" | "location" | "profileVisibility" | "showEmail" | "showLocation" | "allowMessages" | "showOnlineStatus" | "addressFull" | "addressLat" | "addressLon" | "addressType" | "addressCountry" | "addressState" | "addressName" | "age" | "sex" | "emailVerified" | "hasPassword" | "lastLogin" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "role" | "fullName" | "firstName" | "lastName" | "avatarUrl" | "creatorName" | "bio" | "website" | "location" | "socialHandles" | "profileVisibility" | "showEmail" | "showLocation" | "allowMessages" | "showOnlineStatus" | "addressFull" | "addressLat" | "addressLon" | "addressType" | "addressCountry" | "addressState" | "addressName" | "age" | "sex" | "emailVerified" | "hasPassword" | "lastLogin" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
   export type ProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creator?: boolean | Profile$creatorArgs<ExtArgs>
     creatorFollows?: boolean | Profile$creatorFollowsArgs<ExtArgs>
     eventLikes?: boolean | Profile$eventLikesArgs<ExtArgs>
     videoLikes?: boolean | Profile$videoLikesArgs<ExtArgs>
+    videoComments?: boolean | Profile$videoCommentsArgs<ExtArgs>
     credential?: boolean | Profile$credentialArgs<ExtArgs>
     session?: boolean | Profile$sessionArgs<ExtArgs>
     videoPurchases?: boolean | Profile$videoPurchasesArgs<ExtArgs>
@@ -4641,6 +4690,7 @@ export namespace Prisma {
       creatorFollows: Prisma.$CreatorFollowPayload<ExtArgs>[]
       eventLikes: Prisma.$CreatorEventLikePayload<ExtArgs>[]
       videoLikes: Prisma.$CreatorVideoLikePayload<ExtArgs>[]
+      videoComments: Prisma.$CreatorVideoCommentPayload<ExtArgs>[]
       credential: Prisma.$AuthCredentialPayload<ExtArgs> | null
       session: Prisma.$SessionPayload<ExtArgs>[]
       videoPurchases: Prisma.$CreatorVideoPurchasePayload<ExtArgs>[]
@@ -4657,6 +4707,7 @@ export namespace Prisma {
       bio: string | null
       website: string | null
       location: string | null
+      socialHandles: Prisma.JsonValue | null
       profileVisibility: string
       showEmail: boolean
       showLocation: boolean
@@ -5074,6 +5125,7 @@ export namespace Prisma {
     creatorFollows<T extends Profile$creatorFollowsArgs<ExtArgs> = {}>(args?: Subset<T, Profile$creatorFollowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorFollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     eventLikes<T extends Profile$eventLikesArgs<ExtArgs> = {}>(args?: Subset<T, Profile$eventLikesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorEventLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     videoLikes<T extends Profile$videoLikesArgs<ExtArgs> = {}>(args?: Subset<T, Profile$videoLikesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorVideoLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    videoComments<T extends Profile$videoCommentsArgs<ExtArgs> = {}>(args?: Subset<T, Profile$videoCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorVideoCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     credential<T extends Profile$credentialArgs<ExtArgs> = {}>(args?: Subset<T, Profile$credentialArgs<ExtArgs>>): Prisma__AuthCredentialClient<$Result.GetResult<Prisma.$AuthCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     session<T extends Profile$sessionArgs<ExtArgs> = {}>(args?: Subset<T, Profile$sessionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     videoPurchases<T extends Profile$videoPurchasesArgs<ExtArgs> = {}>(args?: Subset<T, Profile$videoPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorVideoPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5117,6 +5169,7 @@ export namespace Prisma {
     readonly bio: FieldRef<"Profile", 'String'>
     readonly website: FieldRef<"Profile", 'String'>
     readonly location: FieldRef<"Profile", 'String'>
+    readonly socialHandles: FieldRef<"Profile", 'Json'>
     readonly profileVisibility: FieldRef<"Profile", 'String'>
     readonly showEmail: FieldRef<"Profile", 'Boolean'>
     readonly showLocation: FieldRef<"Profile", 'Boolean'>
@@ -5617,6 +5670,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CreatorVideoLikeScalarFieldEnum | CreatorVideoLikeScalarFieldEnum[]
+  }
+
+  /**
+   * Profile.videoComments
+   */
+  export type Profile$videoCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorVideoComment
+     */
+    select?: CreatorVideoCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorVideoComment
+     */
+    omit?: CreatorVideoCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorVideoCommentInclude<ExtArgs> | null
+    where?: CreatorVideoCommentWhereInput
+    orderBy?: CreatorVideoCommentOrderByWithRelationInput | CreatorVideoCommentOrderByWithRelationInput[]
+    cursor?: CreatorVideoCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorVideoCommentScalarFieldEnum | CreatorVideoCommentScalarFieldEnum[]
   }
 
   /**
@@ -23421,6 +23498,8 @@ export namespace Prisma {
     id: string | null
     creatorVideoId: string | null
     commenterProfileId: string | null
+    commenterEmail: string | null
+    parentCommentId: string | null
     content: string | null
     createdAt: Date | null
   }
@@ -23429,6 +23508,8 @@ export namespace Prisma {
     id: string | null
     creatorVideoId: string | null
     commenterProfileId: string | null
+    commenterEmail: string | null
+    parentCommentId: string | null
     content: string | null
     createdAt: Date | null
   }
@@ -23437,6 +23518,8 @@ export namespace Prisma {
     id: number
     creatorVideoId: number
     commenterProfileId: number
+    commenterEmail: number
+    parentCommentId: number
     content: number
     createdAt: number
     _all: number
@@ -23447,6 +23530,8 @@ export namespace Prisma {
     id?: true
     creatorVideoId?: true
     commenterProfileId?: true
+    commenterEmail?: true
+    parentCommentId?: true
     content?: true
     createdAt?: true
   }
@@ -23455,6 +23540,8 @@ export namespace Prisma {
     id?: true
     creatorVideoId?: true
     commenterProfileId?: true
+    commenterEmail?: true
+    parentCommentId?: true
     content?: true
     createdAt?: true
   }
@@ -23463,6 +23550,8 @@ export namespace Prisma {
     id?: true
     creatorVideoId?: true
     commenterProfileId?: true
+    commenterEmail?: true
+    parentCommentId?: true
     content?: true
     createdAt?: true
     _all?: true
@@ -23544,6 +23633,8 @@ export namespace Prisma {
     id: string
     creatorVideoId: string
     commenterProfileId: string | null
+    commenterEmail: string | null
+    parentCommentId: string | null
     content: string
     createdAt: Date
     _count: CreatorVideoCommentCountAggregateOutputType | null
@@ -23569,57 +23660,86 @@ export namespace Prisma {
     id?: boolean
     creatorVideoId?: boolean
     commenterProfileId?: boolean
+    commenterEmail?: boolean
+    parentCommentId?: boolean
     content?: boolean
     createdAt?: boolean
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    commenterProfile?: boolean | CreatorVideoComment$commenterProfileArgs<ExtArgs>
+    parentComment?: boolean | CreatorVideoComment$parentCommentArgs<ExtArgs>
+    replies?: boolean | CreatorVideoComment$repliesArgs<ExtArgs>
+    _count?: boolean | CreatorVideoCommentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["creatorVideoComment"]>
 
   export type CreatorVideoCommentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     creatorVideoId?: boolean
     commenterProfileId?: boolean
+    commenterEmail?: boolean
+    parentCommentId?: boolean
     content?: boolean
     createdAt?: boolean
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    commenterProfile?: boolean | CreatorVideoComment$commenterProfileArgs<ExtArgs>
+    parentComment?: boolean | CreatorVideoComment$parentCommentArgs<ExtArgs>
   }, ExtArgs["result"]["creatorVideoComment"]>
 
   export type CreatorVideoCommentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     creatorVideoId?: boolean
     commenterProfileId?: boolean
+    commenterEmail?: boolean
+    parentCommentId?: boolean
     content?: boolean
     createdAt?: boolean
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    commenterProfile?: boolean | CreatorVideoComment$commenterProfileArgs<ExtArgs>
+    parentComment?: boolean | CreatorVideoComment$parentCommentArgs<ExtArgs>
   }, ExtArgs["result"]["creatorVideoComment"]>
 
   export type CreatorVideoCommentSelectScalar = {
     id?: boolean
     creatorVideoId?: boolean
     commenterProfileId?: boolean
+    commenterEmail?: boolean
+    parentCommentId?: boolean
     content?: boolean
     createdAt?: boolean
   }
 
-  export type CreatorVideoCommentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorVideoId" | "commenterProfileId" | "content" | "createdAt", ExtArgs["result"]["creatorVideoComment"]>
+  export type CreatorVideoCommentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorVideoId" | "commenterProfileId" | "commenterEmail" | "parentCommentId" | "content" | "createdAt", ExtArgs["result"]["creatorVideoComment"]>
   export type CreatorVideoCommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    commenterProfile?: boolean | CreatorVideoComment$commenterProfileArgs<ExtArgs>
+    parentComment?: boolean | CreatorVideoComment$parentCommentArgs<ExtArgs>
+    replies?: boolean | CreatorVideoComment$repliesArgs<ExtArgs>
+    _count?: boolean | CreatorVideoCommentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CreatorVideoCommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    commenterProfile?: boolean | CreatorVideoComment$commenterProfileArgs<ExtArgs>
+    parentComment?: boolean | CreatorVideoComment$parentCommentArgs<ExtArgs>
   }
   export type CreatorVideoCommentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creatorVideo?: boolean | CreatorVideoDefaultArgs<ExtArgs>
+    commenterProfile?: boolean | CreatorVideoComment$commenterProfileArgs<ExtArgs>
+    parentComment?: boolean | CreatorVideoComment$parentCommentArgs<ExtArgs>
   }
 
   export type $CreatorVideoCommentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CreatorVideoComment"
     objects: {
       creatorVideo: Prisma.$CreatorVideoPayload<ExtArgs>
+      commenterProfile: Prisma.$ProfilePayload<ExtArgs> | null
+      parentComment: Prisma.$CreatorVideoCommentPayload<ExtArgs> | null
+      replies: Prisma.$CreatorVideoCommentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       creatorVideoId: string
       commenterProfileId: string | null
+      commenterEmail: string | null
+      parentCommentId: string | null
       content: string
       createdAt: Date
     }, ExtArgs["result"]["creatorVideoComment"]>
@@ -24017,6 +24137,9 @@ export namespace Prisma {
   export interface Prisma__CreatorVideoCommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     creatorVideo<T extends CreatorVideoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreatorVideoDefaultArgs<ExtArgs>>): Prisma__CreatorVideoClient<$Result.GetResult<Prisma.$CreatorVideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    commenterProfile<T extends CreatorVideoComment$commenterProfileArgs<ExtArgs> = {}>(args?: Subset<T, CreatorVideoComment$commenterProfileArgs<ExtArgs>>): Prisma__ProfileClient<$Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    parentComment<T extends CreatorVideoComment$parentCommentArgs<ExtArgs> = {}>(args?: Subset<T, CreatorVideoComment$parentCommentArgs<ExtArgs>>): Prisma__CreatorVideoCommentClient<$Result.GetResult<Prisma.$CreatorVideoCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    replies<T extends CreatorVideoComment$repliesArgs<ExtArgs> = {}>(args?: Subset<T, CreatorVideoComment$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreatorVideoCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24049,6 +24172,8 @@ export namespace Prisma {
     readonly id: FieldRef<"CreatorVideoComment", 'String'>
     readonly creatorVideoId: FieldRef<"CreatorVideoComment", 'String'>
     readonly commenterProfileId: FieldRef<"CreatorVideoComment", 'String'>
+    readonly commenterEmail: FieldRef<"CreatorVideoComment", 'String'>
+    readonly parentCommentId: FieldRef<"CreatorVideoComment", 'String'>
     readonly content: FieldRef<"CreatorVideoComment", 'String'>
     readonly createdAt: FieldRef<"CreatorVideoComment", 'DateTime'>
   }
@@ -24449,6 +24574,68 @@ export namespace Prisma {
      * Limit how many CreatorVideoComments to delete.
      */
     limit?: number
+  }
+
+  /**
+   * CreatorVideoComment.commenterProfile
+   */
+  export type CreatorVideoComment$commenterProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profile
+     */
+    select?: ProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profile
+     */
+    omit?: ProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfileInclude<ExtArgs> | null
+    where?: ProfileWhereInput
+  }
+
+  /**
+   * CreatorVideoComment.parentComment
+   */
+  export type CreatorVideoComment$parentCommentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorVideoComment
+     */
+    select?: CreatorVideoCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorVideoComment
+     */
+    omit?: CreatorVideoCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorVideoCommentInclude<ExtArgs> | null
+    where?: CreatorVideoCommentWhereInput
+  }
+
+  /**
+   * CreatorVideoComment.replies
+   */
+  export type CreatorVideoComment$repliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreatorVideoComment
+     */
+    select?: CreatorVideoCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreatorVideoComment
+     */
+    omit?: CreatorVideoCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreatorVideoCommentInclude<ExtArgs> | null
+    where?: CreatorVideoCommentWhereInput
+    orderBy?: CreatorVideoCommentOrderByWithRelationInput | CreatorVideoCommentOrderByWithRelationInput[]
+    cursor?: CreatorVideoCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreatorVideoCommentScalarFieldEnum | CreatorVideoCommentScalarFieldEnum[]
   }
 
   /**
@@ -39529,6 +39716,7 @@ export namespace Prisma {
     bio: 'bio',
     website: 'website',
     location: 'location',
+    socialHandles: 'socialHandles',
     profileVisibility: 'profileVisibility',
     showEmail: 'showEmail',
     showLocation: 'showLocation',
@@ -39815,6 +40003,8 @@ export namespace Prisma {
     id: 'id',
     creatorVideoId: 'creatorVideoId',
     commenterProfileId: 'commenterProfileId',
+    commenterEmail: 'commenterEmail',
+    parentCommentId: 'parentCommentId',
     content: 'content',
     createdAt: 'createdAt'
   };
@@ -40073,6 +40263,14 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const JsonNullValueInput: {
     JsonNull: typeof JsonNull
   };
@@ -40088,14 +40286,6 @@ export namespace Prisma {
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
-  };
-
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
   export const JsonNullValueFilter: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull,
@@ -40103,6 +40293,14 @@ export namespace Prisma {
   };
 
   export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   /**
@@ -40135,6 +40333,20 @@ export namespace Prisma {
    * Reference to a field of type 'Role[]'
    */
   export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -40198,20 +40410,6 @@ export namespace Prisma {
    * Reference to a field of type 'SuperAdminSettingSection[]'
    */
   export type ListEnumSuperAdminSettingSectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SuperAdminSettingSection[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -40359,6 +40557,7 @@ export namespace Prisma {
     bio?: StringNullableFilter<"Profile"> | string | null
     website?: StringNullableFilter<"Profile"> | string | null
     location?: StringNullableFilter<"Profile"> | string | null
+    socialHandles?: JsonNullableFilter<"Profile">
     profileVisibility?: StringFilter<"Profile"> | string
     showEmail?: BoolFilter<"Profile"> | boolean
     showLocation?: BoolFilter<"Profile"> | boolean
@@ -40382,6 +40581,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowListRelationFilter
     eventLikes?: CreatorEventLikeListRelationFilter
     videoLikes?: CreatorVideoLikeListRelationFilter
+    videoComments?: CreatorVideoCommentListRelationFilter
     credential?: XOR<AuthCredentialNullableScalarRelationFilter, AuthCredentialWhereInput> | null
     session?: SessionListRelationFilter
     videoPurchases?: CreatorVideoPurchaseListRelationFilter
@@ -40399,6 +40599,7 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
+    socialHandles?: SortOrderInput | SortOrder
     profileVisibility?: SortOrder
     showEmail?: SortOrder
     showLocation?: SortOrder
@@ -40422,6 +40623,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowOrderByRelationAggregateInput
     eventLikes?: CreatorEventLikeOrderByRelationAggregateInput
     videoLikes?: CreatorVideoLikeOrderByRelationAggregateInput
+    videoComments?: CreatorVideoCommentOrderByRelationAggregateInput
     credential?: AuthCredentialOrderByWithRelationInput
     session?: SessionOrderByRelationAggregateInput
     videoPurchases?: CreatorVideoPurchaseOrderByRelationAggregateInput
@@ -40442,6 +40644,7 @@ export namespace Prisma {
     bio?: StringNullableFilter<"Profile"> | string | null
     website?: StringNullableFilter<"Profile"> | string | null
     location?: StringNullableFilter<"Profile"> | string | null
+    socialHandles?: JsonNullableFilter<"Profile">
     profileVisibility?: StringFilter<"Profile"> | string
     showEmail?: BoolFilter<"Profile"> | boolean
     showLocation?: BoolFilter<"Profile"> | boolean
@@ -40465,6 +40668,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowListRelationFilter
     eventLikes?: CreatorEventLikeListRelationFilter
     videoLikes?: CreatorVideoLikeListRelationFilter
+    videoComments?: CreatorVideoCommentListRelationFilter
     credential?: XOR<AuthCredentialNullableScalarRelationFilter, AuthCredentialWhereInput> | null
     session?: SessionListRelationFilter
     videoPurchases?: CreatorVideoPurchaseListRelationFilter
@@ -40482,6 +40686,7 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
+    socialHandles?: SortOrderInput | SortOrder
     profileVisibility?: SortOrder
     showEmail?: SortOrder
     showLocation?: SortOrder
@@ -40523,6 +40728,7 @@ export namespace Prisma {
     bio?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     website?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     location?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    socialHandles?: JsonNullableWithAggregatesFilter<"Profile">
     profileVisibility?: StringWithAggregatesFilter<"Profile"> | string
     showEmail?: BoolWithAggregatesFilter<"Profile"> | boolean
     showLocation?: BoolWithAggregatesFilter<"Profile"> | boolean
@@ -41907,18 +42113,28 @@ export namespace Prisma {
     id?: StringFilter<"CreatorVideoComment"> | string
     creatorVideoId?: StringFilter<"CreatorVideoComment"> | string
     commenterProfileId?: StringNullableFilter<"CreatorVideoComment"> | string | null
+    commenterEmail?: StringNullableFilter<"CreatorVideoComment"> | string | null
+    parentCommentId?: StringNullableFilter<"CreatorVideoComment"> | string | null
     content?: StringFilter<"CreatorVideoComment"> | string
     createdAt?: DateTimeFilter<"CreatorVideoComment"> | Date | string
     creatorVideo?: XOR<CreatorVideoScalarRelationFilter, CreatorVideoWhereInput>
+    commenterProfile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
+    parentComment?: XOR<CreatorVideoCommentNullableScalarRelationFilter, CreatorVideoCommentWhereInput> | null
+    replies?: CreatorVideoCommentListRelationFilter
   }
 
   export type CreatorVideoCommentOrderByWithRelationInput = {
     id?: SortOrder
     creatorVideoId?: SortOrder
     commenterProfileId?: SortOrderInput | SortOrder
+    commenterEmail?: SortOrderInput | SortOrder
+    parentCommentId?: SortOrderInput | SortOrder
     content?: SortOrder
     createdAt?: SortOrder
     creatorVideo?: CreatorVideoOrderByWithRelationInput
+    commenterProfile?: ProfileOrderByWithRelationInput
+    parentComment?: CreatorVideoCommentOrderByWithRelationInput
+    replies?: CreatorVideoCommentOrderByRelationAggregateInput
   }
 
   export type CreatorVideoCommentWhereUniqueInput = Prisma.AtLeast<{
@@ -41928,15 +42144,22 @@ export namespace Prisma {
     NOT?: CreatorVideoCommentWhereInput | CreatorVideoCommentWhereInput[]
     creatorVideoId?: StringFilter<"CreatorVideoComment"> | string
     commenterProfileId?: StringNullableFilter<"CreatorVideoComment"> | string | null
+    commenterEmail?: StringNullableFilter<"CreatorVideoComment"> | string | null
+    parentCommentId?: StringNullableFilter<"CreatorVideoComment"> | string | null
     content?: StringFilter<"CreatorVideoComment"> | string
     createdAt?: DateTimeFilter<"CreatorVideoComment"> | Date | string
     creatorVideo?: XOR<CreatorVideoScalarRelationFilter, CreatorVideoWhereInput>
+    commenterProfile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
+    parentComment?: XOR<CreatorVideoCommentNullableScalarRelationFilter, CreatorVideoCommentWhereInput> | null
+    replies?: CreatorVideoCommentListRelationFilter
   }, "id">
 
   export type CreatorVideoCommentOrderByWithAggregationInput = {
     id?: SortOrder
     creatorVideoId?: SortOrder
     commenterProfileId?: SortOrderInput | SortOrder
+    commenterEmail?: SortOrderInput | SortOrder
+    parentCommentId?: SortOrderInput | SortOrder
     content?: SortOrder
     createdAt?: SortOrder
     _count?: CreatorVideoCommentCountOrderByAggregateInput
@@ -41951,6 +42174,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"CreatorVideoComment"> | string
     creatorVideoId?: StringWithAggregatesFilter<"CreatorVideoComment"> | string
     commenterProfileId?: StringNullableWithAggregatesFilter<"CreatorVideoComment"> | string | null
+    commenterEmail?: StringNullableWithAggregatesFilter<"CreatorVideoComment"> | string | null
+    parentCommentId?: StringNullableWithAggregatesFilter<"CreatorVideoComment"> | string | null
     content?: StringWithAggregatesFilter<"CreatorVideoComment"> | string
     createdAt?: DateTimeWithAggregatesFilter<"CreatorVideoComment"> | Date | string
   }
@@ -43262,6 +43487,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -43285,6 +43511,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialCreateNestedOneWithoutProfileInput
     session?: SessionCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
@@ -43302,6 +43529,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -43325,6 +43553,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentUncheckedCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
     session?: SessionUncheckedCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
@@ -43342,6 +43571,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -43365,6 +43595,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
     session?: SessionUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
@@ -43382,6 +43613,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -43405,6 +43637,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUncheckedUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
     session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
@@ -43422,6 +43655,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -43455,6 +43689,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -43488,6 +43723,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -45040,47 +45276,61 @@ export namespace Prisma {
 
   export type CreatorVideoCommentCreateInput = {
     id: string
-    commenterProfileId?: string | null
+    commenterEmail?: string | null
     content: string
     createdAt?: Date | string
     creatorVideo: CreatorVideoCreateNestedOneWithoutCommentsInput
+    commenterProfile?: ProfileCreateNestedOneWithoutVideoCommentsInput
+    parentComment?: CreatorVideoCommentCreateNestedOneWithoutRepliesInput
+    replies?: CreatorVideoCommentCreateNestedManyWithoutParentCommentInput
   }
 
   export type CreatorVideoCommentUncheckedCreateInput = {
     id: string
     creatorVideoId: string
     commenterProfileId?: string | null
+    commenterEmail?: string | null
+    parentCommentId?: string | null
     content: string
     createdAt?: Date | string
+    replies?: CreatorVideoCommentUncheckedCreateNestedManyWithoutParentCommentInput
   }
 
   export type CreatorVideoCommentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    commenterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creatorVideo?: CreatorVideoUpdateOneRequiredWithoutCommentsNestedInput
+    commenterProfile?: ProfileUpdateOneWithoutVideoCommentsNestedInput
+    parentComment?: CreatorVideoCommentUpdateOneWithoutRepliesNestedInput
+    replies?: CreatorVideoCommentUpdateManyWithoutParentCommentNestedInput
   }
 
   export type CreatorVideoCommentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     creatorVideoId?: StringFieldUpdateOperationsInput | string
     commenterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    parentCommentId?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: CreatorVideoCommentUncheckedUpdateManyWithoutParentCommentNestedInput
   }
 
   export type CreatorVideoCommentCreateManyInput = {
     id: string
     creatorVideoId: string
     commenterProfileId?: string | null
+    commenterEmail?: string | null
+    parentCommentId?: string | null
     content: string
     createdAt?: Date | string
   }
 
   export type CreatorVideoCommentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    commenterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -45089,6 +45339,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     creatorVideoId?: StringFieldUpdateOperationsInput | string
     commenterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    parentCommentId?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -46624,6 +46876,29 @@ export namespace Prisma {
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
@@ -46697,6 +46972,12 @@ export namespace Prisma {
     none?: CreatorVideoLikeWhereInput
   }
 
+  export type CreatorVideoCommentListRelationFilter = {
+    every?: CreatorVideoCommentWhereInput
+    some?: CreatorVideoCommentWhereInput
+    none?: CreatorVideoCommentWhereInput
+  }
+
   export type AuthCredentialNullableScalarRelationFilter = {
     is?: AuthCredentialWhereInput | null
     isNot?: AuthCredentialWhereInput | null
@@ -46731,6 +47012,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type CreatorVideoCommentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type SessionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -46751,6 +47036,7 @@ export namespace Prisma {
     bio?: SortOrder
     website?: SortOrder
     location?: SortOrder
+    socialHandles?: SortOrder
     profileVisibility?: SortOrder
     showEmail?: SortOrder
     showLocation?: SortOrder
@@ -46894,6 +47180,32 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -47513,17 +47825,7 @@ export namespace Prisma {
     none?: CreatorVideoViewWhereInput
   }
 
-  export type CreatorVideoCommentListRelationFilter = {
-    every?: CreatorVideoCommentWhereInput
-    some?: CreatorVideoCommentWhereInput
-    none?: CreatorVideoCommentWhereInput
-  }
-
   export type CreatorVideoViewOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type CreatorVideoCommentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -47914,10 +48216,17 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type CreatorVideoCommentNullableScalarRelationFilter = {
+    is?: CreatorVideoCommentWhereInput | null
+    isNot?: CreatorVideoCommentWhereInput | null
+  }
+
   export type CreatorVideoCommentCountOrderByAggregateInput = {
     id?: SortOrder
     creatorVideoId?: SortOrder
     commenterProfileId?: SortOrder
+    commenterEmail?: SortOrder
+    parentCommentId?: SortOrder
     content?: SortOrder
     createdAt?: SortOrder
   }
@@ -47926,6 +48235,8 @@ export namespace Prisma {
     id?: SortOrder
     creatorVideoId?: SortOrder
     commenterProfileId?: SortOrder
+    commenterEmail?: SortOrder
+    parentCommentId?: SortOrder
     content?: SortOrder
     createdAt?: SortOrder
   }
@@ -47934,6 +48245,8 @@ export namespace Prisma {
     id?: SortOrder
     creatorVideoId?: SortOrder
     commenterProfileId?: SortOrder
+    commenterEmail?: SortOrder
+    parentCommentId?: SortOrder
     content?: SortOrder
     createdAt?: SortOrder
   }
@@ -48971,6 +49284,13 @@ export namespace Prisma {
     connect?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
   }
 
+  export type CreatorVideoCommentCreateNestedManyWithoutCommenterProfileInput = {
+    create?: XOR<CreatorVideoCommentCreateWithoutCommenterProfileInput, CreatorVideoCommentUncheckedCreateWithoutCommenterProfileInput> | CreatorVideoCommentCreateWithoutCommenterProfileInput[] | CreatorVideoCommentUncheckedCreateWithoutCommenterProfileInput[]
+    connectOrCreate?: CreatorVideoCommentCreateOrConnectWithoutCommenterProfileInput | CreatorVideoCommentCreateOrConnectWithoutCommenterProfileInput[]
+    createMany?: CreatorVideoCommentCreateManyCommenterProfileInputEnvelope
+    connect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+  }
+
   export type AuthCredentialCreateNestedOneWithoutProfileInput = {
     create?: XOR<AuthCredentialCreateWithoutProfileInput, AuthCredentialUncheckedCreateWithoutProfileInput>
     connectOrCreate?: AuthCredentialCreateOrConnectWithoutProfileInput
@@ -49016,6 +49336,13 @@ export namespace Prisma {
     connectOrCreate?: CreatorVideoLikeCreateOrConnectWithoutLikerProfileInput | CreatorVideoLikeCreateOrConnectWithoutLikerProfileInput[]
     createMany?: CreatorVideoLikeCreateManyLikerProfileInputEnvelope
     connect?: CreatorVideoLikeWhereUniqueInput | CreatorVideoLikeWhereUniqueInput[]
+  }
+
+  export type CreatorVideoCommentUncheckedCreateNestedManyWithoutCommenterProfileInput = {
+    create?: XOR<CreatorVideoCommentCreateWithoutCommenterProfileInput, CreatorVideoCommentUncheckedCreateWithoutCommenterProfileInput> | CreatorVideoCommentCreateWithoutCommenterProfileInput[] | CreatorVideoCommentUncheckedCreateWithoutCommenterProfileInput[]
+    connectOrCreate?: CreatorVideoCommentCreateOrConnectWithoutCommenterProfileInput | CreatorVideoCommentCreateOrConnectWithoutCommenterProfileInput[]
+    createMany?: CreatorVideoCommentCreateManyCommenterProfileInputEnvelope
+    connect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
   }
 
   export type AuthCredentialUncheckedCreateNestedOneWithoutProfileInput = {
@@ -49130,6 +49457,20 @@ export namespace Prisma {
     deleteMany?: CreatorVideoLikeScalarWhereInput | CreatorVideoLikeScalarWhereInput[]
   }
 
+  export type CreatorVideoCommentUpdateManyWithoutCommenterProfileNestedInput = {
+    create?: XOR<CreatorVideoCommentCreateWithoutCommenterProfileInput, CreatorVideoCommentUncheckedCreateWithoutCommenterProfileInput> | CreatorVideoCommentCreateWithoutCommenterProfileInput[] | CreatorVideoCommentUncheckedCreateWithoutCommenterProfileInput[]
+    connectOrCreate?: CreatorVideoCommentCreateOrConnectWithoutCommenterProfileInput | CreatorVideoCommentCreateOrConnectWithoutCommenterProfileInput[]
+    upsert?: CreatorVideoCommentUpsertWithWhereUniqueWithoutCommenterProfileInput | CreatorVideoCommentUpsertWithWhereUniqueWithoutCommenterProfileInput[]
+    createMany?: CreatorVideoCommentCreateManyCommenterProfileInputEnvelope
+    set?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    disconnect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    delete?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    connect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    update?: CreatorVideoCommentUpdateWithWhereUniqueWithoutCommenterProfileInput | CreatorVideoCommentUpdateWithWhereUniqueWithoutCommenterProfileInput[]
+    updateMany?: CreatorVideoCommentUpdateManyWithWhereWithoutCommenterProfileInput | CreatorVideoCommentUpdateManyWithWhereWithoutCommenterProfileInput[]
+    deleteMany?: CreatorVideoCommentScalarWhereInput | CreatorVideoCommentScalarWhereInput[]
+  }
+
   export type AuthCredentialUpdateOneWithoutProfileNestedInput = {
     create?: XOR<AuthCredentialCreateWithoutProfileInput, AuthCredentialUncheckedCreateWithoutProfileInput>
     connectOrCreate?: AuthCredentialCreateOrConnectWithoutProfileInput
@@ -49218,6 +49559,20 @@ export namespace Prisma {
     update?: CreatorVideoLikeUpdateWithWhereUniqueWithoutLikerProfileInput | CreatorVideoLikeUpdateWithWhereUniqueWithoutLikerProfileInput[]
     updateMany?: CreatorVideoLikeUpdateManyWithWhereWithoutLikerProfileInput | CreatorVideoLikeUpdateManyWithWhereWithoutLikerProfileInput[]
     deleteMany?: CreatorVideoLikeScalarWhereInput | CreatorVideoLikeScalarWhereInput[]
+  }
+
+  export type CreatorVideoCommentUncheckedUpdateManyWithoutCommenterProfileNestedInput = {
+    create?: XOR<CreatorVideoCommentCreateWithoutCommenterProfileInput, CreatorVideoCommentUncheckedCreateWithoutCommenterProfileInput> | CreatorVideoCommentCreateWithoutCommenterProfileInput[] | CreatorVideoCommentUncheckedCreateWithoutCommenterProfileInput[]
+    connectOrCreate?: CreatorVideoCommentCreateOrConnectWithoutCommenterProfileInput | CreatorVideoCommentCreateOrConnectWithoutCommenterProfileInput[]
+    upsert?: CreatorVideoCommentUpsertWithWhereUniqueWithoutCommenterProfileInput | CreatorVideoCommentUpsertWithWhereUniqueWithoutCommenterProfileInput[]
+    createMany?: CreatorVideoCommentCreateManyCommenterProfileInputEnvelope
+    set?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    disconnect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    delete?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    connect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    update?: CreatorVideoCommentUpdateWithWhereUniqueWithoutCommenterProfileInput | CreatorVideoCommentUpdateWithWhereUniqueWithoutCommenterProfileInput[]
+    updateMany?: CreatorVideoCommentUpdateManyWithWhereWithoutCommenterProfileInput | CreatorVideoCommentUpdateManyWithWhereWithoutCommenterProfileInput[]
+    deleteMany?: CreatorVideoCommentScalarWhereInput | CreatorVideoCommentScalarWhereInput[]
   }
 
   export type AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput = {
@@ -50133,12 +50488,86 @@ export namespace Prisma {
     connect?: CreatorVideoWhereUniqueInput
   }
 
+  export type ProfileCreateNestedOneWithoutVideoCommentsInput = {
+    create?: XOR<ProfileCreateWithoutVideoCommentsInput, ProfileUncheckedCreateWithoutVideoCommentsInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutVideoCommentsInput
+    connect?: ProfileWhereUniqueInput
+  }
+
+  export type CreatorVideoCommentCreateNestedOneWithoutRepliesInput = {
+    create?: XOR<CreatorVideoCommentCreateWithoutRepliesInput, CreatorVideoCommentUncheckedCreateWithoutRepliesInput>
+    connectOrCreate?: CreatorVideoCommentCreateOrConnectWithoutRepliesInput
+    connect?: CreatorVideoCommentWhereUniqueInput
+  }
+
+  export type CreatorVideoCommentCreateNestedManyWithoutParentCommentInput = {
+    create?: XOR<CreatorVideoCommentCreateWithoutParentCommentInput, CreatorVideoCommentUncheckedCreateWithoutParentCommentInput> | CreatorVideoCommentCreateWithoutParentCommentInput[] | CreatorVideoCommentUncheckedCreateWithoutParentCommentInput[]
+    connectOrCreate?: CreatorVideoCommentCreateOrConnectWithoutParentCommentInput | CreatorVideoCommentCreateOrConnectWithoutParentCommentInput[]
+    createMany?: CreatorVideoCommentCreateManyParentCommentInputEnvelope
+    connect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+  }
+
+  export type CreatorVideoCommentUncheckedCreateNestedManyWithoutParentCommentInput = {
+    create?: XOR<CreatorVideoCommentCreateWithoutParentCommentInput, CreatorVideoCommentUncheckedCreateWithoutParentCommentInput> | CreatorVideoCommentCreateWithoutParentCommentInput[] | CreatorVideoCommentUncheckedCreateWithoutParentCommentInput[]
+    connectOrCreate?: CreatorVideoCommentCreateOrConnectWithoutParentCommentInput | CreatorVideoCommentCreateOrConnectWithoutParentCommentInput[]
+    createMany?: CreatorVideoCommentCreateManyParentCommentInputEnvelope
+    connect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+  }
+
   export type CreatorVideoUpdateOneRequiredWithoutCommentsNestedInput = {
     create?: XOR<CreatorVideoCreateWithoutCommentsInput, CreatorVideoUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: CreatorVideoCreateOrConnectWithoutCommentsInput
     upsert?: CreatorVideoUpsertWithoutCommentsInput
     connect?: CreatorVideoWhereUniqueInput
     update?: XOR<XOR<CreatorVideoUpdateToOneWithWhereWithoutCommentsInput, CreatorVideoUpdateWithoutCommentsInput>, CreatorVideoUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type ProfileUpdateOneWithoutVideoCommentsNestedInput = {
+    create?: XOR<ProfileCreateWithoutVideoCommentsInput, ProfileUncheckedCreateWithoutVideoCommentsInput>
+    connectOrCreate?: ProfileCreateOrConnectWithoutVideoCommentsInput
+    upsert?: ProfileUpsertWithoutVideoCommentsInput
+    disconnect?: ProfileWhereInput | boolean
+    delete?: ProfileWhereInput | boolean
+    connect?: ProfileWhereUniqueInput
+    update?: XOR<XOR<ProfileUpdateToOneWithWhereWithoutVideoCommentsInput, ProfileUpdateWithoutVideoCommentsInput>, ProfileUncheckedUpdateWithoutVideoCommentsInput>
+  }
+
+  export type CreatorVideoCommentUpdateOneWithoutRepliesNestedInput = {
+    create?: XOR<CreatorVideoCommentCreateWithoutRepliesInput, CreatorVideoCommentUncheckedCreateWithoutRepliesInput>
+    connectOrCreate?: CreatorVideoCommentCreateOrConnectWithoutRepliesInput
+    upsert?: CreatorVideoCommentUpsertWithoutRepliesInput
+    disconnect?: CreatorVideoCommentWhereInput | boolean
+    delete?: CreatorVideoCommentWhereInput | boolean
+    connect?: CreatorVideoCommentWhereUniqueInput
+    update?: XOR<XOR<CreatorVideoCommentUpdateToOneWithWhereWithoutRepliesInput, CreatorVideoCommentUpdateWithoutRepliesInput>, CreatorVideoCommentUncheckedUpdateWithoutRepliesInput>
+  }
+
+  export type CreatorVideoCommentUpdateManyWithoutParentCommentNestedInput = {
+    create?: XOR<CreatorVideoCommentCreateWithoutParentCommentInput, CreatorVideoCommentUncheckedCreateWithoutParentCommentInput> | CreatorVideoCommentCreateWithoutParentCommentInput[] | CreatorVideoCommentUncheckedCreateWithoutParentCommentInput[]
+    connectOrCreate?: CreatorVideoCommentCreateOrConnectWithoutParentCommentInput | CreatorVideoCommentCreateOrConnectWithoutParentCommentInput[]
+    upsert?: CreatorVideoCommentUpsertWithWhereUniqueWithoutParentCommentInput | CreatorVideoCommentUpsertWithWhereUniqueWithoutParentCommentInput[]
+    createMany?: CreatorVideoCommentCreateManyParentCommentInputEnvelope
+    set?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    disconnect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    delete?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    connect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    update?: CreatorVideoCommentUpdateWithWhereUniqueWithoutParentCommentInput | CreatorVideoCommentUpdateWithWhereUniqueWithoutParentCommentInput[]
+    updateMany?: CreatorVideoCommentUpdateManyWithWhereWithoutParentCommentInput | CreatorVideoCommentUpdateManyWithWhereWithoutParentCommentInput[]
+    deleteMany?: CreatorVideoCommentScalarWhereInput | CreatorVideoCommentScalarWhereInput[]
+  }
+
+  export type CreatorVideoCommentUncheckedUpdateManyWithoutParentCommentNestedInput = {
+    create?: XOR<CreatorVideoCommentCreateWithoutParentCommentInput, CreatorVideoCommentUncheckedCreateWithoutParentCommentInput> | CreatorVideoCommentCreateWithoutParentCommentInput[] | CreatorVideoCommentUncheckedCreateWithoutParentCommentInput[]
+    connectOrCreate?: CreatorVideoCommentCreateOrConnectWithoutParentCommentInput | CreatorVideoCommentCreateOrConnectWithoutParentCommentInput[]
+    upsert?: CreatorVideoCommentUpsertWithWhereUniqueWithoutParentCommentInput | CreatorVideoCommentUpsertWithWhereUniqueWithoutParentCommentInput[]
+    createMany?: CreatorVideoCommentCreateManyParentCommentInputEnvelope
+    set?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    disconnect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    delete?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    connect?: CreatorVideoCommentWhereUniqueInput | CreatorVideoCommentWhereUniqueInput[]
+    update?: CreatorVideoCommentUpdateWithWhereUniqueWithoutParentCommentInput | CreatorVideoCommentUpdateWithWhereUniqueWithoutParentCommentInput[]
+    updateMany?: CreatorVideoCommentUpdateManyWithWhereWithoutParentCommentInput | CreatorVideoCommentUpdateManyWithWhereWithoutParentCommentInput[]
+    deleteMany?: CreatorVideoCommentScalarWhereInput | CreatorVideoCommentScalarWhereInput[]
   }
 
   export type CreatorEventCreatetagsInput = {
@@ -51271,6 +51700,29 @@ export namespace Prisma {
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
@@ -51700,6 +52152,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CreatorVideoCommentCreateWithoutCommenterProfileInput = {
+    id: string
+    commenterEmail?: string | null
+    content: string
+    createdAt?: Date | string
+    creatorVideo: CreatorVideoCreateNestedOneWithoutCommentsInput
+    parentComment?: CreatorVideoCommentCreateNestedOneWithoutRepliesInput
+    replies?: CreatorVideoCommentCreateNestedManyWithoutParentCommentInput
+  }
+
+  export type CreatorVideoCommentUncheckedCreateWithoutCommenterProfileInput = {
+    id: string
+    creatorVideoId: string
+    commenterEmail?: string | null
+    parentCommentId?: string | null
+    content: string
+    createdAt?: Date | string
+    replies?: CreatorVideoCommentUncheckedCreateNestedManyWithoutParentCommentInput
+  }
+
+  export type CreatorVideoCommentCreateOrConnectWithoutCommenterProfileInput = {
+    where: CreatorVideoCommentWhereUniqueInput
+    create: XOR<CreatorVideoCommentCreateWithoutCommenterProfileInput, CreatorVideoCommentUncheckedCreateWithoutCommenterProfileInput>
+  }
+
+  export type CreatorVideoCommentCreateManyCommenterProfileInputEnvelope = {
+    data: CreatorVideoCommentCreateManyCommenterProfileInput | CreatorVideoCommentCreateManyCommenterProfileInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AuthCredentialCreateWithoutProfileInput = {
     passwordHash: string
     createdAt?: Date | string
@@ -51924,6 +52406,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CreatorVideoLike"> | Date | string
   }
 
+  export type CreatorVideoCommentUpsertWithWhereUniqueWithoutCommenterProfileInput = {
+    where: CreatorVideoCommentWhereUniqueInput
+    update: XOR<CreatorVideoCommentUpdateWithoutCommenterProfileInput, CreatorVideoCommentUncheckedUpdateWithoutCommenterProfileInput>
+    create: XOR<CreatorVideoCommentCreateWithoutCommenterProfileInput, CreatorVideoCommentUncheckedCreateWithoutCommenterProfileInput>
+  }
+
+  export type CreatorVideoCommentUpdateWithWhereUniqueWithoutCommenterProfileInput = {
+    where: CreatorVideoCommentWhereUniqueInput
+    data: XOR<CreatorVideoCommentUpdateWithoutCommenterProfileInput, CreatorVideoCommentUncheckedUpdateWithoutCommenterProfileInput>
+  }
+
+  export type CreatorVideoCommentUpdateManyWithWhereWithoutCommenterProfileInput = {
+    where: CreatorVideoCommentScalarWhereInput
+    data: XOR<CreatorVideoCommentUpdateManyMutationInput, CreatorVideoCommentUncheckedUpdateManyWithoutCommenterProfileInput>
+  }
+
+  export type CreatorVideoCommentScalarWhereInput = {
+    AND?: CreatorVideoCommentScalarWhereInput | CreatorVideoCommentScalarWhereInput[]
+    OR?: CreatorVideoCommentScalarWhereInput[]
+    NOT?: CreatorVideoCommentScalarWhereInput | CreatorVideoCommentScalarWhereInput[]
+    id?: StringFilter<"CreatorVideoComment"> | string
+    creatorVideoId?: StringFilter<"CreatorVideoComment"> | string
+    commenterProfileId?: StringNullableFilter<"CreatorVideoComment"> | string | null
+    commenterEmail?: StringNullableFilter<"CreatorVideoComment"> | string | null
+    parentCommentId?: StringNullableFilter<"CreatorVideoComment"> | string | null
+    content?: StringFilter<"CreatorVideoComment"> | string
+    createdAt?: DateTimeFilter<"CreatorVideoComment"> | Date | string
+  }
+
   export type AuthCredentialUpsertWithoutProfileInput = {
     update: XOR<AuthCredentialUpdateWithoutProfileInput, AuthCredentialUncheckedUpdateWithoutProfileInput>
     create: XOR<AuthCredentialCreateWithoutProfileInput, AuthCredentialUncheckedCreateWithoutProfileInput>
@@ -52025,6 +52536,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -52048,6 +52560,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentCreateNestedManyWithoutCommenterProfileInput
     session?: SessionCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
   }
@@ -52064,6 +52577,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -52087,6 +52601,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentUncheckedCreateNestedManyWithoutCommenterProfileInput
     session?: SessionUncheckedCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
   }
@@ -52119,6 +52634,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -52142,6 +52658,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUpdateManyWithoutCommenterProfileNestedInput
     session?: SessionUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
   }
@@ -52158,6 +52675,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -52181,6 +52699,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUncheckedUpdateManyWithoutCommenterProfileNestedInput
     session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
   }
@@ -52197,6 +52716,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -52219,6 +52739,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialCreateNestedOneWithoutProfileInput
     session?: SessionCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
@@ -52236,6 +52757,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -52258,6 +52780,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentUncheckedCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
     session?: SessionUncheckedCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
@@ -52763,6 +53286,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -52785,6 +53309,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
     session?: SessionUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
@@ -52802,6 +53327,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -52824,6 +53350,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUncheckedUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
     session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
@@ -53190,6 +53717,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -53212,6 +53740,7 @@ export namespace Prisma {
     creator?: CreatorCreateNestedOneWithoutProfileInput
     eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialCreateNestedOneWithoutProfileInput
     session?: SessionCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
@@ -53229,6 +53758,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -53251,6 +53781,7 @@ export namespace Prisma {
     creator?: CreatorUncheckedCreateNestedOneWithoutProfileInput
     eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentUncheckedCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
     session?: SessionUncheckedCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
@@ -53335,6 +53866,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -53357,6 +53889,7 @@ export namespace Prisma {
     creator?: CreatorUpdateOneWithoutProfileNestedInput
     eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
     session?: SessionUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
@@ -53374,6 +53907,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -53396,6 +53930,7 @@ export namespace Prisma {
     creator?: CreatorUncheckedUpdateOneWithoutProfileNestedInput
     eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUncheckedUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
     session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
@@ -54045,16 +54580,22 @@ export namespace Prisma {
 
   export type CreatorVideoCommentCreateWithoutCreatorVideoInput = {
     id: string
-    commenterProfileId?: string | null
+    commenterEmail?: string | null
     content: string
     createdAt?: Date | string
+    commenterProfile?: ProfileCreateNestedOneWithoutVideoCommentsInput
+    parentComment?: CreatorVideoCommentCreateNestedOneWithoutRepliesInput
+    replies?: CreatorVideoCommentCreateNestedManyWithoutParentCommentInput
   }
 
   export type CreatorVideoCommentUncheckedCreateWithoutCreatorVideoInput = {
     id: string
     commenterProfileId?: string | null
+    commenterEmail?: string | null
+    parentCommentId?: string | null
     content: string
     createdAt?: Date | string
+    replies?: CreatorVideoCommentUncheckedCreateNestedManyWithoutParentCommentInput
   }
 
   export type CreatorVideoCommentCreateOrConnectWithoutCreatorVideoInput = {
@@ -54261,17 +54802,6 @@ export namespace Prisma {
     data: XOR<CreatorVideoCommentUpdateManyMutationInput, CreatorVideoCommentUncheckedUpdateManyWithoutCreatorVideoInput>
   }
 
-  export type CreatorVideoCommentScalarWhereInput = {
-    AND?: CreatorVideoCommentScalarWhereInput | CreatorVideoCommentScalarWhereInput[]
-    OR?: CreatorVideoCommentScalarWhereInput[]
-    NOT?: CreatorVideoCommentScalarWhereInput | CreatorVideoCommentScalarWhereInput[]
-    id?: StringFilter<"CreatorVideoComment"> | string
-    creatorVideoId?: StringFilter<"CreatorVideoComment"> | string
-    commenterProfileId?: StringNullableFilter<"CreatorVideoComment"> | string | null
-    content?: StringFilter<"CreatorVideoComment"> | string
-    createdAt?: DateTimeFilter<"CreatorVideoComment"> | Date | string
-  }
-
   export type CreatorVideoPurchaseUpsertWithWhereUniqueWithoutCreatorVideoInput = {
     where: CreatorVideoPurchaseWhereUniqueInput
     update: XOR<CreatorVideoPurchaseUpdateWithoutCreatorVideoInput, CreatorVideoPurchaseUncheckedUpdateWithoutCreatorVideoInput>
@@ -54428,6 +54958,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -54451,6 +54982,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialCreateNestedOneWithoutProfileInput
     session?: SessionCreateNestedManyWithoutProfileInput
   }
@@ -54467,6 +54999,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -54490,6 +55023,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentUncheckedCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
     session?: SessionUncheckedCreateNestedManyWithoutProfileInput
   }
@@ -54662,6 +55196,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -54685,6 +55220,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
     session?: SessionUpdateManyWithoutProfileNestedInput
   }
@@ -54701,6 +55237,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -54724,6 +55261,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUncheckedUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
     session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
   }
@@ -54995,6 +55533,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -55017,6 +55556,7 @@ export namespace Prisma {
     creator?: CreatorCreateNestedOneWithoutProfileInput
     creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialCreateNestedOneWithoutProfileInput
     session?: SessionCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
@@ -55034,6 +55574,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -55056,6 +55597,7 @@ export namespace Prisma {
     creator?: CreatorUncheckedCreateNestedOneWithoutProfileInput
     creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentUncheckedCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
     session?: SessionUncheckedCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
@@ -55178,6 +55720,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -55200,6 +55743,7 @@ export namespace Prisma {
     creator?: CreatorUpdateOneWithoutProfileNestedInput
     creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
     session?: SessionUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
@@ -55217,6 +55761,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -55239,6 +55784,7 @@ export namespace Prisma {
     creator?: CreatorUncheckedUpdateOneWithoutProfileNestedInput
     creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUncheckedUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
     session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
@@ -55391,6 +55937,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -55413,6 +55960,7 @@ export namespace Prisma {
     creator?: CreatorCreateNestedOneWithoutProfileInput
     creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
     videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialCreateNestedOneWithoutProfileInput
     session?: SessionCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
@@ -55430,6 +55978,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -55452,6 +56001,7 @@ export namespace Prisma {
     creator?: CreatorUncheckedCreateNestedOneWithoutProfileInput
     creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
     videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentUncheckedCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
     session?: SessionUncheckedCreateNestedManyWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
@@ -55626,6 +56176,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -55648,6 +56199,7 @@ export namespace Prisma {
     creator?: CreatorUpdateOneWithoutProfileNestedInput
     creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
     videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
     session?: SessionUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
@@ -55665,6 +56217,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -55687,6 +56240,7 @@ export namespace Prisma {
     creator?: CreatorUncheckedUpdateOneWithoutProfileNestedInput
     creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
     videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUncheckedUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
     session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
@@ -55773,6 +56327,148 @@ export namespace Prisma {
   export type CreatorVideoCreateOrConnectWithoutCommentsInput = {
     where: CreatorVideoWhereUniqueInput
     create: XOR<CreatorVideoCreateWithoutCommentsInput, CreatorVideoUncheckedCreateWithoutCommentsInput>
+  }
+
+  export type ProfileCreateWithoutVideoCommentsInput = {
+    id: string
+    email: string
+    role?: $Enums.Role
+    fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    avatarUrl?: string | null
+    creatorName?: string | null
+    bio?: string | null
+    website?: string | null
+    location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
+    addressFull?: string | null
+    addressLat?: number | null
+    addressLon?: number | null
+    addressType?: string | null
+    addressCountry?: string | null
+    addressState?: string | null
+    addressName?: string | null
+    age?: number | null
+    sex?: string | null
+    emailVerified?: boolean
+    hasPassword?: boolean
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator?: CreatorCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
+    credential?: AuthCredentialCreateNestedOneWithoutProfileInput
+    session?: SessionCreateNestedManyWithoutProfileInput
+    videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
+  }
+
+  export type ProfileUncheckedCreateWithoutVideoCommentsInput = {
+    id: string
+    email: string
+    role?: $Enums.Role
+    fullName?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    avatarUrl?: string | null
+    creatorName?: string | null
+    bio?: string | null
+    website?: string | null
+    location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
+    profileVisibility?: string
+    showEmail?: boolean
+    showLocation?: boolean
+    allowMessages?: boolean
+    showOnlineStatus?: boolean
+    addressFull?: string | null
+    addressLat?: number | null
+    addressLon?: number | null
+    addressType?: string | null
+    addressCountry?: string | null
+    addressState?: string | null
+    addressName?: string | null
+    age?: number | null
+    sex?: string | null
+    emailVerified?: boolean
+    hasPassword?: boolean
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator?: CreatorUncheckedCreateNestedOneWithoutProfileInput
+    creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
+    eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
+    session?: SessionUncheckedCreateNestedManyWithoutProfileInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
+  }
+
+  export type ProfileCreateOrConnectWithoutVideoCommentsInput = {
+    where: ProfileWhereUniqueInput
+    create: XOR<ProfileCreateWithoutVideoCommentsInput, ProfileUncheckedCreateWithoutVideoCommentsInput>
+  }
+
+  export type CreatorVideoCommentCreateWithoutRepliesInput = {
+    id: string
+    commenterEmail?: string | null
+    content: string
+    createdAt?: Date | string
+    creatorVideo: CreatorVideoCreateNestedOneWithoutCommentsInput
+    commenterProfile?: ProfileCreateNestedOneWithoutVideoCommentsInput
+    parentComment?: CreatorVideoCommentCreateNestedOneWithoutRepliesInput
+  }
+
+  export type CreatorVideoCommentUncheckedCreateWithoutRepliesInput = {
+    id: string
+    creatorVideoId: string
+    commenterProfileId?: string | null
+    commenterEmail?: string | null
+    parentCommentId?: string | null
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type CreatorVideoCommentCreateOrConnectWithoutRepliesInput = {
+    where: CreatorVideoCommentWhereUniqueInput
+    create: XOR<CreatorVideoCommentCreateWithoutRepliesInput, CreatorVideoCommentUncheckedCreateWithoutRepliesInput>
+  }
+
+  export type CreatorVideoCommentCreateWithoutParentCommentInput = {
+    id: string
+    commenterEmail?: string | null
+    content: string
+    createdAt?: Date | string
+    creatorVideo: CreatorVideoCreateNestedOneWithoutCommentsInput
+    commenterProfile?: ProfileCreateNestedOneWithoutVideoCommentsInput
+    replies?: CreatorVideoCommentCreateNestedManyWithoutParentCommentInput
+  }
+
+  export type CreatorVideoCommentUncheckedCreateWithoutParentCommentInput = {
+    id: string
+    creatorVideoId: string
+    commenterProfileId?: string | null
+    commenterEmail?: string | null
+    content: string
+    createdAt?: Date | string
+    replies?: CreatorVideoCommentUncheckedCreateNestedManyWithoutParentCommentInput
+  }
+
+  export type CreatorVideoCommentCreateOrConnectWithoutParentCommentInput = {
+    where: CreatorVideoCommentWhereUniqueInput
+    create: XOR<CreatorVideoCommentCreateWithoutParentCommentInput, CreatorVideoCommentUncheckedCreateWithoutParentCommentInput>
+  }
+
+  export type CreatorVideoCommentCreateManyParentCommentInputEnvelope = {
+    data: CreatorVideoCommentCreateManyParentCommentInput | CreatorVideoCommentCreateManyParentCommentInput[]
+    skipDuplicates?: boolean
   }
 
   export type CreatorVideoUpsertWithoutCommentsInput = {
@@ -55862,6 +56558,146 @@ export namespace Prisma {
     views?: CreatorVideoViewUncheckedUpdateManyWithoutCreatorVideoNestedInput
     likes?: CreatorVideoLikeUncheckedUpdateManyWithoutCreatorVideoNestedInput
     purchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutCreatorVideoNestedInput
+  }
+
+  export type ProfileUpsertWithoutVideoCommentsInput = {
+    update: XOR<ProfileUpdateWithoutVideoCommentsInput, ProfileUncheckedUpdateWithoutVideoCommentsInput>
+    create: XOR<ProfileCreateWithoutVideoCommentsInput, ProfileUncheckedCreateWithoutVideoCommentsInput>
+    where?: ProfileWhereInput
+  }
+
+  export type ProfileUpdateToOneWithWhereWithoutVideoCommentsInput = {
+    where?: ProfileWhereInput
+    data: XOR<ProfileUpdateWithoutVideoCommentsInput, ProfileUncheckedUpdateWithoutVideoCommentsInput>
+  }
+
+  export type ProfileUpdateWithoutVideoCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
+    addressFull?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressType?: NullableStringFieldUpdateOperationsInput | string | null
+    addressCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    addressState?: NullableStringFieldUpdateOperationsInput | string | null
+    addressName?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    sex?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    hasPassword?: BoolFieldUpdateOperationsInput | boolean
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
+    credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
+    session?: SessionUpdateManyWithoutProfileNestedInput
+    videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
+  }
+
+  export type ProfileUncheckedUpdateWithoutVideoCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorName?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
+    profileVisibility?: StringFieldUpdateOperationsInput | string
+    showEmail?: BoolFieldUpdateOperationsInput | boolean
+    showLocation?: BoolFieldUpdateOperationsInput | boolean
+    allowMessages?: BoolFieldUpdateOperationsInput | boolean
+    showOnlineStatus?: BoolFieldUpdateOperationsInput | boolean
+    addressFull?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressLon?: NullableFloatFieldUpdateOperationsInput | number | null
+    addressType?: NullableStringFieldUpdateOperationsInput | string | null
+    addressCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    addressState?: NullableStringFieldUpdateOperationsInput | string | null
+    addressName?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    sex?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    hasPassword?: BoolFieldUpdateOperationsInput | boolean
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: CreatorUncheckedUpdateOneWithoutProfileNestedInput
+    creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
+    eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
+    session?: SessionUncheckedUpdateManyWithoutProfileNestedInput
+    videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
+  }
+
+  export type CreatorVideoCommentUpsertWithoutRepliesInput = {
+    update: XOR<CreatorVideoCommentUpdateWithoutRepliesInput, CreatorVideoCommentUncheckedUpdateWithoutRepliesInput>
+    create: XOR<CreatorVideoCommentCreateWithoutRepliesInput, CreatorVideoCommentUncheckedCreateWithoutRepliesInput>
+    where?: CreatorVideoCommentWhereInput
+  }
+
+  export type CreatorVideoCommentUpdateToOneWithWhereWithoutRepliesInput = {
+    where?: CreatorVideoCommentWhereInput
+    data: XOR<CreatorVideoCommentUpdateWithoutRepliesInput, CreatorVideoCommentUncheckedUpdateWithoutRepliesInput>
+  }
+
+  export type CreatorVideoCommentUpdateWithoutRepliesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorVideo?: CreatorVideoUpdateOneRequiredWithoutCommentsNestedInput
+    commenterProfile?: ProfileUpdateOneWithoutVideoCommentsNestedInput
+    parentComment?: CreatorVideoCommentUpdateOneWithoutRepliesNestedInput
+  }
+
+  export type CreatorVideoCommentUncheckedUpdateWithoutRepliesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorVideoId?: StringFieldUpdateOperationsInput | string
+    commenterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    parentCommentId?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorVideoCommentUpsertWithWhereUniqueWithoutParentCommentInput = {
+    where: CreatorVideoCommentWhereUniqueInput
+    update: XOR<CreatorVideoCommentUpdateWithoutParentCommentInput, CreatorVideoCommentUncheckedUpdateWithoutParentCommentInput>
+    create: XOR<CreatorVideoCommentCreateWithoutParentCommentInput, CreatorVideoCommentUncheckedCreateWithoutParentCommentInput>
+  }
+
+  export type CreatorVideoCommentUpdateWithWhereUniqueWithoutParentCommentInput = {
+    where: CreatorVideoCommentWhereUniqueInput
+    data: XOR<CreatorVideoCommentUpdateWithoutParentCommentInput, CreatorVideoCommentUncheckedUpdateWithoutParentCommentInput>
+  }
+
+  export type CreatorVideoCommentUpdateManyWithWhereWithoutParentCommentInput = {
+    where: CreatorVideoCommentScalarWhereInput
+    data: XOR<CreatorVideoCommentUpdateManyMutationInput, CreatorVideoCommentUncheckedUpdateManyWithoutParentCommentInput>
   }
 
   export type CreatorCreateWithoutEventsInput = {
@@ -59464,6 +60300,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -59487,6 +60324,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialCreateNestedOneWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseCreateNestedManyWithoutBuyerProfileInput
   }
@@ -59503,6 +60341,7 @@ export namespace Prisma {
     bio?: string | null
     website?: string | null
     location?: string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: string
     showEmail?: boolean
     showLocation?: boolean
@@ -59526,6 +60365,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUncheckedCreateNestedManyWithoutFollowerProfileInput
     eventLikes?: CreatorEventLikeUncheckedCreateNestedManyWithoutLikerProfileInput
     videoLikes?: CreatorVideoLikeUncheckedCreateNestedManyWithoutLikerProfileInput
+    videoComments?: CreatorVideoCommentUncheckedCreateNestedManyWithoutCommenterProfileInput
     credential?: AuthCredentialUncheckedCreateNestedOneWithoutProfileInput
     videoPurchases?: CreatorVideoPurchaseUncheckedCreateNestedManyWithoutBuyerProfileInput
   }
@@ -59558,6 +60398,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -59581,6 +60422,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUpdateOneWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUpdateManyWithoutBuyerProfileNestedInput
   }
@@ -59597,6 +60439,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    socialHandles?: NullableJsonNullValueInput | InputJsonValue
     profileVisibility?: StringFieldUpdateOperationsInput | string
     showEmail?: BoolFieldUpdateOperationsInput | boolean
     showLocation?: BoolFieldUpdateOperationsInput | boolean
@@ -59620,6 +60463,7 @@ export namespace Prisma {
     creatorFollows?: CreatorFollowUncheckedUpdateManyWithoutFollowerProfileNestedInput
     eventLikes?: CreatorEventLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
     videoLikes?: CreatorVideoLikeUncheckedUpdateManyWithoutLikerProfileNestedInput
+    videoComments?: CreatorVideoCommentUncheckedUpdateManyWithoutCommenterProfileNestedInput
     credential?: AuthCredentialUncheckedUpdateOneWithoutProfileNestedInput
     videoPurchases?: CreatorVideoPurchaseUncheckedUpdateManyWithoutBuyerProfileNestedInput
   }
@@ -59646,6 +60490,15 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type CreatorVideoCommentCreateManyCommenterProfileInput = {
+    id: string
+    creatorVideoId: string
+    commenterEmail?: string | null
+    parentCommentId?: string | null
+    content: string
+    createdAt?: Date | string
   }
 
   export type SessionCreateManyProfileInput = {
@@ -59744,6 +60597,35 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreatorVideoCommentUpdateWithoutCommenterProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorVideo?: CreatorVideoUpdateOneRequiredWithoutCommentsNestedInput
+    parentComment?: CreatorVideoCommentUpdateOneWithoutRepliesNestedInput
+    replies?: CreatorVideoCommentUpdateManyWithoutParentCommentNestedInput
+  }
+
+  export type CreatorVideoCommentUncheckedUpdateWithoutCommenterProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorVideoId?: StringFieldUpdateOperationsInput | string
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    parentCommentId?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: CreatorVideoCommentUncheckedUpdateManyWithoutParentCommentNestedInput
+  }
+
+  export type CreatorVideoCommentUncheckedUpdateManyWithoutCommenterProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorVideoId?: StringFieldUpdateOperationsInput | string
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    parentCommentId?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SessionUpdateWithoutProfileInput = {
@@ -60801,6 +61683,8 @@ export namespace Prisma {
   export type CreatorVideoCommentCreateManyCreatorVideoInput = {
     id: string
     commenterProfileId?: string | null
+    commenterEmail?: string | null
+    parentCommentId?: string | null
     content: string
     createdAt?: Date | string
   }
@@ -60869,21 +61753,29 @@ export namespace Prisma {
 
   export type CreatorVideoCommentUpdateWithoutCreatorVideoInput = {
     id?: StringFieldUpdateOperationsInput | string
-    commenterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commenterProfile?: ProfileUpdateOneWithoutVideoCommentsNestedInput
+    parentComment?: CreatorVideoCommentUpdateOneWithoutRepliesNestedInput
+    replies?: CreatorVideoCommentUpdateManyWithoutParentCommentNestedInput
   }
 
   export type CreatorVideoCommentUncheckedUpdateWithoutCreatorVideoInput = {
     id?: StringFieldUpdateOperationsInput | string
     commenterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    parentCommentId?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: CreatorVideoCommentUncheckedUpdateManyWithoutParentCommentNestedInput
   }
 
   export type CreatorVideoCommentUncheckedUpdateManyWithoutCreatorVideoInput = {
     id?: StringFieldUpdateOperationsInput | string
     commenterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    parentCommentId?: NullableStringFieldUpdateOperationsInput | string | null
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -60946,6 +61838,44 @@ export namespace Prisma {
     accessExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     purchasedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CreatorVideoCommentCreateManyParentCommentInput = {
+    id: string
+    creatorVideoId: string
+    commenterProfileId?: string | null
+    commenterEmail?: string | null
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type CreatorVideoCommentUpdateWithoutParentCommentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorVideo?: CreatorVideoUpdateOneRequiredWithoutCommentsNestedInput
+    commenterProfile?: ProfileUpdateOneWithoutVideoCommentsNestedInput
+    replies?: CreatorVideoCommentUpdateManyWithoutParentCommentNestedInput
+  }
+
+  export type CreatorVideoCommentUncheckedUpdateWithoutParentCommentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorVideoId?: StringFieldUpdateOperationsInput | string
+    commenterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: CreatorVideoCommentUncheckedUpdateManyWithoutParentCommentNestedInput
+  }
+
+  export type CreatorVideoCommentUncheckedUpdateManyWithoutParentCommentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    creatorVideoId?: StringFieldUpdateOperationsInput | string
+    commenterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    commenterEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CreatorEventLocationRestrictionCreateManyEventInput = {

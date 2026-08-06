@@ -33,6 +33,7 @@ type EventStreamPlayerProps = {
   locked?: boolean
   viewers?: number
   overlay?: ReactNode
+  hasAccess?: boolean
 }
 
 function formatDateTime(value?: string | null) {
@@ -50,7 +51,7 @@ function pickTrack(track: RemoteTrack | null | undefined, current: RemoteTrack |
   return current
 }
 
-export default function EventStreamPlayer({
+export default function  EventStreamPlayer({
   eventId,
   title,
   subtitle,
@@ -64,6 +65,7 @@ export default function EventStreamPlayer({
   locked = false,
   viewers = 0,
   overlay,
+  hasAccess = true,
 }: EventStreamPlayerProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -80,6 +82,7 @@ export default function EventStreamPlayer({
   const [audioPlaybackBlocked, setAudioPlaybackBlocked] = useState(false)
   const [audioPlaybackReady, setAudioPlaybackReady] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [isPreviewPlaying, setIsPreviewPlaying] = useState(false)
 
   const normalizedStatus = (status ?? "").toUpperCase()
   const isLive = normalizedStatus === "LIVE" || normalizedStatus === "STREAMING" || normalizedStatus === "LIVE_NOW"
@@ -88,7 +91,11 @@ export default function EventStreamPlayer({
   const previewMedia = useMemo(() => resolvePlayableMediaSource(!isEnded ? previewVideoUrl : null), [previewVideoUrl, isEnded])
   const recordedMedia = useMemo(() => resolvePlayableMediaSource(isEnded ? recordedVideoUrl : null), [recordedVideoUrl, isEnded])
   const fallbackPreviewMedia = useMemo(() => resolvePlayableMediaSource(previewVideoUrl), [previewVideoUrl])
-  const activePlaybackMedia = isEnded ? (recordedMedia ?? fallbackPreviewMedia ?? null) : isScheduled ? (previewMedia ?? null) : null
+  const activePlaybackMedia = isEnded
+    ? (recordedMedia && hasAccess ? recordedMedia : fallbackPreviewMedia ?? null)
+    : isScheduled
+    ? (previewMedia ?? null)
+    : null
   const shouldRenderPlaybackMedia = Boolean(activePlaybackMedia) && !isLive
   const scheduledLabel = useMemo(() => formatDateTime(scheduledAt), [scheduledAt])
   const canConnect = Boolean(isLive && !locked)
@@ -331,6 +338,21 @@ export default function EventStreamPlayer({
     }
   }
 
+  const handlePlayPreview = async () => {
+    if (!previewVideoRef.current) return
+
+    try {
+      await previewVideoRef.current.play()
+      setIsPreviewPlaying(true)
+    } catch (error) {
+      console.error("Preview play failed:", error)
+    }
+  }
+
+  useEffect(() => {
+    setIsPreviewPlaying(false)
+  }, [activePlaybackMedia?.src, activePlaybackMedia?.kind, isLive])
+
   const toggleFullscreen = async () => {
     const element = playerContainerRef.current
     const activeVideoElement = videoRef.current ?? previewVideoRef.current
@@ -380,7 +402,7 @@ export default function EventStreamPlayer({
   }
 
   return (
-    <div ref={playerContainerRef} className="relative aspect-video overflow-hidden rounded-2xl border border-border bg-black">
+    <div ref={playerContainerRef} className="relative aspect-video  overflow-hidden rounded-2xl border border-border bg-black">
       {poster ? (
         <img
           src={poster}
@@ -391,29 +413,7 @@ export default function EventStreamPlayer({
         <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-950 to-black" />
       )}
 
-      {shouldRenderPlaybackMedia && activePlaybackMedia ? (
-        activePlaybackMedia.kind === "youtube" ? (
-          <iframe
-            src={activePlaybackMedia.embedUrl}
-            title={title}
-            className="absolute inset-0 h-full w-full border-0 bg-black"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
-          />
-        ) : (
-          <video
-            ref={previewVideoRef}
-            src={activePlaybackMedia.src}
-            poster={poster ?? undefined}
-            className="absolute inset-0 h-full w-full bg-black object-contain"
-            controls
-            playsInline
-            preload="metadata"
-          />
-        )
-      ) : (
+      {isLive ? (
         <video
           ref={videoRef}
           className="absolute inset-0 h-full w-full object-contain bg-black"
@@ -421,12 +421,67 @@ export default function EventStreamPlayer({
           autoPlay
           muted
         />
-      )}
+      ) : shouldRenderPlaybackMedia && activePlaybackMedia ? (
+        activePlaybackMedia.kind === "youtube" ? (
+          <div className="absolute inset-0 h-full w-full bg-black">
+            {isPreviewPlaying ? (
+              <iframe
+                src={activePlaybackMedia.embedUrl}
+                title={title}
+                className="absolute inset-0 h-full w-full border-0 bg-black"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center bg-black">
+                {poster ? (
+                  <img src={poster} alt={title} className="absolute inset-0 h-full w-full object-cover opacity-80" />
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => setIsPreviewPlaying(true)}
+                  className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black/80"
+                  aria-label="Play preview video"
+                >
+                  <Play className="h-8 w-8" />
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="absolute inset-0 h-full w-full bg-black">
+            <video
+              ref={previewVideoRef}
+              src={activePlaybackMedia.src}
+              poster={poster ?? undefined}
+              className="absolute inset-0 h-full w-full object-contain"
+              controls
+              playsInline
+              preload="metadata"
+              onPlay={() => setIsPreviewPlaying(true)}
+              onPause={() => setIsPreviewPlaying(false)}
+              onEnded={() => setIsPreviewPlaying(false)}
+            />
+            {!isPreviewPlaying ? (
+              <button
+                type="button"
+                onClick={handlePlayPreview}
+                className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black/80"
+                aria-label="Play preview video"
+              >
+                <Play className="h-8 w-8" />
+              </button>
+            ) : null}
+          </div>
+        )
+      ) : null}
       <audio ref={audioRef} className="hidden" autoPlay />
 
       {shouldShowBackdrop ? (
-        <div className="absolute inset-0 flex items-end bg-black/55 p-4 md:p-6">
-          <div className="w-full space-y-4">
+        <div className="absolute flex justify-center items-center w-full h-full inset-0 bg-black/55 p-4 md:p-6">
+          <div className="w-full h-full space-y-4">
             <div className="flex flex-wrap items-center gap-2">
               <span
                 className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${
@@ -475,14 +530,15 @@ export default function EventStreamPlayer({
             ) : null}
 
             <AnimatePresence>
-              {overlay ? (
+              {overlay ? ( 
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 16 }}
-                  className=" flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+                  className=" flex items-center justify-center  min-h-full w-full bg-black/70 p-4 backdrop-blur-sm"
                 >
                   {overlay}
+                  {/* span */}
                 </motion.div>
               ) : null}
             </AnimatePresence>

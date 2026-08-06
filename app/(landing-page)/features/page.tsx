@@ -133,7 +133,7 @@ const FeaturesPage = () => {
 
       {/* Main Features */}
       <section className="  py-10 lg:py-20   px-6 md:px-8">
-        <div className="max-w-6xl 2xl:max-w-[100rem] mx-auto">
+        <div className="w-full">
           {mainFeatures.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -187,7 +187,7 @@ const FeaturesPage = () => {
 
       {/* Additional Features Grid */}
       <section className="py-10 lg:py-20 px-6 md:px-8">
-        <div className="max-w-6xl 2xl:max-w-[100rem]  mx-auto">
+        <div className="w-full">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -229,39 +229,6 @@ const FeaturesPage = () => {
         <TestimonialSection/>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-10 lg:py-20 px-6 md:px-8">
-        <div className="max-w-6xl 2xl:max-w-[100rem]  mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Ready to Experience <span className="text-red-500">All Features</span>?
-            </h2>
-            <p className="text-xl text-gray-300 mb-12">
-              Start your free trial today and discover why thousands of creators choose Xonnect for premium event streaming, community building, and content monetization.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Link
-                href="/sign-up"
-                className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 flex items-center space-x-2"
-              >
-                <span>Start Free Trial</span>
-                <Zap className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/pricing"
-                className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 backdrop-blur-sm border border-white/20"
-              >
-                View Pricing
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
     </div>
   )

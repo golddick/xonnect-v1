@@ -140,7 +140,9 @@ export default function VideoAnalyticsPage() {
         setLoading(true)
         setError(null)
 
-        const res = await fetch(`/api/creator/videos/${folderId}/analytics`)
+        const res = await fetch(
+          `/api/creator/videos/${folderId}/analytics?range=${encodeURIComponent(activeTimeRange)}`
+        )
         if (!res.ok) {
           const data = await res.json().catch(() => ({}))
           throw new Error(data?.message || "Failed to load analytics")
@@ -159,7 +161,7 @@ export default function VideoAnalyticsPage() {
     return () => {
       cancelled = true
     }
-  }, [folderId])
+  }, [folderId, activeTimeRange])
 
   const video = analytics?.folder
   const timeSeries = analytics?.timeSeries.items ?? []

@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 import { UploadButton } from "@/lib/utils/uploadthing"
 import { getVideoDuration } from "@/lib/utils/video-duration"
+import LoadingSplash from "@/components/splash_screen/loading-splash"
 
 type VideoFormData = {
   title: string
@@ -324,7 +325,7 @@ export default function EditVideoPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background text-foreground p-6 flex items-center justify-center">
-        Loading...
+        <LoadingSplash/>
       </div>
     )
   }
@@ -333,7 +334,7 @@ export default function EditVideoPage() {
     return (
       <div className="min-h-screen bg-background text-foreground p-6 flex items-center justify-center">
         <div className="text-center space-y-3">
-          <p className="text-lg font-semibold">Video folder not found</p>
+          <p className="text-lg font-semibold">Video not found</p>
           {error && <p className="text-sm text-muted-foreground">{error}</p>}
           <button
             onClick={() => router.back()}
@@ -349,7 +350,7 @@ export default function EditVideoPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors"

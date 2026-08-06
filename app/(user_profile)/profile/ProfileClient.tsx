@@ -121,7 +121,7 @@ export default function ProfileClient({
   }
 
   return (
-    <div className="mx-auto max-w-7xl">
+    <div className="w-full">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         {/* Sidebar Navigation */}
         <div className="lg:col-span-1">
@@ -136,7 +136,7 @@ export default function ProfileClient({
                 }`}
               >
                 <User className="h-5 w-5" />
-                <span className="font-medium">Profile</span>
+                <span className="font-medium hidden md:block">Profile</span>
               </button>
               <button
                 onClick={() => setActiveTab("tickets")}
@@ -147,9 +147,10 @@ export default function ProfileClient({
                 }`}
               >
                 <Ticket className="h-5 w-5" />
-                <span className="font-medium">Tickets & Videos</span>
+                <span className="font-medium hidden md:block">Events & Videos</span>
               </button>
-              <button
+
+              {/* <button
                 onClick={() => setActiveTab("community")}
                 className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
                   activeTab === "community"
@@ -159,7 +160,8 @@ export default function ProfileClient({
               >
                 <Users className="h-5 w-5" />
                 <span className="font-medium">Community</span>
-              </button>
+              </button> */}
+
               <button
                 onClick={() => setActiveTab("creators")}
                 className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
@@ -169,7 +171,7 @@ export default function ProfileClient({
                 }`}
               >
                 <Play className="h-5 w-5" />
-                <span className="font-medium">Following</span>
+                <span className="font-medium hidden md:block">Following</span>
               </button>
             </nav>
           </div>
@@ -178,11 +180,12 @@ export default function ProfileClient({
         {/* Main Content */}
         <div className="lg:col-span-3">
           <div className="rounded-lg border border-border bg-card p-8">
+           
             {activeTab === "profile" && (
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold">Edit Profile</h2>
-                  <p className="mt-2 text-sm text-muted-foreground">
+                  <p className="mt-2 text-sm hidden md:block text-muted-foreground">
                     Update your profile information
                   </p>
                 </div>
@@ -196,8 +199,8 @@ export default function ProfileClient({
             {activeTab === "tickets" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold">My Tickets & Videos</h2>
-                  <p className="mt-2 text-sm text-muted-foreground">
+                  <h2 className="text-2xl font-bold">My Events & Videos</h2>
+                  <p className="mt-2 text-sm hidden md:block text-muted-foreground">
                     View your purchased event tickets and videos separately
                   </p>
                 </div>
@@ -323,7 +326,7 @@ export default function ProfileClient({
               </div>
             )}
 
-            {activeTab === "community" && (
+            {/* {activeTab === "community" && (
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold">Community</h2>
@@ -337,7 +340,7 @@ export default function ProfileClient({
                   </p>
                 </div>
               </div>
-            )}
+            )} */}
 
             {activeTab === "creators" && (
               <div className="space-y-6">

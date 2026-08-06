@@ -88,6 +88,33 @@ export async function verifyPaystackTransaction(reference: string) {
   return data.data
 }
 
+export async function resolvePaystackBankAccount(accountNumber: string, bankCode: string) {
+  const response = await fetch(
+    `${PAYSTACK_BASE_URL}/bank/resolve?account_number=${encodeURIComponent(accountNumber)}&bank_code=${encodeURIComponent(bankCode)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${getPaystackSecretKey()}`,
+      },
+    }
+  )
+
+  const data = (await response.json()) as {
+    status: boolean
+    message: string
+    data?: {
+      account_name?: string | null
+      account_number?: string | null
+      bank_id?: number | null
+    }
+  }
+
+  if (!response.ok || !data.status || !data.data?.account_name) {
+    throw new Error(data.message || "Failed to resolve Paystack bank account")
+  }
+
+  return data.data.account_name
+}
+
 export function createPaystackSignature(rawBody: string) {
   return crypto.createHmac("sha512", getPaystackSecretKey()).update(rawBody).digest("hex")
 }
@@ -109,7 +136,7 @@ export function createPurchaseTicketCode(ticketId: string, reference: string) {
   return `XON-${ticketId.slice(0, 4).toUpperCase()}-${suffix}`
 }
 
-export function createTicketItemCode(ticketId: string, reference: string, index: number) {
+export function createTicketItemCode(ticketId: string, reference: string, index: number)  {  
   const suffix = `${reference.replace(/[^a-zA-Z0-9]/g, "").slice(-6).toUpperCase()}${String(index + 1).padStart(2, "0")}`
   return `XON-${ticketId.slice(0, 4).toUpperCase()}-${suffix}`
 }

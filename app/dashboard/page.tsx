@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 
 
-import { PostLoginModal } from "@/components/post-login-modal"
+import { PostLoginModal } from "@/components/common_component/post-login-modal"
 import { auth } from "@/lib/auth/auth"
 
 export default async function DashboardPage({

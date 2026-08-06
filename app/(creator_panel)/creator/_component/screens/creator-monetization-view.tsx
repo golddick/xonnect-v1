@@ -27,7 +27,7 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  Title,
+  Title, 
   Tooltip,
   Legend,
   ArcElement,
@@ -72,7 +72,7 @@ export default function CreatorMonetizationView() {
         setRevenueData(payload.summary ?? payload)
       } catch (error) {
         console.error(error)
-      } finally {
+      } finally { 
         setLoading(false)
       }
     }

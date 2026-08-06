@@ -3,8 +3,8 @@ import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { Role } from "@/lib/generated/prisma"
 
-function normalizeEmail(email: string | null | undefined) {
-  return typeof email === "string" ? email.toLowerCase().trim() : null
+function normalizeEmail(email: string | null | undefined): string | undefined {
+  return typeof email === "string" ? email.toLowerCase().trim() : undefined
 }
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
@@ -16,6 +16,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     const payoutAccountId = params.id
     const email = normalizeEmail(session.user.email)
+    if (!email) {
+      return NextResponse.json({ message: "Invalid email" }, { status: 400 })
+    }
 
     const creator = await prisma.creator.findFirst({
       where: { profile: { email } },
@@ -62,6 +65,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     const payoutAccountId = params.id
     const email = normalizeEmail(session.user.email)
+    if (!email) {
+      return NextResponse.json({ message: "Invalid email" }, { status: 400 })
+    }
 
     const creator = await prisma.creator.findFirst({
       where: { profile: { email } },

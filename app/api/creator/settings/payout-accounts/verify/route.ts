@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
       where: { id: accountId },
       select: { id: true, creatorId: true, isPrimary: true },
     })
+
     if (!account) {
       return NextResponse.json({ message: "Payout account not found" }, { status: 404 })
     }

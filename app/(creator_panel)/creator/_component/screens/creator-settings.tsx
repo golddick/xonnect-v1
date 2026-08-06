@@ -33,6 +33,7 @@ import {
 import LoadingSplash from "@/components/splash_screen/loading-splash"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { sidebarItems } from "@/lib/constant"
+import { dropid } from "dropid"
 
 export default function CreatorSettings() {
   const router = useRouter()
@@ -68,6 +69,7 @@ export default function CreatorSettings() {
     website: "",
     location: "",
     avatarUrl: "",
+    socialHandles: [] as Array<{ network: string; handle: string }>,
   })
 
   const [privacySettings, setPrivacySettings] = useState({
@@ -183,6 +185,9 @@ export default function CreatorSettings() {
         website: profilePayload.profile?.website ?? prev.website,
         location: profilePayload.profile?.location ?? prev.location,
         avatarUrl: profilePayload.profile?.avatarUrl ?? prev.avatarUrl,
+        socialHandles: Array.isArray(profilePayload.profile?.socialHandles)
+          ? profilePayload.profile.socialHandles
+          : [],
       }))
       setUserEmail(profilePayload.profile?.email ?? "")
 
@@ -207,6 +212,32 @@ export default function CreatorSettings() {
     loadSettings()
   }, [])
 
+  const addSocialHandle = () => {
+    setProfileData((prev) => ({
+      ...prev,
+      socialHandles: [...prev.socialHandles, { network: "", handle: "" }],
+    }))
+  }
+
+  const updateSocialHandle = (
+    index: number,
+    key: "network" | "handle",
+    value: string
+  ) => {
+    setProfileData((prev) => {
+      const nextHandles = [...prev.socialHandles]
+      nextHandles[index] = { ...nextHandles[index], [key]: value }
+      return { ...prev, socialHandles: nextHandles }
+    })
+  }
+
+  const removeSocialHandle = (index: number) => {
+    setProfileData((prev) => ({
+      ...prev,
+      socialHandles: prev.socialHandles.filter((_, i) => i !== index),
+    }))
+  }
+
   const handleSaveProfile = async () => {
     setSavingProfile(true)
     setNotificationMessage(null)
@@ -223,6 +254,7 @@ export default function CreatorSettings() {
           website: profileData.website,
           location: profileData.location,
           avatarUrl: profileData.avatarUrl,
+          socialHandles: profileData.socialHandles,
         }),
       })
 
@@ -269,6 +301,32 @@ export default function CreatorSettings() {
     }
   }
 
+  const resolveAccountName = async (bankName: string, accountNumber: string) => {
+    setVerifyingAccount(true)
+    setOtpError("")
+
+    try {
+      const response = await fetch("/api/creator/settings/payout-accounts/resolve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bankName, accountNumber }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => null)
+        throw new Error(error?.message || "Unable to resolve account name")
+      }
+
+      const payload = await response.json()
+      setNewAccount((prev) => ({ ...prev, accountName: payload.accountName ?? "" }))
+    } catch (error) {
+      setOtpError(error instanceof Error ? error.message : "Unable to resolve account name")
+      setNewAccount((prev) => ({ ...prev, accountName: "" }))
+    } finally {
+      setVerifyingAccount(false)
+    }
+  }
+
   const handleVerifyAccount = async (e: React.FormEvent) => {
     e.preventDefault()
     setVerifyingAccount(true)
@@ -300,7 +358,16 @@ export default function CreatorSettings() {
       }
 
       const created = await createResponse.json()
-      setPendingAccountId(created.payoutAccount?.id ?? null)
+      const accountId = created.payoutAccount?.id ?? null
+      setPendingAccountId(accountId)
+      if (created.payoutAccount) {
+        setPayoutAccounts((prev) => {
+          const updated = created.payoutAccount.isPrimary
+            ? prev.map((acc) => ({ ...acc, isPrimary: false }))
+            : prev
+          return [...updated, created.payoutAccount]
+        })
+      }
       setShowOtpVerification(true)
 
       const otpResponse = await fetch("/api/creator/settings/payout-accounts/send-otp", {
@@ -369,18 +436,7 @@ export default function CreatorSettings() {
     setOtpError('')
     setVerifyingAccount(false)
     setVerifyingOtp(false)
-  }
-
-  const verifyAccountName = async (accountNumber: string) => {
-    setVerifyingAccount(true)
-    // Simulate API call
-    setTimeout(() => {
-      setNewAccount(prev => ({ 
-        ...prev, 
-        accountName: "John Doe" // Simulated account name
-      }))
-      setVerifyingAccount(false)
-    }, 1000)
+    setPendingAccountId(null)
   }
 
   const handleOtpChange = (index: number, value: string) => {
@@ -400,32 +456,41 @@ export default function CreatorSettings() {
   const verifyOtpAndAddAccount = async () => {
     setVerifyingOtp(true)
     setOtpError('')
-    
+
     try {
-      // Simulate OTP verification
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Add the account
-      const account = {
-        id: Date.now().toString(),
-        ...newAccount,
-        isPrimary: newAccount.isPrimary || payoutAccounts.length === 0
+      if (!pendingAccountId) {
+        throw new Error('No pending payout account to verify.')
       }
-      
-      if (account.isPrimary) {
-        setPayoutAccounts(prev => 
-          prev.map(acc => ({...acc, isPrimary: false}))
-            .concat(account)
+
+      const code = otp.join('')
+      if (code.length !== 6) {
+        throw new Error('Enter the 6-digit OTP code.')
+      }
+
+      const response = await fetch('/api/creator/settings/payout-accounts/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accountId: pendingAccountId, code }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => null)
+        throw new Error(error?.message || 'Invalid OTP. Please try again.')
+      }
+
+      setPayoutAccounts((prev) =>
+        prev.map((acc) =>
+          acc.id === pendingAccountId ? { ...acc, verified: true } : acc
         )
-      } else {
-        setPayoutAccounts(prev => [...prev, account])
-      }
-      
+      )
+
+      setNotificationMessage('Payout account verified and ready for payout')
       setShowAddAccount(false)
       setShowOtpVerification(false)
       resetForm()
+      setPendingAccountId(null)
     } catch (error) {
-      setOtpError('Error verifying OTP. Please try again.')
+      setOtpError(error instanceof Error ? error.message : 'Error verifying OTP. Please try again.')
     } finally {
       setVerifyingOtp(false)
     }
@@ -433,16 +498,24 @@ export default function CreatorSettings() {
 
   const resendOtp = async () => {
     if (resendCooldown > 0) return
-    
+
     try {
+      const response = await fetch('/api/creator/settings/payout-accounts/send-otp', {
+        method: 'POST',
+      })
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => null)
+        throw new Error(error?.message || 'Unable to resend OTP')
+      }
+
       setOtp(['', '', '', '', '', ''])
       setOtpTimer(300)
       setResendCooldown(60)
       setOtpError('')
-      
-      // Reset timer
+
       const timer = setInterval(() => {
-        setOtpTimer(prev => {
+        setOtpTimer((prev) => {
           if (prev <= 1) {
             clearInterval(timer)
             return 0
@@ -450,10 +523,9 @@ export default function CreatorSettings() {
           return prev - 1
         })
       }, 1000)
-      
-      // Reset resend cooldown
+
       const resendTimer = setInterval(() => {
-        setResendCooldown(prev => {
+        setResendCooldown((prev) => {
           if (prev <= 1) {
             clearInterval(resendTimer)
             return 0
@@ -462,7 +534,7 @@ export default function CreatorSettings() {
         })
       }, 1000)
     } catch (error) {
-      setOtpError('Error resending OTP. Please try again.')
+      setOtpError(error instanceof Error ? error.message : 'Error resending OTP. Please try again.')
     }
   }
 
@@ -497,7 +569,6 @@ export default function CreatorSettings() {
     setPasswordError('')
     setPasswordSuccess('')
 
-    // Validation
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       setPasswordError('New passwords do not match')
       return
@@ -508,9 +579,21 @@ export default function CreatorSettings() {
       return
     }
 
-    // Simulate API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const response = await fetch('/api/profile/update-password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          currentPassword: passwordData.currentPassword,
+          password: passwordData.newPassword,
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => null)
+        throw new Error(error?.message || 'Failed to update password')
+      }
+
       setPasswordSuccess('Password updated successfully!')
       setPasswordData({
         currentPassword: '',
@@ -522,7 +605,7 @@ export default function CreatorSettings() {
         setPasswordSuccess('')
       }, 3000)
     } catch (error) {
-      setPasswordError('Failed to update password. Please try again.')
+      setPasswordError(error instanceof Error ? error.message : 'Failed to update password. Please try again.')
     }
   }
 
@@ -635,14 +718,32 @@ export default function CreatorSettings() {
 
                 {/* Profile Picture */}
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-2xl">J</span>
+                  <div className="w-20 h-20 rounded-full overflow-hidden bg-red-600 flex items-center justify-center">
+                    {profileData.avatarUrl ? (
+                      <img src={profileData.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-white font-bold text-2xl">J</span>
+                    )}
                   </div>
                   <div>
-                    <button className="bg-muted hover:bg-muted/80 text-foreground px-4 py-2 rounded-lg transition-colors flex items-center gap-2 mb-2">
+                    <button
+                      type="button"
+                      onClick={triggerAvatarUpload}
+                      className="bg-muted hover:bg-muted/80 text-foreground px-4 py-2 rounded-lg transition-colors flex items-center gap-2 mb-2"
+                    >
                       <Upload className="w-4 h-4" />
                       Upload New Photo
                     </button>
+                    <input
+                      ref={avatarInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.target.files?.[0] ?? null
+                        void handleAvatarSelect(file)
+                      }}
+                    />
                     <p className="text-muted-foreground text-sm">JPG, PNG up to 10MB</p>
                   </div>
                 </div>
@@ -727,6 +828,54 @@ export default function CreatorSettings() {
                       className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
                     />
                   </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block text-sm font-medium text-muted-foreground mb-2">Social Handles</label>
+                      <p className="text-muted-foreground text-sm">Add your social network handles or profile URLs.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addSocialHandle}
+                      className="text-red-600 hover:text-red-700 text-sm"
+                    >
+                      + Add Handle
+                    </button>
+                  </div>
+
+                  {profileData.socialHandles.map((item, index) => (
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+                      <div>
+                        <label className="block text-sm font-medium text-muted-foreground mb-2">Network</label>
+                        <input
+                          type="text"
+                          value={item.network}
+                          onChange={(e) => updateSocialHandle(index, "network", e.target.value)}
+                          className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                          placeholder="Instagram, Twitter, TikTok"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-muted-foreground mb-2">Handle / URL</label>
+                        <input
+                          type="text"
+                          value={item.handle}
+                          onChange={(e) => updateSocialHandle(index, "handle", e.target.value)}
+                          className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                          placeholder="@yourhandle or https://..."
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeSocialHandle(index)}
+                        className="text-red-500 hover:text-red-400 text-sm self-start"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Password Change Button */}
@@ -838,12 +987,30 @@ export default function CreatorSettings() {
                 </div>
 
                 <div className="flex justify-end gap-4 pt-4">
-                  <button className="bg-muted hover:bg-muted/80 text-foreground px-6 py-3 rounded-lg transition-colors border border-border">
+                  <button
+                    type="button"
+                    onClick={loadSettings}
+                    className="bg-muted hover:bg-muted/80 text-foreground px-6 py-3 rounded-lg transition-colors border border-border"
+                  >
                     Cancel
                   </button>
-                  <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors flex items-center gap-2">
-                    <Save className="w-4 h-4" />
-                    Save Changes
+                  <button
+                    type="button"
+                    onClick={handleSaveProfile}
+                    disabled={savingProfile}
+                    className="bg-red-600 hover:bg-red-700 disabled:bg-muted disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    {savingProfile ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Saving...
+                      </span>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4" />
+                        Save Changes
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
@@ -922,9 +1089,23 @@ export default function CreatorSettings() {
                 </div>
 
                 <div className="flex justify-end mt-6">
-                  <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors flex items-center gap-2">
-                    <Save className="w-4 h-4" />
-                    Save Privacy Settings
+                  <button
+                    type="button"
+                    onClick={handleSavePrivacy}
+                    disabled={savingPrivacy}
+                    className="bg-red-600 hover:bg-red-700 disabled:bg-muted disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    {savingPrivacy ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Saving...
+                      </span>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4" />
+                        Save Privacy Settings
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
@@ -935,7 +1116,7 @@ export default function CreatorSettings() {
               <div className="bg-card border border-border hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 rounded-2xl p-6">
                 <div className="flex items-center gap-2 mb-6">
                   <CreditCard className="w-5 h-5 text-red-400" />
-                  <h2 className="text-xl font-bold text-foreground">Billing & Accounts</h2>
+                  <h2 className="text-xl font-bold text-foreground"> Accounts</h2>
                 </div>
 
                 <div className="space-y-6">
@@ -973,7 +1154,9 @@ export default function CreatorSettings() {
                                 <p className="text-foreground font-medium">{payoutAccounts.find(acc => acc.isPrimary)?.bankName}</p>
                                 <p className="text-muted-foreground">••••••••{payoutAccounts.find(acc => acc.isPrimary)?.accountNumber.slice(-4)}</p>
                                 <p className="text-muted-foreground text-sm">{payoutAccounts.find(acc => acc.isPrimary)?.accountName}</p>
-                                <p className="text-muted-foreground text-xs mt-1">Verified Account</p>
+                                <p className="text-muted-foreground text-xs mt-1">
+                                  {payoutAccounts.find(acc => acc.isPrimary)?.verified ? "Verified Account" : "Pending Verification"}
+                                </p>
                               </div>
                             </div>
                             <div className="flex gap-2">
@@ -1002,7 +1185,9 @@ export default function CreatorSettings() {
                               <p className="text-foreground font-medium">{account.bankName}</p>
                               <p className="text-muted-foreground">••••••••{account.accountNumber.slice(-4)}</p>
                               <p className="text-muted-foreground text-sm">{account.accountName}</p>
-                              <p className="text-muted-foreground text-xs mt-1">Verified Account</p>
+                              <p className="text-muted-foreground text-xs mt-1">
+                                {account.verified ? "Verified Account" : "Pending Verification"}
+                              </p>
                             </div>
                           </div>
                           <div className="flex gap-2">
@@ -1064,16 +1249,24 @@ export default function CreatorSettings() {
                             <label className="block text-muted-foreground text-sm mb-2">Bank Name</label>
                             <select 
                               value={newAccount.bankName}
-                              onChange={(e) => setNewAccount({...newAccount, bankName: e.target.value})}
+                              onChange={(e) => {
+                                const value = e.target.value
+                                const currentAccountNumber = newAccount.accountNumber
+                                setNewAccount((prev) => ({ ...prev, bankName: value }))
+                                if (value && currentAccountNumber.length === 10) {
+                                  void resolveAccountName(value, currentAccountNumber)
+                                }
+                              }}
                               className="w-full bg-transparent border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-red-500"
                               required
                             >
-                              <option value="">Select Bank</option>
-                              <option value="Access Bank">Access Bank</option>
-                              <option value="UBA">United Bank for Africa (UBA)</option>
-                              <option value="Zenith Bank">Zenith Bank</option>
-                              <option value="First Bank">First Bank</option>
-                              <option value="GTBank">GTBank</option>
+                              <option className=" bg-background  px-4 py-3 text-foreground " value="">Select Bank</option>
+                              <option className=" bg-background  px-4 py-3 text-foreground "  value="Access Bank">Access Bank</option>
+                              <option className=" bg-background  px-4 py-3 text-foreground "  value="UBA">United Bank for Africa (UBA)</option>
+                              <option className=" bg-background  px-4 py-3 text-foreground "  value="Zenith Bank">Zenith Bank</option>
+                              <option className=" bg-background  px-4 py-3 text-foreground "  value="First Bank">First Bank</option>
+                              <option className=" bg-background  px-4 py-3 text-foreground "  value="OPAY">OPay</option>
+                              <option className=" bg-background  px-4 py-3 text-foreground "  value="GTBank">GTBank</option>
                             </select>
                           </div>
 
@@ -1085,10 +1278,9 @@ export default function CreatorSettings() {
                               value={newAccount.accountNumber}
                               onChange={(e) => {
                                 const value = e.target.value.replace(/\D/g, '')
-                                setNewAccount({...newAccount, accountNumber: value})
-                                // Auto-verify account name when 10 digits entered
-                                if (value.length === 10) {
-                                  verifyAccountName(value)
+                                setNewAccount((prev) => ({ ...prev, accountNumber: value }))
+                                if (value.length === 10 && newAccount.bankName) {
+                                  void resolveAccountName(newAccount.bankName, value)
                                 }
                               }}
                               placeholder="0000000000"
@@ -1105,17 +1297,12 @@ export default function CreatorSettings() {
                               value={newAccount.accountName}
                               readOnly
                               className="w-full bg-transparent border border-border rounded-lg px-4 py-3 text-muted-foreground"
-                              placeholder="Will be auto-filled after verification"
+                              placeholder="Will be auto-filled after resolving account number"
+                              required
                             />
-                            {verifyingAccount && (
-                              <p className="text-blue-400 text-xs mt-2 flex items-center gap-1">
-                                <Loader2 className="w-3 h-3 animate-spin" />
-                                Verifying account...
-                              </p>
-                            )}
-                          </div>
-
-                          <div>
+                            <p className="text-muted-foreground text-xs mt-2">
+                              Account holder name will be filled automatically.
+                            </p>
                             <label className="block text-muted-foreground text-sm mb-2">Account Type</label>
                             <select 
                               value={newAccount.accountType}

@@ -101,7 +101,7 @@ const ReadBlog = () => {
             onClick={() => router.push('/blog')}
             className="rounded-full px-8 bg-transparent hover:bg-white hover:text-black border-white/20"
           >
-            Back to Blog
+            Back
           </Button>
         </div>
       </div>

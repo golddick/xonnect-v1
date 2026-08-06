@@ -5,8 +5,8 @@ import { prisma } from "@/lib/db/prisma"
 import { CreatorEventTicketAccessType, Role, SuperAdminSettingSection } from "@/lib/generated/prisma"
 import { normalizeRevenueSettings } from "@/lib/superadmin-settings"
 
-function normalizeEmail(email: string | null | undefined) {
-  return typeof email === "string" ? email.toLowerCase().trim() : null
+function normalizeEmail(email: string | null | undefined): string | undefined {
+  return typeof email === "string" ? email.toLowerCase().trim() : undefined
 }
 
 export async function POST(request: NextRequest) {
@@ -25,6 +25,11 @@ export async function POST(request: NextRequest) {
     }
 
     const email = normalizeEmail(session.user.email)
+
+    if (!email) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const creator = await prisma.creator.findFirst({
       where: { profile: { email } },
       select: { id: true },
