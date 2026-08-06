@@ -126,6 +126,7 @@ export function ProfileEditForm({ profile, avatarUrlOverride }: ProfileEditFormP
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          currentPassword: formData.currentPassword,
           password: formData.newPassword,
         }),
       })

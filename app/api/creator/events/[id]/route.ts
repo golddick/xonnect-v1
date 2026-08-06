@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
+import { randomUUID } from "crypto"
 
 import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { Role } from "@/lib/generated/prisma"
 
-const db = prisma as any
+const db = prisma
 
 type EventStatusInput = "draft" | "scheduled" | "live" | "ended" | "cancelled"
 type RecordingStatusInput = "disabled" | "pending" | "recording" | "processing" | "ready" | "failed"
@@ -256,7 +257,7 @@ export async function PUT(
       )
     }
 
-    const updated = await db.$transaction(async (tx: typeof db) => {
+    const updated = await db.$transaction(async (tx) => {
       const eventUpdate = await tx.creatorEvent.update({
         where: { id: event.id },
         data: {
@@ -361,6 +362,7 @@ export async function PUT(
         if (body.restrictedLocations.length > 0) {
           await tx.creatorEventLocationRestriction.createMany({
             data: body.restrictedLocations.map((location) => ({
+              id: randomUUID(),
               eventId: event.id,
               name: location.name.trim(),
               country: location.country.trim(),
@@ -376,6 +378,36 @@ export async function PUT(
 
       return eventUpdate
     })
+
+    // If status changed to LIVE, notify followers
+    if (updated.status === "LIVE") {
+      try {
+        const followers = await db.creatorFollow.findMany({
+          where: { creatorId: updated.creatorId, status: "active" },
+          select: { followerProfile: { select: { email: true, fullName: true } } },
+        })
+
+        const notify = followers.map((follow) =>
+          import("@/lib/auth/notifications").then((mod) =>
+            mod.sendEventLiveNotificationEmail({
+              email: follow.followerProfile.email,
+              fullName: follow.followerProfile.fullName ?? null,
+              eventId: updated.id,
+              eventTitle: updated.title,
+              eventScheduledAt: updated.scheduledAt?.toISOString() ?? null,
+              location:
+                updated.locationFullAddress ?? updated.locationName ?? updated.address ?? updated.locationCountry ?? null,
+              watchUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/tv/watch/event/${updated.id}`,
+              isTicketHolder: false,
+            })
+          )
+        )
+
+        await Promise.allSettled(notify)
+      } catch (err) {
+        console.error("Failed to notify followers of live start", err)
+      }
+    }
 
     return NextResponse.json({ event: updated }, { status: 200 })
   } catch (error) {

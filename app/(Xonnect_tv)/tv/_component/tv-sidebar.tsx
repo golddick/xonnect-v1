@@ -219,15 +219,14 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
                             )}
                           </div>
 
-                        {/* Name - hidden when collapsed */}
-                        {!isCollapsed && (
-                          <div className="min-w-0 flex-1">
-                            <p className="truncate text-left text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                              {creator.name || "Anonymous"}
-                            </p>
-                          </div>
-                        )}
-                          )
+                          {/* Name - hidden when collapsed */}
+                          {!isCollapsed && (
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-left text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                                {creator.name || "Anonymous"}
+                              </p>
+                            </div>
+                          )}
                         </button>
                       )
                     })}

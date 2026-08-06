@@ -15,10 +15,11 @@ import { FollowButton, LikeButton } from "@/components/tv/follow-like-buttons"
 import { ExpandableDescription } from "@/components/tv/expandable-description"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { type WatchFolder, type WatchPart } from "@/lib/tv/watch-folder"
 import LoadingSplash from "@/components/splash_screen/loading-splash"
+import WatchAccessPopover from "@/components/tv/watch/popover"
 
 type WatchContentKind = "event" | "folder"
 type PurchaseType = "rent24" | "rent48" | "purchase"
@@ -42,7 +43,7 @@ type WatchPageProps = {
 type WatchComment = {
   id: string
   author: string
-  authorEmail: string
+  authorEmail: string | null
   text: string
   createdAt: string
   likes: number
@@ -195,6 +196,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const [likedComments, setLikedComments] = useState<Set<string>>(new Set())
   const eventSourceRef = useRef<EventSource | null>(null)
   const sessionKey = `${session?.user?.email ?? ""}:${session?.user?.id ?? ""}`
+  const currentPart = folderData?.parts?.[activePart] ?? null
+  const currentPartId = currentPart?.id ?? null
+  const currentVideoUrl = currentPart?.videoUrl ?? null
 
   useEffect(() => {
     if (session?.user?.email) {
@@ -376,7 +380,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
   useEffect(() => {
     // Only load comments for videos/folders, not events
-    if (kind !== "folder" || !watchId) {
+    if (kind !== "folder" || !currentPartId) {
       setComments([])
       return
     }
@@ -385,63 +389,21 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
     async function loadComments() {
       try {
-        const response = await fetch(`/api/tv/watch/comments/${watchId}`)
+        const response = await fetch(`/api/tv/watch/comments/${currentPartId}`)
         if (!response.ok) {
-          // Fall back to demo comments if API fails
-          setComments([
-            // {
-            //   id: "demo-comment-1",
-            //   author: "Ada",
-            //   authorEmail: "ada@example.com",
-            //   text: "The pacing is perfect and the production quality is amazing.",
-            //   createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
-            //   likes: 12,
-            //   replies: [
-            //     {
-            //       id: "demo-reply-1",
-            //       author: "Mina",
-            //       authorEmail: "mina@example.com",
-            //       text: "Absolutely. This feels like a premium stream.",
-            //       createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-            //       likes: 5,
-            //       replies: [],
-            //     },
-            //   ],
-            // },
-          ])
+          if (!cancelled) setComments([])
           return
         }
 
         const data = await response.json()
         if (!cancelled && Array.isArray(data.comments)) {
           setComments(data.comments)
+        } else if (!cancelled) {
+          setComments([])
         }
       } catch (error) {
         console.error("Failed to load comments:", error)
-        // Fall back to demo comments
-        if (!cancelled) {
-          setComments([
-            {
-              id: "demo-comment-1",
-              author: "Ada",
-              authorEmail: "ada@example.com",
-              text: "The pacing is perfect and the production quality is amazing.",
-              createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
-              likes: 12,
-              replies: [
-                {
-                  id: "demo-reply-1",
-                  author: "Mina",
-                  authorEmail: "mina@example.com",
-                  text: "Absolutely. This feels like a premium stream.",
-                  createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-                  likes: 5,
-                  replies: [],
-                },
-              ],
-            },
-          ])
-        }
+        if (!cancelled) setComments([])
       }
     }
 
@@ -450,7 +412,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     return () => {
       cancelled = true
     }
-  }, [watchId, kind])
+  }, [kind, currentPart?.id])
 
   useEffect(() => {
     if (!eventData || eventData.status === "LIVE") return
@@ -604,8 +566,6 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     }
   }, [submittedAccessCode, codeNonce, watchId, kind, partParam])
 
-  const currentPart = folderData?.parts?.[activePart] ?? null
-  const currentVideoUrl = currentPart?.videoUrl ?? null
   useEffect(() => {
     if (currentPart?.id) {
       setVideoLikesCount(currentPart.likes ?? 0)
@@ -614,7 +574,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   }, [currentPart?.id, currentPart?.likes])
   const currentThumbnail = currentPart?.thumbnail || folderData?.thumbnail || null
   const currentType = folderData?.contentType ?? "video"
-  const previewExpired = Boolean(currentPart?.id && previewExpiredPartId === currentPart.id)
+  const partsTitle = currentType === "series" ? "Episodes" : "Parts"
+  const previewExpired = Boolean(currentPartId && previewExpiredPartId === currentPartId)
   const accessGrantExpiresAt = currentPart?.accessExpiresAt ?? null
   const accessGrantExpired = Boolean(accessGrantExpiresAt && new Date(accessGrantExpiresAt).getTime() <= Date.now())
   const isPreviewActive = Boolean(currentPart?.previewOnly && !previewExpired)
@@ -702,7 +663,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       setMessage("Redirecting you to secure payment...")
       setShowGuestEmailPrompt(false)
       setPendingPurchaseAction(null)
-      const res = await fetch(`/api/tv/watch/${currentPart.id}/purchase`, {
+      const purchaseVideoId = currentPartId
+      const res = await fetch(`/api/tv/watch/${purchaseVideoId}/purchase`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -819,12 +781,15 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const syncAccessCodeInUrl = (nextCode: string) => {
     if (typeof window === "undefined") return
 
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(window.location.search)
     params.delete("accessCode")
 
     const trimmed = nextCode.trim()
     if (trimmed) {
+      params.set("accessCode", trimmed)
       persistGuestAccess(kind, watchId, trimmed)
+    } else {
+      clearStoredGuestAccess(kind, watchId)
     }
 
     const queryString = params.toString()
@@ -847,6 +812,11 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     if (days < 7) return `${days} day${days === 1 ? "" : "s"} ago`
 
     return new Date(value).toLocaleDateString()
+  }
+
+  const getCommentDisplayName = (comment: WatchComment) => {
+    const emailName = comment.authorEmail ? String(comment.authorEmail).split("@")[0].trim() : ""
+    return emailName || comment.author || "Anonymous"
   }
 
   const appendCommentToTree = (items: WatchComment[], parentId: string | null, newComment: WatchComment): WatchComment[] => {
@@ -895,10 +865,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       setComments((current) => updateCommentLikes(current, commentId, 1))
     }
 
+    if (!currentPartId) return
+
     // Send to API
     ;(async () => {
       try {
-        await fetch(`/api/tv/watch/comments/${currentPart?.id}`, {
+        await fetch(`/api/tv/watch/comments/${currentPartId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -943,12 +915,13 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
     const authorName = session?.user?.name?.trim() || resolvedEmail.split("@")[0] || "Unknown"
     
-    // Only submit if we have a video ID (folder view)
-    if (!currentPart?.id) return
+    if (!currentPartId) return
+
+    const commentVideoId = currentPartId
 
     ;(async () => {
       try {
-        const response = await fetch(`/api/tv/watch/comments/${currentPart.id}`, {
+        const response = await fetch(`/api/tv/watch/comments/${commentVideoId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -987,7 +960,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     })()
   }
 
-  const handleChatReaction = (messageId: string, reaction: ChatReaction) => {
+  const handleChatReaction = async (messageId: string, reaction: ChatReaction) => {
     setChatMessages((current) =>
       current.map((message) =>
         message.id === messageId
@@ -1001,6 +974,26 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           : message
       )
     )
+
+    try {
+      const res = await fetch(`/api/tv/watch/chat/${watchId}?kind=${encodeURIComponent(kind)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messageId, reaction }),
+      })
+
+      if (!res.ok) {
+        console.error("Failed to persist chat reaction")
+        return
+      }
+
+      const data = await res.json()
+      if (data?.message) {
+        setChatMessages((current) => current.map((message) => (message.id === messageId ? data.message : message)))
+      }
+    } catch (err) {
+      console.error("Failed to persist chat reaction", err)
+    }
   }
 
   const handleChatSend = () => {
@@ -1118,16 +1111,18 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         const repliesToRender = isReplyExpanded ? comment.replies : comment.replies.slice(0, VISIBLE_REPLY_COUNT)
         const showReplies = depth === 0 ? isReplyExpanded : true
 
-        return (
+        const displayName = getCommentDisplayName(comment)
+
+      return (
           <div key={comment.id} className="rounded-2xl border border-border/50 bg-background/80 p-4 hover:bg-background/90 transition-colors">
             <div className="flex items-start gap-3">
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-600/20 to-red-600/10 text-sm font-semibold text-red-500 flex-shrink-0">
-                {comment.author.slice(0, 2).toUpperCase()}
+                {displayName.slice(0, 2).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
                 <div className=" w-full flex items-center justify-between gap-2">
                   <div>
-                    <span className="font-semibold text-foreground text-sm">{comment.author}</span>
+                    <span className="font-semibold text-foreground text-sm">{displayName}</span>
                     <span className="text-xs text-muted-foreground truncate">{formatTimeAgo(comment.createdAt)}</span>
                 
                    </div> 
@@ -1241,7 +1236,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         setBusy("code")
         setMessage(null)
         persistGuestAccess(kind, watchId, nextCode)
-        persistAccessGrant(kind, watchId, currentPart?.id ?? null, currentPart?.accessExpiresAt ?? null)
+        persistAccessGrant(kind, watchId, currentPartId, currentPart?.accessExpiresAt ?? null)
         setAccessGranted(true)
         setAccessOverlayDismissed(false)
         setSubmittedAccessCode(nextCode)
@@ -1260,7 +1255,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       onBuyerNameChange={setBuyerName}
       onBuyerEmailChange={setBuyerEmail}
       onBuyerPhoneChange={setBuyerPhone}
-      showGuestEmailPrompt={showGuestEmailPrompt && !watchFolder.access.loggedIn}
+      showGuestEmailPrompt={!watchFolder.access.loggedIn || showGuestEmailPrompt}
       guestEmail={buyerEmail}
       onGuestEmailChange={setBuyerEmail}
       onGuestEmailSubmit={() => {
@@ -1342,8 +1337,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     }
 
     const streamTicket = (eventData.tickets ?? []).find((ticket: any) => ticket.access === "STREAM")
-    const eventLockOverlay = eventData.access?.locked ? (
-      <WatchAccessOverlay
+    const eventLockOverlay = (
+      <WatchAccessPopover
         title={eventData.status === "LIVE" ? "locked" : "Get access"}
         description={
           eventData.access?.loggedIn
@@ -1385,7 +1380,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         isPurchasing={busy === "purchase" ? "purchase" : null}
         paymentAccessCode={paymentAccessCode}
         paymentUrl={paymentUrl}
-        showGuestEmailPrompt={showGuestEmailPrompt && !(eventData.access?.loggedIn ?? false)}
+        showGuestEmailPrompt={!eventData.access?.loggedIn || showGuestEmailPrompt}
         guestEmail={buyerEmail}
         onGuestEmailChange={setBuyerEmail}
         onGuestEmailSubmit={() => {
@@ -1415,8 +1410,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           setCodeNonce((value) => value + 1)
           setMessage(nextAccessCode ? "Access code copied into the unlock field and the event is being verified." : "Access code copied into the unlock field.")
         }}
-      />
-    ) : null
+        />
+      )
 
     return (
       <div className="min-h-screen w-full hidden-scrollbar bg-background text-foreground pb-20">
@@ -1431,11 +1426,16 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                   <Radio className="w-5 h-5 text-red-500 hidden lg:block" />
                   <h1 className="text-lg font-bold truncate max-w-[200px] capitalize md:max-w-md">{eventData.title}</h1>
                 </div>
-                <p className="text-xs text-muted-foreground flex items-center gap-2">
+
+                 <span className="flex items-center gap-1.5">
+                    <Calendar className="w-4 h-4" />
+                    {eventData.scheduledAt ? new Date(eventData.scheduledAt).toLocaleDateString() : "N/A"}
+                  </span>
+                {/* <p className="text-xs text-muted-foreground flex items-center gap-2">
                   <span>{eventData.category}</span>
                   <span className="w-1 h-1 bg-muted-foreground rounded-full" />
                   <span>{eventData.status}</span>
-                </p>
+                </p> */}
               </div>
             </div>
 
@@ -1470,30 +1470,50 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 wsUrl={eventData.livekitWsUrl}
                 accessCode={submittedAccessCode}
                 locked={Boolean(eventData.access?.locked && eventData.status === "LIVE")}
+                hasAccess={(accessGranted && !accessGrantExpired) || Boolean(eventData && !eventData.access?.locked)}
                 viewers={eventData.viewsCount ?? 0}
-                overlay={eventData.access?.locked ? eventLockOverlay : null}
+                overlay={
+                  (() => {
+                    const normalizedStatus = String(eventData?.status ?? "").toUpperCase()
+                    const isLive = normalizedStatus === "LIVE" || normalizedStatus === "STREAMING" || normalizedStatus === "LIVE_NOW"
+                    const isEnded = normalizedStatus === "ENDED" || normalizedStatus === "FINISHED" || normalizedStatus === "COMPLETED"
+                    const hasEventAccess = (accessGranted && !accessGrantExpired) || Boolean(eventData && !eventData.access?.locked)
+
+                    // show overlay only for locked live events, or when a non-live event has no preview recording available
+                    if (eventData.access?.locked && (isLive || !eventData.thumbnailVideoUrl)) return eventLockOverlay
+                    if (isEnded && eventData.recordedVideoUrl && !hasEventAccess && !eventData.thumbnailVideoUrl) return eventLockOverlay
+                    return null
+                  })()
+                }
               />
 
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="flex w-full justify-between items-center gap-6 text-sm text-muted-foreground">
                    
-                    <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2">
+                           
 
-                    <span className="flex items-center gap-1.5">
-                      <Calendar className="w-4 h-4" />
-                      {eventData.scheduledAt ? new Date(eventData.scheduledAt).toLocaleDateString() : "N/A"}
-                    </span>
+                            {/* Purchase button replaces lock icon for scheduled events with a preview */}
+                            {(() => {
+                              const normalizedStatus = String(eventData?.status ?? "").toUpperCase()
+                              const isLive = normalizedStatus === "LIVE" || normalizedStatus === "STREAMING" || normalizedStatus === "LIVE_NOW"
+                              const isEnded = normalizedStatus === "ENDED" || normalizedStatus === "FINISHED" || normalizedStatus === "COMPLETED"
+                              const isScheduled = !isLive && !isEnded
+                              const hasEventAccess = (accessGranted && !accessGrantExpired) || Boolean(eventData && !eventData.access?.locked)
 
-                      <p className="mt-1 text-sm font-semibold text-foreground">
-                      {eventData.access?.locked ? <Lock /> : null}
-                    </p>
-                    
-                    
-                    <span className="flex items-center gap-1.5">
-                        {eventData.access?.premium ? <Banknote /> : null}
-                    </span>
-                     </div> 
+                              if (isScheduled && eventData.thumbnailVideoUrl) {
+                                // show purchase popover trigger for users who don't already have access
+                                if (!hasEventAccess) {
+                                  return eventLockOverlay
+                                }
+                                return null
+                              }
+
+                              // fallback: show lock for live locked events
+                              return eventData.access?.locked ? <Lock /> : null
+                            })()}
+                          </div>
                     
                     <div className="flex items-center gap-2">
                     <FollowButton
@@ -1563,18 +1583,18 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   return (
     <div className="min-h-screen w-full bg-background text-foreground pb-20">
       
-      {/* <Sheet open={commentSheetOpen} onOpenChange={setCommentSheetOpen}>
-        <SheetContent side="bottom" className="rounded-t-2xl">
-          <SheetHeader>
-            <SheetTitle className="text-lg">
+      <Dialog open={commentSheetOpen} onOpenChange={setCommentSheetOpen}>
+        <DialogContent className="rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-lg">
               {session?.user?.email ? "Verify your email to comment" : "Share your email to comment"}
-            </SheetTitle>
-            <SheetDescription>
+            </DialogTitle>
+            <DialogDescription>
               {session?.user?.email 
                 ? "Your email is pre-filled from your account. You can edit it if needed."
                 : "To post a comment, please provide your email address. We'll use it to identify your comments."}
-            </SheetDescription>
-          </SheetHeader>
+            </DialogDescription>
+          </DialogHeader>
           <div className="mt-6 space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Email Address</label>
@@ -1609,31 +1629,33 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 <p className="text-sm text-red-600">{commentEmailError}</p>
               </div>
             ) : null}
-            <Button
-              className="w-full rounded-lg"
-              onClick={() => {
-                const emailValue = commentEmailInput.trim()
-                if (!emailValue) {
-                  setCommentEmailError("Email is required to publish a comment.")
-                  return
-                }
+            <DialogFooter>
+              <Button
+                className="w-full rounded-lg"
+                onClick={() => {
+                  const emailValue = commentEmailInput.trim()
+                  if (!emailValue) {
+                    setCommentEmailError("Email is required to publish a comment.")
+                    return
+                  }
 
-                if (!isValidEmail(emailValue)) {
-                  setCommentEmailError("Please enter a valid email address.")
-                  return
-                }
+                  if (!isValidEmail(emailValue)) {
+                    setCommentEmailError("Please enter a valid email address.")
+                    return
+                  }
 
-                setCommentEmailError("")
-                setCommentSheetOpen(false)
-                handleCommentSubmit(replyingToId)
-              }}
-              disabled={!commentEmailInput.trim() || !isValidEmail(commentEmailInput.trim())}
-            >
-              Continue
-            </Button>
+                  setCommentEmailError("")
+                  setCommentSheetOpen(false)
+                  handleCommentSubmit(replyingToId)
+                }}
+                disabled={!commentEmailInput.trim() || !isValidEmail(commentEmailInput.trim())}
+              >
+                Continue
+              </Button>
+            </DialogFooter>
           </div>
-        </SheetContent>
-      </Sheet> */}
+        </DialogContent>
+      </Dialog>
 
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4 py-4">
         <div className="flex items-center justify-between w-full">
@@ -1649,7 +1671,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               <p className="text-xs text-muted-foreground flex items-center gap-2">
                 <span>{watchFolder.contentType}</span>
                 <span className="w-1 h-1 bg-muted-foreground rounded-full" />
-                <span>{watchFolder.parts?.length ?? 0} Parts</span>
+                <span>{watchFolder.parts?.length ?? 0} {partsTitle}</span>
               </p>
             </div>
           </div>
@@ -1673,7 +1695,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               title={currentPart?.title ?? watchFolder.title}
               subtitle={currentPart?.description ?? watchFolder.description}
               locked={isContentLocked}
-              previewSeconds={currentPart?.previewOnly ? 60 : null}
+              previewSeconds={currentPart?.previewOnly ? 30 : null}
               showOverlay={shouldShowAccessOverlay}
               overlay={shouldShowAccessOverlay ? lockOverlay : null}
               reportAfterSeconds={60}
@@ -1684,16 +1706,17 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               }}
               purchaseButtonLabel="Unlock access"
               onReportView={() => {
-                if (!currentPart?.id) return
+                if (!currentPartId) return
+                const reportPartId = currentPartId
                 ;(async () => {
                   try {
-                    const res = await fetch(`/api/tv/watch/${currentPart.id}/view`, { method: "POST" })
+                    const res = await fetch(`/api/tv/watch/${reportPartId}/view`, { method: "POST" })
                     if (!res.ok) return
                     setFolderData((prev) => {
                       if (!prev) return prev
                       return {
                         ...prev,
-                        parts: prev.parts.map((p) => (p.id === currentPart.id ? { ...p, views: (p.views ?? 0) + 1 } : p)),
+                        parts: prev.parts.map((p) => (p.id === reportPartId ? { ...p, views: (p.views ?? 0) + 1 } : p)),
                       }
                     })
                   } catch (err) {
@@ -1702,8 +1725,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 })()
               }}
               onPreviewExpired={() => {
-                if (currentPart?.id) {
-                  setPreviewExpiredPartId(currentPart.id)
+                if (currentPartId) {
+                  setPreviewExpiredPartId(currentPartId)
                 }
               }}
             />
@@ -1768,7 +1791,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 )}
               </div>
 
-              {/* <div className="rounded-2xl border border-border/50 bg-muted/20 p-6 gap-2">
+              <div className="rounded-2xl border border-border/50 bg-muted/20 p-6 gap-2">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <h3 className="font-semibold text-foreground">Comments</h3>
@@ -1819,19 +1842,22 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                     </div>
                   ) : null}
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <WatchPartsPanel
-              parts={watchFolder.parts ?? []}
-              activePart={activePart}
-              onSelectPart={(index) => {
-                setActivePart(index)
-                setPreviewExpiredPartId(null)
-              }}
-            />
+          <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+            {watchFolder.parts?.length ? (
+              <WatchPartsPanel
+                title={partsTitle}
+                parts={watchFolder.parts ?? []}
+                activePart={activePart}
+                onSelectPart={(index) => {
+                  setActivePart(index)
+                  setPreviewExpiredPartId(null)
+                }}
+              />
+            ) : null}
 
             
           </div>

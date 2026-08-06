@@ -48,6 +48,10 @@ export function CreatorProfilePopup({
     totalViews: 0,
     totalComments: 0,
   })
+  const [creatorProfile, setCreatorProfile] = useState<{
+    fullName: string
+    avatarUrl?: string | null
+  }>({ fullName: creatorName, avatarUrl: creatorImage })
   const [loading, setLoading] = useState(false)
   const { toggle, isLoading: isFollowLoading } = useFollowCreator()
 
@@ -57,10 +61,14 @@ export function CreatorProfilePopup({
     const loadStats = async () => {
       setLoading(true)
       try {
-        const response = await fetch(`/api/profile/${creatorId}/stats`)
+        const response = await fetch(`/api/profile/creator/${creatorId}/stats`)
         if (response.ok) {
           const data = await response.json()
           setStats(data.stats || {})
+          setCreatorProfile({
+            fullName: data.profile?.fullName || creatorName,
+            avatarUrl: data.profile?.avatarUrl ?? creatorImage,
+          })
         }
       } catch (error) {
         console.error('Failed to load creator stats:', error)
@@ -70,7 +78,7 @@ export function CreatorProfilePopup({
     }
 
     loadStats()
-  }, [open, creatorId])
+  }, [open, creatorId, creatorImage, creatorName])
 
   const handleFollowClick = async () => {
     const result = await toggle(creatorId, isFollowing)
@@ -105,21 +113,21 @@ export function CreatorProfilePopup({
           {/* Profile Header */}
           <div className="flex flex-col items-center space-y-4">
             <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-red-600/20 to-red-600/10 flex items-center justify-center flex-shrink-0 border-2 border-border">
-              {creatorImage ? (
+              {creatorProfile.avatarUrl ? (
                 <Image
-                  src={creatorImage}
-                  alt={creatorName}
+                  src={creatorProfile.avatarUrl}
+                  alt={creatorProfile.fullName}
                   fill
                   className="object-cover"
                 />
               ) : (
                 <span className="text-4xl font-bold text-red-500">
-                  {getInitials(creatorName)}
+                  {getInitials(creatorProfile.fullName)}
                 </span>
               )}
             </div>
             <div className="text-center space-y-1">
-              <h3 className="text-2xl font-bold text-foreground">{creatorName}</h3>
+              <h3 className="text-2xl font-bold text-foreground">{creatorProfile.fullName}</h3>
               <p className="text-sm text-muted-foreground">
                 {stats.followers?.toLocaleString() || 0} followers
               </p>

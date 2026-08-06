@@ -61,27 +61,7 @@ const FAQPage = () => {
         },
       ],
     },
-    // {
-    //   title: "Monetization & Payments",
-    //   icon: CreditCard,
-    //   faqs: [
-    //     {
-    //       question: "How do I earn money on Xonnect?",
-    //       answer:
-    //         "Multiple revenue streams are available: subscriber tiers, one-time tips, premium content sales, merchandise integration, and sponsored content. We provide detailed analytics to track all revenue sources.",
-    //     },
-    //     {
-    //       question: "When do I receive my earnings?",
-    //       answer:
-    //         "Earnings are processed weekly every Friday. Funds typically arrive in your account within 1-3 business days depending on your chosen payout method. You can track all transactions in your creator dashboard.",
-    //     },
-    //     {
-    //       question: "Are there any hidden fees?",
-    //       answer:
-    //         "No hidden fees! Our 30% platform fee covers all transaction processing, hosting, and platform maintenance. Payment processor fees (typically 2.9% + $0.30) are clearly disclosed and deducted separately.",
-    //     },
-    //   ],
-    // },
+   
     {
       title: "Community & Features",
       icon: Users,
@@ -174,7 +154,7 @@ const FAQPage = () => {
 
       {/* FAQ Categories */}
       <section className="py-10 lg:py-20 px-6 md:px-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           {faqCategories.map((category, categoryIndex) => (
             <motion.div
               key={category.title}

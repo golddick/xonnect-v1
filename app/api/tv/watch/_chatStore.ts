@@ -53,6 +53,72 @@ export async function pushMessage(kind: string, id: string, message: ChatMessage
   }
 }
 
+export async function broadcastMessage(kind: string, id: string, message: ChatMessage) {
+  const key = `${kind}:${id}`
+  const subs = chatStore.subscribers.get(key)
+  if (!subs) return
+
+  const payload = `event: message\ndata: ${JSON.stringify({ message })}\n\n`
+  const enc = new TextEncoder()
+  const data = enc.encode(payload)
+  for (const writer of subs) {
+    try {
+      writer.write(data)
+    } catch (e) {
+      // ignore per-subscriber errors
+    }
+  }
+}
+
+export async function updateMessageReaction(
+  kind: string,
+  id: string,
+  messageId: string,
+  reaction: ChatReaction
+) {
+  const existing = await prisma.chatMessage.findFirst({
+    where: {
+      id: messageId,
+      kind,
+      channelId: id,
+    },
+  })
+  if (!existing) return null
+
+  const currentReactions =
+    typeof existing.reactions === "string"
+      ? JSON.parse(existing.reactions)
+      : existing.reactions
+
+  const nextReactions: Record<ChatReaction, number> = {
+    "👍": 0,
+    "❤️": 0,
+    "🔥": 0,
+    "😂": 0,
+    "👏": 0,
+    ...currentReactions,
+    [reaction]: (currentReactions[reaction] ?? 0) + 1,
+  }
+
+  const updated = await prisma.chatMessage.update({
+    where: { id: messageId },
+    data: { reactions: nextReactions },
+  })
+
+  const mapped: ChatMessage = {
+    id: updated.id,
+    name: updated.name,
+    handle: updated.handle,
+    time: updated.createdAt.toISOString(),
+    text: updated.text,
+    reactions: typeof updated.reactions === "string" ? JSON.parse(updated.reactions) : updated.reactions,
+  }
+
+  await broadcastMessage(kind, id, mapped)
+
+  return mapped
+}
+
 export async function getMessages(kind: string, id: string) {
   try {
     const rows: any[] = await prisma.$queryRaw`

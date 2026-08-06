@@ -3,8 +3,8 @@ import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { Role } from "@/lib/generated/prisma"
 
-function normalizeEmail(email: string | null | undefined) {
-  return typeof email === "string" ? email.toLowerCase().trim() : null
+function normalizeEmail(email: string | null | undefined): string | undefined {
+  return typeof email === "string" ? email.toLowerCase().trim() : undefined
 }
 
 function buildMonthlySeries(records: Array<{ purchasedAt: Date | string | null; revenue: number | null | undefined }>) {

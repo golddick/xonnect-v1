@@ -4,8 +4,8 @@ import { prisma } from "@/lib/db/prisma"
 import { Role } from "@/lib/generated/prisma"
 import { dropid } from "dropid"
 
-function normalizeEmail(email: string | null | undefined) {
-  return typeof email === "string" ? email.toLowerCase().trim() : null
+function normalizeEmail(email: string | null | undefined): string | undefined {
+  return typeof email === "string" ? email.toLowerCase().trim() : undefined
 }
 
 export async function GET() {
@@ -15,10 +15,15 @@ export async function GET() {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
     }
 
+    const email = normalizeEmail(session.user.email)
+    if (!email) {
+      return NextResponse.json({ message: "Invalid email" }, { status: 400 })
+    }
+
     const creator = await prisma.creator.findFirst({
-      where: { profile: { email: normalizeEmail(session.user.email) } },
+      where: { profile: { email } },
       include: { payoutAccounts: true },
-    })
+    }) 
 
     if (!creator) {
       return NextResponse.json({ message: "Creator profile not found" }, { status: 404 })
@@ -43,6 +48,9 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     const email = normalizeEmail(session.user.email)
+    if (!email) {
+      return NextResponse.json({ message: "Invalid email" }, { status: 400 })
+    }
 
     const bankName = typeof body.bankName === "string" ? body.bankName.trim() : null
     const accountNumber = typeof body.accountNumber === "string" ? body.accountNumber.trim() : null

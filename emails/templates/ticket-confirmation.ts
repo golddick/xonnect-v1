@@ -35,42 +35,79 @@ function formatDate(dateString?: string | null) {
   }).format(date)
 }
 
+const fallbackLogoUrl =
+  process.env.LOGO?.replace(/['"\s]+/g, "") ||
+  "https://7slbx1f2rk.ufs.sh/f/u52F0NVYM8eNo1AzAe0qpkWeDK13duNrlR0SM8Lx7AJBQfGU"
+
+function getEmailLogoUrl() {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/+$/, "")
+  if (appUrl) {
+    return `${appUrl}/xonnect-logo.png`
+  }
+  return fallbackLogoUrl
+}
+
 function buildDetailsRows(input: TicketConfirmationTemplateInput) {
   return `
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
       <tr>
-        <td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Event:</strong> ${input.eventTitle}</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;width:30%;font-weight:700;color:#111827;">Event</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;color:#4b5563;">${input.eventTitle}</td>
       </tr>
       <tr>
-        <td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Ticket:</strong> ${input.ticketType}</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;font-weight:700;color:#111827;">Ticket</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;color:#4b5563;">${input.ticketType}</td>
       </tr>
       <tr>
-        <td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Access:</strong> ${input.access === "VENUE" ? "Venue" : "Streaming"}</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;font-weight:700;color:#111827;">Access</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;color:#4b5563;">${input.access === "VENUE" ? "Venue" : "Streaming"}</td>
       </tr>
       <tr>
-        <td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Quantity:</strong> ${input.quantity}</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;font-weight:700;color:#111827;">Quantity</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;color:#4b5563;">${input.quantity}</td>
       </tr>
       <tr>
-        <td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Total paid:</strong> ${formatMoney(input.amount)}</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;font-weight:700;color:#111827;">Total paid</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;color:#4b5563;">${formatMoney(input.amount)}</td>
       </tr>
       <tr>
-        <td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Ticket code:</strong> ${input.ticketCode}</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;font-weight:700;color:#111827;">Ticket code</td>
+        <td style="padding:10px 0;border-top:1px solid #e5e7eb;color:#4b5563;">${input.ticketCode}</td>
       </tr>
-      ${input.ticketCodes && input.ticketCodes.length > 1 ? `
-      <tr>
-        <td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Ticket codes:</strong> ${input.ticketCodes.join(", ")}</td>
-      </tr>
-      ` : ""}
       ${
         formatDate(input.eventDate)
-          ? `<tr><td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Date:</strong> ${formatDate(input.eventDate)}</td></tr>`
+          ? `<tr><td style="padding:10px 0;border-top:1px solid #e5e7eb;font-weight:700;color:#111827;">Date</td><td style="padding:10px 0;border-top:1px solid #e5e7eb;color:#4b5563;">${formatDate(input.eventDate)}</td></tr>`
           : ""
       }
       ${
         input.location
-          ? `<tr><td style="padding:10px 0;border-top:1px solid #e5e7eb;"><strong>Location:</strong> ${input.location}</td></tr>`
+          ? `<tr><td style="padding:10px 0;border-top:1px solid #e5e7eb;font-weight:700;color:#111827;">Location</td><td style="padding:10px 0;border-top:1px solid #e5e7eb;color:#4b5563;">${input.location}</td></tr>`
           : ""
       }
+    </table>
+  `
+}
+
+function buildTicketCodesSection(input: TicketConfirmationTemplateInput) {
+  if (!input.ticketCodes || input.ticketCodes.length === 0) {
+    return ""
+  }
+
+  return `
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin-top:24px;">
+      <tr>
+        <td colspan="2" style="padding:12px 0 8px;font-weight:700;color:#111827;">Ticket codes</td>
+      </tr>
+      ${input.ticketCodes
+        .map(
+          (code, index) => `
+            <tr>
+              <td style="padding:8px 0;width:28%;font-weight:700;color:#111827;">Code ${index + 1}</td>
+              <td style="padding:8px 0;color:#4b5563;">${code}</td>
+            </tr>
+          `
+        )
+        .join("")}
     </table>
   `
 }
@@ -87,9 +124,10 @@ export function ticketConfirmationTemplate(input: TicketConfirmationTemplateInpu
     input.access === "VENUE" && input.qrImageDataUrls && input.qrImageDataUrls.length > 0
       ? input.qrImageDataUrls
           .map(
-            (qrImageDataUrl) => `
+            (qrImageDataUrl, index) => `
         <div style="margin:24px 0 8px;padding:18px;border:1px solid #e5e7eb;border-radius:18px;background:#fafafa;text-align:center;">
-          <img src="${qrImageDataUrl}" alt="Venue ticket QR code" style="display:block;margin:0 auto;width:240px;max-width:100%;height:auto;" />
+          <div style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#6b7280;font-weight:700;">Ticket QR code ${index + 1}</div>
+          <img src="${qrImageDataUrl}" alt="Venue ticket QR code" style="display:block;margin:14px auto 0;width:240px;max-width:100%;height:auto;" />
           <p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#6b7280;">Present this QR code at the venue gate. It includes the platform logo for quick identification.</p>
         </div>
       `
@@ -108,7 +146,11 @@ export function ticketConfirmationTemplate(input: TicketConfirmationTemplateInpu
     title,
     intro,
     body: `
+      <div style="text-align:center;margin-bottom:24px;">
+        <img src="${getEmailLogoUrl()}" alt="Xonnect logo" style="display:block;margin:0 auto;max-width:160px;height:auto;" />
+      </div>
       ${buildDetailsRows(input)}
+      ${buildTicketCodesSection(input)}
       ${qrBlock}
     `,
     buttonText: input.documentUrl ? "Open ticket document" : undefined,

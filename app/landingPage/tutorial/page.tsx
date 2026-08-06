@@ -3,9 +3,9 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { PlayCircle, BookOpen, Users, Zap, ArrowRight } from "lucide-react"
-import Navigation from "@/components/navigation"
 import Footer from "@/components/footer"
 import Link from "next/link"
+import Navigation from "@/components/nav/navigation"
 
 interface Tutorial {
   id: string

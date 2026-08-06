@@ -25,7 +25,7 @@ export default function UploadVideoContent() {
   return (
     <div className="min-h-screen bg-background">
       {showUploader && (
-        <UploadVideoComponent
+        <UploadVideoComponent 
           onClose={handleClose}
           onUpload={handleUpload}
           initialFolderId={initialFolderId}

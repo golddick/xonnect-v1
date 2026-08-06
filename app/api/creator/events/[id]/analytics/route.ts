@@ -27,7 +27,7 @@ async function getCreatorIdOrResponse() {
   return { creatorId: creator.id }
 }
 
-type PurchaseRow = {
+type PurchaseRow = { 
   status: string
   amount: number
 }
@@ -38,6 +38,7 @@ type TicketRow = {
   access: string
   status: string
   price: number
+  revenue: number
   quantity: number
   soldCount: number
   purchases: PurchaseRow[]
@@ -101,6 +102,7 @@ export async function GET(
               select: {
                 id: true,
                 amount: true,
+                revenue: true,
                 status: true,
                 purchasedAt: true,
               },
@@ -152,7 +154,7 @@ export async function GET(
         ticketType: ticket.ticketType,
         access: ticket.access,
         status: ticket.status, 
-        price: ticket.price,
+        price: ticket.revenue,
         quantity: ticket.quantity,
         soldCount: ticket.soldCount,
         revenue,

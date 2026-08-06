@@ -91,7 +91,7 @@ export default function VideoViewPage() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-20">
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4 lg:px-8 py-4">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
+        <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.back()}
@@ -133,7 +133,7 @@ export default function VideoViewPage() {
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6">
+      <main className="w-full px-4 lg:px-8 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <VideoViewPanel
@@ -157,19 +157,21 @@ export default function VideoViewPage() {
                       ? new Date(currentPart.uploadDate).toLocaleDateString()
                       : "N/A"}
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4" />
-                    {currentPart?.duration ?? "N/A"}
-                  </span>
+                
                 </div>
 
               </div>
 
               <div className="p-6 bg-muted/20 rounded-2xl border border-border/50">
-                <h3 className="font-semibold mb-2">Description</h3>
-                <p className="text-muted-foreground leading-relaxed text-sm">
-                  {currentPart?.description || "No description available"}
-                </p>
+                { currentPart.description && (
+                  <div>
+                    <h3 className="font-semibold mb-2">Description</h3>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
+                      {currentPart?.description || "No description available"}
+                    </p>
+                  </div> 
+                )}
+                
                 {currentPart?.tags && currentPart.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-4">
                     {currentPart.tags.map((tag: string) => (
@@ -223,9 +225,9 @@ export default function VideoViewPage() {
                         />
                       </div>
                     )}
-                    <div className="absolute bottom-1 right-1 bg-black/70 text-[10px] text-white px-1 rounded">
+                    {/* <div className="absolute bottom-1 right-1 bg-black/70 text-[10px] text-white px-1 rounded">
                       {part.duration || "0:00"}
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="flex-1 min-w-0">

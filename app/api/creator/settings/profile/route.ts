@@ -3,8 +3,8 @@ import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { Role } from "@/lib/generated/prisma"
 
-function normalizeEmail(email: string | null | undefined) {
-  return typeof email === "string" ? email.toLowerCase().trim() : null
+function normalizeEmail(email: string | null | undefined): string | undefined {
+  return typeof email === "string" ? email.toLowerCase().trim() : undefined
 }
 
 export async function GET() {
@@ -40,6 +40,7 @@ export async function GET() {
           website: profile.website,
           location: profile.location,
           avatarUrl: profile.avatarUrl,
+          socialHandles: profile.socialHandles ?? [],
         },
       },
       { status: 200 }
@@ -83,6 +84,14 @@ export async function PUT(request: NextRequest) {
     const website = typeof body.website === "string" ? body.website.trim() : undefined
     const location = typeof body.location === "string" ? body.location.trim() : undefined
     const avatarUrl = typeof body.avatarUrl === "string" ? body.avatarUrl.trim() : undefined
+    const socialHandles = Array.isArray(body.socialHandles)
+      ? body.socialHandles
+          .map((item: any) => ({
+            network: typeof item?.network === "string" ? item.network.trim() : "",
+            handle: typeof item?.handle === "string" ? item.handle.trim() : "",
+          }))
+          .filter((item: any) => item.network && item.handle)
+      : undefined
 
     const updateData: Record<string, unknown> = {
       ...(firstName !== undefined && { firstName }),
@@ -92,6 +101,7 @@ export async function PUT(request: NextRequest) {
       ...(website !== undefined && { website }),
       ...(location !== undefined && { location }),
       ...(avatarUrl !== undefined && { avatarUrl }),
+      ...(socialHandles !== undefined && { socialHandles }),
     }
 
     if (firstName !== undefined || lastName !== undefined) {

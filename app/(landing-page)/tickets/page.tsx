@@ -126,13 +126,13 @@ export default function TicketsPage() {
     <div className="min-h-screen bg-background text-foreground">
 
      <HeroSection2
-          title=" Your Front Row Seat Anywhere on Earth."
+          title=" Your Front Row Seat ."
           ICON={<BookAIcon className="w-5 h-5 text-red-400" />}
           iconTitle="Our Tickets "
       />
 
       <section className="border-b px-4 lg:px-6 border-border bg-card/40">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full flex-col gap-4 px-4 py-6 sm:px-6 lg:px-8">
           {/* <div className="flex flex-col gap-2">
             <p className="text-sm text-muted-foreground">Tickets</p>
             <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Browse public events and ticket types</h1>
@@ -174,7 +174,7 @@ export default function TicketsPage() {
         </div>
       </section>
 
-      <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full px-4 py-6 sm:px-6 lg:px-8">
         {loading ? (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (

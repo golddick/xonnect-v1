@@ -27,7 +27,7 @@ const HeroSection2 = (props: HeroSectionProps) => {
                 <span>{props.iconTitle}</span>
               </div>
 
-              <h1 className="text-5xl md:text-6xl lg:text-7xl items-center  max-w-4xl mx-auto font-black mb-6 leading-tight">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl items-center  max-w-7xl mx-auto font-black mb-6 leading-tight">
                 <span className=" ">
                     {props.title}
                 </span>

@@ -47,10 +47,27 @@ export default function CameraTokenPage() {
   const [expiresAt, setExpiresAt] = useState<string | null>(null)
   const [sessionTitle, setSessionTitle] = useState("")
   const [connectedAt, setConnectedAt] = useState<string | null>(null)
+  const [cameraReady, setCameraReady] = useState(false)
+  const [scanStatus, setScanStatus] = useState<"idle" | "scanning" | "found" | "error">("idle")
+  const [scannedCode, setScannedCode] = useState<string | null>(null)
+  const [scanError, setScanError] = useState<string | null>(null)
 
   const canStart = useMemo(() => status === "idle" || status === "error", [status])
 
+  const scanTimerRef = useRef<number | null>(null)
+  const scanCanvasRef = useRef<HTMLCanvasElement | null>(null)
+
+  const stopScanner = () => {
+    if (scanTimerRef.current) {
+      window.clearInterval(scanTimerRef.current)
+      scanTimerRef.current = null
+    }
+    setScanStatus("idle")
+  }
+
   const stopStream = () => {
+    stopScanner()
+
     if (pollTimerRef.current) {
       window.clearInterval(pollTimerRef.current)
       pollTimerRef.current = null
@@ -69,6 +86,10 @@ export default function CameraTokenPage() {
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = null
     }
+
+    setCameraReady(false)
+    setScannedCode(null)
+    setScanError(null)
   }
 
   const disconnect = async (nextStatus: CameraStatus = "completed") => {
@@ -83,6 +104,79 @@ export default function CameraTokenPage() {
     } catch {
       // Best effort.
     }
+  }
+
+  const handleDetectedCode = async (code: string) => {
+    setScannedCode(code)
+    setScanStatus("found")
+    setScanError(null)
+
+    try {
+      const response = await fetch("/api/checkin/scan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message ?? "Failed to scan ticket")
+      }
+
+      if (data.status !== "success" && data.status !== "already") {
+        throw new Error(data.message ?? "Ticket scan failed")
+      }
+
+      setError("")
+      setScanError(null)
+      setScanStatus("found")
+    } catch (err) {
+      setScanError(err instanceof Error ? err.message : "Failed to scan ticket")
+      setScanStatus("error")
+    }
+  }
+
+  const startScanner = () => {
+    if (!localVideoRef.current) return
+    if (!("BarcodeDetector" in window)) {
+      setScanError("QR code scanning is not supported in this browser.")
+      return
+    }
+
+    if (scanTimerRef.current) return
+
+    const detector = new (window as any).BarcodeDetector({ formats: ["qr_code"] })
+    setScanStatus("scanning")
+
+    scanTimerRef.current = window.setInterval(async () => {
+      const video = localVideoRef.current
+      if (!video || video.readyState !== HTMLMediaElement.HAVE_ENOUGH_DATA) return
+
+      let canvas = scanCanvasRef.current
+      if (!canvas) {
+        canvas = document.createElement("canvas")
+        scanCanvasRef.current = canvas
+      }
+
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
+      const context = canvas.getContext("2d")
+      if (!context) return
+
+      context.drawImage(video, 0, 0, canvas.width, canvas.height)
+      try {
+        const barcodes = await detector.detect(canvas)
+        if (barcodes.length > 0 && barcodes[0].rawValue) {
+          stopScanner()
+          void handleDetectedCode(barcodes[0].rawValue)
+        }
+      } catch (err) {
+        // Ignore detection errors and continue scanning.
+      }
+    }, 500)
   }
 
   useEffect(() => {
@@ -199,6 +293,8 @@ export default function CameraTokenPage() {
       if (localVideoRef.current) {
         localVideoRef.current.srcObject = stream
       }
+      setCameraReady(true)
+      startScanner()
 
       const peerConnection = new RTCPeerConnection({ iceServers: ICE_SERVERS })
       peerConnectionRef.current = peerConnection
@@ -237,23 +333,7 @@ export default function CameraTokenPage() {
       })
       await peerConnection.setLocalDescription(offer)
 
-      peerConnection.onicecandidate = async (event) => {
-      if (event.candidate) {
-        // Convert the candidate to a plain object using toJSON
-        const candidateJSON = event.candidate.toJSON();
-        await sendCameraSessionAction(token, "signal", {
-          sender: "phone",
-          type: "candidate",
-          payload: candidateJSON,
-        });
-      }
-    }
-      
-      // await sendCameraSessionAction(token, "signal", {
-      //   sender: "phone",
-      //   type: "offer",
-      //   payload: offer.toJSON(),
-      // }) 
+
 
       lastSignalAtRef.current = new Date().toISOString()
       setStatus("connecting")
@@ -330,6 +410,14 @@ export default function CameraTokenPage() {
             </div>
           )}
 
+          {scanStatus !== "idle" && (
+            <div className="rounded-lg border border-slate-300/80 bg-slate-50 p-3 text-sm text-slate-700">
+              {scanStatus === "scanning" && <p>Scanning for QR codes… hold the ticket in front of the camera.</p>}
+              {scanStatus === "found" && scannedCode && <p>Ticket scanned: <span className="font-medium">{scannedCode}</span></p>}
+              {scanStatus === "error" && <p className="text-red-600">{scanError || "Unable to read QR code. Try again."}</p>}
+            </div>
+          )}
+
           {connectedAt && (
             <p className="text-xs text-muted-foreground">
               Connected at {new Date(connectedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
@@ -344,7 +432,7 @@ export default function CameraTokenPage() {
                   Starting
                 </>
               ) : status === "connecting" ? (
-                "Waiting for operator"
+                cameraReady ? "Scanning QR code" : "Connecting camera"
               ) : status === "connected" ? (
                 "Camera active"
               ) : (
@@ -359,7 +447,7 @@ export default function CameraTokenPage() {
         </div>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
-          Keep this page open until the operator completes the check-in.
+          Hold the ticket QR code in front of the camera to complete check-in.
         </p>
       </main>
     </div>

@@ -47,6 +47,7 @@ type TicketConfirmationContext = {
   ticketCode: string
   ticketItemCodes?: string[]
   purchaseId: string
+  documentUrl?: string | null
 }
 
 export async function sendWelcomeEmail(context: LoginContext) {
@@ -222,7 +223,7 @@ export async function sendTicketConfirmationEmail(context: TicketConfirmationCon
       ticketCode: context.ticketCode,
       ticketCodes,
       qrImageDataUrls: qrImageDataUrls.length ? qrImageDataUrls : undefined,
-      documentUrl,
+      documentUrl: context.documentUrl ?? documentUrl,
     }),
     fromName: DEFAULT_FROM_NAME,
     fromEmail: DEFAULT_FROM_EMAIL,

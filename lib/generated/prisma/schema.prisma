@@ -94,6 +94,7 @@ model Profile {
   bio               String?
   website           String? @map("website")
   location          String? @map("location")
+  socialHandles     Json?   @map("social_handles")
   profileVisibility String  @default("public") @map("profile_visibility")
   showEmail         Boolean @default(false) @map("show_email")
   showLocation      Boolean @default(true) @map("show_location")
@@ -102,9 +103,10 @@ model Profile {
 
   creator Creator?
 
-  creatorFollows CreatorFollow[]    @relation("CreatorFollowFollower")
-  eventLikes     CreatorEventLike[] @relation("CreatorEventLikeLiker")
-  videoLikes     CreatorVideoLike[] @relation("CreatorVideoLikeLiker")
+  creatorFollows CreatorFollow[]       @relation("CreatorFollowFollower")
+  eventLikes     CreatorEventLike[]    @relation("CreatorEventLikeLiker")
+  videoLikes     CreatorVideoLike[]    @relation("CreatorVideoLikeLiker")
+  videoComments  CreatorVideoComment[] @relation("CreatorVideoCommenter")
 
   addressFull    String? @map("address_full")
   addressLat     Float?  @map("address_lat")
@@ -485,12 +487,17 @@ model CreatorVideoComment {
   creatorVideoId String       @map("creator_video_id")
   creatorVideo   CreatorVideo @relation(fields: [creatorVideoId], references: [id], onDelete: Cascade)
 
-  commenterProfileId String? @map("commenter_profile_id")
+  commenterProfileId String?               @map("commenter_profile_id")
+  commenterProfile   Profile?              @relation("CreatorVideoCommenter", fields: [commenterProfileId], references: [id], onDelete: SetNull)
+  commenterEmail     String?               @map("commenter_email")
+  parentCommentId    String?               @map("parent_comment_id")
+  parentComment      CreatorVideoComment?  @relation("CreatorVideoCommentReplies", fields: [parentCommentId], references: [id])
+  replies            CreatorVideoComment[] @relation("CreatorVideoCommentReplies")
   content            String
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  @@index([creatorVideoId])
+  @@index([creatorVideoId, parentCommentId])
   @@map("creator_video_comments")
 }
 

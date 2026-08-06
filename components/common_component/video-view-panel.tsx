@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react"
 import { Loader2, Play } from "lucide-react"
@@ -64,15 +64,24 @@ export default function VideoViewPanel({
     setIsPlaying(false)
   }, [videoUrl])
 
+  const shouldShowOverlay = Boolean(overlay) && (locked || showOverlay || previewExpired)
+
   useEffect(() => {
-    if (!videoRef.current || locked || !videoUrl || isYouTubeVideo) return
+    if (!videoRef.current || locked || !videoUrl || isYouTubeVideo || shouldShowOverlay) return
 
     videoRef.current.load()
-  }, [videoUrl, locked, isYouTubeVideo])
+  }, [videoUrl, locked, isYouTubeVideo, shouldShowOverlay])
+
+  useEffect(() => {
+    if (!shouldShowOverlay || !videoRef.current) return
+
+    videoRef.current.pause()
+    setIsPlaying(false)
+  }, [shouldShowOverlay])
 
   const handlePlay = async () => {
     try {
-      if (!videoRef.current || locked || !videoUrl || isYouTubeVideo) return
+      if (!videoRef.current || locked || !videoUrl || isYouTubeVideo || shouldShowOverlay) return
       await videoRef.current.play()
       setIsPlaying(true)
     } catch (error) {
@@ -81,7 +90,7 @@ export default function VideoViewPanel({
   }
 
   const handleTimeUpdate = () => {
-    if (locked) return
+    if (locked || shouldShowOverlay) return
 
     const currentTime = videoRef.current?.currentTime ?? 0
 
@@ -105,7 +114,6 @@ export default function VideoViewPanel({
     }
   }
 
-  const shouldShowOverlay = Boolean(overlay) && (locked || showOverlay || previewExpired)
   const handleMediaReady = () => setIsMediaLoading(false)
   const shouldShowMediaActionButton = !shouldShowOverlay && (showPurchaseButton || Boolean(playableMedia && !isYouTubeVideo && !isMediaLoading && !isPlaying))
   const shouldShowLoadingIndicator = !shouldShowOverlay && isMediaLoading && !isPlaying && !videoRef.current?.currentTime
@@ -130,12 +138,12 @@ export default function VideoViewPanel({
             <video
               key={playableMedia.src}
               ref={videoRef}
-              src={playableMedia.src}
+              src={shouldShowOverlay ? undefined : playableMedia.src}
               poster={poster || undefined}
               className="w-full h-full object-cover bg-black"
-              controls
+              controls={!shouldShowOverlay}
               playsInline
-              preload="auto"
+              preload={shouldShowOverlay || locked ? "none" : "auto"}
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
               onEnded={() => setIsPlaying(false)}
@@ -179,6 +187,7 @@ export default function VideoViewPanel({
           ) : (
             <div className="text-white">No media available</div>
           )}
+
           {shouldShowLoadingIndicator ? (
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 pointer-events-none">
               <div className="flex items-center gap-2 rounded-full border border-white/15 bg-black/50 px-3 py-2 text-xs font-medium text-white/90 shadow-lg backdrop-blur-sm">
@@ -188,7 +197,7 @@ export default function VideoViewPanel({
           ) : null}
 
           {shouldShowOverlay && overlay ? (
-            <div className=" z-20 pointer-events-auto">{overlay}</div>
+            <div className="absolute inset-0 z-20 pointer-events-auto">{overlay}</div>
           ) : null}
 
           {shouldShowMediaActionButton ? (

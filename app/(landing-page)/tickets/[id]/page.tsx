@@ -396,14 +396,14 @@ export default function TicketDetailsPage() {
 
   return (
     <div className="min-h-screen bg-background px-2 text-foreground">
-      <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <main className=" w-full px-4 py-6 sm:px-6 lg:px-8 mt-10">
         <Link href="/tickets" className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" />
-          Back to tickets
+          Back
         </Link>
 
         {loading ? (
-          <div className="flex min-h-[60vh] items-center justify-center">
+          <div className="flex h-full items-center justify-center">
             <LoadingSplash />
           </div>
         ) : error ? (
@@ -440,21 +440,21 @@ export default function TicketDetailsPage() {
                   </div>
 
                   <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-                    {event.description ?? "Event details and ticket options."}
+                    {event.description ?? null}
                   </p>
 
                   <div className="grid gap-3 sm:grid-cols-3">
                     <div className="rounded-lg border border-border bg-background p-3">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <CalendarDays className="h-4 w-4" />
-                        <span>Date</span>
+                        <span className="hidden lg:block">Date</span>
                       </div>
                       <p className="mt-2 text-sm font-medium">{formatDate(event.scheduledAt)}</p>
                     </div>
                     <div className="rounded-lg border border-border bg-background p-3">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <MapPin className="h-4 w-4" />
-                        <span>Location</span>
+                        <span className="hidden lg:block">Location</span>
                       </div>
                       <p className="mt-2 text-sm font-medium">{formatLocation(event)}</p>
                     </div>

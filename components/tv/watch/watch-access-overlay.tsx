@@ -90,22 +90,22 @@ export default function WatchAccessOverlay({
   onDismiss,
 }: WatchAccessOverlayProps) {
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 px-3 py-4 sm:px-4 sm:py-6 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/80 px-3 py-4 sm:px-4 sm:py-6 backdrop-blur-sm">
       <div className="w-full max-w-[min(100%,32rem)] max-h-[min(92vh,44rem)] overflow-y-auto rounded-3xl border border-border/60 bg-background/95 p-4 shadow-2xl sm:p-5 md:p-6 space-y-4 overscroll-contain">
         {/* Header */}
         <div className="flex items-start gap-3 sm:items-center">
           <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full bg-red-600/15 text-red-500">
             <Lock className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-foreground leading-tight">{title}</p>
+          <div className="min-w-0 flex-1 hidden lg:block">
+            <p className="text-sm font-semibold text-foreground leading-tight ">{title}</p>
             <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{description}</p>
           </div>
           {onDismiss ? (
             <button
               type="button"
               onClick={onDismiss}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+              className="inline-flex h-2.5 w-2.5 lg:h-9 lg:w-9 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
               aria-label="Close access prompt"
             >
               <X className="h-4 w-4" />
@@ -147,7 +147,7 @@ export default function WatchAccessOverlay({
               {isUnlocking ? (
                 <span className="flex items-center justify-center gap-2">
                   <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                  Checking...
+                  <span className="hidden lg:block"> Checking... </span>
                 </span>
               ) : (
                 primaryActionLabel
@@ -155,7 +155,7 @@ export default function WatchAccessOverlay({
             </button>
           </div>
         ) : (
-          <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5 sm:p-4 text-sm text-muted-foreground leading-relaxed">
+          <div className="hidden lg:block rounded-xl border border-border/60 bg-muted/20 p-3.5 sm:p-4 text-sm text-muted-foreground leading-relaxed">
             You're signed in. We'll verify your purchase automatically and unlock this video as soon as access is available.
           </div>
         )}
@@ -245,7 +245,7 @@ export default function WatchAccessOverlay({
           )}
 
         {/* Payment Code Section */}
-        {paymentAccessCode && (
+        {/* {paymentAccessCode && (
           <div className="rounded-xl border border-red-600/30 bg-red-600/10 p-4 space-y-3">
             <div>
               <p className="text-sm font-semibold text-foreground">Payment code</p>
@@ -270,7 +270,7 @@ export default function WatchAccessOverlay({
               </button>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Message */}
         {message && (

@@ -30,7 +30,7 @@ const values = [
 
 // ─── Milestones ───────────────────────────────────────────────────────────────
 const milestones = [
-  { year: "2022", title: "The Idea", desc: "Founders missed a sold-out concerts and asked: why can't the world watch this live?" },
+  { year: "2024", title: "The Idea", desc: "Founders missed a sold-out concerts and asked: why can't the world watch this live?" },
   { year: "2025", title: "First Build", desc: "Beta launched at a fola event in ui Hosted by GTB." },
   { year: "2026", title: "Growth", desc: "Crossed 50K active users, $500K paid out to creators, expanded to 30 countries." }
 ]
@@ -53,13 +53,13 @@ export default function AboutPage() {
           title="  Built for the Ones Left Outside."
           ICON={<ShieldQuestion className="w-5 h-5 text-red-400" />}
           iconTitle="Our Story "
-      />
+      /> 
 
 
 
       {/* ── Stats Bar ── */}
       <section className=" bg-card/50 py-8 px-4 sm:px-6 md:px-8">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 md:divide-x divide-border">
+        <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-6 md:divide-x divide-border">
           {stats.map((s, i) => (
             <motion.div
               key={s.label}
@@ -78,7 +78,7 @@ export default function AboutPage() {
 
       {/* ── The Problem We Solve ── */}
       <section className="py-20 px-4 sm:px-6 md:px-8">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -144,7 +144,7 @@ export default function AboutPage() {
 
       {/* ── Our Values ── */}
       <section className="py-20 px-4 sm:px-6 md:px-8 bg-card/30">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -181,7 +181,7 @@ export default function AboutPage() {
 
       {/* ── Timeline ── */}
       <section className="py-20 px-4 sm:px-6 md:px-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -266,7 +266,7 @@ export default function AboutPage() {
       <section className="relative py-24 px-4 sm:px-6 md:px-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-red-600/20 via-background to-background" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-red-600/10 rounded-full blur-3xl" />
-        <div className="relative z-10 max-w-3xl mx-auto text-center">
+        <div className="relative z-10 max-w-7xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}

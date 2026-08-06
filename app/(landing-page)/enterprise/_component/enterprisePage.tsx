@@ -232,7 +232,7 @@ export default function EnterprisePage() {
       </div>
 
       {/* Partnership Benefits */}
-      <section className="relative z-10 py-8 md:py-8">
+      {/* <section className="relative z-10 py-8 md:py-8">
         <div className="max-w-6xl 2xl:max-w-[100rem] mx-auto px-4 sm:px-6 md:px-8">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 sm:mb-6">{benefitsData.title}</h2>
@@ -241,27 +241,13 @@ export default function EnterprisePage() {
             </p>
           </div>
 
-        {/*  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">*/}
-        {/*    {benefitsData.cards.map((card, index) => (*/}
-        {/*      <Card key={index} className="bg-card text-card-foreground border-border hover:border-red-600/50 transition-all duration-300 group">*/}
-        {/*        <CardContent className="p-6 sm:p-8 text-center">*/}
-        {/*          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-600 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 mx-auto group-hover:scale-110 transition-transform">*/}
-        {/*            <card.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />*/}
-        {/*          </div>*/}
-        {/*          <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">{card.title}</h3>*/}
-        {/*          <p className="text-muted-foreground mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">*/}
-        {/*            {card.description}*/}
-        {/*          </p>*/}
-        {/*        </CardContent>*/}
-        {/*      </Card>*/}
-        {/*    ))}*/}
-        {/*  </div>*/}
+       
         </div>
-      </section>
+      </section> */}
 
       {/* Features Grid */}
-      <section className="relative z-10 py-12 md:py-20 bg-muted/30">
-        <div className="max-w-6xl 2xl:max-w-[100rem] mx-auto px-4 sm:px-6 md:px-8">
+      <section className="relative z-10 py-12 md:py-20 ">
+        <div className="w-full mx-auto px-4 sm:px-6 md:px-8">
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {featuresData.cards.map((card, index) => (
@@ -291,7 +277,7 @@ export default function EnterprisePage() {
 
       {/* How It Works */}
       <section className="relative z-10 py-12 md:py-20">
-        <div className="max-w-6xl 2xl:max-w-[100rem] mx-auto px-4 sm:px-6 md:px-8">
+        <div className="w-full mx-auto px-4 sm:px-6 md:px-8">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">{processData.title}</h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
@@ -316,8 +302,8 @@ export default function EnterprisePage() {
       </section>
 
       {/* Pricing Section */}
-      <section className="relative z-10 py-12 md:py-20 bg-muted/30">
-        <div className="max-w-6xl 2xl:max-w-[100rem] mx-auto px-4 sm:px-6 md:px-8">
+      <section className="relative z-10 py-12 md:py-20 ">
+        <div className="w-full px-4 sm:px-6 md:px-8">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">{pricingData.title}</h2>
             <p className="text-lg md:text-xl text-muted-foreground px-4">{pricingData.description}</p>
