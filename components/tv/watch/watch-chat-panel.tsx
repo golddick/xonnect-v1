@@ -57,10 +57,11 @@ export default function WatchChatPanel({
   onQuickReaction,
 }: WatchChatPanelProps) {
   const [openReactionsFor, setOpenReactionsFor] = useState<string | null>(null)
+  const [showQuickReactions, setShowQuickReactions] = useState(false)
 
   return (
-    <aside className="space-y-4 xl:sticky xl:top-24 h-full xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto" hidden-scrollbar>
-      <div className="rounded-2xl border border-border bg-muted/20 p-2 md:p4">
+    <aside className="h-full xl:sticky xl:top-24" hidden-scrollbar>
+      <div className="flex h-full flex-col rounded-2xl border border-border bg-muted/20 p-2 md:p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="text-sm font-semibold text-foreground">Chat</p>
@@ -70,7 +71,7 @@ export default function WatchChatPanel({
           </span>
         </div>
 
-        <div className="mt-4 max-h-[28rem] space-y-3 overflow-y-auto pr-1">
+        <div className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1">
           {messages.map((message) => (
             <div key={message.id} className="rounded-2xl ">
               <div className="flex items-start justify-between gap-3">
@@ -126,23 +127,35 @@ export default function WatchChatPanel({
         </div>
 
         <div className="mt-4 space-y-3 border-t border-border pt-4">
-          {/* <div className="flex flex-wrap gap-2">
-            {reactions.map((reaction) => (
-              <button
-                key={reaction}
-                type="button"
-                onClick={() => onQuickReaction(reaction)}
-                className="rounded-full border border-border bg-background/70 px-3 py-2 text-sm transition-colors hover:border-red-500/50"
-                title="Insert reaction"
-              >
-                {reaction}
-              </button>
-            ))}
-          </div> */}
+          {showQuickReactions ? (
+            <div className="flex flex-wrap gap-2">
+              {reactions.map((reaction) => (
+                <button
+                  key={reaction}
+                  type="button"
+                  onClick={() => {
+                    onQuickReaction(reaction)
+                    setShowQuickReactions(false)
+                  }}
+                  className="rounded-full border border-border bg-background/70 px-3 py-2 text-sm transition-colors hover:border-red-500/50"
+                  title={`Insert ${reaction}`}
+                >
+                  {reaction}
+                </button>
+              ))}
+            </div>
+          ) : null}
 
           <div className="flex gap-2">
             <label className="relative flex-1">
-              <Smile className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <button
+                type="button"
+                onClick={() => setShowQuickReactions((value) => !value)}
+                className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:text-foreground"
+                aria-label="Open reactions"
+              >
+                <Smile className="h-4 w-4" />
+              </button>
               <input
                 value={draft}
                 onChange={(event) => onDraftChange(event.target.value)}
@@ -153,7 +166,7 @@ export default function WatchChatPanel({
                   }
                 }}
                 placeholder="Write a message or drop a reaction"
-                className="w-full rounded-xl border border-border bg-background/70 py-3 pl-9 pr-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-red-500/50"
+                className="w-full rounded-xl border border-border bg-background/70 py-3 pl-10 pr-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-red-500/50"
               />
             </label>
 

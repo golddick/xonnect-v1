@@ -39,10 +39,10 @@ export async function uploadCreatorVideo(
   if (!uploaded) throw new Error("Upload failed")
 
   return {
-    videoUrl: uploaded.serverData.videoUrl ?? null,
-    fileUrl: uploaded.serverData.fileUrl ?? null,
+    videoUrl: uploaded.serverData.videoUrl ?? uploaded.ufsUrl ?? uploaded.url ?? null,
+    fileUrl: uploaded.serverData.fileUrl ?? uploaded.url ?? null,
     ufsUrl: uploaded.ufsUrl,
-    key: uploaded.key,
+    key: uploaded.key ?? uploaded.url ?? uploaded.ufsUrl,
     serverData: uploaded.serverData,
   }
 }

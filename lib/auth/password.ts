@@ -1,6 +1,6 @@
-import crypto from "crypto"
+import { randomBytes, scryptSync, timingSafeEqual } from "crypto"
 
-import { prisma } from "@/lib/db/prisma"
+import { prisma } from "../db/prisma"
 import { markProfilePasswordState } from "./profiles"
 
 const SCRYPT_PARAMS = {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
-import { ChevronDown, Menu, X, Home, Video, Film, Trophy, Tv, Gamepad2, MicVocal } from "lucide-react"
+import { ChevronDown, Menu, X, Home, Video, Film, Trophy, Tv, Gamepad2, MicVocal, ArrowLeft } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import Logo from "@/components/nav/logo"
@@ -79,7 +79,7 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
     { id: "/", name: "Home", icon: Home, color: "text-red-500" },
     { id: "live-event", name: "Event", icon: Video, color: "text-red-400" },
     { id: "video", name: "Video", icon: Film, color: "text-purple-500" },
-    { id: "sport", name: "Sport", icon: Trophy, color: "text-blue-500" },
+    // { id: "sport", name: "Sport", icon: Trophy, color: "text-blue-500" },
     // { id: "podcast", name: "Podcast", icon: MicVocal, color: "text-gold-500" },
     // { id: "tv-show", name: "TV Show", icon: Tv, color: "text-green-500" },
     // { id: "entertainment", name: "Entertainment", icon: Sparkles, color: "text-yellow-500" },
@@ -118,7 +118,7 @@ const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="p-2 hover:bg-muted rounded-lg transition-colors"
             >
-              {isCollapsed ? <Menu className="w-5 h-5 text-foreground" /> : <X className="w-5 h-5 text-foreground" />}
+              {isCollapsed ? <Menu className="w-5 h-5 text-foreground" /> : <ArrowLeft className="w-5 h-5 text-foreground" />}
             </button>
           </div>
 

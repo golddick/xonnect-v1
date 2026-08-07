@@ -1,71 +1,21 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Play, Users, Radio, TrendingUp, Clock } from "lucide-react"
 import Link from "next/link"
 
-const liveShows = [
-  {
-    id: "1",
-    title: "Afrobeats World Tour Live",
-    host: "DJ Kolade",
-    viewers: 14200,
-    thumbnail: "/afrobeats-concert-stage.jpg",
-    category: "Music",
-    isLive: true,
-    duration: "2h 14m",
-  },
-  {
-    id: "2",
-    title: "Pro Gaming Championship Finals",
-    host: "Team Nexus",
-    viewers: 9800,
-    thumbnail: "/gaming-esports-tournament.jpg",
-    category: "Gaming",
-    isLive: true,
-    duration: "1h 42m",
-  },
-  {
-    id: "3",
-    title: "Tech Founders Summit 2025",
-    host: "Xonnect Events",
-    viewers: 6500,
-    thumbnail: "/tech-conference-ai-presentation.jpg",
-    category: "Tech",
-    isLive: true,
-    duration: "45m",
-  },
-  {
-    id: "4",
-    title: "Masterclass: Music Production",
-    host: "BeatsByAde",
-    viewers: 3200,
-    thumbnail: "/music-production-setup.png",
-    category: "Education",
-    isLive: false,
-    duration: "58m",
-  },
-  {
-    id: "5",
-    title: "Fashion Week Runway Show",
-    host: "StyleHouse Africa",
-    viewers: 7100,
-    thumbnail: "/fashion-show-runway.png",
-    category: "Fashion",
-    isLive: false,
-    duration: "1h 10m",
-  },
-  {
-    id: "6",
-    title: "Community Fitness Challenge",
-    host: "FitWithTemi",
-    viewers: 2900,
-    thumbnail: "/diverse-group-workout.png",
-    category: "Fitness",
-    isLive: false,
-    duration: "35m",
-  },
-]
+type LiveShow = {
+  id: string
+  title: string
+  host: string
+  viewers: number
+  thumbnail: string
+  category: string
+  isLive: boolean
+  duration: string
+  watchId: string
+}
 
 function formatViewers(count: number) {
   if (count >= 1000) return `${(count / 1000).toFixed(1)}K`
@@ -73,8 +23,36 @@ function formatViewers(count: number) {
 }
 
 export default function LiveNow() {
-  const hasLive = liveShows.some((s) => s.isLive)
-  const label = hasLive ? "🔴 Live Now" : "🔥 Trending Now"
+  const [shows, setShows] = useState<LiveShow[]>([])
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadShows() {
+      try {
+        const response = await fetch("/api/landing-page/live-now?limit=6", { cache: "no-store" })
+        if (!response.ok) throw new Error("Failed to load live shows")
+
+        const data = await response.json()
+        if (isMounted) {
+          setShows((data.shows ?? []) as LiveShow[])
+        }
+      } catch (error) {
+        console.error("Failed to load live-now content:", error)
+        if (isMounted) {
+          setShows([])
+        }
+      }
+    }
+
+    loadShows()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  if (shows.length === 0) return null
 
   return (
     <section className="relative z-10 py-12 px-4 sm:px-6 md:px-8">
@@ -82,20 +60,13 @@ export default function LiveNow() {
         {/* Section Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            {hasLive ? (
-              <span className="flex items-center gap-2">
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
-                </span>
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground">Live Now</h2>
+            <span className="flex items-center gap-2">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
               </span>
-            ) : (
-              <span className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-red-500" />
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground">Trending Now</h2>
-              </span>
-            )}
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground">Live Now</h2>
+            </span>
           </div>
           <Link
             href="/tv"
@@ -107,7 +78,7 @@ export default function LiveNow() {
 
         {/* Cards Row */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {liveShows.map((show, index) => (
+          {shows.map((show, index) => (
             <motion.div
               key={show.id}
               initial={{ opacity: 0, y: 20 }}
@@ -116,7 +87,7 @@ export default function LiveNow() {
               transition={{ duration: 0.4, delay: index * 0.07 }}
               className="group relative cursor-pointer"
             >
-              <Link href="/tv">
+              <Link href={`/tv/watch/event/${show.watchId}`}>
                 <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-muted">
                   <img
                     src={show.thumbnail}

@@ -1,11 +1,13 @@
 "use client"
 
+import { useEffect } from "react"
 import { motion } from "framer-motion"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Users, Tv, DollarSign, Globe } from "lucide-react"
 import Link from "next/link"
+import { toast } from "sonner"
 import XonnectHero from "./_component/XonnectHero"
 import LiveNow from "./_component/LiveNow"
 import WhyJoin from "./_component/WhyJoin"
@@ -56,6 +58,22 @@ const faqs = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function HomePage() {
+  useEffect(() => {
+    const handleOffline = () => {
+      toast.error("No network connection")
+    }
+
+    if (typeof window !== "undefined" && !window.navigator.onLine) {
+      handleOffline()
+    }
+
+    window.addEventListener("offline", handleOffline)
+
+    return () => {
+      window.removeEventListener("offline", handleOffline)
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
 
@@ -104,7 +122,7 @@ export default function HomePage() {
               <img
                 src="/futuristic-creator-workspace-with-charts-and-analy.png"
                 alt="Creator workspace"
-                className="relative z-10 rounded-2xl shadow-2xl w-full object-cover"
+                className="relative z-10 rounded-2xl shadow-2xl w-full max-w-[420px] mx-auto object-cover"
               />
               {/* Floating card */}
               <motion.div
@@ -178,7 +196,7 @@ export default function HomePage() {
               </p>
               <ul className="space-y-3">
                 {[
-                  "Pay-per-stream no monthly fees",
+                  "Pay on demand no monthly fees",
                   "HD streaming on TV, laptop & mobile",
                   "Live chat, polls & creator Q&As",
                 ].map((item) => (
@@ -206,7 +224,7 @@ export default function HomePage() {
               className="relative order-1 lg:order-2"
             >
               <div className="absolute -inset-4 bg-red-600/10 rounded-3xl blur-2xl" />
-              <div className="relative z-10 grid grid-cols-2 gap-3">
+              <div className="relative z-10 mx-auto grid max-w-[420px] grid-cols-2 gap-3">
                 <img src="/vibrant-concert.png" alt="Concert" className="rounded-xl shadow-lg w-full object-cover aspect-square" />
                 <img src="/gaming-tournament.png" alt="Gaming" className="rounded-xl shadow-lg w-full object-cover aspect-square mt-6" />
                 <img src="/cooking-show.jpg" alt="Cooking" className="rounded-xl shadow-lg w-full object-cover aspect-square -mt-6" />

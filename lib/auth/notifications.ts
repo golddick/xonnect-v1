@@ -1,14 +1,14 @@
-import { sendEmail } from "@/lib/auth/dropaphi-client"
-import { checkinCredentialsTemplate } from "@/emails/templates/checkin-credentials"
-import { eventLiveNotificationTemplate } from "@/emails/templates/event-live-notification"
-import { securityAlertTemplate } from "@/emails/templates/security-alert"
-import { privilegedLoginTemplate } from "@/emails/templates/privileged-login"
-import { otpSuccessTemplate } from "@/emails/templates/otp"
-import { ticketConfirmationTemplate } from "@/emails/templates/ticket-confirmation"
-import { welcomeBackTemplate } from "@/emails/templates/welcome-back"
-import { welcomeTemplate } from "@/emails/templates/welcome"
-import { buildTicketPayload, createTicketQrDataUrl } from "@/lib/ticket-media"
-import { creatorPlatformNotificationTemplate } from "@/emails/templates/creator-platform-notification"
+import { sendEmail } from "./dropaphi-client"
+import { checkinCredentialsTemplate } from "../../emails/templates/checkin-credentials"
+import { eventLiveNotificationTemplate } from "../../emails/templates/event-live-notification"
+import { securityAlertTemplate } from "../../emails/templates/security-alert"
+import { privilegedLoginTemplate } from "../../emails/templates/privileged-login"
+import { otpSuccessTemplate } from "../../emails/templates/otp"
+import { ticketConfirmationTemplate } from "../../emails/templates/ticket-confirmation"
+import { welcomeBackTemplate } from "../../emails/templates/welcome-back"
+import { welcomeTemplate } from "../../emails/templates/welcome"
+import { buildTicketPayload, createTicketQrDataUrl } from "../ticket-media"
+import { creatorPlatformNotificationTemplate } from "../../emails/templates/creator-platform-notification"
 
 const DEFAULT_FROM_EMAIL = process.env.DROPAPHI_FROM_EMAIL || ''
 const DEFAULT_FROM_NAME = process.env.DROPAPHI_FROM_NAME || 'Xonnect'
@@ -174,6 +174,7 @@ export async function sendCreatorPayoutStatusEmail(context: CreatorPayoutStatusE
     html: creatorPlatformNotificationTemplate({
       fullName: context.fullName,
       message: messageLines.join("\n"),
+      downloadReceiptUrl: context.receiptUrl ?? null,
     }),
     fromName: DEFAULT_FROM_NAME,
     fromEmail: DEFAULT_FROM_EMAIL,

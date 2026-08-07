@@ -1,41 +1,81 @@
 
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import OverviewTab from "./OverviewTab"
 import RevenueHeader from "./RevenueHeader"
 import CategoryTabs from "./CategoryTabs"
-import { mockAdRevenue, mockPremiumVideoRevenue, mockRevenueData, mockStreamRevenue } from "@/lib/data/mock-content"
 import VideosTab from "./VideosTab"
 import EventsTab from "./EventTab"
+
+type RevenueData = {
+  total: number
+  streams: number
+  premiumVideos: number
+  ads: number
+  platformEarnings: number
+  payoutEarnings: number
+  growth: number
+}
+
+type EventRevenue = {
+  id: string
+  creatorName: string
+  streamTitle: string
+  revenue: number
+  platformEarnings: number
+  payoutEarnings: number
+  viewers: number
+  duration: string
+  date: string
+  type: string
+}
+
+type VideoRevenue = {
+  id: string
+  creatorName: string
+  videoTitle: string
+  revenue: number
+  platformEarnings: number
+  payoutEarnings: number
+  views: number
+  price: number
+  sales: number
+  date: string
+}
 
 export default function RevenueAnalytics() {
   const [selectedPeriod, setSelectedPeriod] = useState("30d")
   const [selectedCategory, setSelectedCategory] = useState("overview")
-  const [revenueData, setRevenueData] = useState(mockRevenueData)
-  const [eventRevenue, setEventRevenue] = useState(mockStreamRevenue)
-  const [premiumVideoRevenue, setPremiumVideoRevenue] = useState(mockPremiumVideoRevenue)
-  const [adRevenue, setAdRevenue] = useState(mockAdRevenue)
+  const [revenueData, setRevenueData] = useState<RevenueData>({
+    total: 0,
+    streams: 0,
+    premiumVideos: 0,
+    ads: 0,
+    platformEarnings: 0,
+    payoutEarnings: 0,
+    growth: 0,
+  })
+  const [eventRevenue, setEventRevenue] = useState<EventRevenue[]>([])
+  const [premiumVideoRevenue, setPremiumVideoRevenue] = useState<VideoRevenue[]>([])
   const [loading, setLoading] = useState(false)
   const [exporting, setExporting] = useState(false)
 
-  // Simulate API calls with mock data
   const fetchRevenueData = async () => {
     setLoading(true)
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      // Use mock data based on selected category
-      if (selectedCategory === 'overview') {
-        setRevenueData(mockRevenueData)
-      } else if (selectedCategory === 'events') {
-        setEventRevenue(mockStreamRevenue)
-      } else if (selectedCategory === 'videos') {
-        setPremiumVideoRevenue(mockPremiumVideoRevenue)
+      const response = await fetch("/api/superadmin/revenue")
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to load revenue data")
       }
+
+      setRevenueData(data.overview)
+      setEventRevenue(data.events ?? [])
+      setPremiumVideoRevenue(data.videos ?? [])
     } catch (error) {
-      console.error('Error fetching revenue data:', error)
+      console.error("Error fetching revenue data:", error)
     } finally {
       setLoading(false)
     }
@@ -44,21 +84,15 @@ export default function RevenueAnalytics() {
   const exportReport = async () => {
     setExporting(true)
     try {
-      // Simulate export delay
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Create CSV content
-      let csvContent = "data:text/csv;charset=utf-8,"
-      
-      if (selectedCategory === 'overview') {
-        csvContent += "Metric,Amount,Percentage\n"
-        csvContent += `Total Revenue,${mockRevenueData.total},100%\n`
-        csvContent += `Stream Revenue,${mockRevenueData.streams},${Math.round((mockRevenueData.streams/mockRevenueData.total)*100)}%\n`
-        csvContent += `Premium Videos,${mockRevenueData.premiumVideos},${Math.round((mockRevenueData.premiumVideos/mockRevenueData.total)*100)}%\n`
-        csvContent += `Ad Revenue,${mockRevenueData.ads},${Math.round((mockRevenueData.ads/mockRevenueData.total)*100)}%\n`
-      }
-      
-      const encodedUri = encodeURI(csvContent)
+      const csvContent = [
+        "Metric,Amount,Percentage",
+        `Total Revenue,${revenueData.total},100%`,
+        `Stream Revenue,${revenueData.streams},${Math.round((revenueData.streams / (revenueData.total || 1)) * 100)}%`,
+        `Premium Videos,${revenueData.premiumVideos},${Math.round((revenueData.premiumVideos / (revenueData.total || 1)) * 100)}%`,
+        `Platform Earnings,${revenueData.platformEarnings},${Math.round((revenueData.platformEarnings / (revenueData.total || 1)) * 100)}%`,
+      ].join("\n")
+
+      const encodedUri = encodeURI(`data:text/csv;charset=utf-8,${csvContent}`)
       const link = document.createElement("a")
       link.setAttribute("href", encodedUri)
       link.setAttribute("download", `revenue-report-${selectedPeriod}.csv`)
@@ -66,7 +100,7 @@ export default function RevenueAnalytics() {
       link.click()
       document.body.removeChild(link)
     } catch (error) {
-      console.error('Error exporting report:', error)
+      console.error("Error exporting report:", error)
     } finally {
       setExporting(false)
     }
@@ -79,26 +113,11 @@ export default function RevenueAnalytics() {
   const renderContent = () => {
     switch (selectedCategory) {
       case "overview":
-        return (
-          <OverviewTab 
-            revenueData={revenueData} 
-            loading={loading}
-          />
-        )
+        return <OverviewTab revenueData={revenueData} loading={loading} />
       case "events":
-        return (
-          <EventsTab 
-            eventRevenue={eventRevenue} 
-            loading={loading}
-          />
-        )
+        return <EventsTab eventRevenue={eventRevenue} loading={loading} />
       case "videos":
-        return (
-          <VideosTab 
-            premiumVideoRevenue={premiumVideoRevenue} 
-            loading={loading}
-          />
-        )
+        return <VideosTab premiumVideoRevenue={premiumVideoRevenue} loading={loading} />
       default:
         return null
     }
@@ -107,7 +126,6 @@ export default function RevenueAnalytics() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="flex">
-        
         <div className="flex-1 w-full">
           <RevenueHeader
             selectedPeriod={selectedPeriod}
@@ -119,10 +137,7 @@ export default function RevenueAnalytics() {
           />
 
           <div className="p-8">
-            <CategoryTabs
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-            />
+            <CategoryTabs selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
 
             {renderContent()}
           </div>

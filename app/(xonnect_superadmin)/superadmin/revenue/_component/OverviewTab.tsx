@@ -87,84 +87,54 @@ export default function OverviewTab({ revenueData, loading }: OverviewTabProps) 
 
   return (
     <>
-      {/* Main Revenue Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-8">
-        <Card className="bg-card border border-border rounded-2xl px-2 py-2 hover:bg-card/70 transition-all duration-300 text-foreground">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-muted-foreground text-sm">Total Revenue</p>
-                <p className="text-2xl font-bold">{formatCurrency(revenueData.total)}</p>
-                <p className={`text-sm ${revenueData.growth >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                  {revenueData.growth >= 0 ? '+' : ''}{revenueData.growth}%
-                </p>
-              </div>
-              <DollarSign className="w-8 h-8 text-green-500" />
-            </div>
+      {/* Revenue Breakdown Graph */}
+      {/* <div className="grid grid-cols-1 gap-6 mb-8">
+        <Card className="bg-card border border-border rounded-2xl p-6 hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
+              Revenue Breakdown
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <BarChartComponent
+              data={[
+                {
+                  name: 'Gross Amount',
+                  value: revenueData.total,
+                  color: '#16a34a',
+                  percentage: 100,
+                },
+                {
+                  name: 'Platform Fee',
+                  value: revenueData.platformEarnings,
+                  color: '#3b82f6',
+                  percentage: calculatePercentage(revenueData.platformEarnings, revenueData.total),
+                },
+                {
+                  name: 'Creator Revenue',
+                  value: revenueData.payoutEarnings,
+                  color: '#8b5cf6',
+                  percentage: calculatePercentage(revenueData.payoutEarnings, revenueData.total),
+                },
+                {
+                  name: 'Stream Revenue',
+                  value: revenueData.streams,
+                  color: '#0ea5e9',
+                  percentage: calculatePercentage(revenueData.streams, revenueData.total),
+                },
+                {
+                  name: 'Premium Videos',
+                  value: revenueData.premiumVideos,
+                  color: '#f97316',
+                  percentage: calculatePercentage(revenueData.premiumVideos, revenueData.total),
+                },
+              ]}
+              title="Revenue Categories"
+            />
           </CardContent>
         </Card>
-
-        <Card className="bg-card border border-border rounded-2xl px-2 py-2 hover:bg-card/70 transition-all duration-300 text-foreground">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-muted-foreground text-sm">Platform Earnings</p>
-                <p className="text-2xl font-bold">{formatCurrency(revenueData.platformEarnings)}</p>
-                <p className="text-blue-500 text-sm">
-                  {calculatePercentage(revenueData.platformEarnings, revenueData.total)}% of total
-                </p>
-              </div>
-              <CreditCard className="w-8 h-8 text-blue-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card border border-border rounded-2xl px-2 py-2 hover:bg-card/70 transition-all duration-300 text-foreground">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-muted-foreground text-sm">Creator Payouts</p>
-                <p className="text-2xl font-bold">{formatCurrency(revenueData.payoutEarnings)}</p>
-                <p className="text-purple-500 text-sm">
-                  {calculatePercentage(revenueData.payoutEarnings, revenueData.total)}% of total
-                </p>
-              </div>
-              <Users className="w-8 h-8 text-purple-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card border border-border rounded-2xl px-2 py-2 hover:bg-card/70 transition-all duration-300 text-foreground">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-muted-foreground text-sm">Stream Revenue</p>
-                <p className="text-2xl font-bold">{formatCurrency(revenueData.streams)}</p>
-                <p className="text-blue-500 text-sm">
-                  {calculatePercentage(revenueData.streams, revenueData.total)}% of total
-                </p>
-              </div>
-              <Video className="w-8 h-8 text-blue-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card border border-border rounded-2xl px-2 py-2 hover:bg-card/70 transition-all duration-300 text-foreground">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-muted-foreground text-sm">Premium Videos</p>
-                <p className="text-2xl font-bold">{formatCurrency(revenueData.premiumVideos)}</p>
-                <p className="text-purple-500 text-sm">
-                  {calculatePercentage(revenueData.premiumVideos, revenueData.total)}% of total
-                </p>
-              </div>
-              <Eye className="w-8 h-8 text-purple-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-      </div>
+      </div> */}
 
 
       {/* Revenue Charts */}

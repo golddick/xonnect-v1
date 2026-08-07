@@ -547,20 +547,23 @@ export default function CreatorSettings() {
     )
   }
 
-  const handleRemoveAccount = (accountId: string) => {
-    const accountToRemove = payoutAccounts.find(acc => acc.id === accountId)
-    
-    if (accountToRemove?.isPrimary && payoutAccounts.length > 1) {
-      // If removing primary account, set next account as primary
-      const remainingAccounts = payoutAccounts.filter(acc => acc.id !== accountId)
-      if (remainingAccounts.length > 0) {
-        remainingAccounts[0].isPrimary = true
-        setPayoutAccounts(remainingAccounts)
-      } else {
-        setPayoutAccounts([])
+  const handleRemoveAccount = async (accountId: string) => {
+    setNotificationMessage(null)
+    try {
+      const response = await fetch(`/api/creator/settings/payout-accounts/${accountId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => null)
+        throw new Error(error?.message || 'Failed to remove payout account')
       }
-    } else {
-      setPayoutAccounts(prev => prev.filter(acc => acc.id !== accountId))
+
+      // Remove locally to keep UI responsive. Backend will handle primary reassignment.
+      setPayoutAccounts((prev) => prev.filter((acc) => acc.id !== accountId))
+      setNotificationMessage('Payout account removed')
+    } catch (error) {
+      setNotificationMessage(error instanceof Error ? error.message : 'Failed to remove payout account')
     }
   }
 
@@ -1253,7 +1256,7 @@ export default function CreatorSettings() {
                                 const value = e.target.value
                                 const currentAccountNumber = newAccount.accountNumber
                                 setNewAccount((prev) => ({ ...prev, bankName: value }))
-                                if (value && currentAccountNumber.length === 10) {
+                                if (value && currentAccountNumber && currentAccountNumber.length === 10) {
                                   void resolveAccountName(value, currentAccountNumber)
                                 }
                               }}
@@ -1278,9 +1281,10 @@ export default function CreatorSettings() {
                               value={newAccount.accountNumber}
                               onChange={(e) => {
                                 const value = e.target.value.replace(/\D/g, '')
+                                const bankName = newAccount.bankName
                                 setNewAccount((prev) => ({ ...prev, accountNumber: value }))
-                                if (value.length === 10 && newAccount.bankName) {
-                                  void resolveAccountName(newAccount.bankName, value)
+                                if (value.length === 10 && bankName) {
+                                  void resolveAccountName(bankName, value)
                                 }
                               }}
                               placeholder="0000000000"

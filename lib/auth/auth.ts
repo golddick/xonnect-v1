@@ -2,22 +2,22 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { headers } from "next/headers"
 
-import { PrismaAdapterWithDropid } from "@/lib/auth/prisma-adapter-dropid"
+import { PrismaAdapterWithDropid } from "./prisma-adapter-dropid"
 
-import { Role } from "@/lib/generated/prisma"
+import { Role } from "../generated/prisma"
 import {
   sendSecurityAlertEmail,
   sendWelcomeBackEmail,
-} from "@/lib/auth/notifications"
+} from "./notifications"
 import {
   getProfileByEmail,
   markProfileEmailVerified,
   markProfileLastLogin,
   upsertProfile,
-} from "@/lib/auth/profiles"
-import { verifyPasswordForEmail } from "@/lib/auth/password"
-import { verifyLoginToken } from "@/lib/auth/login-token"
-import { prisma } from "@/lib/db/prisma"
+} from "./profiles"
+import { verifyPasswordForEmail } from "./password"
+import { verifyLoginToken } from "./login-token"
+import { prisma } from "../db/prisma"
 
 type TokenClaims = {
   profileId?: string

@@ -1,5 +1,5 @@
 import { PrismaPg } from "@prisma/adapter-pg"
-import { PrismaClient } from "@/lib/generated/prisma"
+import { PrismaClient } from "../generated/prisma"
 
 const connectionString =
   process.env.NODE_ENV === "production"

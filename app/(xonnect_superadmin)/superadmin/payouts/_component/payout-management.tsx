@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { Search, Filter, Download, DollarSign, TrendingUp, CheckCircle, Clock, XCircle, Eye, Banknote, PieChart } from "lucide-react"
+import { Search, Filter, Download, DollarSign, TrendingUp, CheckCircle, Clock, XCircle, Eye } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -104,8 +104,6 @@ const PayoutManagement = () => {
 
   const totalStats = {
     totalPayouts: payouts.reduce((sum, payout) => sum + payout.amount, 0),
-    platformRevenue: payouts.reduce((sum, payout) => sum + Math.round(payout.amount * 0.1), 0),
-    creatorEarnings: payouts.reduce((sum, payout) => sum + Math.round(payout.amount * 0.9), 0),
     pendingPayouts: payouts.filter((p) => p.status === "pending").length,
   }
 
@@ -132,7 +130,7 @@ const PayoutManagement = () => {
       </div>
 
       <div className="p-8 border-b border-border">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="bg-card border border-border rounded-2xl p-6 hover:bg-card/70 transition-all duration-300 text-foreground">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -141,30 +139,6 @@ const PayoutManagement = () => {
                   <p className="text-2xl font-bold">{formatCurrency(totalStats.totalPayouts)}</p>
                 </div>
                 <DollarSign className="w-8 h-8 text-green-500" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border border-border rounded-2xl p-6 hover:bg-card/70 transition-all duration-300 text-foreground">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-muted-foreground text-sm">Platform Revenue</p>
-                  <p className="text-2xl font-bold">{formatCurrency(totalStats.platformRevenue)}</p>
-                </div>
-                <PieChart className="w-8 h-8 text-red-500" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border border-border rounded-2xl p-6 hover:bg-card/70 transition-all duration-300 text-foreground">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-muted-foreground text-sm">Creator Earnings</p>
-                  <p className="text-2xl font-bold">{formatCurrency(totalStats.creatorEarnings)}</p>
-                </div>
-                <Banknote className="w-8 h-8 text-blue-500" />
               </div>
             </CardContent>
           </Card>

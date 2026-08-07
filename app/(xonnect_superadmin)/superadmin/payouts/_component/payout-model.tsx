@@ -19,6 +19,7 @@ import {
   Eye,
 } from "lucide-react"
 import { toast } from "sonner"
+import { UploadButton } from "@/lib/utils/uploadthing"
 
 type PayoutData = {
   id: string
@@ -54,10 +55,10 @@ const PayoutModal: React.FC<PayoutModalProps> = ({ payout, onClose, onRefresh })
   const [showRejectModal, setShowRejectModal] = useState(false)
   const [showCompleteModal, setShowCompleteModal] = useState(false)
   const [showAccountDetails, setShowAccountDetails] = useState(false)
+  const [showAccountNumber, setShowAccountNumber] = useState(false)
   const [approvalNote, setApprovalNote] = useState("")
   const [rejectionNote, setRejectionNote] = useState("")
   const [completionNote, setCompletionNote] = useState("")
-  const [receiptFile, setReceiptFile] = useState<File | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState("")
 
@@ -113,7 +114,6 @@ const PayoutModal: React.FC<PayoutModalProps> = ({ payout, onClose, onRefresh })
   const handleCompleteClick = () => {
     setShowCompleteModal(true)
     setError("")
-    setReceiptFile(null)
   }
 
   const submitApproval = async () => {
@@ -173,24 +173,7 @@ const PayoutModal: React.FC<PayoutModalProps> = ({ payout, onClose, onRefresh })
     setError("")
 
     try {
-      let receiptUrl = payout.receiptUrl
-
-      if (!receiptUrl && receiptFile) {
-        const formData = new FormData()
-        formData.append("receipt", receiptFile)
-
-        const uploadResponse = await fetch(`/api/superadmin/payouts/${payout.id}`, {
-          method: "POST",
-          body: formData,
-        })
-
-        const uploadData = await uploadResponse.json()
-        if (!uploadResponse.ok) {
-          throw new Error(uploadData?.message || "Receipt upload failed")
-        }
-
-        receiptUrl = uploadData.receiptUrl
-      }
+      const receiptUrl = payout.receiptUrl
 
       if (!receiptUrl) {
         throw new Error("Please upload a receipt before completing this payout")
@@ -212,39 +195,6 @@ const PayoutModal: React.FC<PayoutModalProps> = ({ payout, onClose, onRefresh })
       onClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to complete payout")
-    } finally {
-      setIsProcessing(false)
-    }
-  }
-
-  const handleUploadReceipt = async () => {
-    if (!receiptFile) {
-      setError("Select a receipt file to upload")
-      return
-    }
-
-    setIsProcessing(true)
-    setError("")
-
-    try {
-      const formData = new FormData()
-      formData.append("receipt", receiptFile)
-
-      const response = await fetch(`/api/superadmin/payouts/${payout.id}`, {
-        method: "POST",
-        body: formData,
-      })
-
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data?.message || "Receipt upload failed")
-      }
-
-      toast.success("Receipt uploaded")
-      onRefresh()
-      onClose()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Receipt upload failed")
     } finally {
       setIsProcessing(false)
     }
@@ -331,8 +281,15 @@ const PayoutModal: React.FC<PayoutModalProps> = ({ payout, onClose, onRefresh })
                       <p className="text-foreground font-semibold text-lg">{payout.bankDetails.bankName}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground text-sm">Account Number</p>
-                      <p className="text-foreground font-semibold text-lg font-mono">••••••••{payout.bankDetails.accountNumber.slice(-4)}</p>
+                        <p className="text-muted-foreground text-sm">Account Number</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-foreground font-semibold text-lg font-mono">
+                            {showAccountNumber ? payout.bankDetails.accountNumber : `••••••••${payout.bankDetails.accountNumber.slice(-4)}`}
+                          </p>
+                          <button onClick={() => setShowAccountNumber((v) => !v)} className="text-blue-400 p-1 rounded">
+                            <Eye className="w-5 h-5" />
+                          </button>
+                        </div>
                     </div>
                     <div>
                       <p className="text-muted-foreground text-sm">Account Name</p>
@@ -351,7 +308,7 @@ const PayoutModal: React.FC<PayoutModalProps> = ({ payout, onClose, onRefresh })
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
               <div className="bg-muted/50 border border-border rounded-xl p-5">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 bg-blue-600/20 rounded-lg flex items-center justify-center">
@@ -362,30 +319,7 @@ const PayoutModal: React.FC<PayoutModalProps> = ({ payout, onClose, onRefresh })
                     <p className="text-2xl font-bold text-foreground">{formatCurrency(payout.amount)}</p>
                   </div>
                 </div>
-              </div>
-
-              <div className="bg-muted/50 border border-border rounded-xl p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-red-600/20 rounded-lg flex items-center justify-center">
-                    <PieChart className="w-5 h-5 text-red-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Platform Fee (10%)</p>
-                    <p className="text-2xl font-bold text-red-400">{formatCurrency(Math.round(payout.amount * 0.1))}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-muted/50 border border-green-600/30 rounded-xl p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-green-600/20 rounded-lg flex items-center justify-center">
-                    <Banknote className="w-5 h-5 text-green-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Creator Earnings (90%)</p>
-                    <p className="text-2xl font-bold text-green-400">{formatCurrency(Math.round(payout.amount * 0.9))}</p>
-                  </div>
-                </div>
+                <p className="text-xs text-muted-foreground">Revenue split already applied at payment time; individual fees are omitted here.</p>
               </div>
             </div>
 
@@ -459,10 +393,42 @@ const PayoutModal: React.FC<PayoutModalProps> = ({ payout, onClose, onRefresh })
 
               {payout.status === "processing" && (
                 <>
-                  <button onClick={handleUploadReceipt} className="flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-400 hover:bg-blue-600/10 rounded-lg transition-colors">
-                    <FileText className="w-4 h-4" />
-                    Upload Receipt
-                  </button>
+                  <UploadButton
+                    endpoint="imageUploader"
+                    onClientUploadComplete={async (res) => {
+                      if (!res || res.length === 0) {
+                        toast.error("Upload failed")
+                        return
+                      }
+
+                      const url = res[0].url ?? res[0].ufsUrl ?? null
+                      if (!url) {
+                        toast.error("Upload returned no URL")
+                        return
+                      }
+
+                      try {
+                        const r = await fetch(`/api/superadmin/payouts/${payout.id}`, {
+                          method: "PATCH",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ action: "upload-receipt", receiptUrl: url }),
+                        })
+
+                        const d = await r.json()
+                        if (!r.ok) throw new Error(d?.message || "Failed to save receipt")
+
+                        toast.success("Receipt uploaded")
+                        onRefresh()
+                      } catch (err) {
+                        toast.error(err instanceof Error ? err.message : "Failed to save receipt")
+                      }
+                    }}
+                    onUploadError={(err) => {
+                      toast.error(`Upload failed: ${err?.message ?? "unknown"}`)
+                    }}
+                    className="uploadthing-button"
+                  />
+
                   <button onClick={handleCompleteClick} className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-foreground rounded-lg transition-colors">
                     <CheckCircle className="w-4 h-4" />
                     Complete Payout
@@ -534,9 +500,8 @@ const PayoutModal: React.FC<PayoutModalProps> = ({ payout, onClose, onRefresh })
             <h4 className="text-lg font-semibold text-foreground mb-2">Complete Payout</h4>
             <p className="text-muted-foreground text-sm mb-6">Upload the transfer receipt and mark the payout completed.</p>
 
-            <div className="mb-4">
-              <label className="block text-muted-foreground text-sm mb-2">Receipt File</label>
-              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => setReceiptFile(e.target.files?.[0] || null)} className="w-full text-sm text-muted-foreground" />
+            <div className="mb-6">
+              <p className="text-sm text-muted-foreground">Upload a receipt first using the uploader above, then complete the payout.</p>
             </div>
 
             <div className="mb-6">
@@ -550,7 +515,7 @@ const PayoutModal: React.FC<PayoutModalProps> = ({ payout, onClose, onRefresh })
             </div>
 
             <div className="flex gap-3">
-              <button onClick={() => { setShowCompleteModal(false); setCompletionNote(""); setReceiptFile(null); setError("") }} className="flex-1 px-4 py-2 border border-gray-600 text-muted-foreground hover:text-foreground hover:border-gray-500 rounded-lg transition-colors" disabled={isProcessing}>Cancel</button>
+              <button onClick={() => { setShowCompleteModal(false); setCompletionNote(""); setError("") }} className="flex-1 px-4 py-2 border border-gray-600 text-muted-foreground hover:text-foreground hover:border-gray-500 rounded-lg transition-colors" disabled={isProcessing}>Cancel</button>
               <button onClick={submitCompletion} disabled={isProcessing} className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-foreground rounded-lg transition-colors flex items-center justify-center gap-2">
                 {isProcessing ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <CheckCircle className="w-4 h-4" />}
                 Mark Completed
