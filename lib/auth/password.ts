@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync, timingSafeEqual } from "crypto"
+import crypto from "crypto"
 
 import { prisma } from "../db/prisma"
 import { markProfilePasswordState } from "./profiles"
@@ -11,7 +11,7 @@ const SCRYPT_PARAMS = {
 }
 
 export function hashPassword(password: string) {
-  const salt = crypto.randomBytes(16) 
+  const salt = crypto.randomBytes(16)
   const derived = crypto.scryptSync(password, salt, SCRYPT_PARAMS.keylen, SCRYPT_PARAMS)
   return `scrypt$${salt.toString("hex")}$${derived.toString("hex")}`
 }

@@ -122,7 +122,7 @@ export default function HomePage() {
               <img
                 src="/futuristic-creator-workspace-with-charts-and-analy.png"
                 alt="Creator workspace"
-                className="relative z-10 rounded-2xl shadow-2xl w-full max-w-[420px] mx-auto object-cover"
+                className="relative z-10 rounded-2xl shadow-2xl w-full  object-cover"
               />
               {/* Floating card */}
               <motion.div
@@ -224,7 +224,7 @@ export default function HomePage() {
               className="relative order-1 lg:order-2"
             >
               <div className="absolute -inset-4 bg-red-600/10 rounded-3xl blur-2xl" />
-              <div className="relative z-10 mx-auto grid max-w-[420px] grid-cols-2 gap-3">
+              <div className="relative z-10 grid grid-cols-2 gap-3">
                 <img src="/vibrant-concert.png" alt="Concert" className="rounded-xl shadow-lg w-full object-cover aspect-square" />
                 <img src="/gaming-tournament.png" alt="Gaming" className="rounded-xl shadow-lg w-full object-cover aspect-square mt-6" />
                 <img src="/cooking-show.jpg" alt="Cooking" className="rounded-xl shadow-lg w-full object-cover aspect-square -mt-6" />
