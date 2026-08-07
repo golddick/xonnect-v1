@@ -32,6 +32,7 @@ export default function CreatorLivePage() {
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<number | null>(null)
   const [recordingUrl, setRecordingUrl] = useState<string | null>(null)
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!eventId) return
@@ -98,6 +99,24 @@ export default function CreatorLivePage() {
     }
   }, [])
 
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (uploading) {
+        event.preventDefault()
+        event.returnValue = ""
+        return ""
+      }
+    }
+
+    if (uploading) {
+      window.addEventListener("beforeunload", handleBeforeUnload)
+    }
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+    }
+  }, [uploading])
+
   const startMediaRecorder = async (videoTrack: any, audioTrack: any) => {
     try {
       if (!videoTrack?.mediaStreamTrack || !audioTrack?.mediaStreamTrack) return
@@ -127,43 +146,7 @@ export default function CreatorLivePage() {
         recordingChunksRef.current = []
 
         if (blob.size > 0) {
-          setUploading(true)
-          setUploadProgress(0)
-          try {
-            const file = new File([blob], `creator-event-${eventId}-${Date.now()}.webm`, {
-              type: "video/webm",
-            })
-            const result = await uploadCreatorVideo(file, (pct) => {
-              setUploadProgress(Math.round(pct))
-            })
-            const uploadedUrl = result.videoUrl ?? result.fileUrl ?? result.ufsUrl
-            const uploadedFileId = result.key ?? result.fileUrl ?? result.ufsUrl
-
-            if (!uploadedUrl) {
-              throw new Error("Upload completed without a valid video URL")
-            }
-
-            setRecordingUrl(uploadedUrl)
-            const response = await fetch(`/api/creator/events/${eventId}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                recordedVideoUrl: uploadedUrl,
-                recordedVideoFileId: uploadedFileId,
-                recordingStatus: "ready",
-              }),
-            })
-
-            if (!response.ok) {
-              const data = await response.json().catch(() => null)
-              throw new Error(data?.message || "Failed to save recorded video to the event")
-            }
-          } catch (err) {
-            setError(err instanceof Error ? err.message : String(err))
-          } finally {
-            setUploading(false)
-            setUploadProgress(null)
-          }
+          recordingBlobRef.current = blob
         }
 
         recorderStopResolver.current?.()
@@ -176,6 +159,8 @@ export default function CreatorLivePage() {
       setError(err instanceof Error ? err.message : String(err))
     }
   }
+
+  const recordingBlobRef = useRef<Blob | null>(null)
 
   const stopMediaRecorder = () => {
     return new Promise<void>((resolve) => {
@@ -305,6 +290,55 @@ export default function CreatorLivePage() {
   const handleStop = async () => {
     try {
       await stopMediaRecorder()
+
+      if (recordingBlobRef.current && recordingBlobRef.current.size > 0) {
+        setUploading(true)
+        setUploadProgress(0)
+
+        try {
+          const file = new File([recordingBlobRef.current], `creator-event-${eventId}-${Date.now()}.webm`, {
+            type: "video/webm",
+          })
+          const result = await uploadCreatorVideo(file, (pct) => {
+            setUploadProgress(Math.round(pct))
+          })
+          const uploadedUrl = result.videoUrl ?? result.fileUrl ?? result.ufsUrl
+          const uploadedFileId = result.key ?? result.fileUrl ?? result.ufsUrl
+
+          console.log("Upload result:", result)
+
+          if (!uploadedUrl) {
+            throw new Error("Upload completed without a valid video URL")
+          }
+
+          setRecordingUrl(uploadedUrl)
+          const response = await fetch(`/api/creator/events/${eventId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              recordedVideoUrl: uploadedUrl,
+              recordedVideoFileId: uploadedFileId,
+              recordingStatus: "ready",
+            }),
+          })
+
+          if (!response.ok) {
+            const data = await response.json().catch(() => null)
+              throw new Error(data?.message || "Failed to save recorded video to the event")
+          }
+
+          recordingBlobRef.current = null
+        } catch (err) {
+            const message = err instanceof Error ? err.message : String(err)
+            setError(message)
+            setUploadError(message)
+            return
+        } finally {
+          setUploading(false)
+          setUploadProgress(null)
+        }
+      }
+
       await endLiveEvent()
 
       if (room) {
@@ -339,7 +373,7 @@ export default function CreatorLivePage() {
       publishedVideoRef.current = null
       publishedAudioRef.current = null
       setIsRecording(false)
-      router.push(`/creator/events`)
+      router.push(`/tv`)
     }
   }
 

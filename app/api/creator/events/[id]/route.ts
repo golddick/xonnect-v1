@@ -222,7 +222,7 @@ export async function PUT(
       ].includes(key)
     )
 
-    if ((event.status === "LIVE" || (event.status === "ENDED" && !isRecordingOnlyUpdate))) {
+    if ((event.status === "LIVE" || event.status === "ENDED") && !isRecordingOnlyUpdate) {
       return NextResponse.json(
         { message: "Live or ended events cannot be edited" },
         { status: 409 }
