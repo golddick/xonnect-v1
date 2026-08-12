@@ -3,6 +3,7 @@
 
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { BadgePercent, Lock, X } from "lucide-react"
 
@@ -82,26 +83,25 @@ export default function WatchAccessOverlay({
   onContinueToPayment,
   secondaryActionLabel,
   secondaryActionHref,
-  showAccessCodeInput = true,
+  showAccessCodeInput = false,
   showGuestEmailPrompt = false,
   guestEmail = "",
   onGuestEmailChange,
   onGuestEmailSubmit,
   onDismiss,
 }: WatchAccessOverlayProps) {
+  const [showCodeForm, setShowCodeForm] = useState(false)
+  const shouldShowAccessCodeInput = showAccessCodeInput || showCodeForm
+
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/80 px-3 py-4 sm:px-4 sm:py-6 backdrop-blur-sm">
-      <div className="w-full max-w-[min(100%,32rem)] max-h-[min(92vh,44rem)] overflow-y-auto rounded-3xl border border-border/60 bg-background/95 p-4 shadow-2xl sm:p-5 md:p-6 space-y-4 overscroll-contain">
+      <div className="w-full max-w-[min(100%,32rem)] max-h-[min(100vh,44rem)] overflow-y-auto rounded-3xl border border-border/60 bg-background/95 p-4 shadow-2xl sm:p-5 md:p-6 space-y-4 overscroll-contain">
         {/* Header */}
         <div className="flex items-start gap-3 sm:items-center">
-          <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full bg-red-600/15 text-red-500">
+          <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-between rounded-full bg-red-600/15 text-red-500">
             <Lock className="h-4 w-4 sm:h-5 sm:w-5" />
-          </div>
-          <div className="min-w-0 flex-1 hidden lg:block">
-            <p className="text-sm font-semibold text-foreground leading-tight ">{title}</p>
-            <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{description}</p>
-          </div>
-          {onDismiss ? (
+
+             {onDismiss ? (
             <button
               type="button"
               onClick={onDismiss}
@@ -111,16 +111,42 @@ export default function WatchAccessOverlay({
               <X className="h-4 w-4" />
             </button>
           ) : null}
+          </div>
+          <div className="min-w-0 flex-1 hidden lg:block">
+            <p className="text-sm font-semibold text-foreground leading-tight ">{title}</p>
+            <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{description}</p>
+          </div>
+         
         </div>
 
+        {!showAccessCodeInput && (
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              Locked
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowCodeForm(true)}
+              className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-foreground transition hover:border-red-600/60 hover:bg-red-600/5"
+            >
+              Grant access
+            </button>
+          </div>
+        )}
+
         {/* Access Code Input */}
-        {showAccessCodeInput ? (
+        {shouldShowAccessCodeInput ? (
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
             <label className="space-y-1.5 text-sm w-full">
               <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">
                 Access code
               </span>
-              <input
+             
+            </label>
+
+            <div className="flex items-center justify-between gap-2 w-full">
+
+             <input
                 value={accessCode}
                 onChange={(event) => onAccessCodeChange(event.target.value)}
                 onKeyDown={(event) => {
@@ -136,9 +162,8 @@ export default function WatchAccessOverlay({
                 spellCheck={false}
                 autoFocus
               />
-            </label>
 
-            <button
+              <button
               type="button"
               onClick={onUnlock}
               className="w-full rounded-xl bg-red-600 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98] sm:w-auto sm:min-w-[128px] sm:py-3"
@@ -153,6 +178,10 @@ export default function WatchAccessOverlay({
                 primaryActionLabel
               )}
             </button>
+
+             </div> 
+
+            
           </div>
         ) : (
           <div className="hidden lg:block rounded-xl border border-border/60 bg-muted/20 p-3.5 sm:p-4 text-sm text-muted-foreground leading-relaxed">
@@ -165,10 +194,9 @@ export default function WatchAccessOverlay({
           <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5 sm:p-4 space-y-3">
             <div className="space-y-1.5">
               <p className="text-sm font-semibold text-foreground">Continue with your email</p>
-              <p className="text-sm text-muted-foreground">We only need your email address to start checkout. We’ll use it to create your display name.</p>
+              <p className="text-xs text-muted-foreground">We’ll use this email to continue checkout.</p>
             </div>
-            <label className="space-y-1.5 text-sm block">
-              <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">Email</span>
+            <div className="flex items-center justify-between gap-2 w-full">
               <input
                 value={guestEmail}
                 onChange={(event) => onGuestEmailChange?.(event.target.value)}
@@ -176,7 +204,7 @@ export default function WatchAccessOverlay({
                 type="email"
                 className="w-full rounded-xl border border-border bg-transparent px-4 py-3.5 sm:py-3 text-foreground text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all"
               />
-            </label>
+            </div>
             <button
               type="button"
               onClick={onGuestEmailSubmit}
@@ -189,7 +217,7 @@ export default function WatchAccessOverlay({
 
         {/* Purchase Options */}
         {purchaseOptions.length > 0 && onPurchase && (
-          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+          <div className="grid gap-2 lg:gap-2.5 grid-cols-3">
             {purchaseOptions.map((option) => {
               const isDisabled =
                 isPurchasing !== null ||

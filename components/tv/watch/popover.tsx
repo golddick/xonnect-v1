@@ -86,7 +86,7 @@ export default function WatchAccessPopover({
   onContinueToPayment,
   secondaryActionLabel,
   secondaryActionHref,
-  showAccessCodeInput = true,
+  showAccessCodeInput = false,
   showGuestEmailPrompt = false,
   guestEmail = "",
   onGuestEmailChange,
@@ -94,6 +94,8 @@ export default function WatchAccessPopover({
   onDismiss,
 }: WatchAccessPopoverProps) {
   const [open, setOpen] = useState(false)
+  const [showCodeForm, setShowCodeForm] = useState(false)
+  const shouldShowAccessCodeInput = showAccessCodeInput || showCodeForm
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -139,8 +141,23 @@ export default function WatchAccessPopover({
             )}
           </div>
 
+          {!showAccessCodeInput && (
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                Locked
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCodeForm(true)}
+                className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-foreground transition hover:border-red-600/60 hover:bg-red-600/5"
+              >
+                Grant access
+              </button>
+            </div>
+          )}
+
           {/* Access Code Input */}
-          {showAccessCodeInput ? (
+          {shouldShowAccessCodeInput ? (
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
               <label className="space-y-1.5 text-sm w-full">
                 <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">
@@ -191,7 +208,7 @@ export default function WatchAccessPopover({
             <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5 sm:p-4 space-y-3">
               <div className="space-y-1.5">
                 <p className="text-sm font-semibold text-foreground">Continue with your email</p>
-                <p className="text-sm text-muted-foreground">We only need your email address to start checkout. We'll use it to create your display name.</p>
+                <p className="text-xs text-muted-foreground">We’ll use this email to continue checkout.</p>
               </div>
               <label className="space-y-1.5 text-sm block">
                 <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">Email</span>

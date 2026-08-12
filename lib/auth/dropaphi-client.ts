@@ -14,7 +14,7 @@ function headers() {
   }
   return {
     'Content-Type': 'application/json',
-    'drop-api-key': apiKey,
+    'DROP-API-Key': apiKey,
   }
 }
 
@@ -231,6 +231,66 @@ export async function getEmailStatus(emailId: string): Promise<EmailStatusResult
   }
 }
 
+export interface SubscribeNewsletterProps {
+  email: string
+  name?: string
+  source?: string
+  templateId?: string
+}
+
+export interface SubscribeNewsletterResult {
+  ok: boolean
+  success?: boolean
+  message?: string
+  subscriber?: {
+    id: string
+    email: string
+    status: string
+  }
+}
+
+export async function subscribeNewsletter(
+  options: SubscribeNewsletterProps
+): Promise<SubscribeNewsletterResult> {
+  try {
+    const res = await fetch(`${BASE}/v1/newsletter/subscribe`, {
+      method: 'POST',
+      headers: headers(),
+      body: JSON.stringify({
+        email: options.email,
+        name: options.name,
+        source: options.source ?? 'landing_page',
+        templateId: options.templateId ?? process.env.DROPAPHI_NEWSLETTER_TEMPLATE_ID,
+      }),
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      console.error('[DropAphi Subscribe Newsletter Error]', data)
+      return {
+        ok: false,
+        success: data?.success ?? false,
+        message: data?.message ?? 'Failed to subscribe to newsletter.',
+      }
+    }
+
+    return {
+      ok: true,
+      success: data?.success ?? true,
+      message: data?.message,
+      subscriber: data?.subscriber,
+    }
+  } catch (error) {
+    console.error('[DropAphi Subscribe Newsletter Exception]', error)
+    return {
+      ok: false,
+      success: false,
+      message: 'Newsletter service unavailable.',
+    }
+  }
+}
+
 // ─── Files ──────────────────────────────────────────────────────────────────
 
 export interface UploadResult {
@@ -327,6 +387,125 @@ export interface FileInfoResult {
     url: string
     size: number
     uploadedAt: string
+  }
+}
+
+export interface DropaphiBlogListResult {
+  success: boolean
+  data?: {
+    posts: Array<{
+      id: string
+      title: string
+      slug: string
+      excerpt?: string
+      publishedAt?: string
+    }>
+    pagination: {
+      page: number
+      limit: number
+      total: number
+      pages: number
+    }
+  }
+  error?: string
+}
+
+export interface DropaphiBlogPostResult {
+  success: boolean
+  data?: {
+    id: string
+    title: string
+    slug: string
+    content?: string
+    excerpt?: string
+    author?: {
+      fullName?: string
+      name?: string
+      avatar?: string
+      bio?: string
+    }
+    publishedAt?: string
+  }
+  error?: string
+}
+
+export async function getBlogPostsFromDropaphi(): Promise<DropaphiBlogListResult> {
+  try {
+    const res = await fetch('https://dropaphi.xyz/api/v1/blog', {
+      method: 'GET',
+      headers: {
+        'DROP-API-Key': process.env.DROPAPHI_API_KEY || process.env.NEXT_PUBLIC_DROPAPHI_API_KEY || '',
+      },
+      cache: 'no-store',
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      console.error('[DropAphi Blog List Error]', data)
+      return {
+        success: false,
+        error: data?.message ?? 'Failed to fetch blog posts.',
+        data: {
+          posts: [],
+          pagination: {
+            page: 1,
+            limit: 10,
+            total: 0,
+            pages: 0,
+          },
+        },
+      }
+    }
+
+    return data
+  } catch (error) {
+    console.error('[DropAphi Blog List Exception]', error)
+    return {
+      success: false,
+      error: 'Blog service unavailable.',
+      data: {
+        posts: [],
+        pagination: {
+          page: 1,
+          limit: 10,
+          total: 0,
+          pages: 0,
+        },
+      },
+    }
+  }
+}
+
+export async function getBlogPostBySlugFromDropaphi(slug: string): Promise<DropaphiBlogPostResult> {
+  try {
+    const res = await fetch(`https://dropaphi.xyz/api/v1/blog/${slug}`, {
+      method: 'GET',
+      headers: {
+        'DROP-API-Key': process.env.DROPAPHI_API_KEY || process.env.NEXT_PUBLIC_DROPAPHI_API_KEY || '',
+      },
+      cache: 'no-store',
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      console.error('[DropAphi Blog Single Error]', data)
+      return {
+        success: false,
+        error: data?.message ?? 'Failed to fetch blog post.',
+        data: undefined,
+      }
+    }
+
+    return data
+  } catch (error) {
+    console.error('[DropAphi Blog Single Exception]', error)
+    return {
+      success: false,
+      error: 'Blog service unavailable.',
+      data: undefined,
+    }
   }
 }
 

@@ -1,18 +1,21 @@
 import { NextResponse } from "next/server"
 
-import {  upsertProfile } from "@/lib/auth/profiles"
+import { upsertProfile } from "@/lib/auth/profiles"
 import { Role } from "@/lib/generated/prisma"
 import { sendWelcomeEmail } from "@/lib/auth/notifications"
+import { subscribeNewsletter } from "@/lib/auth/dropaphi-client"
 
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as {
       fullName?: string
       email?: string
+      newsletterOptIn?: boolean
     }
 
     const email = body.email?.toLowerCase().trim()
     const fullName = body.fullName?.trim() || null
+    const shouldSubscribe = Boolean(body.newsletterOptIn)
 
     if (!email) {
       return NextResponse.json(
@@ -26,6 +29,18 @@ export async function POST(request: Request) {
       fullName,
       role: Role.USER,
     })
+
+    if (shouldSubscribe) {
+      try {
+        await subscribeNewsletter({
+          email,
+          name: fullName || undefined,
+          source: "signup_page",
+        })
+      } catch (newsletterError) {
+        console.error("Failed to subscribe user to newsletter:", newsletterError)
+      }
+    }
 
     try {
       await sendWelcomeEmail({

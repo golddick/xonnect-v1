@@ -29,6 +29,7 @@ export type EventWatchData = {
   thumbnail: string | null
   thumbnailVideoUrl: string | null
   recordedVideoUrl: string | null
+  recordingUrl: string | null
   scheduledAt: string | null
   durationMinutes: number
   maxViewers: number | null
@@ -79,7 +80,7 @@ function normalizeTicketAccess(value?: string | null): "STREAM" | "VENUE" {
 }
 
 function isEventPublic(status: string) {
-  return ["SCHEDULED", "LIVE", "ENDED"].includes(status.toUpperCase())
+  return ["SCHEDULED", "LIVE", "PAUSED", "ENDED"].includes(status.toUpperCase())
 }
 
 export async function loadEventWatchData(eventId: string, options?: { accessCode?: string | null }) {
@@ -111,6 +112,7 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
       thumbnailUrl: true,
       thumbnailVideoUrl: true,
       recordedVideoUrl: true,
+      recordingUrl: true,
       scheduledAt: true,
       durationMinutes: true,
       maxViewers: true,
@@ -259,6 +261,7 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
       thumbnail: event.thumbnailUrl,
       thumbnailVideoUrl: event.thumbnailVideoUrl,
       recordedVideoUrl: event.recordedVideoUrl,
+      recordingUrl: event.recordingUrl,
       scheduledAt: event.scheduledAt?.toISOString() ?? null,
       durationMinutes: event.durationMinutes,
       viewsCount:event.viewsCount,

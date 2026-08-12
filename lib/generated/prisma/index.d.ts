@@ -187,6 +187,7 @@ export const CreatorEventStatus: {
   DRAFT: 'DRAFT',
   SCHEDULED: 'SCHEDULED',
   LIVE: 'LIVE',
+  PAUSED: 'PAUSED',
   ENDED: 'ENDED',
   CANCELLED: 'CANCELLED'
 };

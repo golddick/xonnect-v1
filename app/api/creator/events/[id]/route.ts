@@ -7,7 +7,7 @@ import { Role } from "@/lib/generated/prisma"
 
 const db = prisma
 
-type EventStatusInput = "draft" | "scheduled" | "live" | "ended" | "cancelled"
+type EventStatusInput = "draft" | "scheduled" | "live" | "paused" | "ended" | "cancelled"
 type RecordingStatusInput = "disabled" | "pending" | "recording" | "processing" | "ready" | "failed"
 
 function normalizeEventStatus(value?: string | null) {
@@ -16,6 +16,8 @@ function normalizeEventStatus(value?: string | null) {
       return "DRAFT"
     case "live":
       return "LIVE"
+    case "paused":
+      return "PAUSED"
     case "ended":
       return "ENDED"
     case "cancelled":
@@ -221,6 +223,7 @@ export async function PUT(
         "recordingUrl",
       ].includes(key)
     )
+    const isTransitionToLive = body.status?.toLowerCase() === "live"
 
     if ((event.status === "LIVE" || event.status === "ENDED") && !isRecordingOnlyUpdate) {
       return NextResponse.json(
@@ -229,7 +232,7 @@ export async function PUT(
       )
     }
 
-    if (!isRecordingOnlyUpdate && event.scheduledAt && event.scheduledAt <= now) {
+    if (!isRecordingOnlyUpdate && !isTransitionToLive && event.scheduledAt && event.scheduledAt <= now) {
       return NextResponse.json(
         { message: "Past events cannot be edited" },
         { status: 409 }

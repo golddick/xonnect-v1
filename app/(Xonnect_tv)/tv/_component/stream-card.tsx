@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Heart, Share2, Eye, Bell } from "lucide-react"
+import { Heart, Share2, Eye, Bell, Play } from "lucide-react"
 
 interface StreamCardProps {
   id: string
@@ -85,10 +85,10 @@ const StreamCard = ({
             </div>
           )}
 
-          <div className="absolute top-3 right-3 bg-background/70 text-foreground px-2 py-1 rounded-lg text-xs font-semibold flex items-center space-x-1">
+          {/* <div className="absolute top-3 right-3 bg-background/70 text-foreground px-2 py-1 rounded-lg text-xs font-semibold flex items-center space-x-1">
             <Eye className="w-3 h-3" />
             <span>{viewers > 1000 ? `${(viewers / 1000).toFixed(1)}K` : viewers}</span>
-          </div>
+          </div> */}
 
           {/* Hover Overlay */}
           {isHovered && (
@@ -104,7 +104,7 @@ const StreamCard = ({
                 }}
                 className="bg-red-600 hover:bg-red-700 text-foreground px-6 py-2 rounded-lg font-semibold transition-colors"
               >
-                Watch
+                <Play className="md:w-5 md:h-5 w-2 h-2" />
               </button>
               {/* <button
                 onClick={(event) => {
@@ -115,19 +115,16 @@ const StreamCard = ({
               >
                 <Bell className={`w-5 h-5 ${notified ? "text-foreground fill-white" : "text-foreground"}`} />
               </button> */}
-              <button
+              {/* <button
                 onClick={(event) => event.stopPropagation()}
                 className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
               >
                 <Share2 className="w-5 h-5 text-foreground" />
-              </button>
+              </button> */}
             </motion.div>
           )}
 
-          {/* Channel Avatar */}
-          <div className="absolute bottom-3 left-3 w-10 h-10 rounded-full bg-white/20 border-2 border-white flex items-center justify-center text-lg">
-            {channelAvatar}
-          </div>
+          
         </div>
 
         {/* Info */}

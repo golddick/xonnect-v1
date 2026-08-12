@@ -1320,7 +1320,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       message={message}
       primaryActionLabel="Unlock"
       loggedIn={watchFolder.access.loggedIn}
-      showAccessCodeInput
+      showAccessCodeInput={false}
       showBuyerFields={false}
       buyerName={buyerName}
       buyerEmail={buyerEmail}
@@ -1328,7 +1328,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       onBuyerNameChange={setBuyerName}
       onBuyerEmailChange={setBuyerEmail}
       onBuyerPhoneChange={setBuyerPhone}
-      showGuestEmailPrompt={!watchFolder.access.loggedIn || showGuestEmailPrompt}
+      showGuestEmailPrompt={showGuestEmailPrompt && !watchFolder.access.loggedIn}
       guestEmail={buyerEmail}
       onGuestEmailChange={setBuyerEmail}
       onGuestEmailSubmit={() => {
@@ -1415,8 +1415,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         title={eventData.status === "LIVE" ? "locked" : "Get access"}
         description={
           eventData.access?.loggedIn
-            ? "Enter the ticket code to unlock the stream."
-            : "Buy your stream ticket now and unlock access."
+            ? "Enter the ticket "
+            : "Buy your stream access."
         }
         accessCode={accessCode}
         accessCodePlaceholder="Enter ticket code"
@@ -1436,7 +1436,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         message={message}
         primaryActionLabel="Unlock"
         loggedIn={eventData.access?.loggedIn ?? false}
-        showAccessCodeInput
+        showAccessCodeInput={false}
         showBuyerFields={false}
         purchaseOptions={streamTicket && streamTicket.price > 0 ? [{ type: "purchase", label: "Buy ticket", price: streamTicket.price }] : []}
         onPurchase={() => {
@@ -1453,7 +1453,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         isPurchasing={busy === "purchase" ? "purchase" : null}
         paymentAccessCode={paymentAccessCode}
         paymentUrl={paymentUrl}
-        showGuestEmailPrompt={!eventData.access?.loggedIn || showGuestEmailPrompt}
+        showGuestEmailPrompt={showGuestEmailPrompt && !(eventData.access?.loggedIn ?? false)}
         guestEmail={buyerEmail}
         onGuestEmailChange={setBuyerEmail}
         onGuestEmailSubmit={() => {
@@ -1532,6 +1532,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 poster={eventData.thumbnail}
                 previewVideoUrl={eventData.thumbnailVideoUrl}
                 recordedVideoUrl={eventData.recordedVideoUrl}
+                recordingUrl={eventData.recordingUrl}
                 scheduledAt={eventData.scheduledAt}
                 status={eventData.status}
                 wsUrl={eventData.livekitWsUrl}
@@ -1774,6 +1775,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         </div>
       </div>
 
+      {shouldShowAccessOverlay ? lockOverlay : null}
+
       <main className="w-full p-2  md:px-4 md:lg:px-8 md:py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
@@ -1785,8 +1788,6 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               subtitle={currentPart?.description ?? watchFolder.description}
               locked={isContentLocked}
               previewSeconds={currentPart?.previewOnly ? 30 : null}
-              showOverlay={shouldShowAccessOverlay}
-              overlay={shouldShowAccessOverlay ? lockOverlay : null}
               reportAfterSeconds={60}
               showPurchaseButton={Boolean(!loading && !hasUnlockedAccess && hasAccessRestriction && !shouldShowAccessOverlay)}
               onRequestAccess={() => {

@@ -45,9 +45,9 @@ export async function POST(
       return NextResponse.json({ message: "Event not found" }, { status: 404 })
     }
 
-    if (event.status !== "LIVE") {
+    if (event.status !== "LIVE" && event.status !== "PAUSED") {
       return NextResponse.json(
-        { message: "Only live events can be ended" },
+        { message: "Only live or paused events can be ended" },
         { status: 409 }
       )
     }

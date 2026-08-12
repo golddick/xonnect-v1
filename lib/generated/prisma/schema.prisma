@@ -25,6 +25,7 @@ enum CreatorEventStatus {
   DRAFT     @map("draft")
   SCHEDULED @map("scheduled")
   LIVE      @map("live")
+  PAUSED    @map("paused")
   ENDED     @map("ended")
   CANCELLED @map("cancelled")
 }

@@ -11,6 +11,7 @@ import { toast } from "sonner"
 import XonnectHero from "./_component/XonnectHero"
 import LiveNow from "./_component/LiveNow"
 import WhyJoin from "./_component/WhyJoin"
+import NewsLetterSection from "./_component/NewsLetter-section"
 
 // ─── Stats Bar ────────────────────────────────────────────────────────────────
 const stats = [
@@ -80,6 +81,7 @@ export default function HomePage() {
       {/* 1.  Hero */}
       
       <XonnectHero />
+      <NewsLetterSection />
 
       {/* 2. Stats Bar */}
       <section className="relative z-10  bg-card/50 backdrop-blur-sm py-6 px-4 sm:px-6 md:px-8">

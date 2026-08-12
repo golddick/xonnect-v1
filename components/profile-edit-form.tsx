@@ -156,7 +156,7 @@ export function ProfileEditForm({ profile, avatarUrlOverride }: ProfileEditFormP
   return (
     <div className="space-y-6">
       {/* Personal Information */}
-      <section className="rounded-3xl border border-border bg-card p-8">
+      <section className="rounded-3xl border border-border bg-card md:p-8 p-2">
         <h2 className="text-lg font-semibold">Personal Information</h2>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
@@ -312,7 +312,7 @@ export function ProfileEditForm({ profile, avatarUrlOverride }: ProfileEditFormP
       ) : null}
 
       {/* Password Management */}
-      <section className="rounded-3xl border border-border bg-card p-8">
+      <section className="rounded-3xl border border-border bg-card md:p-8 p-2">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold">Security</h2>

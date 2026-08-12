@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 
 import StreamCard from "@/app/(Xonnect_tv)/tv/_component/stream-card"
 import TvLoadingState from "@/app/(Xonnect_tv)/tv/_component/tv-loading-state"
+import WelcomeBackBanner from "@/app/(Xonnect_tv)/tv/_component/welcome-back-banner"
 import { AvatarDropdownMenu } from "@/components/common_component/AvatarDropdown"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -267,14 +268,8 @@ export default function TvPage() {
         <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border">
           <div className="hidden lg:flex items-center justify-between gap-4 px-4 md:px-6 py-3">
             <div>
-              <h1 className="text-xl md:text-2xl font-bold text-foreground">Discover</h1>
-              {showWelcomeBack && userName ? (
-                <p className="text-sm text-muted-foreground mt-1">Welcome back, {userName}</p>
-              ) : null}
-            </div>
 
-            <div className="flex items-center gap-2 md:gap-4">
-              <div className="relative hidden md:block">
+               <div className="relative hidden md:block">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                   type="text"
@@ -284,6 +279,15 @@ export default function TvPage() {
                   className="bg-transparent border border-border rounded-lg pl-10 pr-4 py-2 text-foreground placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600 text-sm w-64"
                 />
               </div>
+
+              {/* <h1 className="text-xl md:text-2xl font-bold text-foreground">Discover</h1>
+              {showWelcomeBack && userName ? (
+                <p className="text-sm text-muted-foreground mt-1">Welcome back, {userName}</p>
+              ) : null} */}
+            </div>
+
+            <div className="flex items-center gap-2 md:gap-4">
+             
 
               <div className="flex gap-2">
                 <button
@@ -315,12 +319,7 @@ export default function TvPage() {
         </div>
 
         <div className="md:p-6 space-y-8">
-          {showWelcomeBack && userName ? (
-            <div className="rounded-3xl border border-red-200 bg-red-600/10 p-4 text-sm text-foreground shadow-sm">
-              <p className="font-semibold">Welcome back, {userName}!</p>
-              <p className="text-muted-foreground">Your TV home is ready.</p>
-            </div>
-          ) : null}
+          <WelcomeBackBanner userName={userName} visible={showWelcomeBack} />
 
           {currentFeature ? (
             <motion.div
@@ -515,7 +514,7 @@ export default function TvPage() {
                     <div
                       key={ev.id}
                       className={`rounded-2xl border p-3 flex items-center justify-between gap-4 ${
-                        selectedExistingEventId === ev.id ? "border-red-600 bg-red-50" : "border-border"
+                        selectedExistingEventId === ev.id ? "border-red-600 " : "border-border"
                       }`}
                     >
                       <div>
@@ -523,17 +522,18 @@ export default function TvPage() {
                         <div className="text-sm text-muted-foreground">{ev.category ?? ev.status ?? ""}</div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Button
+                        {/* <Button
                           type="button"
                           variant="ghost"
                           onClick={() => setSelectedExistingEventId(ev.id)}
                         >
                           Select
-                        </Button>
+                        </Button> */}
                         <Button
                           type="button"
                           onClick={() => handleStartExistingEvent(ev.id)}
                           disabled={goLiveLoading}
+                          className="bg-red-600 text-white"
                         >
                           Go Live
                         </Button>

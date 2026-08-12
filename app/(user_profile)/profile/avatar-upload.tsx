@@ -26,7 +26,7 @@ export default function AvatarUpload({
       if (!result.ok || !result.url) {
         throw new Error(result.message ?? "Upload failed")
       }
-
+ 
       setPreviewUrl(result.url)
       onUploaded(result.url)
     } catch (e) {

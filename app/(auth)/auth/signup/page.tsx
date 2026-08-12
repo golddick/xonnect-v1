@@ -13,6 +13,7 @@ export default function SignupPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const [newsletterOptIn, setNewsletterOptIn] = useState(false)
   const fullNameRef = useRef<HTMLInputElement>(null)
   const emailRef = useRef<HTMLInputElement>(null)
 
@@ -27,7 +28,11 @@ export default function SignupPage() {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ fullName: fullNameValue, email: emailValue }),
+        body: JSON.stringify({
+          fullName: fullNameValue,
+          email: emailValue,
+          newsletterOptIn,
+        }),
       })
 
       const payload = (await response.json()) as { error?: string }
@@ -82,6 +87,19 @@ export default function SignupPage() {
               required
             />
           </div>
+        </div>
+
+        <div className="flex items-start gap-3">
+          <input
+            id="newsletterOptIn"
+            type="checkbox"
+            checked={newsletterOptIn}
+            onChange={(event) => setNewsletterOptIn(event.target.checked)}
+            className="mt-1 h-4 w-4 rounded border-border text-red-600 focus:ring-red-500"
+          />
+          <label htmlFor="newsletterOptIn" className="text-sm text-foreground">
+            Yes, sign me up for Xonnect news, tips, and creator updates.
+          </label>
         </div>
 
         {error && (

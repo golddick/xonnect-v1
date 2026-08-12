@@ -5,6 +5,7 @@ import Link from "next/link"
 import { auth } from "@/lib/auth/auth"
 import { getProfileByEmail } from "@/lib/auth/profiles"
 import ProfileClient from "./ProfileClient"
+import Header from "@/app/(Xonnect_tv)/tv/_component/Header"
 
 export default async function ProfilePage({
   searchParams,
@@ -29,7 +30,7 @@ export default async function ProfilePage({
         message="Account successfully created. You are ready to start creating events."
       />
       <div className=" space-y-6">
-       
+       <Header/>
         <ProfileClient profile={profile}/>
 
       </div>
