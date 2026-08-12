@@ -24,6 +24,7 @@ export const blogPosts: BlogContent[] = [
       <p>Ready to begin your journey? Head over to your creator panel and upload your first video today!</p>
     `,
     excerpt: 'A comprehensive guide for new creators on how to set up their profile, define their niche, and start earning on Xonnect.',
+    coverImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=2072',
     featuredImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=2072',
     author: {
       name: 'Xonnect Team',
@@ -33,6 +34,7 @@ export const blogPosts: BlogContent[] = [
     publishedAt: '2026-04-10T10:00:00Z',
     readTime: '5 min',
     views: 1240,
+    viewCount: 1240,
     likes: 85,
     allowComments: true,
     commentsCount: 12,
@@ -75,6 +77,7 @@ export const blogPosts: BlogContent[] = [
       <p>We've seen creators increase their revenue by 300% simply by offering exclusive content through their community tiers.</p>
     `,
     excerpt: 'Learn how to use our unique pay-on-demand model and community features to significantly increase your creator revenue.',
+    coverImage: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&q=80&w=2070',
     featuredImage: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&q=80&w=2070',
     author: {
       name: 'Sarah Johnson',
@@ -84,6 +87,7 @@ export const blogPosts: BlogContent[] = [
     publishedAt: '2026-04-15T14:30:00Z',
     readTime: '7 min',
     views: 890,
+    viewCount: 890,
     likes: 56,
     allowComments: true,
     commentsCount: 8,
@@ -112,6 +116,7 @@ export const blogPosts: BlogContent[] = [
       <p>From real-time translation to automated highlights, AI is becoming an indispensable tool for streamers, allowing them to reach a global audience with ease.</p>
     `,
     excerpt: 'Exploring upcoming trends in the live streaming industry, from interactive viewer experiences to AI-powered content creation.',
+    coverImage: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=2070',
     featuredImage: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=2070',
     author: {
       name: 'Michael Chen',
@@ -121,6 +126,7 @@ export const blogPosts: BlogContent[] = [
     publishedAt: '2026-04-18T09:15:00Z',
     readTime: '6 min',
     views: 1560,
+    viewCount: 1560,
     likes: 120,
     allowComments: true,
     commentsCount: 25,

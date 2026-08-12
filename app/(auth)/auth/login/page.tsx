@@ -179,7 +179,7 @@ export default function LoginPage() {
             disabled={isLoading}
             className="w-full rounded-xl bg-foreground px-4 py-3 font-semibold text-background transition disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isLoading ? "Checking account..." : "Continue"}
+            {isLoading ? "Checking..." : "Continue"}
           </button>
 
           <p className="text-center text-sm text-muted-foreground">
@@ -193,7 +193,7 @@ export default function LoginPage() {
 
       {step === "password" && (
         <form onSubmit={handlePasswordLogin} className="space-y-5">
-          <div className="rounded-2xl border border-border bg-muted/30 p-4">
+          <div className="rounded-2xl ">
             <p className="text-sm text-muted-foreground">Signed in as</p>
             <p className="mt-1 font-medium text-foreground">{fullName || email}</p>
           </div>
@@ -230,7 +230,7 @@ export default function LoginPage() {
             disabled={isLoading}
             className="w-full rounded-xl bg-foreground px-4 py-3 font-semibold text-background transition disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isLoading ? "Signing in..." : "Sign in with password"}
+            {isLoading ? "Signing in..." : "Sign in... "}
           </button>
 
           <button

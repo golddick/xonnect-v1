@@ -16,14 +16,13 @@ import {
   ArrowRight,
   MessageCircle
 } from 'lucide-react'
-import { BlogContent } from '@/lib/type/blog'
+import { BlogContent, BlogSingleApiResponse } from '@/lib/type/blog'
 import { blogPosts } from '@/lib/data/blogData'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { toast } from 'sonner'
 import LoadingSplash from "@/components/splash_screen/loading-splash";
-import CommentComponent from './CommentComponent'
 
 const ReadBlog = () => {
   const params = useParams()
@@ -51,18 +50,73 @@ const ReadBlog = () => {
   useEffect(() => {
     if (!slug) return
 
-    setLoading(true)
-    // Simulate a slight delay for realism if desired, or just set immediately
-    const foundBlog = blogPosts.find(post => post.slug === slug)
-    
-    if (foundBlog) {
-      setBlog(foundBlog)
+    let mounted = true
+
+    const fetchBlogPost = async () => {
+      setLoading(true)
       setError(null)
-    } else {
-      setError('Blog post not found')
+
+      try {
+        const response = await fetch(`/api/blog/${encodeURIComponent(slug)}`, {
+          cache: 'no-store',
+        })
+        const payload = await response.json() as BlogSingleApiResponse
+        const remotePost = payload?.success ? payload.data : undefined
+
+        console.log( remotePost, 'response blog')
+
+        if (!mounted) return
+
+        if (!response.ok || !remotePost) {
+          setBlog(null)
+          setError(response.status === 404 ? 'Blog post not found' : payload?.error ?? 'Unable to load blog post')
+          return
+        }
+
+        const fallback = blogPosts.find((post) => post.slug === remotePost.slug)
+        setBlog({
+          id: remotePost.id,
+          title: remotePost.title,
+          slug: remotePost.slug,
+          content: remotePost.content ?? fallback?.content ?? '',
+          excerpt: remotePost.excerpt ?? fallback?.excerpt ?? '',
+          coverImage: remotePost.coverImage ?? fallback?.coverImage ?? fallback?.featuredImage ?? '/video/thumbnail.png',
+          featuredImage: fallback?.featuredImage ?? remotePost.coverImage ?? remotePost.featuredImage,
+          allowComments: fallback?.allowComments ?? true,
+          commentsCount: fallback?.commentsCount ?? 0,
+          comments: fallback?.comments ?? [],
+          author: {
+            name: remotePost.author?.fullName ?? remotePost.author?.name ?? fallback?.author.name ?? 'Xonnect Team',
+            avatar: remotePost.author?.avatar ?? fallback?.author.avatar ?? '',
+            bio: remotePost.author?.bio ?? fallback?.author.bio,
+          },
+          publishedAt: remotePost.publishedAt ?? fallback?.publishedAt ?? new Date().toISOString(),
+          readTime: fallback?.readTime ?? '5 min',
+          views: fallback?.views ?? 0,
+          viewCount: remotePost.viewCount ?? fallback?.viewCount ?? fallback?.views ?? 0,
+          likes: fallback?.likes ?? 0,
+          category: fallback?.category,
+          tags: fallback?.tags ?? [],
+        })
+      } catch (fetchError) {
+        console.error('[Blog Detail Fetch Error]', fetchError)
+        if (mounted) {
+          setBlog(null)
+          setError('Unable to load blog post')
+        }
+      } finally {
+        if (mounted) setLoading(false)
+      }
     }
-    setLoading(false)
+
+    fetchBlogPost()
+
+    return () => {
+      mounted = false
+    }
   }, [slug])
+
+  console.log(blog, 'blog')
 
   const handleShare = () => {
     if (navigator.share) {
@@ -93,7 +147,7 @@ const ReadBlog = () => {
             </div>
           </div>
           <h2 className="text-3xl font-bold tracking-tight">Post Not Found</h2>
-          <p className="text-gray-400">
+          <p className="text-muted-foreground">
             {error || "We couldn't find the blog post you're looking for. It might have been moved or deleted."}
           </p>
           <Button 
@@ -125,14 +179,14 @@ const ReadBlog = () => {
       {/* Navigation Progress Bar */}
       <div className="fixed top-0 left-0 w-full h-1.5 bg-gray-100/50 z-[100]">
         <div 
-          className="h-full bg-black transition-all duration-150 ease-out" 
+          className="h-full bg-primary transition-all duration-150 ease-out" 
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
       {/* Hero Section */}
       <header className="relative w-full h-[60vh] md:h-[75vh] min-h-[500px] overflow-hidden">
         <Image 
-          src={blog.featuredImage} 
+          src={blog.coverImage ?? blog.featuredImage ?? '/video/thumbnail.png'} 
           alt={blog.title} 
           fill 
           priority
@@ -151,10 +205,12 @@ const ReadBlog = () => {
             </Link>
             
             <div className="flex flex-wrap gap-2 mb-4">
-              <Badge variant="secondary" className="bg-white/20 text-white border-none backdrop-blur-md px-4 py-1">
-                {blog.category}
-              </Badge>
-              {blog.tags.slice(0, 3).map(tag => (
+              {blog.category ? (
+                <Badge variant="secondary" className="bg-white/20 text-white border-none backdrop-blur-md px-4 py-1">
+                  {blog.category}
+                </Badge>
+              ) : null}
+              {blog.tags?.slice(0, 3).map(tag => (
                 <Badge key={tag} variant="outline" className="border-white/30 text-white/90 px-3">
                   #{tag}
                 </Badge>
@@ -183,7 +239,7 @@ const ReadBlog = () => {
                   <span className="text-[10px] uppercase tracking-tighter opacity-60">Read Time</span>
                 </div>
                 <div className="flex flex-col border-l border-white/20 pl-6">
-                  <span className="text-white font-bold">{blog.views.toLocaleString()}</span>
+                  <span className="text-white font-bold">{(blog.viewCount ?? blog.views ?? 0).toLocaleString()}</span>
                   <span className="text-[10px] uppercase tracking-tighter opacity-60">Views</span>
                 </div>
               </div>
@@ -193,16 +249,17 @@ const ReadBlog = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-6 pt-16 md:pt-24">
+      <main className="max-w-7xl mx-auto px-6 pt-16 md:pt-24">
         <article className="prose prose-xl prose-stone max-w-none">
           {/* Content Render */}
           <div 
-            className="blog-content prose-headings:font-extrabold prose-p:text-muted-foreground prose-h2:text-foreground prose-p:leading-relaxed prose-img:rounded-3xl"
+            className="blog-content prose-headings:font-extrabold prose-p:text-foreground prose-h2:text-foreground prose-p:leading-relaxed prose-img:rounded-3xl"
             dangerouslySetInnerHTML={{ __html: blog.content }} 
           />
         </article>
 
         {/* Post Actions Sticky Mobile / Regular Desktop */}
+        {/*
         <div className="mt-20 py-10 flex items-center justify-between border-t border-border">
           <div className="flex items-center gap-4">
             <button 
@@ -232,12 +289,12 @@ const ReadBlog = () => {
           </button>
         </div>
 
-        {/* Comments Section */}
         <div id="comments-section">
           {blog.allowComments && (
             <CommentComponent comments={blog.comments || []} />
           )}
         </div>
+        */}
 
         {/* Author Bio */}
         {blog.author.bio && (
@@ -253,14 +310,14 @@ const ReadBlog = () => {
                   {blog.author.bio}
                 </p>
               </div>
-              <div className="flex flex-wrap justify-center md:justify-start gap-4">
+              {/* <div className="flex flex-wrap justify-center md:justify-start gap-4">
                 <Button variant="default" className="rounded-full bg-black text-white hover:bg-stone-800 px-8">
                   Follow Author
                 </Button>
                 <Button variant="outline" className="rounded-full bg-black text-white hover:text-black border-stone-200 hover:bg-white px-8">
                    All Stories
                 </Button>
-              </div>
+              </div> */}
             </div>
           </section>
         )}
@@ -269,8 +326,8 @@ const ReadBlog = () => {
         <section className="mt-24 rounded-[3.5rem] bg-card border border-border text-foreground hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 p-12 md:p-20 relative overflow-hidden text-center">
           <div className="relative z-10 max-w-2xl mx-auto space-y-8">
             <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-none">Stay in the loop.</h2>
-            <p className="text-gray-400 text-xl font-medium">
-              Join 10,000+ readers getting our weekly digest of tech, design, and culture.
+            <p className="text-muted-foreground text-xl font-medium">
+              Join 1,000+ readers getting our weekly digest of tech, design, and culture.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-6 max-w-md mx-auto">
               <input 
@@ -285,7 +342,7 @@ const ReadBlog = () => {
           </div>
           {/* Decorative Gradients */}
           {/*<div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-red-500/10 to-transparent pointer-events-none" />*/}
-          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-red-500/10 rounded-full blur-[120px] pointer-events-none" />
+          {/* <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-red-500/10 rounded-full blur-[120px] pointer-events-none" /> */}
         </section>
       </main>
 
@@ -298,7 +355,7 @@ const ReadBlog = () => {
                   <div className="h-1.5 w-12 bg-black rounded-full" />
                </div>
                <Link href="/blog" className="font-bold text-foreground text-sm uppercase tracking-widest flex items-center gap-2 hover:mr-2 transition-all group">
-                  EXPLORE ALL STORIES <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  EXPLORE <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                </Link>
             </div>
             

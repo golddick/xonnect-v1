@@ -26,6 +26,7 @@ type EventStreamPlayerProps = {
   poster?: string | null
   previewVideoUrl?: string | null
   recordedVideoUrl?: string | null
+  recordingUrl?: string | null
   scheduledAt?: string | null
   status: string
   wsUrl?: string | null
@@ -58,6 +59,7 @@ export default function  EventStreamPlayer({
   poster,
   previewVideoUrl,
   recordedVideoUrl,
+  recordingUrl,
   scheduledAt,
   status,
   wsUrl,
@@ -86,21 +88,25 @@ export default function  EventStreamPlayer({
 
   const normalizedStatus = (status ?? "").toUpperCase()
   const isLive = normalizedStatus === "LIVE" || normalizedStatus === "STREAMING" || normalizedStatus === "LIVE_NOW"
+  const isPaused = normalizedStatus === "PAUSED"
   const isEnded = normalizedStatus === "ENDED" || normalizedStatus === "FINISHED" || normalizedStatus === "COMPLETED"
-  const isScheduled = !isLive && !isEnded
+  const isScheduled = !isLive && !isEnded && !isPaused
   const previewMedia = useMemo(() => resolvePlayableMediaSource(!isEnded ? previewVideoUrl : null), [previewVideoUrl, isEnded])
-  const recordedMedia = useMemo(() => resolvePlayableMediaSource(isEnded ? recordedVideoUrl : null), [recordedVideoUrl, isEnded])
+  const recordedMedia = useMemo(
+    () => resolvePlayableMediaSource(isEnded ? recordedVideoUrl ?? recordingUrl : null),
+    [recordedVideoUrl, recordingUrl, isEnded]
+  )
   const fallbackPreviewMedia = useMemo(() => resolvePlayableMediaSource(previewVideoUrl), [previewVideoUrl])
   const activePlaybackMedia = isEnded
     ? (recordedMedia && hasAccess ? recordedMedia : fallbackPreviewMedia ?? null)
     : isScheduled
     ? (previewMedia ?? null)
     : null
-  const shouldRenderPlaybackMedia = Boolean(activePlaybackMedia) && !isLive
+  const shouldRenderPlaybackMedia = Boolean(activePlaybackMedia) && !isLive && !isPaused
   const scheduledLabel = useMemo(() => formatDateTime(scheduledAt), [scheduledAt])
-  const canConnect = Boolean(isLive && !locked)
+  const canConnect = Boolean(isLive && !locked && !isPaused)
   const shouldShowBackdrop =
-    (!isLive && !shouldRenderPlaybackMedia) || (isLive && locked) || isConnecting || Boolean(connectionError) || Boolean(overlay)
+    (!isLive && !shouldRenderPlaybackMedia) || (isLive && locked) || isConnecting || Boolean(connectionError) || Boolean(overlay) || isPaused
 
   useEffect(() => {
     if (audioRef.current) {
@@ -413,6 +419,11 @@ export default function  EventStreamPlayer({
         <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-950 to-black" />
       )}
 
+      <div className="pointer-events-none absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/55 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm">
+        <span className="h-2 w-2 rounded-full bg-red-500" />
+        Xonnect Live
+      </div>
+
       {isLive ? (
         <video
           ref={videoRef}
@@ -478,6 +489,15 @@ export default function  EventStreamPlayer({
         )
       ) : null}
       <audio ref={audioRef} className="hidden" autoPlay />
+
+      {isPaused ? (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/55 backdrop-blur-sm">
+          <div className="rounded-2xl border border-white/30 bg-black/65 px-6 py-4 text-center">
+            <div className="text-xs font-bold uppercase tracking-[0.20em] text-white/80">Stream paused</div>
+            <div className="mt-2 text-lg font-semibold text-white">This stream is currently paused</div>
+          </div>
+        </div>
+      ) : null}
 
       {shouldShowBackdrop ? (
         <div className="absolute flex justify-center items-center w-full h-full inset-0 bg-black/55 p-4 md:p-6">
@@ -612,7 +632,7 @@ export default function  EventStreamPlayer({
 
       {audioPlaybackReady && !audioPlaybackBlocked ? (
         <div className="absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-black/70 px-3 py-2 text-xs font-semibold text-white/80">
-          <MicOff className="h-4 w-4" />
+          <Speaker className="h-4 w-4" />
           <span className="hidden lg:block">Audio connected</span>
         </div>
       ) : null}

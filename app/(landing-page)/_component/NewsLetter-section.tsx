@@ -16,7 +16,7 @@ const NewsLetterSection = () => {
     showSuccess,
     error,
     reset,
-  } = useNewsletterSubscription();
+  } = useNewsletterSubscription({ source: "blog_page" });
 
   // Auto-reset error after 5 seconds
   useEffect(() => {

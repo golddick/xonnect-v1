@@ -125,7 +125,7 @@ export default function ProfileClient({
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         {/* Sidebar Navigation */}
         <div className="lg:col-span-1">
-          <div className="rounded-lg border border-border bg-card p-4">
+          <div className="rounded-lg md:border md:border-border bg-card p-4">
             <nav className="space-y-2">
               <button
                 onClick={() => setActiveTab("profile")}
@@ -136,7 +136,7 @@ export default function ProfileClient({
                 }`}
               >
                 <User className="h-5 w-5" />
-                <span className="font-medium hidden md:block">Profile</span>
+                <span className="font-medium ">Profile</span>
               </button>
               <button
                 onClick={() => setActiveTab("tickets")}
@@ -147,7 +147,7 @@ export default function ProfileClient({
                 }`}
               >
                 <Ticket className="h-5 w-5" />
-                <span className="font-medium hidden md:block">Events & Videos</span>
+                <span className="font-medium ">Events </span>
               </button>
 
               {/* <button
@@ -171,7 +171,7 @@ export default function ProfileClient({
                 }`}
               >
                 <Play className="h-5 w-5" />
-                <span className="font-medium hidden md:block">Following</span>
+                <span className="font-medium">Following</span>
               </button>
             </nav>
           </div>
@@ -179,7 +179,7 @@ export default function ProfileClient({
 
         {/* Main Content */}
         <div className="lg:col-span-3">
-          <div className="rounded-lg border border-border bg-card p-8">
+          <div className="rounded-lg md:border md:border-border bg-card md:p-8 p-2">
            
             {activeTab === "profile" && (
               <div className="space-y-6">
@@ -199,9 +199,9 @@ export default function ProfileClient({
             {activeTab === "tickets" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold">My Events & Videos</h2>
+                  <h2 className="text-2xl font-bold">My Tickets</h2>
                   <p className="mt-2 text-sm hidden md:block text-muted-foreground">
-                    View your purchased event tickets and videos separately
+                    View your purchased event tickets and videos access separately
                   </p>
                 </div>
 
@@ -345,7 +345,7 @@ export default function ProfileClient({
             {activeTab === "creators" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold">Creators I Follow</h2>
+                  <h2 className="text-2xl font-bold"> Following</h2>
                   <p className="mt-2 text-sm text-muted-foreground">
                     Manage the creators you follow
                   </p>

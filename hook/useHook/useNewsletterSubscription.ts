@@ -1,36 +1,64 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import type { FormEvent } from 'react';
 
-export function useNewsletterSubscription() {
-  const [email, setEmail] = useState('');
+interface NewsletterSubscriptionOptions {
+  source?: string;
+  initialEmail?: string;
+}
+
+export function useNewsletterSubscription(options?: NewsletterSubscriptionOptions) {
+  const [email, setEmail] = useState(options?.initialEmail ?? '');
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setEmail('');
     setIsLoading(false);
     setShowSuccess(false);
     setError(null);
-  };
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
+  const handleSubmit = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (!email.trim()) return;
 
-    setIsLoading(true);
-    setError(null);
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      // Mock API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setShowSuccess(true);
-      setEmail('');
-    } catch (err) {
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      try {
+        const response = await fetch('/api/newsletter/subscribe', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email.trim(),
+            source: options?.source ?? 'landing_page',
+          }),
+        });
+
+        const payload = await response.json();
+
+        if (!response.ok || !payload?.success) {
+          throw new Error(payload?.message || 'Unable to subscribe.');
+        }
+
+        setShowSuccess(true);
+        setEmail('');
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Something went wrong. Please try again.'
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [email, options?.source]
+  );
 
   return {
     email,
