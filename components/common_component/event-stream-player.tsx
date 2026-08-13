@@ -419,11 +419,6 @@ export default function  EventStreamPlayer({
         <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-950 to-black" />
       )}
 
-      <div className="pointer-events-none absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/55 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm">
-        <span className="h-2 w-2 rounded-full bg-red-500" />
-        Xonnect Live
-      </div>
-
       {isLive ? (
         <video
           ref={videoRef}
@@ -529,12 +524,12 @@ export default function  EventStreamPlayer({
               {subtitle ? <p className="text-sm text-white/75 md:text-base">{subtitle}</p> : null}
             </div> */}
 
-            {!isLive && !shouldRenderPlaybackMedia ? (
+            {/* {!isLive && !shouldRenderPlaybackMedia ? (
               <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-white/80">
                 <Clock3 className="h-4 w-4 text-red-400" />
                 OFFLINE
               </div>
-            ) : null}
+            ) : null} */}
 
             {connectionError ? (
               <div className="flex items-center gap-2 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">

@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { uploadCreatorVideo } from "@/lib/uploadthing/client"
-import { Camera, ScreenShareIcon, Video } from "lucide-react"
 
 export default function CreatorLivePage() {
   const params = useParams() as { id?: string }
@@ -785,24 +784,17 @@ export default function CreatorLivePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
         <div className="absolute inset-x-0 top-0 p-4">
-          <div className="flex flex-col gap-2 w-full">
+          <div className="flex flex-col gap-2 max-w-5xl mx-auto">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h1 className="text-xl font-semibold">Creator Live — {eventId}</h1>
                 {sourceMode === "screen" || sourceMode === "both" ? (
-                  <div className="flex items-center gap-1">
-                  <ScreenShareIcon className="w-4 h-4 inline-block mr-1" />
-                  <p className="text-sm text-amber-200 hidden lg:block">Screen recording mode</p>
-                  </div>
+                  <p className="text-sm text-amber-200">Screen recording mode</p>
                 ) : null}
                 {recordingUrl ? (
-                  <div>
-                    <Video className="w-4 h-4 inline-block mr-1" /> 
-                    <p className="text-sm text-emerald-300">Recording uploaded</p>
-                  </div>
+                  <p className="text-sm text-emerald-300">Recording uploaded</p>
                 ) : isRecording ? (
-                  
-                  <p className="text-sm text-red-500 animate-pulse">.</p>
+                  <p className="text-sm text-sky-200">Recording live...</p>
                 ) : null}
               </div>
               <div className="flex flex-wrap gap-2">
@@ -827,8 +819,7 @@ export default function CreatorLivePage() {
                   sourceMode === "camera" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
                 } ${(connecting || publishing) ? 'cursor-not-allowed opacity-50' : ''}`}
               >
-                <Camera className="w-4 h-4 lg:hidden"/>
-                <span className="ml-1 hidden lg:block">Camera only</span>
+                Camera only
               </button>
               <button
                 type="button"
@@ -838,8 +829,7 @@ export default function CreatorLivePage() {
                   sourceMode === "screen" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
                 } ${(connecting || publishing) ? 'cursor-not-allowed opacity-50' : ''}`}
               >
-                <ScreenShareIcon className="w-4 h-4 lg:hidden"/>
-                <span className="ml-1 hidden lg:block">Screen share only</span>
+                Screen share only
               </button>
               <button
                 type="button"
@@ -849,9 +839,7 @@ export default function CreatorLivePage() {
                   sourceMode === "both" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
                 } ${(connecting || publishing) ? 'cursor-not-allowed opacity-50' : ''}`}
               >
-
-                <Camera className="w-4 h-4 lg:hidden"/> + <ScreenShareIcon className="w-4 h-4 lg:hidden"/>
-                <span className="ml-1 hidden lg:block">Camera + screen share</span>
+                Camera + screen share
               </button>
             </div>
             {cameras.length > 0 ? (
@@ -875,9 +863,8 @@ export default function CreatorLivePage() {
             ) : null}
           </div>
         </div>
-
         <div className="absolute inset-x-0 bottom-0 p-4">
-          <div className="mx-auto flex w-full  flex-wrap justify-end gap-2 rounded-3xl bg-black/60 p-3 backdrop-blur-md">
+          <div className="mx-auto flex w-full max-w-5xl flex-wrap justify-end gap-2 rounded-3xl bg-black/60 p-3 backdrop-blur-md">
             {!connected ? (
               <Button onClick={handleConnectAndPublish} disabled={!token || connecting || publishing}>
                 {connecting ? "Connecting..." : "Start live"}
@@ -890,9 +877,9 @@ export default function CreatorLivePage() {
                 <Button onClick={handleToggleVideo} disabled={publishing}>
                   {videoEnabled ? "Stop video" : "Start video"}
                 </Button>
-                {/* <Button onClick={handlePauseToggle} disabled={publishing}>
+                <Button onClick={handlePauseToggle} disabled={publishing}>
                   {paused ? "Resume" : "Pause"}
-                </Button> */}
+                </Button>
                 <Button variant="destructive" onClick={handleStop} disabled={publishing || awaitingStopDecision}>
                   End live
                 </Button>
@@ -903,28 +890,107 @@ export default function CreatorLivePage() {
       </div>
 
       <Dialog open={showSaveDialog} onOpenChange={(open) => {
+        if (!open && savingStatus !== "pending") {
+          return
+        }
         if (!open) {
           setShowSaveDialog(false)
           setAwaitingStopDecision(false)
         }
       }}>
-        <DialogContent>
+        <DialogContent className="max-w-sm" onPointerDownOutside={(e) => {
+          if (savingStatus !== "pending") {
+            e.preventDefault()
+          }
+        }}>
           <DialogHeader>
-            <DialogTitle>Save live recording?</DialogTitle>
+            <DialogTitle>
+              {savingStatus === "completed" ? "✓ Recording saved" : "Save live recording?"}
+            </DialogTitle>
             <DialogDescription>
-              Do you want to save this live recording?
+              {savingStatus === "uploading" && "Uploading video..."}
+              {savingStatus === "saving" && "Saving to database..."}
+              {savingStatus === "completed" && "Your recording has been successfully saved."}
+              {savingStatus === "pending" && "Do you want to save this live recording?"}
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4 text-sm text-muted-foreground">
-            Choose whether to upload the recording before ending the event.
+
+          <div className="py-4">
+            {savingStatus === "uploading" && (
+              <div className="space-y-3">
+                <div className="text-sm font-medium text-foreground">
+                  Uploading: {uploadProgress ?? 0}%
+                </div>
+                <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
+                  <div
+                    className="h-full bg-blue-500 transition-all duration-300"
+                    style={{ width: `${uploadProgress ?? 0}%` }}
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Please keep this window open until upload completes
+                </p>
+              </div>
+            )}
+
+            {savingStatus === "saving" && (
+              <div className="space-y-3">
+                <div className="text-sm font-medium text-foreground">
+                  Video uploaded. Finalizing...
+                </div>
+                <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
+                  <div className="h-full bg-green-500 animate-pulse" style={{ width: "100%" }} />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Saving to database... please wait
+                </p>
+              </div>
+            )}
+
+            {savingStatus === "completed" && (
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Your live recording has been successfully saved to your event.
+                </p>
+              </div>
+            )}
+
+            {savingError && (
+              <div className="rounded-md bg-red-500/10 border border-red-500/30 p-3">
+                <p className="text-sm text-red-500">
+                  <strong>Error:</strong> {savingError}
+                </p>
+              </div>
+            )}
+
+            {savingStatus === "pending" && (
+              <p className="text-sm text-muted-foreground">
+                Choose whether to upload the recording before ending the event.
+              </p>
+            )}
           </div>
+
           <DialogFooter className="flex gap-2">
-            <Button variant="outline" onClick={() => handleSaveRecordingChoice(false)}>
-              Don’t save / discard
-            </Button>
-            <Button onClick={() => handleSaveRecordingChoice(true)}>
-              Save recording
-            </Button>
+            {savingStatus === "pending" && (
+              <>
+                <Button variant="outline" onClick={() => handleSaveRecordingChoice(false)}>
+                  Don't save / discard
+                </Button>
+                <Button onClick={() => handleSaveRecordingChoice(true)}>
+                  Save recording
+                </Button>
+              </>
+            )}
+            {savingStatus === "completed" && (
+              <Button onClick={() => handleSaveRecordingChoice(true)}>
+                Done
+              </Button>
+            )}
+            {(savingStatus === "uploading" || savingStatus === "saving") && (
+              <div className="text-xs text-muted-foreground">
+                Processing... do not close
+              </div>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

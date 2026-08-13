@@ -36,6 +36,7 @@ import {
 } from "chart.js"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { sidebarItems } from "@/lib/constant"
+import Logo from "@/components/nav/logo"
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, ArcElement)
 
@@ -186,9 +187,7 @@ export default function CreatorAnalytics() {
           <div className="fixed left-0 top-0 h-full w-64 bg-card border-r border-border">
             <div className="flex items-center justify-between p-6 border-b border-border">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-foreground" />
-                </div>
+                <Logo />
                 <span className="text-xl font-bold">Xonnect</span>
               </div>
               <button onClick={() => setSidebarOpen(false)}>

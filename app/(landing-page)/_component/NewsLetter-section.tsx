@@ -9,9 +9,10 @@ import { useNewsletterSubscription } from "@/hook/useHook/useNewsletterSubscript
 
 type Props = {
   source?: string
+  onSuccess?: () => void
 }
 
-const NewsLetterSection = ({ source = "blog_page" }: Props) => {
+const NewsLetterSection = ({ source = "blog_page", onSuccess }: Props) => {
   const {
     email,
     setEmail,
@@ -31,6 +32,13 @@ const NewsLetterSection = ({ source = "blog_page" }: Props) => {
       return () => clearTimeout(timer);
     } 
   }, [error, isLoading, reset]);
+
+  // Call onSuccess callback when subscription succeeds
+  useEffect(() => {
+    if (showSuccess && onSuccess) {
+      onSuccess()
+    }
+  }, [showSuccess, onSuccess]);
 
   return (
     <section className="py-20 px-6 md:px-8">

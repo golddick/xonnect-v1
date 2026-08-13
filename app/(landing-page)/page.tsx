@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { motion } from "framer-motion"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Users, Tv, DollarSign, Globe } from "lucide-react"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { ArrowRight, Users, Tv, DollarSign, Globe, X } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import XonnectHero from "./_component/XonnectHero"
@@ -60,6 +61,29 @@ const faqs = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function HomePage() {
   const [showNewsletterPopup, setShowNewsletterPopup] = useState(false)
+  const triggerButtonRef = useRef<HTMLButtonElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+
+  const handleClosePopup = () => {
+    try { window.localStorage.setItem('newsletterPopupDismissed', '1') } catch {}
+    setShowNewsletterPopup(false)
+    // Restore focus to the trigger button if it exists
+    if (triggerButtonRef.current) {
+      triggerButtonRef.current.focus()
+    }
+  }
+
+  const handleSubscriptionSuccess = () => {
+    // Persist dismissal on successful subscription
+    try { window.localStorage.setItem('newsletterPopupDismissed', '1') } catch {}
+    // Auto-close after a moment to let user see success message
+    setTimeout(() => {
+      setShowNewsletterPopup(false)
+      if (triggerButtonRef.current) {
+        triggerButtonRef.current.focus()
+      }
+    }, 2000)
+  }
 
   useEffect(() => {
     const handleOffline = () => {
@@ -293,56 +317,32 @@ export default function HomePage() {
       </section>
 
       {/* 8. Final CTA Banner */}
-       {showNewsletterPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-            <div className="relative w-full max-w-4xl overflow-hidden rounded-[2rem] bg-background shadow-2xl">
-                <button
-                  type="button"
-                  onClick={() => {
-                    try { window.localStorage.setItem('newsletterPopupDismissed', '1') } catch {}
-                    setShowNewsletterPopup(false)
-                  }}
-                  className="absolute right-4 top-4 z-10 rounded-full bg-black/40 px-3 py-2 text-sm text-white transition hover:bg-black/60"
-                >
-                  Close
-                </button>
-                <NewsLetterSection source="landing_page" />
-              </div>
-        </div>
-      )}
 
-      {/* <section className="relative z-10 py-24 px-4 sm:px-6 md:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-red-600/20 via-background to-background" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-red-600/10 rounded-full blur-3xl" />
-        <div className="relative z-10 max-w-7xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <Badge variant="destructive" className="mb-6">Join Xonnect Today</Badge>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-foreground mb-6 leading-tight">
-              Ready to Connect<br />with the World?
-            </h2>
-            <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto">
-              Whether you're here to create, watch, or both Xonnect is your stage. Join thousands already streaming, earning, and connecting.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth/signup">
-                <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white font-bold px-10 gap-2">
-                  Create Free Account <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link href="/tv">
-                <Button size="lg" variant="outline" className="border-border text-foreground hover:bg-muted font-semibold px-10">
-                  Browse Content
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section> */}
+    <Dialog open={showNewsletterPopup} onOpenChange={(open) => {
+  if (!open) {
+    handleClosePopup()
+  }
+}}>
+  <DialogContent 
+    className="max-w-4xl w-full p-6 border-0 rounded-[2rem] overflow-hidden relative"
+    onKeyDown={(e) => {
+      if (e.key === 'Escape') {
+        handleClosePopup()
+      }
+    }}
+  >
+    {/* Close button - positioned absolute top-right */}
+    <button
+      onClick={handleClosePopup}
+      className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors duration-200 md:bg-white/90 md:hover:bg-white md:text-gray-800"
+      aria-label="Close dialog"
+    >
+      <X className="w-5 h-5" />
+    </button>
+    
+    <NewsLetterSection source="landing_page" onSuccess={handleSubscriptionSuccess} />
+  </DialogContent>
+</Dialog>
 
     </div>
   )

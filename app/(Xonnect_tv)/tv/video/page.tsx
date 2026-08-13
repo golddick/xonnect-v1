@@ -118,7 +118,7 @@ export default function VideoPage() {
                   ))}
                 </div>
 
-                <p className="text-sm text-muted-foreground">{resultSummary}</p>
+                {/* <p className="text-sm text-muted-foreground">{resultSummary}</p> */}
               </div>
 
               <div className="flex items-center gap-2 justify-start lg:justify-end">

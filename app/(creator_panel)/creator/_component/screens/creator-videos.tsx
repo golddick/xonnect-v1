@@ -24,6 +24,8 @@ import {
 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { sidebarItems } from "@/lib/constant"
+import LoadingSplash from "@/components/splash_screen/loading-splash"
+import Logo from "@/components/nav/logo"
 
 export default function CreatorVideos() {
   const router = useRouter()
@@ -163,7 +165,7 @@ export default function CreatorVideos() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        Loading videos...
+        <LoadingSplash />
       </div>
     )
   }
@@ -177,9 +179,7 @@ export default function CreatorVideos() {
           <div className="fixed left-0 top-0 h-full w-64 bg-card border-r border-border">
             <div className="flex items-center justify-between p-6 border-b border-border">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-white" />
-                </div>
+                <Logo />
                 <span className="text-xl font-bold text-foreground">Xonnect</span>
               </div>
               <button onClick={() => setSidebarOpen(false)}>

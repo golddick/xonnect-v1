@@ -2,14 +2,14 @@ import crypto from "crypto"
 
 import QRCode from "qrcode"
 
-const CAMERA_SESSION_TTL_MINUTES = 2
-const CAMERA_LOGO_URL = process.env.LOGO?.trim() || "https://utfs.io/f/Sgkj9xKh6THfmetGRdWbY8exhNzLoErGW0lkfQ3VPOyXdZDB"
+const CAMERA_SESSION_TTL_MINUTES = 30
+const CAMERA_LOGO_URL = "https://utfs.io/f/Sgkj9xKh6THfmetGRdWbY8exhNzLoErGW0lkfQ3VPOyXdZDB"
 
 export type CheckInCameraStatus =
   | "ACTIVE"
   | "OPENED"
   | "CONNECTED"
-  | "COMPLETED"
+  | "COMPLETED" 
   | "REVOKED"
   | "EXPIRED"
 
@@ -89,7 +89,7 @@ export async function createCheckInCameraQrDataUrl(token: string) {
     : `
       <rect x="39%" y="39%" width="22%" height="22%" rx="8%" fill="#ffffff" />
     `
-
+ 
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg.replace("</svg>", `${logoMarkup}</svg>`))}`
 }
 

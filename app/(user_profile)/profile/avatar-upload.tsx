@@ -19,7 +19,7 @@ export default function AvatarUpload({
   async function onFileChange(file: File | null) {
     if (!file) return
     setIsUploading(true)
-    setError(null)
+    setError(null) 
     try {
       const result = await uploadFileRaw( file  )
       

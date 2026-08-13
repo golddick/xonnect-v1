@@ -27,6 +27,7 @@ import {
 
 import { ThemeToggle } from "@/components/theme-toggle"
 import { sidebarItems } from "@/lib/constant"
+import Logo from "@/components/nav/logo"
 
 type EventOption = {
   id: string
@@ -246,9 +247,7 @@ export default function CreatorCheckinManagement() {
           <div className="fixed left-0 top-0 h-full w-72 bg-card border-r border-border shadow-xl overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-white" />
-                </div>
+                  <Logo/>
                 <span className="text-xl font-bold">Xonnect</span>
               </div>
               <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-muted rounded-lg transition-colors">
@@ -321,7 +320,7 @@ export default function CreatorCheckinManagement() {
               >
                 <option value="">Select an event</option>
                 {events.map((event) => (
-                  <option key={event.id} value={event.id}>
+                  <option className="bg-card text-card-foreground" key={event.id} value={event.id}>
                     {event.title} ({event.status})
                   </option>
                 ))}
@@ -361,7 +360,7 @@ export default function CreatorCheckinManagement() {
           <div className="bg-card border border-border rounded-2xl overflow-hidden">
             {/* Desktop Table View */}
             <div className="hidden md:block overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[640px]">
+              <table className="w-full text-left border-collapse ">
                 <thead>
                   <tr className="border-b border-border bg-muted/50">
                     <th className="p-4 font-semibold text-muted-foreground text-sm">Name</th>

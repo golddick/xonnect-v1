@@ -34,6 +34,7 @@ import LoadingSplash from "@/components/splash_screen/loading-splash"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { sidebarItems } from "@/lib/constant"
 import { dropid } from "dropid"
+import Logo from "@/components/nav/logo"
 
 export default function CreatorSettings() {
   const router = useRouter()
@@ -628,9 +629,7 @@ export default function CreatorSettings() {
           <div className="fixed left-0 top-0 h-full w-64 bg-card border-r border-border">
             <div className="flex items-center justify-between p-6 border-b border-border">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-white" />
-                </div>
+               <Logo/>
                 <span className="text-xl font-bold text-foreground">Xonnect</span>
               </div>
               <button onClick={() => setSidebarOpen(false)}>
@@ -735,7 +734,7 @@ export default function CreatorSettings() {
                       className="bg-muted hover:bg-muted/80 text-foreground px-4 py-2 rounded-lg transition-colors flex items-center gap-2 mb-2"
                     >
                       <Upload className="w-4 h-4" />
-                      Upload New Photo
+                      Upload 
                     </button>
                     <input
                       ref={avatarInputRef}
