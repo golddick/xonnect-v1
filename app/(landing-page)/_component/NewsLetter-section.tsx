@@ -7,7 +7,11 @@ import React, { useEffect } from 'react';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { useNewsletterSubscription } from "@/hook/useHook/useNewsletterSubscription";
 
-const NewsLetterSection = () => {
+type Props = {
+  source?: string
+}
+
+const NewsLetterSection = ({ source = "blog_page" }: Props) => {
   const {
     email,
     setEmail,
@@ -16,7 +20,7 @@ const NewsLetterSection = () => {
     showSuccess,
     error,
     reset,
-  } = useNewsletterSubscription({ source: "blog_page" });
+  } = useNewsletterSubscription({ source });
 
   // Auto-reset error after 5 seconds
   useEffect(() => {

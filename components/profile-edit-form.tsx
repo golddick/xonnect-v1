@@ -156,7 +156,7 @@ export function ProfileEditForm({ profile, avatarUrlOverride }: ProfileEditFormP
   return (
     <div className="space-y-6">
       {/* Personal Information */}
-      <section className="rounded-3xl border border-border bg-card md:p-8 p-2">
+      <section className="rounded-3xl md:border md:border-border bg-card md:p-8 ">
         <h2 className="text-lg font-semibold">Personal Information</h2>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
@@ -186,14 +186,14 @@ export function ProfileEditForm({ profile, avatarUrlOverride }: ProfileEditFormP
           <div>
             <label className="block text-sm font-medium">Avatar URL</label>
             <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-3">
-              <input
+              {/* <input
                 type="text"
                 name="avatarUrl"
                 value={formData.avatarUrl}
                 onChange={handleChange}
                 className="w-full sm:flex-1 rounded-lg border border-border bg-background px-4 py-2 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
                 placeholder="https://... (optional)"
-              />
+              /> */}
 
               <div className="w-full sm:w-auto">
                 <AvatarUpload
@@ -312,7 +312,7 @@ export function ProfileEditForm({ profile, avatarUrlOverride }: ProfileEditFormP
       ) : null}
 
       {/* Password Management */}
-      <section className="rounded-3xl border border-border bg-card md:p-8 p-2">
+      <section className="rounded-3xl md:border md:border-border bg-card md:p-8">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold">Security</h2>

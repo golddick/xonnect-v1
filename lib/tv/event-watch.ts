@@ -28,8 +28,8 @@ export type EventWatchData = {
   requireTicket: boolean
   thumbnail: string | null
   thumbnailVideoUrl: string | null
-  recordedVideoUrl: string | null
-  recordingUrl: string | null
+  recordedVideoUrl?: string | null
+  recordingUrl?: string | null
   scheduledAt: string | null
   durationMinutes: number
   maxViewers: number | null
@@ -215,6 +215,8 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
     accessGranted = Boolean(emailMatch)
   }
 
+  const canViewRecordings = !premium || accessGranted
+
   const creatorName = event.creator.profile.fullName?.trim() || "Xonnect Creator"
   const creatorAvatarUrl = event.creator.profile.avatarUrl ?? null
   const creatorSocialHandles = Array.isArray(event.creator.profile.socialHandles)
@@ -248,54 +250,59 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
       }))
   )
 
-  return {
-    event: {
-      id: event.id,
-      title: event.title,
-      description: event.description,
-      category: event.category,
-      status: event.status,
-      isPrivate: event.isPrivate,
-      isPaid: event.isPaid,
-      requireTicket: event.requireTicket,
-      thumbnail: event.thumbnailUrl,
-      thumbnailVideoUrl: event.thumbnailVideoUrl,
-      recordedVideoUrl: event.recordedVideoUrl,
-      recordingUrl: event.recordingUrl,
-      scheduledAt: event.scheduledAt?.toISOString() ?? null,
-      durationMinutes: event.durationMinutes,
-      viewsCount:event.viewsCount,
-      maxViewers: event.maxViewers,
-      currentViewersCount: event.currentViewersCount,
-      peakViewersCount: event.peakViewersCount,
-      likesCount: event.likesCount ?? 0,
-      creator: {
-        id: event.creatorId,
-        name: creatorName,
-        avatarUrl: creatorAvatarUrl,
-        avatarInitials: toInitials(creatorName),
-        isSelf: Boolean(profileId && event.creator.profileId === profileId),
-        socialHandles: creatorSocialHandles.map((handle: any) => ({
-          network: handle.network,
-          handle: handle.handle,
-        })),
-        followersCount: event.creator.followersCount ?? 0,
-        followingCount: event.creator.followingCount ?? 0,
-        isFollowing: isFollowingCreator,
-      },
-      tickets: streamTickets,
-      isLiked: isLikedEvent,
-      access: {
-        locked: premium && !accessGranted,
-        accessCodeProvided: Boolean(accessCode),
-        canUseAccessCode: premium,
-        requiresSignIn: !loggedIn,
-        loggedIn,
-        canBypassAccess,
-        premium,
-        accessGranted,
-      },
+  const eventPayload: any = {
+    id: event.id,
+    title: event.title,
+    description: event.description,
+    category: event.category,
+    status: event.status,
+    isPrivate: event.isPrivate,
+    isPaid: event.isPaid,
+    requireTicket: event.requireTicket,
+    thumbnail: event.thumbnailUrl,
+    thumbnailVideoUrl: event.thumbnailVideoUrl,
+    scheduledAt: event.scheduledAt?.toISOString() ?? null,
+    durationMinutes: event.durationMinutes,
+    viewsCount: event.viewsCount,
+    maxViewers: event.maxViewers,
+    currentViewersCount: event.currentViewersCount,
+    peakViewersCount: event.peakViewersCount,
+    likesCount: event.likesCount ?? 0,
+    creator: {
+      id: event.creatorId,
+      name: creatorName,
+      avatarUrl: creatorAvatarUrl,
+      avatarInitials: toInitials(creatorName),
+      isSelf: Boolean(profileId && event.creator.profileId === profileId),
+      socialHandles: creatorSocialHandles.map((handle: any) => ({
+        network: handle.network,
+        handle: handle.handle,
+      })),
+      followersCount: event.creator.followersCount ?? 0,
+      followingCount: event.creator.followingCount ?? 0,
+      isFollowing: isFollowingCreator,
     },
+    tickets: streamTickets,
+    isLiked: isLikedEvent,
+    access: {
+      locked: premium && !accessGranted,
+      accessCodeProvided: Boolean(accessCode),
+      canUseAccessCode: premium,
+      requiresSignIn: !loggedIn,
+      loggedIn,
+      canBypassAccess,
+      premium,
+      accessGranted,
+    },
+  }
+
+  if (canViewRecordings) {
+    eventPayload.recordedVideoUrl = event.recordedVideoUrl
+    eventPayload.recordingUrl = event.recordingUrl
+  }
+
+  return {
+    event: eventPayload,
     canBypassAccess,
   }
 }

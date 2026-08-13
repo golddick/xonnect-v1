@@ -260,7 +260,7 @@ export async function subscribeNewsletter(
         email: options.email,
         name: options.name,
         source: options.source ?? 'landing_page',
-        templateId: options.templateId ?? process.env.DROPAPHI_NEWSLETTER_TEMPLATE_ID,
+        // templateId: options.templateId ?? process.env.DROPAPHI_NEWSLETTER_TEMPLATE_ID,
       }),
     })
 
@@ -431,11 +431,9 @@ export interface DropaphiBlogPostResult {
 
 export async function getBlogPostsFromDropaphi(): Promise<DropaphiBlogListResult> {
   try {
-    const res = await fetch('https://dropaphi.xyz/api/v1/blog', {
+    const res = await fetch(`${BASE}/v1/blog`, {
       method: 'GET',
-      headers: {
-        'DROP-API-Key': process.env.DROPAPHI_API_KEY || process.env.NEXT_PUBLIC_DROPAPHI_API_KEY || '',
-      },
+      headers: headers(),
       cache: 'no-store',
     })
 
@@ -479,11 +477,11 @@ export async function getBlogPostsFromDropaphi(): Promise<DropaphiBlogListResult
 
 export async function getBlogPostBySlugFromDropaphi(slug: string): Promise<DropaphiBlogPostResult> {
   try {
-    const res = await fetch(`https://dropaphi.xyz/api/v1/blog/${slug}`, {
+    const decodedSlug = decodeURIComponent(slug)
+    const encodedSlug = encodeURIComponent(decodedSlug)
+    const res = await fetch(`${BASE}/v1/blog/${encodedSlug}`, {
       method: 'GET',
-      headers: {
-        'DROP-API-Key': process.env.DROPAPHI_API_KEY || process.env.NEXT_PUBLIC_DROPAPHI_API_KEY || '',
-      },
+      headers: headers(),
       cache: 'no-store',
     })
 

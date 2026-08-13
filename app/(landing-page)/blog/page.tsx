@@ -47,31 +47,38 @@ const BlogPage = () => {
 
 
         const mappedPosts: BlogContent[] = dropaphiPosts.map((post: any, index: number) => {
-          const fallback = blogPosts.find((source) => source.slug === post.slug) ?? blogPosts[index % blogPosts.length]
+          // Match local post only by slug (if present); but do NOT inherit
+          // author/engagement/readTime/category/tags from unrelated local posts.
+          const fallback = blogPosts.find((source) => source.slug === post.slug) ?? undefined
+
+          const cleanedAvatar = post.author?.avatar?.trim()
+          const authorAvatar = cleanedAvatar && cleanedAvatar.length > 0 ? cleanedAvatar : '/placeholder.svg'
 
           return {
             id: post.id ?? `${post.slug}-${index}`,
-            title: post.title ?? fallback.title,
-            slug: post.slug ?? fallback.slug,
-            content: post.content ?? fallback.content,
-            excerpt: post.excerpt ?? post.content?.slice(0, 180) ?? fallback.excerpt,
-            coverImage: post.coverImage ?? fallback?.coverImage ?? fallback?.featuredImage ?? '/video/thumbnail.png',
-            featuredImage: fallback?.featuredImage ?? post.coverImage ?? post.featuredImage,
-            allowComments: fallback?.allowComments ?? true,
-            commentsCount: fallback?.commentsCount ?? 0,
-            comments: fallback?.comments ?? [],
+            title: post.title ?? (fallback?.title ?? 'Untitled'),
+            slug: post.slug ?? (fallback?.slug ?? ''),
+            content: post.content ?? (fallback?.content ?? ''),
+            excerpt: post.excerpt ?? post.content?.slice(0, 180) ?? (fallback?.excerpt ?? ''),
+            coverImage: post.coverImage ?? post.featuredImage ?? (fallback?.coverImage ?? fallback?.featuredImage) ?? '/video/thumbnail.png',
+            featuredImage: post.featuredImage ?? post.coverImage ?? (fallback?.featuredImage ?? fallback?.coverImage) ?? '/video/thumbnail.png',
+            // Engagement and author fields MUST come from remote post only; if absent use neutral defaults
+            allowComments: post.allowComments ?? true,
+            commentsCount: post.commentsCount ?? 0,
+            comments: Array.isArray(post.comments) ? post.comments : [],
             author: {
-              name: post.author?.fullName ?? post.author?.name ?? fallback.author.name,
-              avatar: fallback.author.avatar,
-              bio: fallback.author.bio,
+              name: post.author?.fullName ?? post.author?.name ?? (fallback?.author?.name ?? 'Xonnect Team'),
+              avatar: authorAvatar,
+              bio: post.author?.bio ?? (fallback?.author?.bio ?? ''),
             },
-            publishedAt: post.publishedAt ?? fallback.publishedAt,
-            readTime: fallback?.readTime ?? '5 min',
-            views: fallback?.views ?? 0,
-            viewCount: post.viewCount ?? fallback?.viewCount ?? fallback?.views ?? 0,
-            likes: fallback?.likes ?? 0,
-            category: fallback?.category,
-            tags: fallback?.tags ?? [],
+            publishedAt: post.publishedAt ?? (fallback?.publishedAt ?? new Date().toISOString()),
+            readTime: post.readTime ?? '5 min',
+            views: post.views ?? 0,
+            viewCount: post.viewCount ?? post.views ?? 0,
+            likes: post.likes ?? 0,
+            // Do not pull category/tags from unrelated local posts
+            category: post.category ?? undefined,
+            tags: Array.isArray(post.tags) ? post.tags : [],
           }
         })
 
@@ -193,10 +200,12 @@ const BlogPage = () => {
                         
                       </div>
                     </div>
-                    <Link href={`/blog/${post.slug}`} className="text-red-500 hover:text-red-600 font-bold text-sm flex items-center group/link">
-                      Read More
-                      <ArrowRight className="ml-1 w-4 h-4 transition-transform group-hover/link:translate-x-1" />
-                    </Link>
+                    {(post.content && post.content.length > (post.excerpt?.length ?? 0)) && (
+                      <Link href={`/blog/${post.slug}`} className="text-red-500 hover:text-red-600 font-bold text-sm flex items-center group/link">
+                        Read More
+                        <ArrowRight className="ml-1 w-4 h-4 transition-transform group-hover/link:translate-x-1" />
+                      </Link>
+                    )}
                   </div>
                 </div>
               </motion.div>

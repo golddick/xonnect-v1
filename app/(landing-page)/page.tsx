@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
@@ -59,6 +59,8 @@ const faqs = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function HomePage() {
+  const [showNewsletterPopup, setShowNewsletterPopup] = useState(false)
+
   useEffect(() => {
     const handleOffline = () => {
       toast.error("No network connection")
@@ -69,6 +71,12 @@ export default function HomePage() {
     }
 
     window.addEventListener("offline", handleOffline)
+    try {
+      const dismissed = typeof window !== 'undefined' ? window.localStorage.getItem('newsletterPopupDismissed') : null
+      if (!dismissed) setShowNewsletterPopup(true)
+    } catch {
+      setShowNewsletterPopup(true)
+    }
 
     return () => {
       window.removeEventListener("offline", handleOffline)
@@ -81,7 +89,7 @@ export default function HomePage() {
       {/* 1.  Hero */}
       
       <XonnectHero />
-      <NewsLetterSection />
+   
 
       {/* 2. Stats Bar */}
       <section className="relative z-10  bg-card/50 backdrop-blur-sm py-6 px-4 sm:px-6 md:px-8">
@@ -285,7 +293,25 @@ export default function HomePage() {
       </section>
 
       {/* 8. Final CTA Banner */}
-      <section className="relative z-10 py-24 px-4 sm:px-6 md:px-8 overflow-hidden">
+       {showNewsletterPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+            <div className="relative w-full max-w-4xl overflow-hidden rounded-[2rem] bg-background shadow-2xl">
+                <button
+                  type="button"
+                  onClick={() => {
+                    try { window.localStorage.setItem('newsletterPopupDismissed', '1') } catch {}
+                    setShowNewsletterPopup(false)
+                  }}
+                  className="absolute right-4 top-4 z-10 rounded-full bg-black/40 px-3 py-2 text-sm text-white transition hover:bg-black/60"
+                >
+                  Close
+                </button>
+                <NewsLetterSection source="landing_page" />
+              </div>
+        </div>
+      )}
+
+      {/* <section className="relative z-10 py-24 px-4 sm:px-6 md:px-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-red-600/20 via-background to-background" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-red-600/10 rounded-full blur-3xl" />
         <div className="relative z-10 max-w-7xl mx-auto text-center">
@@ -316,7 +342,7 @@ export default function HomePage() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
     </div>
   )
