@@ -26,6 +26,7 @@ export default function CreatorLivePage() {
   const publishedVideoRef = useRef<any>(null)
   const publishedScreenRef = useRef<any>(null)
   const publishedAudioRef = useRef<any>(null)
+  const unpublishedDuringPauseRef = useRef<any[]>([])
   const recorderRef = useRef<MediaRecorder | null>(null)
   const recorderStopResolver = useRef<(() => void) | null>(null)
   const recordingChunksRef = useRef<Blob[]>([])
@@ -332,21 +333,14 @@ export default function CreatorLivePage() {
         const v: any = publishedVideoRef.current
         const s: any = publishedScreenRef.current
         const a: any = publishedAudioRef.current
-
-        if (sourceMode === "camera" || sourceMode === "both") {
-          if (v) {
-            await room.localParticipant.publishTrack(v)
+        // Republish only the exact tracks that were unpublished during pause.
+        const toRepublish = unpublishedDuringPauseRef.current.splice(0)
+        for (const t of toRepublish) {
+          try {
+            await room.localParticipant.publishTrack(t)
+          } catch (err) {
+            console.warn('Failed to republish track after pause', err)
           }
-        }
-
-        if (sourceMode === "screen" || sourceMode === "both") {
-          if (s) {
-            await room.localParticipant.publishTrack(s)
-          }
-        }
-
-        if (a) {
-          await room.localParticipant.publishTrack(a)
         }
 
         const response = await fetch(`/api/creator/events/${eventId}`, {
@@ -371,10 +365,26 @@ export default function CreatorLivePage() {
       const v: any = publishedVideoRef.current
       const s: any = publishedScreenRef.current
       const a: any = publishedAudioRef.current
-
-      if (v) await room.localParticipant.unpublishTrack(v)
-      if (s) await room.localParticipant.unpublishTrack(s)
-      if (a) await room.localParticipant.unpublishTrack(a)
+      // Unpublish only currently published tracks and remember them so we can restore exact state
+      unpublishedDuringPauseRef.current = []
+      if (v) {
+        try {
+          await room.localParticipant.unpublishTrack(v)
+          unpublishedDuringPauseRef.current.push(v)
+        } catch {}
+      }
+      if (s) {
+        try {
+          await room.localParticipant.unpublishTrack(s)
+          unpublishedDuringPauseRef.current.push(s)
+        } catch {}
+      }
+      if (a) {
+        try {
+          await room.localParticipant.unpublishTrack(a)
+          unpublishedDuringPauseRef.current.push(a)
+        } catch {}
+      }
 
       const response = await fetch(`/api/creator/events/${eventId}`, {
         method: "PUT",
@@ -662,27 +672,30 @@ export default function CreatorLivePage() {
               <button
                 type="button"
                 onClick={() => setSourceMode("camera")}
+                disabled={connected}
                 className={`rounded-full border px-3 py-2 text-sm transition ${
                   sourceMode === "camera" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
-                }`}
+                } ${connected ? 'cursor-not-allowed opacity-50' : ''}`}
               >
                 Camera only
               </button>
               <button
                 type="button"
                 onClick={() => setSourceMode("screen")}
+                disabled={connected}
                 className={`rounded-full border px-3 py-2 text-sm transition ${
                   sourceMode === "screen" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
-                }`}
+                } ${connected ? 'cursor-not-allowed opacity-50' : ''}`}
               >
                 Screen share only
               </button>
               <button
                 type="button"
                 onClick={() => setSourceMode("both")}
+                disabled={connected}
                 className={`rounded-full border px-3 py-2 text-sm transition ${
                   sourceMode === "both" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
-                }`}
+                } ${connected ? 'cursor-not-allowed opacity-50' : ''}`}
               >
                 Camera + screen share
               </button>

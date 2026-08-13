@@ -133,7 +133,9 @@ const ReadBlog = () => {
   const toggleLike = () => {
     setIsLiked(!isLiked)
   }
-
+ 
+  const hasOtherPosts = blogPosts.some((post) => post.slug !== slug)
+ 
   if (loading) return <LoadingSplash />
 
   if (error || !blog) {
@@ -345,35 +347,36 @@ const ReadBlog = () => {
           {/* <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-red-500/10 rounded-full blur-[120px] pointer-events-none" /> */}
         </section>
       </main>
-
-      {/* Footer Related */}
-      <footer className=" mt-24">
-         <div className="max-w-6xl mx-auto px-6">
-            <div className="flex items-end justify-between mb-16">
-               <div className="space-y-2">
-                  <h2 className="text-3xl font-black tracking-tighter text-foreground uppercase">Read more</h2>
-                  <div className="h-1.5 w-12 bg-black rounded-full" />
-               </div>
-               <Link href="/blog" className="font-bold text-foreground text-sm uppercase tracking-widest flex items-center gap-2 hover:mr-2 transition-all group">
-                  EXPLORE <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-               </Link>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="group space-y-4 rounded-[2rem] border border-border hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5">
-                  <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-gray-100">
-                    <div className="absolute inset-0 bg-stone-200 animate-pulse" />
+ 
+      {hasOtherPosts && (
+        <footer className=" mt-24">
+           <div className="max-w-6xl mx-auto px-6">
+              <div className="flex items-end justify-between mb-16">
+                 <div className="space-y-2">
+                    <h2 className="text-3xl font-black tracking-tighter text-foreground uppercase">Read more</h2>
+                    <div className="h-1.5 w-12 bg-black rounded-full" />
+                 </div>
+                 <Link href="/blog" className="font-bold text-foreground text-sm uppercase tracking-widest flex items-center gap-2 hover:mr-2 transition-all group">
+                    EXPLORE <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                 </Link>
+              </div>
+               
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="group space-y-4 rounded-[2rem] border border-border hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5">
+                    <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-gray-100">
+                      <div className="absolute inset-0 bg-stone-200 animate-pulse" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="h-4 w-24 bg-gray-100 rounded animate-pulse" />
+                      <div className="h-6 w-full bg-gray-100 rounded animate-pulse" />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <div className="h-4 w-24 bg-gray-100 rounded animate-pulse" />
-                    <div className="h-6 w-full bg-gray-100 rounded animate-pulse" />
-                  </div>
-                </div>
-              ))}
-            </div>
-         </div>
-      </footer>
+                ))}
+              </div>
+           </div>
+        </footer>
+      )}
     </div>
   )
 }
