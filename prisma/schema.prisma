@@ -544,8 +544,6 @@ model CreatorEvent {
   recordingEnabled   Boolean                     @default(false) @map("recording_enabled")
   recordingStatus    CreatorEventRecordingStatus @default(DISABLED) @map("recording_status")
   recordingAssetId   String?                     @unique @map("recording_asset_id")
-  recordingUrl       String?                     @map("recording_url")
-  recordingFileId    String?                     @map("recording_file_id")
   recordingStartedAt DateTime?                   @map("recording_started_at")
   recordingEndedAt   DateTime?                   @map("recording_ended_at")
 

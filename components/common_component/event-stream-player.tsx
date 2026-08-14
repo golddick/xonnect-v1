@@ -59,7 +59,7 @@ export default function  EventStreamPlayer({
   poster,
   previewVideoUrl,
   recordedVideoUrl,
-  recordingUrl,
+  // recordingUrl,
   scheduledAt,
   status,
   wsUrl,
@@ -93,8 +93,8 @@ export default function  EventStreamPlayer({
   const isScheduled = !isLive && !isEnded && !isPaused
   const previewMedia = useMemo(() => resolvePlayableMediaSource(!isEnded ? previewVideoUrl : null), [previewVideoUrl, isEnded])
   const recordedMedia = useMemo(
-    () => resolvePlayableMediaSource(isEnded ? recordedVideoUrl ?? recordingUrl : null),
-    [recordedVideoUrl, recordingUrl, isEnded]
+    () => resolvePlayableMediaSource(isEnded ? recordedVideoUrl ?? recordedVideoUrl : null),
+    [recordedVideoUrl, isEnded]
   )
   const fallbackPreviewMedia = useMemo(() => resolvePlayableMediaSource(previewVideoUrl), [previewVideoUrl])
   const activePlaybackMedia = isEnded
@@ -451,7 +451,7 @@ export default function  EventStreamPlayer({
                   className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black/80"
                   aria-label="Play preview video"
                 >
-                  <Play className="h-8 w-8" />
+                  <Play className="lg:h-8 lg:w-8 h-4 w-4" />
                 </button>
               </div>
             )}
@@ -477,7 +477,7 @@ export default function  EventStreamPlayer({
                 className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black/80"
                 aria-label="Play preview video"
               >
-                <Play className="h-8 w-8" />
+                <Play className="lg:h-8 lg:w-8 h-4 w-4" />
               </button>
             ) : null}
           </div>

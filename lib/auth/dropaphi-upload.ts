@@ -1,6 +1,3 @@
-
-
-
 // lib/auth/dropaphi-upload.ts
 const BASE = 'https://dropaphi.xyz/api'
 // const BASE = 'http://localhost:3002/api'
@@ -36,7 +33,6 @@ interface UploadFileOptions {
   visibility?: string
   name?: string
   type?: string
-  apiKey?: string
 }
 
 function normalizeMetadata(metadata?: Record<string, unknown>) {
@@ -96,84 +92,48 @@ export async function uploadFileRaw(
     })
 
     if (typeof window !== 'undefined') {
-      // Client-side: if an API key is provided via `options.apiKey`, perform
-      // the JSON/base64 upload directly to DropAphi as documented.
+      // Client-side: perform the JSON/base64 upload directly to DropAphi as documented.
       // NOTE: providing the API key client-side exposes it to end users.
-      if (options.apiKey) {
-        const base64Data = await fileToBase64(file)
+      const base64Data = await fileToBase64(file)
 
-        const payload = {
-          name: options.name ?? file.name,
-          type: file.type,
-          data: base64Data,
-          metadata,
-        }
+      const payload = {
+        name: file.name,
+        type: file.type,
+        data: base64Data,
+        metadata: metadata,
+      }
 
-        const apiKey = getDropAphiApiKey()
+      const apiKey = getDropAphiApiKey()
 
-        const res = await fetch(`${BASE}/v1/files/upload`, {
-          method: 'POST',
-          headers: {
-            'DROP-API-Key': apiKey,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        })
+      const res = await fetch(`${BASE}/v1/files/upload`, {
+        method: 'POST',
+        headers: {
+          'DROP-API-Key': apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
 
-        const data = await res.json()
+      const data = await res.json()
 
-        if (!res.ok) {
-          return {
-            ok: false,
-            message: data?.error || data?.message || 'Upload failed',
-          }
-        }
-
+      if (!res.ok) {
         return {
-          ok: true,
-          url: data?.data?.url,
-          directUrl: data?.data?.directUrl,
-          fileId: data?.data?.id,
+          ok: false,
+          message: data?.error || data?.message || 'Upload failed',
         }
       }
 
-      return { ok: false, message: 'Client-side uploads require `options.apiKey`. Use server proxy otherwise.' }
-    }
-
-    const apiKey = getDropAphiApiKey()
-    const base64Data = await fileToBase64(file)
-
-    const payload = {
-      name: options.name ?? file.name,
-      type: file.type,
-      data: base64Data,
-      metadata,
-    }
-
-    const res = await fetch(`${BASE}/v1/files/upload`, {
-      method: 'POST',
-      headers: {
-        'DROP-API-Key': apiKey,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-
-    const data = await res.json()
-
-    if (!res.ok) {
       return {
-        ok: false,
-        message: data?.error || data?.message || 'Upload failed',
+        ok: true,
+        url: data?.data?.url,
+        directUrl: data?.data?.directUrl,
+        fileId: data?.data?.id,
       }
     }
 
-    return {
-      ok: true,
-      url: data?.data?.url,
-      directUrl: data?.data?.directUrl,
-      fileId: data?.data?.id,
-    }
+    // Server-side upload (Node.js environment)
+    // Note: This code path won't be reached in browser environments
+    return { ok: false, message: 'Server-side uploads require a different implementation' }
   } catch (error) {
     console.error('[DropAphi Upload Error]', error)
     return { ok: false, message: 'Upload service unavailable' }

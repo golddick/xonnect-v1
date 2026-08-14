@@ -17,7 +17,7 @@ export default function AvatarUpload({
   const [error, setError] = useState<string | null>(null)
 
   async function onFileChange(file: File | null) {
-    if (!file) return
+    if (!file) return 
     setIsUploading(true)
     setError(null) 
     try {

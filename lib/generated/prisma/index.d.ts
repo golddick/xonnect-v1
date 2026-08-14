@@ -24738,8 +24738,6 @@ export namespace Prisma {
     recordingEnabled: boolean | null
     recordingStatus: $Enums.CreatorEventRecordingStatus | null
     recordingAssetId: string | null
-    recordingUrl: string | null
-    recordingFileId: string | null
     recordingStartedAt: Date | null
     recordingEndedAt: Date | null
     hasRecordedVideo: boolean | null
@@ -24797,8 +24795,6 @@ export namespace Prisma {
     recordingEnabled: boolean | null
     recordingStatus: $Enums.CreatorEventRecordingStatus | null
     recordingAssetId: string | null
-    recordingUrl: string | null
-    recordingFileId: string | null
     recordingStartedAt: Date | null
     recordingEndedAt: Date | null
     hasRecordedVideo: boolean | null
@@ -24856,8 +24852,6 @@ export namespace Prisma {
     recordingEnabled: number
     recordingStatus: number
     recordingAssetId: number
-    recordingUrl: number
-    recordingFileId: number
     recordingStartedAt: number
     recordingEndedAt: number
     hasRecordedVideo: number
@@ -24952,8 +24946,6 @@ export namespace Prisma {
     recordingEnabled?: true
     recordingStatus?: true
     recordingAssetId?: true
-    recordingUrl?: true
-    recordingFileId?: true
     recordingStartedAt?: true
     recordingEndedAt?: true
     hasRecordedVideo?: true
@@ -25011,8 +25003,6 @@ export namespace Prisma {
     recordingEnabled?: true
     recordingStatus?: true
     recordingAssetId?: true
-    recordingUrl?: true
-    recordingFileId?: true
     recordingStartedAt?: true
     recordingEndedAt?: true
     hasRecordedVideo?: true
@@ -25070,8 +25060,6 @@ export namespace Prisma {
     recordingEnabled?: true
     recordingStatus?: true
     recordingAssetId?: true
-    recordingUrl?: true
-    recordingFileId?: true
     recordingStartedAt?: true
     recordingEndedAt?: true
     hasRecordedVideo?: true
@@ -25217,8 +25205,6 @@ export namespace Prisma {
     recordingEnabled: boolean
     recordingStatus: $Enums.CreatorEventRecordingStatus
     recordingAssetId: string | null
-    recordingUrl: string | null
-    recordingFileId: string | null
     recordingStartedAt: Date | null
     recordingEndedAt: Date | null
     hasRecordedVideo: boolean
@@ -25296,8 +25282,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: boolean
     recordingAssetId?: boolean
-    recordingUrl?: boolean
-    recordingFileId?: boolean
     recordingStartedAt?: boolean
     recordingEndedAt?: boolean
     hasRecordedVideo?: boolean
@@ -25364,8 +25348,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: boolean
     recordingAssetId?: boolean
-    recordingUrl?: boolean
-    recordingFileId?: boolean
     recordingStartedAt?: boolean
     recordingEndedAt?: boolean
     hasRecordedVideo?: boolean
@@ -25425,8 +25407,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: boolean
     recordingAssetId?: boolean
-    recordingUrl?: boolean
-    recordingFileId?: boolean
     recordingStartedAt?: boolean
     recordingEndedAt?: boolean
     hasRecordedVideo?: boolean
@@ -25486,8 +25466,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: boolean
     recordingAssetId?: boolean
-    recordingUrl?: boolean
-    recordingFileId?: boolean
     recordingStartedAt?: boolean
     recordingEndedAt?: boolean
     hasRecordedVideo?: boolean
@@ -25512,7 +25490,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CreatorEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "title" | "description" | "category" | "status" | "isPrivate" | "isPaid" | "requireTicket" | "enableDonations" | "enableLocationRestriction" | "locationRestrictionType" | "address" | "locationName" | "locationCountry" | "locationState" | "locationType" | "locationLat" | "locationLon" | "locationFullAddress" | "thumbnailUrl" | "thumbnailFileId" | "thumbnailVideoUrl" | "thumbnailVideoFileId" | "recordedVideoUrl" | "recordedVideoFileId" | "streamKey" | "rtmpUrl" | "ingressId" | "livekitRoomName" | "recordingEnabled" | "recordingStatus" | "recordingAssetId" | "recordingUrl" | "recordingFileId" | "recordingStartedAt" | "recordingEndedAt" | "hasRecordedVideo" | "timezone" | "scheduledAt" | "startedAt" | "endedAt" | "durationMinutes" | "maxViewers" | "estimatedUsers" | "tags" | "viewsCount" | "likesCount" | "commentsCount" | "peakViewersCount" | "currentViewersCount" | "venueParticipantCount" | "revenue" | "amount" | "platformFee" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEvent"]>
+  export type CreatorEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "creatorId" | "title" | "description" | "category" | "status" | "isPrivate" | "isPaid" | "requireTicket" | "enableDonations" | "enableLocationRestriction" | "locationRestrictionType" | "address" | "locationName" | "locationCountry" | "locationState" | "locationType" | "locationLat" | "locationLon" | "locationFullAddress" | "thumbnailUrl" | "thumbnailFileId" | "thumbnailVideoUrl" | "thumbnailVideoFileId" | "recordedVideoUrl" | "recordedVideoFileId" | "streamKey" | "rtmpUrl" | "ingressId" | "livekitRoomName" | "recordingEnabled" | "recordingStatus" | "recordingAssetId" | "recordingStartedAt" | "recordingEndedAt" | "hasRecordedVideo" | "timezone" | "scheduledAt" | "startedAt" | "endedAt" | "durationMinutes" | "maxViewers" | "estimatedUsers" | "tags" | "viewsCount" | "likesCount" | "commentsCount" | "peakViewersCount" | "currentViewersCount" | "venueParticipantCount" | "revenue" | "amount" | "platformFee" | "createdAt" | "updatedAt", ExtArgs["result"]["creatorEvent"]>
   export type CreatorEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creator?: boolean | CreatorDefaultArgs<ExtArgs>
     restrictedLocations?: boolean | CreatorEvent$restrictedLocationsArgs<ExtArgs>
@@ -25575,8 +25553,6 @@ export namespace Prisma {
       recordingEnabled: boolean
       recordingStatus: $Enums.CreatorEventRecordingStatus
       recordingAssetId: string | null
-      recordingUrl: string | null
-      recordingFileId: string | null
       recordingStartedAt: Date | null
       recordingEndedAt: Date | null
       hasRecordedVideo: boolean
@@ -26062,8 +26038,6 @@ export namespace Prisma {
     readonly recordingEnabled: FieldRef<"CreatorEvent", 'Boolean'>
     readonly recordingStatus: FieldRef<"CreatorEvent", 'CreatorEventRecordingStatus'>
     readonly recordingAssetId: FieldRef<"CreatorEvent", 'String'>
-    readonly recordingUrl: FieldRef<"CreatorEvent", 'String'>
-    readonly recordingFileId: FieldRef<"CreatorEvent", 'String'>
     readonly recordingStartedAt: FieldRef<"CreatorEvent", 'DateTime'>
     readonly recordingEndedAt: FieldRef<"CreatorEvent", 'DateTime'>
     readonly hasRecordedVideo: FieldRef<"CreatorEvent", 'Boolean'>
@@ -40047,8 +40021,6 @@ export namespace Prisma {
     recordingEnabled: 'recordingEnabled',
     recordingStatus: 'recordingStatus',
     recordingAssetId: 'recordingAssetId',
-    recordingUrl: 'recordingUrl',
-    recordingFileId: 'recordingFileId',
     recordingStartedAt: 'recordingStartedAt',
     recordingEndedAt: 'recordingEndedAt',
     hasRecordedVideo: 'hasRecordedVideo',
@@ -42218,8 +42190,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFilter<"CreatorEvent"> | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFilter<"CreatorEvent"> | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: StringNullableFilter<"CreatorEvent"> | string | null
-    recordingUrl?: StringNullableFilter<"CreatorEvent"> | string | null
-    recordingFileId?: StringNullableFilter<"CreatorEvent"> | string | null
     recordingStartedAt?: DateTimeNullableFilter<"CreatorEvent"> | Date | string | null
     recordingEndedAt?: DateTimeNullableFilter<"CreatorEvent"> | Date | string | null
     hasRecordedVideo?: BoolFilter<"CreatorEvent"> | boolean
@@ -42285,8 +42255,6 @@ export namespace Prisma {
     recordingEnabled?: SortOrder
     recordingStatus?: SortOrder
     recordingAssetId?: SortOrderInput | SortOrder
-    recordingUrl?: SortOrderInput | SortOrder
-    recordingFileId?: SortOrderInput | SortOrder
     recordingStartedAt?: SortOrderInput | SortOrder
     recordingEndedAt?: SortOrderInput | SortOrder
     hasRecordedVideo?: SortOrder
@@ -42355,8 +42323,6 @@ export namespace Prisma {
     rtmpUrl?: StringNullableFilter<"CreatorEvent"> | string | null
     recordingEnabled?: BoolFilter<"CreatorEvent"> | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFilter<"CreatorEvent"> | $Enums.CreatorEventRecordingStatus
-    recordingUrl?: StringNullableFilter<"CreatorEvent"> | string | null
-    recordingFileId?: StringNullableFilter<"CreatorEvent"> | string | null
     recordingStartedAt?: DateTimeNullableFilter<"CreatorEvent"> | Date | string | null
     recordingEndedAt?: DateTimeNullableFilter<"CreatorEvent"> | Date | string | null
     hasRecordedVideo?: BoolFilter<"CreatorEvent"> | boolean
@@ -42422,8 +42388,6 @@ export namespace Prisma {
     recordingEnabled?: SortOrder
     recordingStatus?: SortOrder
     recordingAssetId?: SortOrderInput | SortOrder
-    recordingUrl?: SortOrderInput | SortOrder
-    recordingFileId?: SortOrderInput | SortOrder
     recordingStartedAt?: SortOrderInput | SortOrder
     recordingEndedAt?: SortOrderInput | SortOrder
     hasRecordedVideo?: SortOrder
@@ -42490,8 +42454,6 @@ export namespace Prisma {
     recordingEnabled?: BoolWithAggregatesFilter<"CreatorEvent"> | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusWithAggregatesFilter<"CreatorEvent"> | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: StringNullableWithAggregatesFilter<"CreatorEvent"> | string | null
-    recordingUrl?: StringNullableWithAggregatesFilter<"CreatorEvent"> | string | null
-    recordingFileId?: StringNullableWithAggregatesFilter<"CreatorEvent"> | string | null
     recordingStartedAt?: DateTimeNullableWithAggregatesFilter<"CreatorEvent"> | Date | string | null
     recordingEndedAt?: DateTimeNullableWithAggregatesFilter<"CreatorEvent"> | Date | string | null
     hasRecordedVideo?: BoolWithAggregatesFilter<"CreatorEvent"> | boolean
@@ -45379,8 +45341,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -45446,8 +45406,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -45511,8 +45469,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -45578,8 +45534,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -45644,8 +45598,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -45703,8 +45655,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -45763,8 +45713,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -48354,8 +48302,6 @@ export namespace Prisma {
     recordingEnabled?: SortOrder
     recordingStatus?: SortOrder
     recordingAssetId?: SortOrder
-    recordingUrl?: SortOrder
-    recordingFileId?: SortOrder
     recordingStartedAt?: SortOrder
     recordingEndedAt?: SortOrder
     hasRecordedVideo?: SortOrder
@@ -48431,8 +48377,6 @@ export namespace Prisma {
     recordingEnabled?: SortOrder
     recordingStatus?: SortOrder
     recordingAssetId?: SortOrder
-    recordingUrl?: SortOrder
-    recordingFileId?: SortOrder
     recordingStartedAt?: SortOrder
     recordingEndedAt?: SortOrder
     hasRecordedVideo?: SortOrder
@@ -48490,8 +48434,6 @@ export namespace Prisma {
     recordingEnabled?: SortOrder
     recordingStatus?: SortOrder
     recordingAssetId?: SortOrder
-    recordingUrl?: SortOrder
-    recordingFileId?: SortOrder
     recordingStartedAt?: SortOrder
     recordingEndedAt?: SortOrder
     hasRecordedVideo?: SortOrder
@@ -52997,8 +52939,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -53062,8 +53002,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -53512,8 +53450,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFilter<"CreatorEvent"> | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFilter<"CreatorEvent"> | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: StringNullableFilter<"CreatorEvent"> | string | null
-    recordingUrl?: StringNullableFilter<"CreatorEvent"> | string | null
-    recordingFileId?: StringNullableFilter<"CreatorEvent"> | string | null
     recordingStartedAt?: DateTimeNullableFilter<"CreatorEvent"> | Date | string | null
     recordingEndedAt?: DateTimeNullableFilter<"CreatorEvent"> | Date | string | null
     hasRecordedVideo?: BoolFilter<"CreatorEvent"> | boolean
@@ -55824,8 +55760,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -55890,8 +55824,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -56057,8 +55989,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -56123,8 +56053,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -57249,8 +57177,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -57315,8 +57241,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -57395,8 +57319,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -57461,8 +57383,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -57525,8 +57445,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -57591,8 +57509,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -57755,8 +57671,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -57821,8 +57735,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -58600,8 +58512,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -58666,8 +58576,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -58965,8 +58873,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -59031,8 +58937,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -59159,8 +59063,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -59225,8 +59127,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -59410,8 +59310,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -59476,8 +59374,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -59838,8 +59734,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -59904,8 +59798,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -60082,8 +59974,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -60148,8 +60038,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -60806,8 +60694,6 @@ export namespace Prisma {
     recordingEnabled?: boolean
     recordingStatus?: $Enums.CreatorEventRecordingStatus
     recordingAssetId?: string | null
-    recordingUrl?: string | null
-    recordingFileId?: string | null
     recordingStartedAt?: Date | string | null
     recordingEndedAt?: Date | string | null
     hasRecordedVideo?: boolean
@@ -61128,8 +61014,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -61193,8 +61077,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
@@ -61258,8 +61140,6 @@ export namespace Prisma {
     recordingEnabled?: BoolFieldUpdateOperationsInput | boolean
     recordingStatus?: EnumCreatorEventRecordingStatusFieldUpdateOperationsInput | $Enums.CreatorEventRecordingStatus
     recordingAssetId?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    recordingFileId?: NullableStringFieldUpdateOperationsInput | string | null
     recordingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recordingEndedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hasRecordedVideo?: BoolFieldUpdateOperationsInput | boolean
