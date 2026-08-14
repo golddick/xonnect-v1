@@ -600,7 +600,7 @@ export default function CreatorLivePage() {
     setRecordingUrl(null)
   }
 
-  const finalizeSave = async () => {
+  const finalizeSave = async (): Promise<boolean> => {
     if (recordingBlobRef.current && recordingBlobRef.current.size > 0) {
       setSavingStatus("uploading")
       setUploadProgress(0)
@@ -643,12 +643,13 @@ export default function CreatorLivePage() {
 
         recordingBlobRef.current = null
         setSavingStatus("completed")
+        return true
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
         setError(message)
         setSavingError(message)
         setSavingStatus("pending")
-        throw err
+        return false
       }
     }
 
@@ -686,16 +687,19 @@ export default function CreatorLivePage() {
       } catch {}
       await room.disconnect()
     }
+
+    return true
   }
 
   const handleSaveRecordingChoice = async (saveRecording: boolean) => {
     try {
       if (saveRecording) {
-        // Start the save process but keep dialog open
         try {
-          await finalizeSave()
+          const saveSucceeded = await finalizeSave()
+          if (!saveSucceeded) {
+            return
+          }
         } catch (err) {
-          // Error already set in finalizeSave, keep dialog open to show error
           console.error("Failed to save recording:", err)
           return
         }
@@ -705,50 +709,8 @@ export default function CreatorLivePage() {
         await finalizeDiscard()
       }
 
-      // Only proceed if saving was successful
-      if (saveRecording && savingStatus !== "completed") {
-        return
-      }
-
-      // Close dialog and cleanup after successful save
       setShowSaveDialog(false)
       setAwaitingStopDecision(false)
-
-      // End live event
-      await endLiveEvent()
-
-      if (room) {
-        try {
-          const v: any = publishedVideoRef.current
-          const s: any = publishedScreenRef.current
-          const a: any = publishedAudioRef.current
-          if (v) {
-            try {
-              await room.localParticipant.unpublishTrack(v)
-            } catch {}
-            try {
-              v.stop()
-            } catch {}
-          }
-          if (s) {
-            try {
-              await room.localParticipant.unpublishTrack(s)
-            } catch {}
-            try {
-              s.stop()
-            } catch {}
-          }
-          if (a) {
-            try {
-              await room.localParticipant.unpublishTrack(a)
-            } catch {}
-            try {
-              a.stop()
-            } catch {}
-          }
-        } catch {}
-        await room.disconnect()
-      }
 
       // Navigate away
       setRoom(null)
@@ -821,6 +783,8 @@ export default function CreatorLivePage() {
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
+                aria-label="Camera only"
+                aria-pressed={sourceMode === "camera"}
                 onClick={() => handleSourceModeChange("camera")}
                 disabled={connecting || publishing}
                 className={`rounded-full border px-3 py-2 text-sm transition ${
@@ -832,6 +796,8 @@ export default function CreatorLivePage() {
               </button>
               <button
                 type="button"
+                aria-label="Screen share only"
+                aria-pressed={sourceMode === "screen"}
                 onClick={() => handleSourceModeChange("screen")}
                 disabled={connecting || publishing}
                 className={`rounded-full border px-3 py-2 text-sm transition ${
@@ -843,6 +809,8 @@ export default function CreatorLivePage() {
               </button>
               <button
                 type="button"
+                aria-label="Camera + screen share"
+                aria-pressed={sourceMode === "both"}
                 onClick={() => handleSourceModeChange("both")}
                 disabled={connecting || publishing}
                 className={`rounded-full border px-3 py-2 text-sm transition ${

@@ -58,6 +58,7 @@ export default function CameraTokenPage() {
 
   const scanControlsRef = useRef<{ stop: () => void } | null>(null)
   const lastScannedRef = useRef<string | null>(null)
+  const inFlightScansRef = useRef<Set<string>>(new Set())
   const scanCooldownRef = useRef(0)
 
   const stopScanner = () => {
@@ -116,8 +117,9 @@ export default function CameraTokenPage() {
   const handleDetectedCode = async (code: string) => {
     const now = Date.now()
     const sameCodeRecently = lastScannedRef.current === code && now - scanCooldownRef.current < 1500
-    if (sameCodeRecently) return
+    if (sameCodeRecently || inFlightScansRef.current.has(code)) return
 
+    inFlightScansRef.current.add(code)
     lastScannedRef.current = code
     scanCooldownRef.current = now
 
@@ -156,6 +158,8 @@ export default function CameraTokenPage() {
       setScanError(message)
       setScanStatus("error")
       toast.error(message)
+    } finally {
+      inFlightScansRef.current.delete(code)
     }
   }
 
