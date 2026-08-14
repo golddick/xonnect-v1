@@ -815,23 +815,37 @@ export default function CreatorVideoAnalytics() {
 
   // Fetch analytics data
   useEffect(() => {
+    if (!folderId) return
+
+    const controller = new AbortController()
+    let isActive = true
+
     const fetchAnalytics = async () => {
-      if (!folderId) return
-      
       setLoading(true)
       setError(null)
-      
+
       try {
-        const response = await fetch(`/api/creator/analytics/folder/${folderId}?range=${range}`)
-        
+        const response = await fetch(`/api/creator/analytics/folder/${folderId}?range=${range}`, {
+          signal: controller.signal,
+        })
+
+        if (!isActive) return
+
         if (!response.ok) {
           const errorData = await response.json()
           throw new Error(errorData.message || "Failed to fetch analytics")
         }
-        
+
         const data: AnalyticsResponse = await response.json()
+
+        if (!isActive) return
+
+        if (!data?.folder || !data?.timeSeries) {
+          throw new Error("Invalid analytics payload")
+        }
+
         setAnalyticsData(data)
-        setVideos(data.folder ? [{
+        setVideos([{
           id: data.folder.id,
           title: data.folder.title,
           description: data.folder.description,
@@ -850,16 +864,29 @@ export default function CreatorVideoAnalytics() {
           rent48Price: null,
           purchasePrice: null,
           tags: data.folder.tags,
-        }] : [])
+        }])
       } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") {
+          return
+        }
+
+        if (!isActive) return
+
         setError(err instanceof Error ? err.message : "Failed to load analytics")
         console.error("Error fetching analytics:", err)
       } finally {
-        setLoading(false)
+        if (isActive) {
+          setLoading(false)
+        }
       }
     }
-    
+
     fetchAnalytics()
+
+    return () => {
+      isActive = false
+      controller.abort()
+    }
   }, [folderId, range])
 
   const totalViews = analyticsData?.folder.views || 0
