@@ -220,7 +220,7 @@ export default function VideoAnalyticsPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
-      <div className="max-w-7xl mx-auto mb-8">
+      <div className="w-full mb-8">
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-gray-400 hover:text-foreground transition-colors mb-6"
@@ -283,7 +283,7 @@ export default function VideoAnalyticsPage() {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="w-full space-y-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4 md:gap-6">
           {[
             {

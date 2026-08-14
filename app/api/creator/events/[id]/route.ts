@@ -4,6 +4,7 @@ import { randomUUID } from "crypto"
 import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { Role } from "@/lib/generated/prisma"
+import { dropid } from "dropid"
 
 const db = prisma
 
@@ -178,7 +179,6 @@ type UpdateEventBody = {
   recordedVideoFileId?: string | null
   recordingEnabled?: boolean
   recordingStatus?: RecordingStatusInput
-  recordingUrl?: string | null
   timezone?: string | null
   scheduledAt?: string | null
   durationMinutes?: number | null
@@ -220,7 +220,6 @@ export async function PUT(
         "recordedVideoFileId",
         "recordingEnabled",
         "recordingStatus",
-        "recordingUrl",
       ].includes(key)
     )
     const isTransitionToLive = body.status?.toLowerCase() === "live"
@@ -332,8 +331,6 @@ export async function PUT(
           recordingStatus: body.recordingStatus
             ? normalizeRecordingStatus(body.recordingStatus)
             : event.recordingStatus,
-          recordingUrl:
-            body.recordingUrl !== undefined ? body.recordingUrl?.trim() || null : event.recordingUrl,
           timezone: body.timezone?.trim() || event.timezone,
           scheduledAt,
           durationMinutes:
@@ -365,7 +362,7 @@ export async function PUT(
         if (body.restrictedLocations.length > 0) {
           await tx.creatorEventLocationRestriction.createMany({
             data: body.restrictedLocations.map((location) => ({
-              id: randomUUID(),
+              id: dropid('loc'),
               eventId: event.id,
               name: location.name.trim(),
               country: location.country.trim(),

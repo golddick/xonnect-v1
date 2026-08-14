@@ -39,7 +39,6 @@ type EventResponse = {
     recordedVideoFileId: string | null
     recordingEnabled: boolean
     recordingStatus: string
-    recordingUrl: string | null
     isPrivate: boolean
     isPaid: boolean
     requireTicket: boolean
@@ -200,7 +199,7 @@ export default function EventEditPage() {
           recordingStatus: (event.recordingStatus.toLowerCase() as EditState["recordingStatus"]) || "pending",
         })
         setEventStatus(event.status)
-        setRecordingUrl(event.recordingUrl ?? "")
+        setRecordingUrl(event.recordedVideoUrl ?? "")
       } catch (err) {
         if (active) {
           setError(err instanceof Error ? err.message : "Failed to load event")
