@@ -14,6 +14,7 @@ const ALLOWED_MIME_TYPES = [
   'image/svg+xml',
 ]
 
+const apiKey = process.env.DROPAPHI_API_KEY
 function getDropAphiApiKey() {
   const apiKey = process.env.DROPAPHI_API_KEY
   if (!apiKey || apiKey.trim() === '') {
@@ -103,15 +104,17 @@ export async function uploadFileRaw(
 
         const payload = {
           name: options.name ?? file.name,
-          type: options.type ?? file.type ?? 'application/octet-stream',
+          type: file.type,
           data: base64Data,
           metadata,
         }
 
+        const apiKey = getDropAphiApiKey()
+
         const res = await fetch(`${BASE}/v1/files/upload`, {
           method: 'POST',
           headers: {
-            'DROP-API-Key': options.apiKey,
+            'DROP-API-Key': apiKey,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(payload),
@@ -134,42 +137,6 @@ export async function uploadFileRaw(
         }
       }
 
-      // Fallback/proxy behavior previously used in the browser branch.
-      // Left commented here intentionally — if you prefer using a server
-      // proxy to keep your DropAphi API key secret, re-enable this block
-      // and point the client to your server endpoint (e.g. `/api/dropaphi/upload`).
-      /*
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('name', options.name ?? file.name)
-      formData.append('type', options.type ?? file.type ?? 'application/octet-stream')
-      formData.append('metadata', JSON.stringify(metadata))
-      if (options.visibility) {
-        formData.append('visibility', options.visibility)
-      }
-
-      const res = await fetch('/api/dropaphi/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        return {
-          ok: false,
-          message: data?.message || 'Upload failed',
-        }
-      }
-
-      return {
-        ok: true,
-        url: data?.url ?? data?.directUrl,
-        directUrl: data?.directUrl ?? data?.url,
-        fileId: data?.fileId,
-      }
-      */
-
       return { ok: false, message: 'Client-side uploads require `options.apiKey`. Use server proxy otherwise.' }
     }
 
@@ -178,7 +145,7 @@ export async function uploadFileRaw(
 
     const payload = {
       name: options.name ?? file.name,
-      type: options.type ?? file.type ?? 'application/octet-stream',
+      type: file.type,
       data: base64Data,
       metadata,
     }

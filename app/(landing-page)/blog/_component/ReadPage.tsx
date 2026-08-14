@@ -33,6 +33,7 @@ const ReadBlog = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [allPosts, setAllPosts] = useState<BlogContent[]>([])
 
   const handleScroll = useCallback(() => {
     const totalHeight = document.documentElement.scrollHeight - window.innerHeight
@@ -46,6 +47,29 @@ const ReadBlog = () => {
   }, [handleScroll])
 
   const [isLiked, setIsLiked] = useState(false)
+
+  useEffect(() => {
+    let mounted = true
+
+    const fetchAllPosts = async () => {
+      try {
+        const response = await fetch('/api/blog', {
+          cache: 'no-store',
+        })
+        const payload = await response.json()
+        if (mounted && payload?.success && Array.isArray(payload.data)) {
+          setAllPosts(payload.data)
+        }
+      } catch (err) {
+        console.error('[Blog List Fetch Error]', err)
+      }
+    }
+
+    fetchAllPosts()
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   useEffect(() => {
     if (!slug) return
@@ -134,7 +158,7 @@ const ReadBlog = () => {
     setIsLiked(!isLiked)
   }
  
-  const hasOtherPosts = blogPosts.some((post) => post.slug !== slug)
+  const hasOtherPosts = allPosts.some((post) => post.slug !== slug)
  
   if (loading) return <LoadingSplash />
 

@@ -15,6 +15,10 @@ import { BlogContent } from "@/lib/type/blog";
 import { blogPosts } from "@/lib/data/blogData";
 
 const BlogPage = () => {
+  const stripHtml = (html: string): string => {
+    if (!html) return ''
+    return html.replace(/<[^>]*>/g, '').trim()
+  }
   const categories = [
     { name: "All Posts", icon: Zap },
     { name: "Creator Tips", icon: TrendingUp },
@@ -59,7 +63,7 @@ const BlogPage = () => {
             title: post.title ?? (fallback?.title ?? 'Untitled'),
             slug: post.slug ?? (fallback?.slug ?? ''),
             content: post.content ?? (fallback?.content ?? ''),
-            excerpt: post.excerpt ?? post.content?.slice(0, 180) ?? (fallback?.excerpt ?? ''),
+            excerpt: post.excerpt ?? (post.content ? stripHtml(post.content).slice(0, 180) : (fallback?.excerpt ?? '')),
             coverImage: post.coverImage ?? post.featuredImage ?? (fallback?.coverImage ?? fallback?.featuredImage) ?? '/video/thumbnail.png',
             featuredImage: post.featuredImage ?? post.coverImage ?? (fallback?.featuredImage ?? fallback?.coverImage) ?? '/video/thumbnail.png',
             // Engagement and author fields MUST come from remote post only; if absent use neutral defaults
@@ -67,12 +71,12 @@ const BlogPage = () => {
             commentsCount: post.commentsCount ?? 0,
             comments: Array.isArray(post.comments) ? post.comments : [],
             author: {
-              name: post.author?.fullName ?? post.author?.name ?? (fallback?.author?.name ?? 'Xonnect Team'),
+              name: post.author?.fullName ?? post.author?.name ?? 'Unknown Author',
               avatar: authorAvatar,
               bio: post.author?.bio ?? (fallback?.author?.bio ?? ''),
             },
-            publishedAt: post.publishedAt ?? (fallback?.publishedAt ?? new Date().toISOString()),
-            readTime: post.readTime ?? '5 min',
+            publishedAt: post.publishedAt ?? new Date().toISOString(),
+            readTime: post.readTime ?? '',
             views: post.views ?? 0,
             viewCount: post.viewCount ?? post.views ?? 0,
             likes: post.likes ?? 0,

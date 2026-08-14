@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useParams } from "next/navigation"
+import { BrowserQRCodeReader } from "@zxing/browser"
+import { toast } from "sonner"
 import {
   AlertTriangle,
   Camera,
@@ -54,13 +56,18 @@ export default function CameraTokenPage() {
 
   const canStart = useMemo(() => status === "idle" || status === "error", [status])
 
-  const scanTimerRef = useRef<number | null>(null)
-  const scanCanvasRef = useRef<HTMLCanvasElement | null>(null)
+  const scanControlsRef = useRef<{ stop: () => void } | null>(null)
+  const lastScannedRef = useRef<string | null>(null)
+  const scanCooldownRef = useRef(0)
 
   const stopScanner = () => {
-    if (scanTimerRef.current) {
-      window.clearInterval(scanTimerRef.current)
-      scanTimerRef.current = null
+    if (scanControlsRef.current) {
+      try {
+        scanControlsRef.current.stop()
+      } catch {
+        // Ignore scanner cleanup errors.
+      }
+      scanControlsRef.current = null
     }
     setScanStatus("idle")
   }
@@ -107,6 +114,13 @@ export default function CameraTokenPage() {
   }
 
   const handleDetectedCode = async (code: string) => {
+    const now = Date.now()
+    const sameCodeRecently = lastScannedRef.current === code && now - scanCooldownRef.current < 1500
+    if (sameCodeRecently) return
+
+    lastScannedRef.current = code
+    scanCooldownRef.current = now
+
     setScannedCode(code)
     setScanStatus("found")
     setScanError(null)
@@ -133,50 +147,47 @@ export default function CameraTokenPage() {
       setError("")
       setScanError(null)
       setScanStatus("found")
+
+      toast.success(data.message || "Ticket checked in successfully", {
+        duration: 2200,
+      })
     } catch (err) {
-      setScanError(err instanceof Error ? err.message : "Failed to scan ticket")
+      const message = err instanceof Error ? err.message : "Failed to scan ticket"
+      setScanError(message)
       setScanStatus("error")
+      toast.error(message)
     }
   }
 
-  const startScanner = () => {
+  const startScanner = async () => {
     if (!localVideoRef.current) return
-    if (!("BarcodeDetector" in window)) {
-      setScanError("QR code scanning is not supported in this browser.")
-      return
-    }
+    if (scanControlsRef.current) return
 
-    if (scanTimerRef.current) return
+    try {
+      const codeReader = new BrowserQRCodeReader()
+      setScanStatus("scanning")
 
-    const detector = new (window as any).BarcodeDetector({ formats: ["qr_code"] })
-    setScanStatus("scanning")
+      scanControlsRef.current = await codeReader.decodeFromVideoElement(
+        localVideoRef.current,
+        (result, error) => {
+          if (!result) {
+            if (error && (error as Error).name !== "NotFoundException") {
+              console.warn("QR scan warning:", error)
+            }
+            return
+          }
 
-    scanTimerRef.current = window.setInterval(async () => {
-      const video = localVideoRef.current
-      if (!video || video.readyState !== HTMLMediaElement.HAVE_ENOUGH_DATA) return
+          const scannedValue = result.getText()
+          if (!scannedValue) return
 
-      let canvas = scanCanvasRef.current
-      if (!canvas) {
-        canvas = document.createElement("canvas")
-        scanCanvasRef.current = canvas
-      }
-
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
-      const context = canvas.getContext("2d")
-      if (!context) return
-
-      context.drawImage(video, 0, 0, canvas.width, canvas.height)
-      try {
-        const barcodes = await detector.detect(canvas)
-        if (barcodes.length > 0 && barcodes[0].rawValue) {
-          stopScanner()
-          void handleDetectedCode(barcodes[0].rawValue)
+          void handleDetectedCode(scannedValue)
         }
-      } catch (err) {
-        // Ignore detection errors and continue scanning.
-      }
-    }, 500)
+      )
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "QR code scanning is not supported in this browser."
+      setScanError(message)
+      setScanStatus("error")
+    }
   }
 
   useEffect(() => {

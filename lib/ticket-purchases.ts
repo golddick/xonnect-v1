@@ -209,7 +209,7 @@ export async function completePurchase(args: {
           ticketCode: true,
         },
       },
-    },
+    }, 
   })
 
   if (completedPurchase) {
