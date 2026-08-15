@@ -11,14 +11,17 @@ const ALLOWED_MIME_TYPES = [
   'image/svg+xml',
 ]
 
-const apiKey = process.env.DROPAPHI_API_KEY
-function getDropAphiApiKey() {
+function headers() {
   const apiKey = process.env.DROPAPHI_API_KEY
-  if (!apiKey || apiKey.trim() === '') {
-    throw new Error('Missing DROPAPHI_API_KEY')
+  if (!apiKey) {
+    throw new Error('Missing DROPAPHI_API_KEY environment variable')
   }
-  return apiKey
+  return {
+    'Content-Type': 'application/json',
+    'DROP-API-Key': apiKey,
+  }
 }
+
 
 export interface UploadResult {
   ok: boolean
@@ -103,14 +106,9 @@ export async function uploadFileRaw(
         metadata: metadata,
       }
 
-      const apiKey = getDropAphiApiKey()
-
       const res = await fetch(`${BASE}/v1/files/upload`, {
         method: 'POST',
-        headers: {
-          'DROP-API-Key': apiKey,
-          'Content-Type': 'application/json',
-        },
+        headers: headers(),
         body: JSON.stringify(payload),
       })
 
