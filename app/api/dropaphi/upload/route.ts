@@ -4,27 +4,46 @@ import { uploadFileRaw } from "@/lib/auth/dropaphi-upload"
 
 export async function POST(request: NextRequest) {
   try {
-    // Parse JSON body
-    const body = await request.json()
+    // Get the raw body text first
+    const rawBody = await request.text()
+    
+    if (!rawBody || rawBody.trim() === '') {
+      return NextResponse.json(
+        { success: false, message: "Empty request body" },
+        { status: 400 }
+      )
+    }
+
+    // Parse JSON
+    let body
+    try {
+      body = JSON.parse(rawBody)
+    } catch (parseError) {
+      console.error("JSON parse error:", parseError, "Raw body:", rawBody)
+      return NextResponse.json(
+        { success: false, message: "Invalid JSON format. Please check your request body." },
+        { status: 400 }
+      )
+    }
     
     // Validate required fields
     if (!body.data) {
       return NextResponse.json(
-        { success: false, message: "Missing required field: data" },
+        { success: false, message: "Missing required field: data (base64 encoded file)" },
         { status: 400 }
       )
     }
 
     if (!body.name) {
       return NextResponse.json(
-        { success: false, message: "Missing required field: name" },
+        { success: false, message: "Missing required field: name (file name)" },
         { status: 400 }
       )
     }
 
     if (!body.type) {
       return NextResponse.json(
-        { success: false, message: "Missing required field: type" },
+        { success: false, message: "Missing required field: type (MIME type)" },
         { status: 400 }
       )
     }
@@ -34,44 +53,53 @@ export async function POST(request: NextRequest) {
     const fileName = body.name
     const fileType = body.type
     
-    // Decode base64 to binary
-    const binaryString = atob(base64Data)
-    const bytes = new Uint8Array(binaryString.length)
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i)
-    }
-    
-    const blob = new Blob([bytes], { type: fileType })
-    const file = new File([blob], fileName, { type: fileType })
+    try {
+      // Decode base64 to binary
+      const binaryString = atob(base64Data)
+      const bytes = new Uint8Array(binaryString.length)
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i)
+      }
+      
+      const blob = new Blob([bytes], { type: fileType })
+      const file = new File([blob], fileName, { type: fileType })
 
-    // Prepare options for uploadFileRaw
-    const options = {
-      metadata: body.metadata || {},
-      visibility: body.metadata?.visibility || "PUBLIC",
-      name: fileName,
-      type: fileType
-    }
+      // Prepare options for uploadFileRaw
+      const options = {
+        metadata: body.metadata || {},
+        visibility: body.metadata?.visibility || "PUBLIC",
+        name: fileName,
+        type: fileType
+      }
 
-    // Let uploadFileRaw handle the rest
-    const result = await uploadFileRaw(file, options)
+      // Let uploadFileRaw handle the rest
+      const result = await uploadFileRaw(file, options)
 
-    if (!result.ok) {
+      if (!result.ok) {
+        return NextResponse.json(
+          { success: false, message: result.message ?? "Upload failed" },
+          { status: 500 }
+        )
+      }
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          id: result.fileId,
+          name: fileName,
+          mimeType: fileType,
+          url: result.url,
+          directUrl: result.directUrl
+        }
+      }, { status: 201 })
+      
+    } catch (base64Error) {
+      console.error("Base64 decode error:", base64Error)
       return NextResponse.json(
-        { success: false, message: result.message ?? "Upload failed" },
-        { status: 500 }
+        { success: false, message: "Invalid base64 data. Please ensure the data is properly encoded." },
+        { status: 400 }
       )
     }
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        id: result.fileId,
-        name: fileName,
-        mimeType: fileType,
-        url: result.url,
-        directUrl: result.directUrl
-      }
-    }, { status: 201 })
     
   } catch (error) {
     console.error("DropAphi upload route error:", error)
