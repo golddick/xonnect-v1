@@ -120,7 +120,7 @@ export function ProfileEditForm({ profile, avatarUrlOverride }: ProfileEditFormP
     }
 
     setIsLoading(true)
-
+ 
     try {
       const response = await fetch("/api/profile/update-password", {
         method: "PUT",

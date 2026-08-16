@@ -11,16 +11,7 @@ const ALLOWED_MIME_TYPES = [
   'image/svg+xml',
 ]
 
-function headers() {
-  const apiKey = process.env.DROPAPHI_API_KEY
-  if (!apiKey) {
-    throw new Error('Missing DROPAPHI_API_KEY environment variable')
-  }
-  return {
-    'Content-Type': 'application/json',
-    'DROP-API-Key': apiKey,
-  }
-}
+const apiKey = process.env.DROPAPHI_API_KEY!
 
 
 export interface UploadResult {
@@ -94,9 +85,9 @@ export async function uploadFileRaw(
       ...(options.visibility ? { visibility: options.visibility } : {}),
     })
 
-    if (typeof window !== 'undefined') {
-      // Client-side: perform the JSON/base64 upload directly to DropAphi as documented.
-      // NOTE: providing the API key client-side exposes it to end users.
+    
+  
+      
       const base64Data = await fileToBase64(file)
 
       const payload = {
@@ -106,9 +97,12 @@ export async function uploadFileRaw(
         metadata: metadata,
       }
 
-      const res = await fetch(`${BASE}/v1/files/upload`, {
+      const res = await fetch(`https://dropaphi.xyz/api/v1/files/upload`, {
         method: 'POST',
-        headers: headers(),
+        headers: {
+        "DROP-API-Key": apiKey,
+        "Content-Type": "application/json",
+          },
         body: JSON.stringify(payload),
       })
 
@@ -129,10 +123,8 @@ export async function uploadFileRaw(
       }
     }
 
-    // Server-side upload (Node.js environment)
-    // Note: This code path won't be reached in browser environments
-    return { ok: false, message: 'Server-side uploads require a different implementation' }
-  } catch (error) {
+
+   catch (error) {
     console.error('[DropAphi Upload Error]', error)
     return { ok: false, message: 'Upload service unavailable' }
   }
