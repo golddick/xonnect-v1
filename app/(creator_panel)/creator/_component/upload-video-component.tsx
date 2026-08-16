@@ -878,7 +878,7 @@ export default function UploadVideoComponent({ onClose, onUpload, initialFolderI
                       required
                     >
                       {categories.map((category) => (
-                        <option key={category.id} value={category.slug} className="bg-muted">
+                        <option key={category.id} value={category.slug} className="bg-muted text-muted-foreground">
                           {category.name}
                         </option>
                       ))}
@@ -892,23 +892,7 @@ export default function UploadVideoComponent({ onClose, onUpload, initialFolderI
                 <h3 className="text-lg font-semibold text-foreground">Thumbnail</h3>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* <div>
-                    <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-muted-foreground/50 transition-colors">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleThumbnailUpload}
-                        className="hidden"
-                        id="thumbnail-upload"
-                      />
-                      <label htmlFor="thumbnail-upload" className="cursor-pointer">
-                        <ImageIcon className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                        <p className="text-muted-foreground text-sm">Upload custom thumbnail</p>
-                        <p className="text-muted-foreground/60 text-xs mt-1">PNG, JPG up to 5MB</p>
-                      </label>
-                    </div>
-                  </div> */}
-
+                 
                    
                 <UploadFile
                   initialUrl={formData.thumbnailUrl || null}
