@@ -1,9 +1,8 @@
+// Updated client - send JSON with base64
 "use client"
 
 import { useState } from "react"
 import Image from "next/image"
-import { uploadFileRaw } from "@/lib/auth/dropaphi-upload"
-
 
 export default function AvatarUpload({
   initialUrl,
@@ -16,19 +15,60 @@ export default function AvatarUpload({
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl ?? null)
   const [error, setError] = useState<string | null>(null)
 
+  // Helper to convert file to base64
+  function fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => {
+        const result = reader.result as string
+        const base64 = result.split(',')[1]
+        resolve(base64)
+      }
+      reader.onerror = reject
+    })
+  }
+
   async function onFileChange(file: File | null) {
     if (!file) return 
+    
     setIsUploading(true)
     setError(null) 
+    
     try {
-      const result = await uploadFileRaw( file  )
+      // Convert file to base64
+      const base64Data = await fileToBase64(file)
+
+      const payload = {
+        name: file.name,
+        type: file.type,
+        data: base64Data,
+        metadata: {
+          visibility: "PUBLIC"
+        }
+      }
+
+      const response = await fetch("/api/dropaphi/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload)
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Upload failed")
+      }
+
+      const data = await response.json()
       
-      if (!result.ok || !result.url) {
-        throw new Error(result.message ?? "Upload failed")
+      if (!data.success || !data.data?.url) {
+        throw new Error(data.message || "Upload failed")
       }
  
-      setPreviewUrl(result.url)
-      onUploaded(result.url)
+      setPreviewUrl(data.data.url)
+      onUploaded(data.data.url)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed")
     } finally {

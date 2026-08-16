@@ -29,7 +29,8 @@ import { LocationData } from "@/lib/type/location"
 import { toast } from "sonner"
 import LocationSearchModal from "./LocationSearchModal"
 import { UploadButton } from "@/lib/utils/uploadthing"
-import { uploadFileRaw } from "@/lib/auth/dropaphi-upload"
+import UploadFile from "@/components/common_component/DropAPHI-upload"
+// import { uploadFileRaw } from "@/lib/auth/dropaphi-upload"
 
 interface ScheduleEventProps {
   onClose?: () => void
@@ -164,47 +165,47 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
     }))
   }
 
-  const handleThumbnailUpload = async (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      toast.error("Please upload an image file")
-      return
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Thumbnail image must be less than 5MB")
-      return
-    }
+  // const handleThumbnailUpload = async (file: File) => {
+  //   if (!file.type.startsWith('image/')) {
+  //     toast.error("Please upload an image file")
+  //     return
+  //   }
+  //   if (file.size > 5 * 1024 * 1024) {
+  //     toast.error("Thumbnail image must be less than 5MB")
+  //     return
+  //   }
 
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      setEventData(prev => ({ 
-        ...prev, 
-        thumbnailPreview: e.target?.result as string 
-      }))
-    }
-    reader.readAsDataURL(file)
+  //   const reader = new FileReader()
+  //   reader.onload = (e) => {
+  //     setEventData(prev => ({ 
+  //       ...prev, 
+  //       thumbnailPreview: e.target?.result as string 
+  //     }))
+  //   }
+  //   reader.readAsDataURL(file)
 
-    setIsUploadingThumbnail(true)
-    setUploadProgress(prev => ({ ...prev, thumbnail: 10 }))
+  //   setIsUploadingThumbnail(true)
+  //   setUploadProgress(prev => ({ ...prev, thumbnail: 10 }))
 
-    const result = await uploadFileRaw(file)
+  //   const result = await uploadFileRaw(file)
 
-    if (result.ok && result.url) {
-      setUploadProgress(prev => ({ ...prev, thumbnail: 100 }))
-      setEventData(prev => ({ 
-        ...prev, 
-        thumbnail: result.url as string
-      }))
-    } else {
-      toast.error(`Upload failed: ${result.message}`)
-      setEventData(prev => ({ 
-        ...prev, 
-        thumbnail: "",
-        thumbnailPreview: "" 
-      }))
-      setUploadProgress(prev => ({ ...prev, thumbnail: 0 }))
-    }
-    setIsUploadingThumbnail(false)
-  }
+  //   if (result.ok && result.url) {
+  //     setUploadProgress(prev => ({ ...prev, thumbnail: 100 }))
+  //     setEventData(prev => ({ 
+  //       ...prev, 
+  //       thumbnail: result.url as string
+  //     }))
+  //   } else {
+  //     toast.error(`Upload failed: ${result.message}`)
+  //     setEventData(prev => ({ 
+  //       ...prev, 
+  //       thumbnail: "",
+  //       thumbnailPreview: "" 
+  //     }))
+  //     setUploadProgress(prev => ({ ...prev, thumbnail: 0 }))
+  //   }
+  //   setIsUploadingThumbnail(false)
+  // }
 
   const removeThumbnail = () => {
     setEventData(prev => ({ 
@@ -562,17 +563,28 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Thumbnail Image *</label>
                 <div className="border-2 border-dashed border-gray-700 rounded-xl p-6 text-center hover:border-red-600 transition-colors">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) handleThumbnailUpload(file)
-                    }}
-                    className="hidden"
-                    id="thumbnail-upload"
-                    disabled={isUploadingThumbnail}
-                  />
+                  
+                  <UploadFile
+                initialUrl={eventData.thumbnail || null}
+                onUploaded={(url) => {
+                  setEventData(prev => ({ 
+                    ...prev, 
+                    thumbnail: url,
+                    thumbnailPreview: url 
+                  }))
+                  setUploadProgress(prev => ({ ...prev, thumbnail: 100 }))
+                  toast.success("Thumbnail uploaded successfully")
+                }}
+                size={120}
+                rounded="lg"
+                label="Event Thumbnail"
+                uploadText="Click to upload thumbnail image"
+                noImageText="No thumbnail"
+                accept="image/*"
+                className="w-full"
+                containerClassName="space-y-4 w-full"
+                previewClassName="shadow-lg border-2 border-dashed border-gray-700"
+              />
                   <label htmlFor="thumbnail-upload" className="cursor-pointer flex flex-col items-center">
                     <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                     <p className="text-foreground text-sm">

@@ -29,7 +29,8 @@ import {
   Trash2,
   FolderPlus,
 } from "lucide-react"
-import { uploadFileRaw } from "@/lib/auth/dropaphi-upload"
+import UploadFile from "@/components/common_component/DropAPHI-upload"
+import { toast } from "sonner"
 
 
 interface UploadVideoProps {
@@ -64,8 +65,7 @@ export default function UploadVideoComponent({ onClose, onUpload, initialFolderI
 
 
 
-    // DropAphi still uses raw File
-    thumbnail: null as File | null,
+    thumbnailUrl: null as string | null, 
 
     tags: [] as string[],
     isPrivate: false,
@@ -321,22 +321,10 @@ export default function UploadVideoComponent({ onClose, onUpload, initialFolderI
       }
 
 
-      // 1) Upload thumbnail (DropAphi)
-      let thumbnailUrl: string | null = null
-      let thumbnailFileId: string | null = null
 
-      if (formData.thumbnail) {
-      
 
-          const thumbRes = await uploadFileRaw(formData.thumbnail)
-
-        if (!thumbRes.ok) {
-          throw new Error(thumbRes.message || "Thumbnail upload failed")
-        }
-
-        thumbnailUrl = thumbRes.url ?? null
-        thumbnailFileId = thumbRes.fileId ?? null
-      }
+      const thumbnailUrl = formData.thumbnailUrl || null
+      const thumbnailFileId = null
 
       // Helper: scheduledAt
       const scheduledAt = !formData.publishNow
@@ -904,7 +892,7 @@ export default function UploadVideoComponent({ onClose, onUpload, initialFolderI
                 <h3 className="text-lg font-semibold text-foreground">Thumbnail</h3>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div>
+                  {/* <div>
                     <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-muted-foreground/50 transition-colors">
                       <input
                         type="file"
@@ -919,7 +907,26 @@ export default function UploadVideoComponent({ onClose, onUpload, initialFolderI
                         <p className="text-muted-foreground/60 text-xs mt-1">PNG, JPG up to 5MB</p>
                       </label>
                     </div>
-                  </div>
+                  </div> */}
+
+                   
+                <UploadFile
+                  initialUrl={formData.thumbnailUrl || null}
+                  onUploaded={(url) => {
+                    setFormData((prev) => ({ ...prev, thumbnailUrl: url }))
+                    toast.success("Thumbnail uploaded successfully")
+                  }}
+                  size={160}
+                  rounded="lg"
+                  label="Upload Thumbnail"
+                  uploadText="Click to upload a custom thumbnail"
+                  noImageText="No thumbnail selected"
+                  accept="image/*"
+                  className="max-w-md"
+                  containerClassName="space-y-4"
+                  previewClassName="border-2 border-dashed border-border rounded-xl shadow-lg"
+                />
+                <p className="text-xs text-muted-foreground">PNG, JPG up to 5MB</p>
 
                   {thumbnailPreview && (
                     <div>

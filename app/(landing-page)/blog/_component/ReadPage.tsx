@@ -283,12 +283,12 @@ const ReadBlog = () => {
               prose-headings: prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:text-gray-900
               prose-h2:text-2xl prose-h2:mt-11 prose-h2:mb-4
               prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-              prose-p:text-gray-600 prose-p:leading-relaxed prose-p:mb-5
+              prose-p:text-foreground prose-p:leading-relaxed prose-p:mb-5
               prose-ul:list-none prose-ul:pl-0 prose-ul:space-y-2 prose-ul:mb-5
               prose-li:text-gray-600 prose-li:leading-relaxed prose-li:flex prose-li:gap-2 prose-li:items-start
               prose-li:before:content-[''] prose-li:before:block prose-li:before:w-1.5 prose-li:before:h-1.5 prose-li:before:rounded-full prose-li:before:bg-red-600 prose-li:before:mt-2 prose-li:before:flex-shrink-0
               prose-blockquote:border-l-4 prose-blockquote:border-red-600 prose-blockquote:pl-6 prose-blockquote:py-4 prose-blockquote:bg-red-50/30 prose-blockquote:rounded-r-lg prose-blockquote:my-7
-              prose-blockquote:p:italic prose-blockquote:p:text-gray-700 prose-blockquote:p:text-base
+              prose-blockquote:italic prose-blockquote:text-muted-foreground prose-blockquote:text-base
               prose-img:rounded-xl prose-img:my-8
               prose-a:text-red-600 prose-a:no-underline hover:prose-a:underline"
 
