@@ -629,7 +629,7 @@ function TvNavigation({
   setViewMode: (value: "grid" | "list") => void
 }) {
   return (
-    <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border">
+    <div className="sticky hidden lg:block top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border">
       <div className="flex items-center justify-between gap-4 px-4 md:px-6 py-3">
         <div className="relative hidden md:block">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
