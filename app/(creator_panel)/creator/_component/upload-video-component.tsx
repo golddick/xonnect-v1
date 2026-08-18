@@ -234,7 +234,6 @@ export default function UploadVideoComponent({ onClose, onUpload, initialFolderI
     }
   }
 
-  // Legacy (raw File) upload handler kept unused after UploadThing wiring.
 
   const removeEpisode = (id: string) => {
     setFormData((prev) => ({
@@ -468,7 +467,7 @@ export default function UploadVideoComponent({ onClose, onUpload, initialFolderI
                 >
                   <Icon className="w-4 h-4" />
                 </div>
-                <span className={`ml-2 text-sm ${currentStep >= step ? "text-foreground" : "text-muted-foreground"}`}>{label}</span>
+                <span className={`ml-2 hidden md:block text-sm ${currentStep >= step ? "text-foreground" : "text-muted-foreground"}`}>{label}</span>
                 {step < 4 && <div className={` hidden lg:block w-12 h-0.5 mx-2 ${currentStep > step ? "bg-red-600" : "bg-muted"}`} />}
               </div>
             ))}

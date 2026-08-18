@@ -165,16 +165,16 @@ function getSocialPlatformMeta(network: string) {
     return { label: "YouTube", icon: Youtube }
   }
 
-  if (normalized.includes("linkedin")) {
-    return { label: "LinkedIn", icon: Linkedin }
+  if (normalized.includes("snapchat")) {
+    return { label: "Snapchat", icon: "Snapchat" }
   }
 
   if (normalized.includes("tiktok")) {
-    return { label: "TikTok", icon: Link2 }
+    return { label: "TikTok", icon: "TikTok" }
   }
 
-  if (normalized.includes("facebook")) {
-    return { label: "Facebook", icon: Globe2 }
+  if (normalized.includes("twitch")) {
+    return { label: "Twitch", icon: "Twitch" }
   }
 
   return { label: network || "Link", icon: Link2 }
@@ -211,8 +211,12 @@ function buildSocialUrl(network: string, handle: string) {
     return `https://www.tiktok.com/@${cleanHandle}`
   }
 
-  if (normalized.includes("facebook")) {
-    return `https://facebook.com/${cleanHandle}`
+    if (normalized.includes("twitch")) {
+    return `https://twitch.tv/${cleanHandle}`  
+  }
+  
+  if (normalized.includes("snapchat")) {
+    return `https://snapchat.com/add/${cleanHandle}` 
   }
 
   return `https://${cleanHandle}`
@@ -1532,7 +1536,6 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 poster={eventData.thumbnail}
                 previewVideoUrl={eventData.thumbnailVideoUrl}
                 recordedVideoUrl={eventData.recordedVideoUrl}
-                recordingUrl={eventData.recordingUrl}
                 scheduledAt={eventData.scheduledAt}
                 status={eventData.status}
                 wsUrl={eventData.livekitWsUrl}

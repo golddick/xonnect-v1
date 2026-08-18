@@ -5,6 +5,7 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { AlertCircle, Crown, DollarSign, Plus, Ticket, Trash2, X } from "lucide-react"
+import LoadingSplash from "@/components/splash_screen/loading-splash"
 
 type EventOption = {
   id: string
@@ -113,21 +114,18 @@ export default function CreateTicketPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background text-foreground p-6 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-t-2 border-red-600 border-solid rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading events...</p>
-        </div>
+        <LoadingSplash/>
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-background text-foreground p-6">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Create New Ticket</h1>
-            <p className="text-muted-foreground text-sm mt-1">Set up a new ticket type for a creator event</p>
+            <h1 className=" text-xl md:text-3xl font-bold text-foreground"> New Ticket</h1>
+            <p className="text-muted-foreground text-sm mt-1">Set up a new ticket type for a event</p>
           </div>
           <button
             onClick={() => router.back()}
@@ -139,10 +137,9 @@ export default function CreateTicketPage() {
 
         {error && <div className="mb-4 text-sm text-red-400">{error}</div>}
 
-        <form onSubmit={handleSubmit} className="border border-border rounded-2xl p-8 space-y-6">
+        <form onSubmit={handleSubmit} className="md:border md:border-border rounded-2xl p-2 md:p-8 space-y-6">
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
-              <Ticket className="w-4 h-4 inline mr-2" />
               Select Event *
             </label>
             <select
@@ -154,7 +151,7 @@ export default function CreateTicketPage() {
             >
               <option value="">Choose an event</option>
               {events.map((event) => (
-                <option key={event.id} value={event.id}>
+                <option className="bg-card text-card-foreground" key={event.id} value={event.id}>
                   {event.title} ({event.status})
                 </option>
               ))}
@@ -164,7 +161,6 @@ export default function CreateTicketPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                <Ticket className="w-4 h-4 inline mr-2" />
                 Ticket Access *
               </label>
               <select
@@ -172,7 +168,7 @@ export default function CreateTicketPage() {
                 value={ticketData.access}
                 onChange={handleInputChange}
                 required
-                className="w-full bg-transparent border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
+                className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600"
               >
                 <option value="STREAM">Stream Access</option>
                 <option value="VENUE">Venue Access</option>
@@ -181,7 +177,6 @@ export default function CreateTicketPage() {
 
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                <Crown className="w-4 h-4 inline mr-2" />
                 Ticket Type *
               </label>
               <input
@@ -199,7 +194,6 @@ export default function CreateTicketPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                <DollarSign className="w-4 h-4 inline mr-2" />
                 Price (NGN) *
               </label>
               <input
@@ -282,7 +276,7 @@ export default function CreateTicketPage() {
             )}
           </div>
 
-          <div className="bg-yellow-600/20 border border-yellow-600/30 rounded-lg p-4 flex items-start gap-3">
+          <div className="bg-yellow-600/20 border-none rounded-lg p-4 flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
             <div className="text-yellow-300 text-sm space-y-1">
               <p className="font-medium">Ticket Information</p>

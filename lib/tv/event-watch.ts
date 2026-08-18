@@ -29,7 +29,6 @@ export type EventWatchData = {
   thumbnail: string | null
   thumbnailVideoUrl: string | null
   recordedVideoUrl?: string | null
-  recordingUrl?: string | null
   scheduledAt: string | null
   durationMinutes: number
   maxViewers: number | null
@@ -112,7 +111,6 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
       thumbnailUrl: true,
       thumbnailVideoUrl: true,
       recordedVideoUrl: true,
-      recordingUrl: true,
       scheduledAt: true,
       durationMinutes: true,
       maxViewers: true,
@@ -298,7 +296,7 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
 
   if (canViewRecordings) {
     eventPayload.recordedVideoUrl = event.recordedVideoUrl
-    eventPayload.recordingUrl = event.recordingUrl
+
   }
 
   return {

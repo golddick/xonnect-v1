@@ -288,7 +288,7 @@ export default function EventEditPage() {
             recordedVideoFileId: state.recordedVideoFileId || null,
             recordingEnabled: state.recordingEnabled,
             recordingStatus: state.recordingStatus,
-            recordingUrl: recordingUrl || null,
+            // recordingUrl: recordingUrl || null,
           }
         : {
             title: state.title,
@@ -317,7 +317,7 @@ export default function EventEditPage() {
             tags: state.tags,
             recordingEnabled: state.recordingEnabled,
             recordingStatus: state.recordingStatus,
-            recordingUrl: recordingUrl || null,
+            // recordingUrl: recordingUrl || null,
           }
 
       const response = await fetch(`/api/creator/events/${eventId}`, {
@@ -404,7 +404,7 @@ export default function EventEditPage() {
           ))}
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-border bg-card p-6">
+        <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl lg:border lg:border-border bg-card lg:p-6">
           {currentStep === 1 && (
             <>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

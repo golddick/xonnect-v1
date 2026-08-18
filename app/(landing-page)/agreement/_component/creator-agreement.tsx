@@ -20,8 +20,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
-import Navigation from "../../../../components/navigation"
-import Footer from "../../../../components/footer"
 import HeroSection2 from "@/app/(landing-page)/_component/heroSection";
 
 const CreatorAgreement = () => {
@@ -71,7 +69,7 @@ const CreatorAgreement = () => {
 
       {/* Agreement Content */}
       <section className="py-16 px-6 md:px-8">
-        <div className="w-full">
+        <div className="w-full max-w-6xl mx-auto">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Creator Support & Benefits */}
             <motion.div
@@ -345,7 +343,7 @@ const CreatorAgreement = () => {
                 ) : (
                   <>
                     <CheckCircle className="w-5 h-5 mr-2" />
-                    Accept Agreement & Become Creator
+                    Accept Agreement 
                   </>
                 )}
               </Button>

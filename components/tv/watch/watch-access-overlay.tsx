@@ -194,7 +194,7 @@ export default function WatchAccessOverlay({
           <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5 sm:p-4 space-y-3">
             <div className="space-y-1.5">
               <p className="text-sm font-semibold text-foreground">Continue with your email</p>
-              <p className="text-xs text-muted-foreground">We’ll use this email to continue checkout.</p>
+              <p className="text-xs hidden md:block text-muted-foreground">We’ll use this email to continue checkout.</p>
             </div>
             <div className="flex items-center justify-between gap-2 w-full">
               <input
@@ -210,7 +210,7 @@ export default function WatchAccessOverlay({
               onClick={onGuestEmailSubmit}
               className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition-colors"
             >
-              Continue to payment
+              Continue
             </button>
           </div>
         )}
@@ -233,14 +233,13 @@ export default function WatchAccessOverlay({
                     if (isDisabled) return
                     onPurchase(option.type)
                   }}
-                  className="rounded-xl border border-border px-4 py-3.5 sm:py-3 text-left transition-all hover:border-red-600/60 hover:bg-red-600/5 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-background"
+                  className="rounded-xl border border-border p-2 text-left transition-all hover:border-red-600/60 hover:bg-red-600/5 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-background"
                   disabled={isDisabled}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <span className="text-sm font-semibold text-foreground">
                       {PURCHASE_LABELS[option.type]}
                     </span>
-                    <BadgePercent className="h-4 w-4 text-muted-foreground shrink-0" />
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
                     {option.price && option.price > 0

@@ -669,7 +669,7 @@ export default function CreatorSettings() {
                 <Menu className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">
+                <h1 className="text-2xl hidden lg:block font-bold text-foreground">
                   Settings
                 </h1>
               </div>
@@ -684,7 +684,7 @@ export default function CreatorSettings() {
           </div>
         </div>
 
-        <div className="p-6">
+        <div className=" p-4 md:p-6">
           <div className="max-w-4xl mx-auto">
             {/* Settings Navigation */}
             <div className="bg-card border-none rounded-2xl p-6 mb-8">
@@ -704,7 +704,7 @@ export default function CreatorSettings() {
                     }`}
                   >
                     <tab.icon className="w-4 h-4" />
-                    <span>{tab.label}</span>
+                    <span className='hidden md:block'>{tab.label}</span>
                   </button>
                 ))}
               </div>
@@ -712,7 +712,7 @@ export default function CreatorSettings() {
 
             {/* Profile Settings */}
             {activeTab === "profile" && (
-              <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
+              <div className="bg-card md:border md:border-border rounded-2xl md:p-6 space-y-6">
                 <div className="flex items-center gap-2 mb-6">
                   <User className="w-5 h-5 text-red-400" />
                   <h2 className="text-xl font-bold text-foreground">Profile Settings</h2>
@@ -832,7 +832,7 @@ export default function CreatorSettings() {
                   </div>
                 </div>
 
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <label className="block text-sm font-medium text-muted-foreground mb-2">Social Handles</label>
@@ -878,6 +878,63 @@ export default function CreatorSettings() {
                       </button>
                     </div>
                   ))}
+                </div> */}
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block text-sm font-medium text-muted-foreground mb-2">Social Handles</label>
+                      <p className="text-muted-foreground hiddren lg:block text-sm">Add your social network handles or profile URLs.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addSocialHandle}
+                      className="text-red-600 hover:text-red-700 text-sm"
+                    >
+                      + Add 
+                    </button>
+                  </div>
+
+                  {profileData.socialHandles.map((item, index) => (
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+                      <div>
+                        <label className="block text-sm font-medium text-muted-foreground mb-2">Network</label>
+                        <select
+                          value={item.network}
+                          onChange={(e) => updateSocialHandle(index, "network", e.target.value)}
+                          className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                        >
+                          <option className="bg-background text-foreground" value="">Select Network</option>
+                          <option className="bg-background text-foreground" value="instagram">Instagram</option>
+                          <option className="bg-background text-foreground" value="twitter/X">Twitter/X</option>
+                          <option className="bg-background text-foreground" value="tikTok">TikTok</option>
+                          <option className="bg-background text-foreground" value="youTube">YouTube</option>
+                          <option className="bg-background text-foreground" value="snapchat">Snapchat</option>
+                          <option className="bg-background text-foreground" value="twitch">Twitch</option>
+                          {/* <option className="bg-background text-foreground" value="WhatsApp">WhatsApp</option> */}
+                          {/* <option className="bg-background text-foreground" value="Telegram">Telegram</option> */}
+                          <option className="bg-background text-foreground" value="Other">Other</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-muted-foreground mb-2">Handle / URL</label>
+                        <input
+                          type="text"
+                          value={item.handle}
+                          onChange={(e) => updateSocialHandle(index, "handle", e.target.value)}
+                          className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                          placeholder="@yourhandle or https://..."
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeSocialHandle(index)}
+                        className="text-red-500 hover:text-red-400 text-sm self-start"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Password Change Button */}
@@ -889,13 +946,13 @@ export default function CreatorSettings() {
                       className="bg-muted hover:bg-muted/80 text-foreground px-4 py-2 rounded-lg transition-colors flex items-center gap-2 border border-border"
                     >
                       <Key className="w-4 h-4" />
-                      {showPasswordReset ? 'Cancel Password Reset' : 'Change Password'}
+                      {showPasswordReset ? 'Cancel' : 'Change Password'}
                     </button>
                   </div>
 
                   {/* Password Reset Form */}
                   {showPasswordReset && (
-                    <div className="bg-transparent hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 rounded-xl p-6 border border-border mt-4">
+                    <div className="bg-transparent hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 rounded-xl lg:p-6 md:border md:border-border mt-4">
                       <h4 className="text-lg font-semibold text-foreground mb-4">Change Password</h4>
                       
                       {passwordSuccess && (
@@ -1005,12 +1062,12 @@ export default function CreatorSettings() {
                     {savingProfile ? (
                       <span className="flex items-center gap-2">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        Saving...
+                        <span className="hidden md:block">Saving...</span>
                       </span>
                     ) : (
                       <>
                         <Save className="w-4 h-4" />
-                        Save Changes
+                      <span className="hidden md:block">  Save Changes</span>
                       </>
                     )}
                   </button>

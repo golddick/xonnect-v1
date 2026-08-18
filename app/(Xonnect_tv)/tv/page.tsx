@@ -942,7 +942,7 @@ export default function TvPage() {
                     </div>
                   )}
                   <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-2">{currentFeature.title}</h3>
-                  <p className="text-muted-foreground mb-4">{currentFeature.channelName}</p>
+                  {/* <p className="text-muted-foreground mb-4">{currentFeature.channelName}</p> */}
                   <button
                     onClick={() => router.push(buildWatchHref(currentFeature))}
                     className="w-fit bg-red-600 hover:bg-red-700 text-foreground px-8 py-3 rounded-lg font-bold transition-colors"
@@ -966,7 +966,9 @@ export default function TvPage() {
             )}
 
             <div className="space-y-4">
-              <h2 className="text-xl md:text-2xl font-bold text-foreground">Events</h2>
+              {filteredLive.length > 0 && (
+                <div><h2 className="text-xl md:text-2xl font-bold text-foreground">Events</h2></div>
+              )}
               {filteredLive.length > 0 ? (
                 <div
                   className={`grid gap-4 ${
@@ -994,7 +996,10 @@ export default function TvPage() {
             </div>
 
             <div className="space-y-4">
-              <h2 className="text-xl md:text-2xl font-bold text-foreground">Video</h2>
+               {filteredVideo.length > 0 && (
+                <div><h2 className="text-xl md:text-2xl font-bold text-foreground">Video</h2></div>
+              )}
+            
               {filteredVideo.length > 0 ? (
                 <div
                   className={`grid gap-4 ${

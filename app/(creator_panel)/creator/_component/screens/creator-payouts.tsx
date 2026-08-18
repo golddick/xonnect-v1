@@ -25,6 +25,7 @@ import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { sidebarItems } from "@/lib/constant"
 import Logo from "@/components/nav/logo"
+import { formatCurrency } from "@/lib/utils"
 
 type PayoutAccount = {
   id: string
@@ -217,7 +218,7 @@ const CreatorPayouts = () => {
     }
   }
 
-  const formatCurrency = (value: number) => `₦${value.toLocaleString()}`
+  // const formatCurrency = (value: number) => `₦${value.toLocaleString()}`
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -265,7 +266,7 @@ const CreatorPayouts = () => {
                 <Menu className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Your Payouts & Earnings</h1>
+                <h1 className="text-2xl hidden md:block font-bold text-foreground">Your Payouts & Earnings</h1>
               </div>
             </div>
 
@@ -280,7 +281,7 @@ const CreatorPayouts = () => {
         </div>
 
         <div className="p-6 space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 mt-4">
             <Card className="bg-card border border-border rounded-2xl overflow-hidden hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -288,7 +289,7 @@ const CreatorPayouts = () => {
                     <p className="text-muted-foreground text-sm">Total Earnings</p>
                     <p className="text-2xl font-bold">{loading ? "—" : formatCurrency(summary.totalRevenue)}</p>
                   </div>
-                  <DollarSign className="w-8 h-8 text-green-500" />
+                  <span className="w-8 h-8 text-green-500" >₦</span>
                 </div>
               </CardContent>
             </Card>
@@ -321,7 +322,7 @@ const CreatorPayouts = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-card border border-border rounded-2xl overflow-hidden hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
+            {/* <Card className="bg-card border border-border rounded-2xl overflow-hidden hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 transition-all duration-300 text-foreground">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -333,14 +334,24 @@ const CreatorPayouts = () => {
                   <TrendingUp className="w-8 h-8 text-blue-500" />
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
 
           <div className="rounded-2xl border border-border bg-card/70 p-4 text-sm text-muted-foreground">
             <p className="font-medium text-foreground">Earnings breakdown</p>
-            <p className="mt-1">
-              Streaming tickets: {formatCurrency(summary.streamRevenue)} • Venue tickets: {formatCurrency(summary.venueRevenue)} • Video revenue: {formatCurrency(summary.videoRevenue)}
-            </p>
+            <div className=" flex justify-between gap-2 items-center">
+              <p className="mt-1">
+              Streaming tickets: {formatCurrency(summary.streamRevenue)} 
+             </p>
+            •
+              <p className="mt-1">
+               Venue tickets: {formatCurrency(summary.venueRevenue)} 
+              </p>
+            •
+              <p className="mt-1">
+              Video revenue: {formatCurrency(summary.videoRevenue)}
+              </p>
+              </div>
           </div>
 
           <div className="flex items-center justify-between mb-8">
@@ -352,7 +363,7 @@ const CreatorPayouts = () => {
             <div className="flex items-center space-x-4">
               <Button variant="outline" className="border-border bg-transparent hover:bg-muted">
                 <Download className="w-4 h-4 mr-2" />
-                Export Report
+               <span className="hidden lg:block"> Export Report</span>
               </Button>
               <Button
                 onClick={() => {
@@ -364,7 +375,7 @@ const CreatorPayouts = () => {
                 className="bg-red-600 hover:bg-red-700"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Request Payout
+                <span className="hidden lg:block">Request Payout</span>
               </Button>
             </div>
           </div>
