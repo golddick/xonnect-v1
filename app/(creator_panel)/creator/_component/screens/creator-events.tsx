@@ -155,7 +155,7 @@ export default function CreatorEvents() {
                 <Menu className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Events</h1>
+                <h1 className="text-2xl hidden md:block font-bold text-foreground">Events</h1>
               </div>
             </div>
 
@@ -170,7 +170,7 @@ export default function CreatorEvents() {
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
-                <span>New Event</span>
+                <span className="hidden lg:block">New Event</span>
               </button>
             </div>
           </div>
@@ -275,9 +275,9 @@ export default function CreatorEvents() {
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="min-w-0">
-                      <h3 className="text-lg font-bold text-foreground line-clamp-2">{event.title}</h3>
+                      <h3 className="text-lg font-bold text-foreground capitalize line-clamp-2">{event.title}</h3>
                       <p className="text-muted-foreground text-sm mt-1 line-clamp-2">
-                        {event.description ?? "No description yet"}
+                        {event.description ?? null}
                       </p>
                     </div>
                     <Ticket className="w-5 h-5 text-red-500 flex-shrink-0" />

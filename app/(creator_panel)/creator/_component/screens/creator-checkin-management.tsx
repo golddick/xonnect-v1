@@ -290,7 +290,7 @@ export default function CreatorCheckinManagement() {
                 <Menu className="w-5 h-5" />
               </button>
               <div className="min-w-0">
-                <h1 className="text-lg md:text-2xl font-bold text-foreground truncate">Check-In <span className="hidden md:block">Management</span></h1>
+                <h1 className="text-lg hidden lg:block md:text-2xl font-bold text-foreground truncate">Check In <span className="hidden md:block">Management</span></h1>
               </div>
             </div>
 
@@ -300,9 +300,9 @@ export default function CreatorCheckinManagement() {
                 <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-600 rounded-full" />
               </button>
               <ThemeToggle />
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center shrink-0">
+              {/* <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center shrink-0">
                 <span className="text-white font-bold text-sm">J</span>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

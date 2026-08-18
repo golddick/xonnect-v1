@@ -26,7 +26,6 @@ type EventStreamPlayerProps = {
   poster?: string | null
   previewVideoUrl?: string | null
   recordedVideoUrl?: string | null
-  recordingUrl?: string | null
   scheduledAt?: string | null
   status: string
   wsUrl?: string | null
@@ -59,7 +58,6 @@ export default function  EventStreamPlayer({
   poster,
   previewVideoUrl,
   recordedVideoUrl,
-  // recordingUrl,
   scheduledAt,
   status,
   wsUrl,
@@ -87,9 +85,9 @@ export default function  EventStreamPlayer({
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false)
 
   const normalizedStatus = (status ?? "").toUpperCase()
-  const isLive = normalizedStatus === "LIVE" || normalizedStatus === "STREAMING" || normalizedStatus === "LIVE_NOW"
+  const isLive = normalizedStatus === "LIVE" 
   const isPaused = normalizedStatus === "PAUSED"
-  const isEnded = normalizedStatus === "ENDED" || normalizedStatus === "FINISHED" || normalizedStatus === "COMPLETED"
+  const isEnded = normalizedStatus === "ENDED" 
   const isScheduled = !isLive && !isEnded && !isPaused
   const previewMedia = useMemo(() => resolvePlayableMediaSource(!isEnded ? previewVideoUrl : null), [previewVideoUrl, isEnded])
   const recordedMedia = useMemo(
@@ -580,11 +578,7 @@ export default function  EventStreamPlayer({
         </div>
       ) : null} */}
 
-      {isLive && !locked && !connectionError ? (
-        <div className="absolute left-4 top-4 z-10 flex items-center gap-2 rounded-full bg-black/70 px-3 py-2 text-xs font-semibold text-white">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" /> 
-        </div>
-      ) : null}
+      
 
       <div className="absolute right-4 top-4 z-10 flex flex-wrap items-center justify-end gap-2">
         <button

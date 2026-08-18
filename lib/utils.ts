@@ -65,3 +65,5 @@ export const handleThirdPartyClick = (adId: string, url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 };
+
+export const formatCurrency = (value: number) => `₦${value.toLocaleString()}`

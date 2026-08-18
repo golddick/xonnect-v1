@@ -56,14 +56,14 @@ const defaultRevenueChartData = {
       borderWidth: 2,
     },
     {
-      label: "Event tickets (stream)",
+      label: "Tickets (stream)",
       data: [0, 0, 0, 0, 0, 0],
       backgroundColor: "rgba(255, 215, 0, 0.8)",
       borderColor: "rgb(255, 215, 0)",
       borderWidth: 2,
     },
     {
-      label: "Event tickets (venue)",
+      label: "Tickets (venue)",
       data: [0, 0, 0, 0, 0, 0],
       backgroundColor: "rgba(59, 130, 246, 0.8)",
       borderColor: "rgb(59, 130, 246)",
@@ -142,14 +142,14 @@ export default function CreatorDashboard() {
     plugins: {
       legend: {
         labels: {
-          color: "hsl(var(--muted-foreground))",
+          color: "hsl(var(--foreground))",
         },
       },
     },
     scales: {
       x: {
         ticks: {
-          color: "hsl(var(--muted-foreground))",
+          color: "hsl(var(--foreground))",
         },
         grid: {
           color: "hsl(var(--border))",
@@ -218,7 +218,7 @@ export default function CreatorDashboard() {
                 <Menu className="w-5 h-5" />
               </button>
               <div>
-               <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+               <h1 className="text-2xl hidden lg:flex font-bold text-foreground items-center gap-2">
                 Creator
                 <span className="hidden md:inline">Dashboard</span>
               </h1>
@@ -307,12 +307,12 @@ export default function CreatorDashboard() {
                 <h3 className="text-xl font-bold text-foreground">Payout Split</h3>
                 <p className="text-sm text-muted-foreground">Creator revenue distribution from your model</p>
               </div>
-              <button
+              {/* <button
                 onClick={() => setShowPayoutSplit(true)}
                 className="rounded-lg border border-red-600/40 bg-red-600/10 px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-600/20"
               >
                 View Split
-              </button>
+              </button> */}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="rounded-xl border border-border bg-muted/40 p-4">
@@ -365,9 +365,14 @@ export default function CreatorDashboard() {
                           <Eye className="w-4 h-4" />
                           {stream.views}
                         </span>
+                        {
+                          stream.revenue && (
                         <span className="flex items-center gap-1 text-yellow-500">
-                          <DollarSign className="w-4 h-4" />₦{stream.revenue}
+                         ₦{stream.revenue}
                         </span>
+                          )
+                        }
+                       
                       </div>
                     </div>
                   </div>
@@ -377,9 +382,9 @@ export default function CreatorDashboard() {
           </div>
 
           {/* Engagement Overview */}
-          <div className="bg-card border border-border rounded-2xl p-6">
+          <div className="bg-card border-none rounded-2xl">
             <h3 className="text-xl font-bold text-foreground mb-6">Engagement Overview</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Heart className="w-8 h-8 text-red-400" />

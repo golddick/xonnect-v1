@@ -107,8 +107,6 @@ export default function EventAnalyticsPage() {
       const response = await fetch(`/api/creator/events/${eventId}/analytics`, { cache: "no-store" })
       const data = (await response.json()) as AnalyticsResponse & { message?: string }
 
-      console.log(data, "analytics data fetched")
-
       if (!response.ok) {
         throw new Error(data.message ?? "Failed to load analytics")
       }
@@ -208,14 +206,14 @@ export default function EventAnalyticsPage() {
         </button>
 
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-          <div>
+          <div >
             <h1 className="text-3xl md:text-4xl font-bold">{analytics.event.title}</h1>
             <p className="text-muted-foreground mt-2">
               {analytics.event.category} - {analytics.event.status}
             </p>
           </div>
 
-          <button
+          {/* <button
             type="button"
             onClick={generateStreamKey}
             disabled={generating}
@@ -223,7 +221,7 @@ export default function EventAnalyticsPage() {
           >
             {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
             Generate Key
-          </button>
+          </button> */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -279,8 +277,17 @@ export default function EventAnalyticsPage() {
         </div>
 
         <Card className="bg-card border border-border rounded-2xl">
-          <CardHeader>
-            <CardTitle className="text-foreground">LiveKit Configuration</CardTitle>
+          <CardHeader className="w-full  justify-between items-center">
+            <CardTitle className="text-foreground">Key Configuration</CardTitle>
+            <button
+            type="button"
+            onClick={generateStreamKey}
+            disabled={generating}
+            className="bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+          >
+            {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+            <span className="hidden lg:block">Generate Key</span>
+          </button>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">

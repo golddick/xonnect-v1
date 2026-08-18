@@ -182,7 +182,7 @@ export default function CreatorMonetizationView() {
                 <Menu className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Monetization</h1>
+                <h1 className="text-2xl hidden lg:block font-bold text-foreground">Monetization</h1>
               </div>
             </div>
 
@@ -197,7 +197,7 @@ export default function CreatorMonetizationView() {
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
-                Request Payout
+                <span className=" hidden lg:block">Request Payout</span>
               </button>
             </div>
           </div>

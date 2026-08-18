@@ -50,7 +50,7 @@ export default function WatchPartsPanel({ title = "Parts", parts, activePart, on
                 </div>
               )}
               <div className="absolute bottom-1 right-1 bg-black/70 text-[10px] text-white px-1 rounded">
-                {part.duration || "0:00"}
+                {part.duration || null}
               </div>
             </div>
 
@@ -63,7 +63,12 @@ export default function WatchPartsPanel({ title = "Parts", parts, activePart, on
                 {index + 1}. {part.title}
               </p>
               <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-2">
-                <span>{part.views} views</span>
+                {
+                  part.views > 0  && (
+                      <span>{part.views} views</span>
+                  )
+                }
+                
                 {part.previewOnly ? <span className="text-amber-400">Preview</span> : null}
                 {part.isLocked ? <span className="text-red-400">Locked</span> : null}
               </p>

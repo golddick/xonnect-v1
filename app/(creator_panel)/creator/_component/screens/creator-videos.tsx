@@ -220,7 +220,7 @@ export default function CreatorVideos() {
                 <Menu className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">
+                <h1 className="text-2xl hidden lg:block font-bold text-foreground">
                   Videos
                 </h1>
               </div>
@@ -237,7 +237,7 @@ export default function CreatorVideos() {
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
               >
                 <Upload className="w-4 h-4" />
-                <span>Upload Video</span>
+                <span className=" hidden lg:block">Upload Video</span>
               </button>
             </div>
           </div>

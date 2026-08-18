@@ -162,7 +162,7 @@ export default function VideoViewPage() {
 
               </div>
 
-              <div className="p-6 bg-muted/20 rounded-2xl border border-border/50">
+              <div className="lg:p-6 bg-muted/20 rounded-2xl lg:border lg:border-border/50">
                 { currentPart.description && (
                   <div>
                     <h3 className="font-semibold mb-2">Description</h3>
