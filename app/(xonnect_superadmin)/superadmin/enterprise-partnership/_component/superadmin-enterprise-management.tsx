@@ -13,56 +13,56 @@ import EmailModal from "./EmailModel"
 
 
 // Mock data
-const mockRequests: EnterpriseRequest[] = [
-  {
-    id: "ENT-001",
-    company: "TechCorp Nigeria Ltd",
-    contactPerson: "Ade Okafor",
-    email: "ade.okafor@techcorp.com",
-    phone: "+234 701 234 5678",
-    industry: "Technology",
-    requestDate: "2024-01-20",
-    status: "pending",
-    notes: "Interested in white-label solution for internal training",
-    estimatedUsers: 500,
-  },
-  {
-    id: "ENT-002",
-    company: "Global Media Group",
-    contactPerson: "Chioma Adeyemi",
-    email: "chioma@globalmedia.com",
-    phone: "+234 802 567 8901",
-    industry: "Media & Entertainment",
-    requestDate: "2024-01-15",
-    status: "approved",
-    notes: "Approved for enterprise streaming package",
-    estimatedUsers: 2000,
-  },
-  {
-    id: "ENT-003",
-    company: "Education Excellence Ltd",
-    contactPerson: "Dr. Emeka Nwosu",
-    email: "emeka@eceducation.com",
-    phone: "+234 810 123 4567",
-    industry: "Education",
-    requestDate: "2024-01-10",
-    status: "pending",
-    notes: "Looking for LMS integration and custom branding",
-    estimatedUsers: 1500,
-  },
-  {
-    id: "ENT-004",
-    company: "Creative Studios Africa",
-    contactPerson: "Tunde Afolabi",
-    email: "tunde@creativestudios.com",
-    phone: "+234 703 987 6543",
-    industry: "Creative Services",
-    requestDate: "2024-01-05",
-    status: "rejected",
-    notes: "Request rejected due to compliance issues",
-    estimatedUsers: 300,
-  },
-]
+// const mockRequests: EnterpriseRequest[] = [
+//   {
+//     id: "ENT-001",
+//     company: "TechCorp Nigeria Ltd",
+//     contactPerson: "Ade Okafor",
+//     email: "ade.okafor@techcorp.com",
+//     phone: "+234 701 234 5678",
+//     industry: "Technology",
+//     requestDate: "2024-01-20",
+//     status: "pending",
+//     notes: "Interested in white-label solution for internal training",
+//     estimatedUsers: 500,
+//   },
+//   {
+//     id: "ENT-002",
+//     company: "Global Media Group",
+//     contactPerson: "Chioma Adeyemi",
+//     email: "chioma@globalmedia.com",
+//     phone: "+234 802 567 8901",
+//     industry: "Media & Entertainment",
+//     requestDate: "2024-01-15",
+//     status: "approved",
+//     notes: "Approved for enterprise streaming package",
+//     estimatedUsers: 2000,
+//   },
+//   {
+//     id: "ENT-003",
+//     company: "Education Excellence Ltd",
+//     contactPerson: "Dr. Emeka Nwosu",
+//     email: "emeka@eceducation.com",
+//     phone: "+234 810 123 4567",
+//     industry: "Education",
+//     requestDate: "2024-01-10",
+//     status: "pending",
+//     notes: "Looking for LMS integration and custom branding",
+//     estimatedUsers: 1500,
+//   },
+//   {
+//     id: "ENT-004",
+//     company: "Creative Studios Africa",
+//     contactPerson: "Tunde Afolabi",
+//     email: "tunde@creativestudios.com",
+//     phone: "+234 703 987 6543",
+//     industry: "Creative Services",
+//     requestDate: "2024-01-05",
+//     status: "rejected",
+//     notes: "Request rejected due to compliance issues",
+//     estimatedUsers: 300,
+//   },
+// ]
 
 export default function SuperAdminEnterpriseManagement() {
   const [activeTab, setActiveTab] = useState("requests")
@@ -75,7 +75,7 @@ export default function SuperAdminEnterpriseManagement() {
     subject: "",
     body: "",
   })
-  const [requests, setRequests] = useState<EnterpriseRequest[]>(mockRequests)
+  const [requests, setRequests] = useState<EnterpriseRequest[]>([])
 
   const filteredRequests = requests
     .filter(

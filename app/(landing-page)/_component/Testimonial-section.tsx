@@ -50,7 +50,7 @@ const TestimonialSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-card backdrop-blur-sm border border-border rounded-2xl p-8 shadow-sm"
+                className="bg-card backdrop-blur-sm border border-border hover:bg-accent rounded-2xl p-8 shadow-sm"
               >
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (

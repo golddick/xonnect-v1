@@ -21,91 +21,177 @@ type Body = {
   requirements?: string
 }
 
+// Email validation helper
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  return emailRegex.test(email.trim().toLowerCase())
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body: Body = await req.json()
 
+    // 1. Validate required fields
     if (!body.companyName || !body.contactName || !body.email || !body.description) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Missing required fields: companyName, contactName, email, description" },
+        { status: 400 }
+      )
     }
 
-    // Try to persist if Prisma model exists
+    // 2. Validate email format FIRST (before any database operations)
+    const sanitizedEmail = body.email.trim().toLowerCase()
+    if (!isValidEmail(sanitizedEmail)) {
+      console.error(`Invalid email format: ${body.email}`)
+      return NextResponse.json(
+        { error: "Invalid email address format. Please provide a valid email." },
+        { status: 400 }
+      )
+    }
+
+    // 3. Validate other fields
+    if (body.expectedUsers && isNaN(Number(body.expectedUsers))) {
+      return NextResponse.json(
+        { error: "Expected users must be a valid number" },
+        { status: 400 }
+      )
+    }
+
+    // 4. Try to persist to database
     let saved: any = null
     try {
-      // prisma.enterpriseRequest may not exist in schema; guard access
-      // @ts-ignore
       if (prisma?.enterpriseRequest) {
-        // @ts-ignore
         saved = await prisma.enterpriseRequest.create({
           data: {
-            company: body.companyName,
-            contactPerson: body.contactName,
-            email: body.email,
-            phone: body.phone ?? null,
-            industry: body.industry ?? null,
-            requestDate: new Date(),
+            company: body.companyName.trim(),
+            contactPerson: body.contactName.trim(),
+            email: sanitizedEmail,
+            phone: body.phone?.trim() ?? null,
+            website: body.website?.trim() ?? null,
+            companySize: body.companySize?.trim() ?? null,
+            industry: body.industry?.trim() ?? null,
+            address: body.address?.trim() ?? null,
+            description: body.description.trim(),
+            requirements: body.requirements?.trim() ?? null,
+            estimatedUsers: body.expectedUsers ? Number(body.expectedUsers) : null,
+            budget: body.budget?.trim() ?? null,
+            timeline: body.timeline?.trim() ?? null,
             status: "pending",
-            notes: body.requirements ?? "",
-            estimatedUsers: body.expectedUsers ? Number(body.expectedUsers) : 0,
           },
         })
       }
-    } catch (e) {
-      // ignore persistence errors and continue to send emails
-      console.warn("EnterpriseRequest persistence failed", e)
+    } catch (dbError) {
+      console.error("Database persistence failed:", dbError)
+      // Continue to emails even if DB fails (but log it)
     }
 
-    // Fetch company/support emails from superadmin settings
-    let adminEmails = [defaultSuperAdminSettings.companyEmail, defaultSuperAdminSettings.supportEmail]
+    // 5. Fetch admin emails from settings
+    let adminEmails = [
+      defaultSuperAdminSettings.companyEmail,
+      defaultSuperAdminSettings.supportEmail
+    ]
+
     try {
-      const settings = await prisma.superAdminSetting.findMany({ orderBy: { createdAt: "desc" } })
-      const companySettings = settings.find((s) => s.section === SuperAdminSettingSection.COMPANY_INFO)
+      const settings = await prisma.superAdminSetting.findMany({
+        orderBy: { createdAt: "desc" }
+      })
+      const companySettings = settings.find(
+        (s) => s.section === SuperAdminSettingSection.COMPANY_INFO
+      )
       if (companySettings) {
         const normalized = normalizeCompanySettings(companySettings as any)
-        adminEmails = [normalized.companyEmail || adminEmails[0], normalized.supportEmail || adminEmails[1]]
+        adminEmails = [
+          normalized.companyEmail || adminEmails[0],
+          normalized.supportEmail || adminEmails[1]
+        ]
       }
-    } catch (e) {
-      console.warn("Failed to load superadmin settings", e)
+    } catch (settingsError) {
+      console.warn("Failed to load superadmin settings:", settingsError)
     }
 
+    // 6. Filter and validate admin emails
+    const validAdminEmails = adminEmails
+      .filter(email => email && typeof email === 'string')
+      .map(email => email.trim().toLowerCase())
+      .filter(email => isValidEmail(email))
+
+    if (validAdminEmails.length === 0) {
+      console.error("No valid admin emails found")
+      return NextResponse.json(
+        { error: "Server configuration error. Please contact support." },
+        { status: 500 }
+      )
+    }
+
+    // 7. Prepare email content
     const adminMessageLines = [
       `New enterprise partnership request received from ${body.companyName}.`,
-      `Contact: ${body.contactName} <${body.email}> ${body.phone ? `| ${body.phone}` : ""}`,
+      `Contact: ${body.contactName} <${sanitizedEmail}> ${body.phone ? `| ${body.phone}` : ""}`,
       `Website: ${body.website ?? "N/A"}`,
       `Industry: ${body.industry ?? "N/A"}`,
       `Company size: ${body.companySize ?? "N/A"}`,
       `Estimated users: ${body.expectedUsers ?? "N/A"}`,
       "---",
-      `Message:\n${body.description}\n\nRequirements:\n${body.requirements ?? "N/A"}`,
+      `Description:\n${body.description}\n\nRequirements:\n${body.requirements ?? "N/A"}`,
     ]
 
-    // Send admin notification
+    const userMessage = `Hi ${body.contactName},\n\nThanks for reaching out to Xonnect. We have received your partnership application and our enterprise team will review it within 2 business days.\n\nSummary:\nCompany: ${body.companyName}\nDescription: ${body.description}\n\nWe will contact you at ${sanitizedEmail} with next steps.`
+
+    // 8. Send emails (both must succeed)
     try {
+      // Send admin notification
       await sendEmail({
-        to: adminEmails.join(","),
+        to: validAdminEmails.join(","),
         subject: `New Enterprise Partnership Request - ${body.companyName}`,
-        html: creatorPlatformNotificationTemplate({ fullName: body.contactName, message: adminMessageLines.join("\n") }),
+        html: creatorPlatformNotificationTemplate({
+          fullName: body.contactName,
+          message: adminMessageLines.join("\n")
+        }),
       })
-    } catch (e) {
-      console.error("Failed to send admin email", e)
-    }
 
-    // Send confirmation to submitter
-    try {
-      const userMessage = `Hi ${body.contactName},\n\nThanks for reaching out to Xonnect. We have received your partnership application and our enterprise team will review it within 2 business days.\n\nSummary:\nCompany: ${body.companyName}\nDescription: ${body.description}\n\nWe will contact you at ${body.email} with next steps.`
-
+      // Send confirmation to submitter
       await sendEmail({
-        to: body.email,
+        to: sanitizedEmail,
         subject: `We received your Enterprise Partnership request — ${body.companyName}`,
-        html: creatorPlatformNotificationTemplate({ fullName: body.contactName, message: userMessage }),
+        html: creatorPlatformNotificationTemplate({
+          fullName: body.contactName,
+          message: userMessage
+        }),
       })
-    } catch (e) {
-      console.error("Failed to send confirmation email", e)
+
+    } catch (emailError) {
+      console.error("Email send failed:", emailError)
+      
+      // Rollback: Delete the saved record if it was created
+      if (saved?.id) {
+        try {
+          await prisma.enterpriseRequest.delete({
+            where: { id: saved.id }
+          })
+          console.log(`Rolled back record ${saved.id} due to email failure`)
+        } catch (deleteError) {
+          console.warn("Failed to delete record after email failure:", deleteError)
+        }
+      }
+      
+      return NextResponse.json(
+        { error: "Failed to send confirmation email. Please try again later." },
+        { status: 500 }
+      )
     }
 
-    return NextResponse.json({ ok: true, id: saved?.id ?? null })
+    // 9. Success response
+    return NextResponse.json({
+      ok: true,
+      id: saved?.id ?? null,
+      message: "Partnership request submitted successfully"
+    })
+
   } catch (err) {
-    console.error(err)
-    return NextResponse.json({ error: "Internal error" }, { status: 500 })
+    console.error("Unhandled error:", err)
+    return NextResponse.json(
+      { error: "Internal server error. Please try again later." },
+      { status: 500 }
+    )
   }
 }

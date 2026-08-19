@@ -3,11 +3,11 @@ export interface EnterpriseRequest {
   company: string
   contactPerson: string
   email: string
-  phone: string
+  phone: string 
   industry: string
-  requestDate: string
+  createdAt: string
   status: "pending" | "approved" | "rejected"
-  notes: string
+  requirements: string
   estimatedUsers: number
 }
 

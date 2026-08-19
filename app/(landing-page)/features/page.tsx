@@ -21,6 +21,7 @@ import Link from "next/link"
 import FeaturesSection from "../_component/Feature-section"
 import TestimonialSection from "../_component/Testimonial-section"
 import HeroSection2 from "../_component/heroSection"
+import Logo from "@/components/nav/logo"
 
 const FeaturesPage = () => {
   const mainFeatures = [
@@ -59,7 +60,8 @@ const FeaturesPage = () => {
         >
           <div className="flex items-center mb-3">
             <div className="w-8 h-8 bg-red-600 rounded-full mr-2 flex items-center justify-center">
-              <span className="text-white text-xs font-bold">X</span>
+              {/* <span className="text-white text-xs font-bold">X</span> */}
+              <Logo />
             </div>
             <div className="font-medium text-foreground backdrop-blur-sm ">xonnect.hq</div>
           </div>
@@ -132,8 +134,8 @@ const FeaturesPage = () => {
         />
 
       {/* Main Features */}
-      <section className="  py-10 lg:py-20   px-6 md:px-8">
-        <div className="w-full">
+      <section className="  py-10 lg:py-20 px-6 md:px-8">
+        <div className="w-full max-w-6xl mx-auto">
           {mainFeatures.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -160,7 +162,7 @@ const FeaturesPage = () => {
                   ))}
                 </ul>
                 <Link
-                  href="/sign-up"
+                  href="/auth/signup"
                   className="inline-flex items-center text-red-400 hover:text-red-300 font-semibold transition-colors"
                 >
                   Learn More
@@ -187,7 +189,7 @@ const FeaturesPage = () => {
 
       {/* Additional Features Grid */}
       <section className="py-10 lg:py-20 px-6 md:px-8">
-        <div className="w-full">
+        <div className="w-full max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -198,12 +200,12 @@ const FeaturesPage = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Complete <span className="text-red-500">Feature Suite</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Everything you need to succeed as a creator in one powerful platform
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Everything you need to succeed as a creator on Xonnect
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {additionalFeatures.map((feature, index) => (
               <motion.div
                 key={feature.title}

@@ -9,7 +9,7 @@ export default function DetailsModal({
   request,
   onClose,
   onApprove,
-  onReject,
+  onReject, 
   onSendEmail,
 }: DetailsModalProps) {
   return (
@@ -49,11 +49,11 @@ export default function DetailsModal({
               </div>
               <div>
                 <p className="text-muted-foreground text-sm mb-2">Estimated Users</p>
-                <p className="font-bold text-blue-400">{request.estimatedUsers.toLocaleString()}</p>
+                <p className="font-bold text-red-400">{request.estimatedUsers.toLocaleString()}</p>
               </div>
               <div>
                 <p className="text-muted-foreground text-sm mb-2">Request Date</p>
-                <p className="font-bold text-foreground">{request.requestDate}</p>
+                <p className="font-bold text-foreground">{request.createdAt}</p>
               </div>
             </div>
           </div>
@@ -61,7 +61,7 @@ export default function DetailsModal({
           {/* Contact Info */}
           <div className="bg-card border border-border rounded-lg p-6 space-y-4">
             <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
-              <User className="w-5 h-5 text-blue-500" />
+              <User className="w-5 h-5 text-red-500" />
               Contact Information
             </h3>
             <div className="space-y-3">
@@ -71,7 +71,7 @@ export default function DetailsModal({
               </div>
               <div>
                 <p className="text-muted-foreground text-sm mb-2">Email</p>
-                <p className="font-bold text-blue-400">{request.email}</p>
+                <p className="font-bold text-red-400">{request.email}</p>
               </div>
               <div>
                 <p className="text-muted-foreground text-sm mb-2">Phone</p>
@@ -80,10 +80,10 @@ export default function DetailsModal({
             </div>
           </div>
 
-          {/* Notes */}
+          {/* requirements */}
           <div className="bg-card border border-border rounded-lg p-6">
-            <h3 className="font-bold mb-3 text-foreground">Notes</h3>
-            <p className="text-muted-foreground text-sm">{request.notes}</p>
+            <h3 className="font-bold mb-3 text-foreground">Requirement</h3>
+            <p className="text-muted-foreground text-sm">{request.requirements}</p>
           </div>
 
           {/* Action Buttons */}
@@ -108,7 +108,7 @@ export default function DetailsModal({
 
           <button
             onClick={onSendEmail}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-foreground px-4 py-2 rounded-lg transition-colors duration-300 font-medium text-sm flex items-center justify-center gap-2"
+            className="w-full bg-red-600 hover:bg-red-700 text-foreground px-4 py-2 rounded-lg transition-colors duration-300 font-medium text-sm flex items-center justify-center gap-2"
           >
             <Mail className="w-4 h-4" />
             Send Email

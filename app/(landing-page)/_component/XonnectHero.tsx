@@ -11,7 +11,7 @@ export default function XonnectHero() {
   const [email, setEmail] = useState("")
  
   return (
-    <section className="relative w-full  overflow-hidden ">
+    <section className="relative w-full min-h-screen md:min-h-{calc(100vh-300md)} flex flex-col justify-center items-center  overflow-hidden ">
       
       <div className="relative z-10 w-full mx-auto px-6 sm:px-10 md:px-16 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
@@ -69,7 +69,7 @@ export default function XonnectHero() {
               </Link>
             </motion.div>
 
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -80,14 +80,14 @@ export default function XonnectHero() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email to get started"
-                className="flex-1 bg-white/10 text-white placeholder:text-muted-foreground backdrop-blur-xl border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500 transition-colors"
+                className="flex-1 bg-card text-foreground placeholder:text-muted-foreground backdrop-blur-xl border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500 transition-colors"
               />
               <Link href="/auth/signup">
                 <Button className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-lg gap-1 whitespace-nowrap w-full sm:w-auto">
                   Get Started <ChevronRight className="w-4 h-4" />
                 </Button>
               </Link>
-            </motion.div>
+            </motion.div> */}
           </div>
 
           <motion.div

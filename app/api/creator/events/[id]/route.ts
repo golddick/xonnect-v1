@@ -220,6 +220,7 @@ export async function PUT(
         "recordedVideoFileId",
         "recordingEnabled",
         "recordingStatus",
+        "hasRecordedVideo",
       ].includes(key)
     )
     const isTransitionToLive = body.status?.toLowerCase() === "live"
