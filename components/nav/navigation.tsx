@@ -130,8 +130,20 @@ const Navigation = () => {
                   FAQ
                 </Link>
                 <div className="pt-4 border-t border-border gap-3 flex flex-col">
+                 
+                 {
+                  !user && (
+                    <Link
+                      href="/auth/signup"
+                      className="block bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors text-center"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Get Started
+                    </Link>
+                  )
+                 }
                   {/* Mobile: Show loading placeholder, Get Started, or AvatarDropdownMenu based on auth status */}
-                  {status === "loading" ? (
+                  {/* {status === "loading" ? (
                     <div className="w-full h-12 bg-muted/30 rounded-lg animate-pulse" />
                   ) : status === "authenticated" ? (
                     <div className="flex justify-center">
@@ -145,7 +157,7 @@ const Navigation = () => {
                     >
                       Get Started
                     </Link>
-                  )}
+                  )} */}
                   
                   <Link
                     href="/tv"

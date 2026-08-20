@@ -23,7 +23,7 @@ interface TvFollower {
 
 const TvSidebar = ({ onItemClick }: TvSidebarProps) => {
   const { data: session, status } = useSession()
-  const [isCollapsed, setIsCollapsed] = useState(true)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const [expandedSections, setExpandedSections] = useState({
     categories: true,
     following: true,
