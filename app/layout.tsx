@@ -13,7 +13,7 @@ import { Toaster } from "sonner";
 export const metadata: Metadata = {
   title: "XONNECT ",
   description:
-    " A pay on demand Premium Streaming platform for Organizations & Fans.",
+    " A pay on demand Event Streaming platform for Organizations & Fans.",
   generator: "Next.js",
   keywords: [
     "Xonnect",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     "creators",
     "fans",
     "organization",
-    "org streaming",
+    "event streaming",
     "live streaming",
     "Premium Streaming",
     "events",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   publisher: "Xonnect",
   openGraph: {
     title: "Xonnect",
-    description: "A pay on demand Premium Streaming platform",
+    description: "A pay on demand Event Streaming platform",
     url: "https://xonnect.net",
     siteName: "Xonnect",
     images: [
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "A pay on demand Streaming platform for Organizations & Fans",
+    title: "A pay on demand Event Streaming platform for Organizations & Fans",
     description: "Xonnect · Watch. Belong",
     images: ["https://xonnect.net/xonnect-logo.png"],
     creator: "@xonnecthq",

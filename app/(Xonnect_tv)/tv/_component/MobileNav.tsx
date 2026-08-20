@@ -56,11 +56,9 @@ export function MobileNav() {
         
         <div className="flex-1 overflow-y-auto">
           {/* Pass the close function to TvSidebar */}
-          <TvSidebar onItemClick={handleCloseSheet} />
+          <TvSidebar onItemClick={handleCloseSheet}  screen="mobile" />
         </div>
-        
-        {/* Hidden close button that we can trigger programmatically */}
-        <SheetClose ref={sheetCloseRef} className="hidden" />
+      
       </SheetContent>
     </Sheet>
   )
