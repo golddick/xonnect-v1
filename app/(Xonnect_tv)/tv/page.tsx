@@ -941,11 +941,11 @@ export default function TvPage() {
                       )}
                     </div>
                   )}
-                  <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-2">{currentFeature.title}</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{currentFeature.title}</h3>
                   {/* <p className="text-muted-foreground mb-4">{currentFeature.channelName}</p> */}
                   <button
                     onClick={() => router.push(buildWatchHref(currentFeature))}
-                    className="w-fit bg-red-600 hover:bg-red-700 text-foreground px-8 py-3 rounded-lg font-bold transition-colors"
+                    className="w-fit bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-bold transition-colors"
                   >
                     Watch Now
                   </button>

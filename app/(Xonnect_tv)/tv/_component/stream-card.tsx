@@ -41,7 +41,7 @@ const StreamCard = ({
       whileHover={{ y: -8 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group cursor-pointer"
+      className="group border border-border  rounded-xl overflow-hidden cursor-pointer"
       role="button"
       tabIndex={0}
       onKeyDown={(event) => {
@@ -63,7 +63,7 @@ const StreamCard = ({
 
           {/* Overlays */}
           {type === "ended" ? (
-            <div className="absolute top-3 left-3 bg-slate-700 text-foreground px-2 py-1 rounded text-xs font-bold">
+            <div className="absolute top-3 left-3 bg-card text-card-foreground px-2 py-1 rounded text-xs font-bold">
               ENDED
             </div>
           ) : isLive ? (
@@ -129,11 +129,13 @@ const StreamCard = ({
 
         {/* Info */}
         <div className="p-3 space-y-2">
-          <h3 className="font-semibold text-foreground line-clamp-2 group-hover:text-red-400 transition-colors">{title}</h3>
-          <p className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-colors">{channelName}</p>
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <span className="bg-white/10 px-2 py-1 rounded">{category}</span>
-            {isLive && <span className="text-red-400">Live now</span>}
+          <h3 className="font-semibold text-foreground line-clamp-2 capitalize group-hover:text-red-400 transition-colors">{title}</h3>
+          <div className=" flex items-center w-full justify-between">
+              <p className="text-sm text-muted-foreground group-hover:text-muted-foreground capitalize transition-colors">{channelName}</p>
+            <div className="flex items-center justify-between text-xs text-gray-500">
+            <span className="bg-card text-card-foreground px-2 py-1 rounded">{category}</span>
+           
+          </div>
           </div>
         </div>
       </div>

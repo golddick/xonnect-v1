@@ -109,14 +109,16 @@ const BlogPage = () => {
     : posts.filter(post => post.category === activeCategory)
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      <div className="w-full px-4">
-
-        <HeroSection2
+    <div className="min-h-screen w-full bg-background text-foreground overflow-x-hidden">
+     
+      <HeroSection2
             title="Read latest Blog News from Xonnect."
             ICON={<BookAIcon className="w-5 h-5 text-red-400" />}
             iconTitle="Our Blog"
         />
+      <div className="w-full max-w-7xl mx-auto px-4">
+
+       
 
         {/* <div className="flex flex-wrap gap-4 mb-12 justify-center">
           {categories.map((cat) => (

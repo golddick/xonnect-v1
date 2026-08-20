@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link';
 import { ReactNode } from 'react'
 
 export default function AuthLayout({ children, title, subtitle }: { children: ReactNode; title: string; subtitle: string }) {
@@ -17,11 +18,13 @@ export default function AuthLayout({ children, title, subtitle }: { children: Re
         <div className="relative z-10 text-center">
           {/* Animated Logo/Title */}
           <div className="mb-8 inline-block">
+            <Link href="/" className="flex items-center justify-center">
             <h1 className="text-6xl md:text-7xl font-bold text-foreground mb-4 animate-fade-in">
               <span className="text-foreground">
                 XONNECT
               </span>
             </h1>
+            </Link>
           </div>
 
           {/* Welcome Messages */}

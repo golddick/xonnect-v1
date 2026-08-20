@@ -116,7 +116,7 @@ const EnterprisePartnership = () => {
 
       <div className="w-full px-8 py-12">
         {/* Benefits Section */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
@@ -143,7 +143,7 @@ const EnterprisePartnership = () => {
               </motion.div>
             ))}
           </div>
-        </motion.div>
+        </motion.div> */}
 
         {/* Application Form */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
@@ -390,7 +390,7 @@ const EnterprisePartnership = () => {
                     </div>
 
                     {/* File Upload Section */}
-                    <div>
+                    {/* <div>
                       <Label>Supporting Documents (Optional)</Label>
                       <div className="mt-2 border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-red-600/50 transition-colors">
                         <Upload className="w-8 h-8 text-gray-400 mx-auto mb-4" />
@@ -402,7 +402,7 @@ const EnterprisePartnership = () => {
                           Choose Files
                         </Button>
                       </div>
-                    </div>
+                    </div> */}
                   </motion.div>
                 )}
 
@@ -414,50 +414,50 @@ const EnterprisePartnership = () => {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                          <h4 className="font-medium text-gray-300 mb-2">Company Information</h4>
+                          <h4 className="font-medium text-foreground mb-2">Company Information</h4>
                           <div className="space-y-2 text-sm">
                             <p>
-                              <span className="text-gray-400">Company:</span> {formData.companyName}
+                              <span className="text-muted-foreground">Company:</span> {formData.companyName}
                             </p>
                             <p>
-                              <span className="text-gray-400">Contact:</span> {formData.contactName}
+                              <span className="text-muted-foreground">Contact:</span> {formData.contactName}
                             </p>
                             <p>
-                              <span className="text-gray-400">Email:</span> {formData.email}
+                              <span className="text-muted-foreground">Email:</span> {formData.email}
                             </p>
                             <p>
-                              <span className="text-gray-400">Size:</span> {formData.companySize}
+                              <span className="text-muted-foreground">Size:</span> {formData.companySize}
                             </p>
                             <p>
-                              <span className="text-gray-400">Industry:</span> {formData.industry}
+                              <span className="text-muted-foreground">Industry:</span> {formData.industry}
                             </p>
                           </div>
                         </div>
 
                         <div>
-                          <h4 className="font-medium text-gray-300 mb-2">Requirements</h4>
+                          <h4 className="font-medium text-foreground mb-2">Requirements</h4>
                           <div className="space-y-2 text-sm">
                             <p>
-                              <span className="text-gray-400">Expected Users:</span> {formData.expectedUsers}
+                              <span className="text-muted-foreground">Expected Users:</span> {formData.expectedUsers}
                             </p>
                             <p>
-                              <span className="text-gray-400">Budget:</span> {formData.budget}
+                              <span className="text-muted-foreground">Budget:</span> {formData.budget}
                             </p>
                             <p>
-                              <span className="text-gray-400">Timeline:</span> {formData.timeline}
+                              <span className="text-muted-foreground">Timeline:</span> {formData.timeline}
                             </p>
                           </div>
                         </div>
                       </div>
 
                       <div className="mt-6">
-                        <h4 className="font-medium text-gray-300 mb-2">Description</h4>
-                        <p className="text-sm text-gray-400">{formData.description}</p>
+                        <h4 className="font-medium text-foreground mb-2">Description</h4>
+                        <p className="text-sm text-muted-foreground">{formData.description}</p>
                       </div>
 
                       <div className="mt-6">
-                        <h4 className="font-medium text-gray-300 mb-2">Requirements</h4>
-                        <p className="text-sm text-gray-400">{formData.requirements}</p>
+                        <h4 className="font-medium text-foreground mb-2">Requirements</h4>
+                        <p className="text-sm text-muted-foreground">{formData.requirements}</p>
                       </div>
                     </div>
 
@@ -466,7 +466,8 @@ const EnterprisePartnership = () => {
                         <FileText className="w-5 h-5 text-yellow-400 mt-0.5" />
                         <div>
                           <h4 className="font-semibold text-yellow-400 mb-1">Next Steps</h4>
-                          <ul className="text-sm text-gray-300 space-y-1">
+                          <ul className="text-sm text-muted-foreground space-y-1">
+                            <li>• A confirmation email will be sent to you once your submission is successful. </li>
                             <li>• Our enterprise team will review your application within 2 business days</li>
                             <li>• You'll receive a follow-up email to schedule a consultation call</li>
                             <li>• We'll prepare a custom proposal based on your requirements</li>
@@ -486,18 +487,18 @@ const EnterprisePartnership = () => {
                     className="text-center py-12"
                   >
                     <div className="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle className="w-10 h-10 text-white" />
+                      <CheckCircle className="w-10 h-10 text-foreground" />
                     </div>
                     <h3 className="text-2xl font-bold mb-4">Application Submitted Successfully!</h3>
-                    <p className="text-gray-400 mb-8 max-w-md mx-auto">
+                    <p className="text-muted-foreground mb-8 max-w-md mx-auto">
                       Thank you for your interest in our Enterprise Partnership Program. Our team will review your
                       application and get back to you within 2 business days.
                     </p>
                     <div className="space-y-4">
-                      <p className="text-sm text-gray-500">
+                      {/* <p className="text-sm text-gray-500">
                         Application ID:{" "}
                         <span className="font-mono text-white">ENT-{Date.now().toString().slice(-6)}</span>
-                      </p>
+                      </p> */}
                       <Button onClick={() => (window.location.href = "/")} className="bg-red-600 hover:bg-red-700">
                         Return to Homepage
                       </Button>

@@ -30,7 +30,7 @@ export default function TermsPage() {
               </span>
             </h1>
 
-              <p className="text-sm text-muted-foreground">Last updated: Febuary,  2025</p>
+              <p className="text-sm text-muted-foreground">Last updated: Febuary,  2025 (under review)</p>
           </motion.div>
         </div>
       </section>
@@ -48,7 +48,7 @@ export default function TermsPage() {
         <div className="max-w-4xl mx-auto px-6 md:px-8">
           <div className="prose prose-lg max-w-none">
             <Card className="mb-8 bg-card border-border">
-              <CardContent className="p-8">
+              <CardContent className="p-8 w-full flex flex-col items-center justify-center">
                 <h2 className="text-2xl font-bold mb-4 flex items-center gap-3 text-card-foreground">
                   <FileText className="w-6 h-6 text-red-600" />
                   Agreement to Terms
@@ -67,48 +67,42 @@ export default function TermsPage() {
             </Card>
 
             <Card className="mb-8 bg-card border-border">
-              <CardContent className="p-8">
+              <CardContent className="p-8 w-full flex flex-col items-center justify-center">
                 <h2 className="text-2xl font-bold mb-4 text-card-foreground">
                   Description of Service
                 </h2>
                 <div className="space-y-4 text-muted-foreground">
                   <p>
-                    Xonnect is a platform that enables creators to build, manage, and monetize online communities. Our
+                    Xonnect is an event streaming platform that enables creators to build, manage, and monetize online communities. Our
                     services include:
                   </p>
-                  <ul className="list-disc pl-6 space-y-2">
-                    <li>Community creation and management tools</li>
-                    <li>Content creation and sharing features</li>
-                    <li>Live streaming and video hosting</li>
-                    <li>Monetization and payment processing</li>
-                    <li>Analytics and insights</li>
-                    <li>Communication and collaboration tools</li>
-                  </ul>
+                  <div className="space-y-1">
+                    <p>Community creation and management tools</p>
+                    <p>Content creation and sharing features</p>
+                    <p>Live streaming and video hosting</p>
+                    <p>Monetization and payment processing</p>
+                    <p>Analytics and insights</p>
+                    <p>Communication and collaboration tools</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="mb-8 bg-card border-border">
-              <CardContent className="p-8">
+              <CardContent className="p-8 w-full flex flex-col items-center justify-center">
                 <h2 className="text-2xl font-bold mb-4 text-foreground">User Accounts</h2>
                 <div className="space-y-4 text-muted-foreground">
                   <div>
                     <h3 className="text-lg font-semibold mb-2 text-foreground">Account Creation</h3>
                     <p>To use certain features of the Service, you must create an account. You agree to:</p>
-                    <ul className="list-disc pl-6 space-y-1 mt-2">
-                      <li>Provide accurate, current, and complete information</li>
-                      <li>Maintain and update your account information</li>
-                      <li>Keep your password secure and confidential</li>
-                      <li>Accept responsibility for all activities under your account</li>
-                    </ul>
+                    <div className="space-y-1 mt-2">
+                      <p>Provide accurate, current, and complete information</p>
+                      <p>Maintain and update your account information</p>
+                      <p>Keep your password secure and confidential</p>
+                      <p>Accept responsibility for all activities under your account</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold mb-2 text-foreground">Account Eligibility</h3>
-                    <p>
-                      You must be at least 13 years old to create an account. Users between 13 and 18 must have parental
-                      consent. You must not create an account if you have been previously banned from the Service.
-                    </p>
-                  </div>
+                  
                 </div>
               </CardContent>
             </Card>
@@ -123,23 +117,23 @@ export default function TermsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <div>
                       <h3 className="font-semibold mb-2 text-red-600">Prohibited Content</h3>
-                      <ul className="text-sm space-y-1">
-                        <li>• Illegal or harmful content</li>
-                        <li>• Harassment or hate speech</li>
-                        <li>• Spam or misleading information</li>
-                        <li>• Adult content (outside designated areas)</li>
-                        <li>• Copyrighted material without permission</li>
-                      </ul>
+                      <div className="text-sm space-y-1">
+                        <p>Illegal or harmful content</p>
+                        <p>Harassment or hate speech</p>
+                        <p>Spam or misleading information</p>
+                        <p>Adult content (outside designated areas)</p>
+                        <p>Copyrighted material without permission</p>
+                      </div>
                     </div>
                     <div>
                       <h3 className="font-semibold mb-2 text-red-600">Prohibited Activities</h3>
-                      <ul className="text-sm space-y-1">
-                        <li>• Impersonating others</li>
-                        <li>• Hacking or system interference</li>
-                        <li>• Automated data collection</li>
-                        <li>• Circumventing security measures</li>
-                        <li>• Commercial use without permission</li>
-                      </ul>
+                      <div className="text-sm space-y-1">
+                        <p>Impersonating others</p>
+                        <p>Hacking or system interference</p>
+                        <p>Automated data collection</p>
+                        <p>Circumventing security measures</p>
+                        <p>Commercial use without permission</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -147,7 +141,7 @@ export default function TermsPage() {
             </Card>
 
             <Card className="mb-8 bg-card border-border">
-              <CardContent className="p-8">
+              <CardContent className="p-8 flex flex-col items-center justify-centerw-full">
                 <h2 className="text-2xl font-bold mb-4 text-foreground">Content and Intellectual Property</h2>
                 <div className="space-y-4 text-muted-foreground">
                   <div>
@@ -177,14 +171,14 @@ export default function TermsPage() {
             </Card>
 
             <Card className="mb-8 bg-card border-border">
-              <CardContent className="p-8">
+              <CardContent className="p-8 flex flex-col items-center justify-center w-full ">
                 <h2 className="text-2xl font-bold mb-4 text-foreground">Payment Terms</h2>
                 <div className="space-y-4 text-muted-foreground">
                   <div>
-                    <h3 className="text-lg font-semibold mb-2 text-foreground">Subscription Plans</h3>
+                    <h3 className="text-lg font-semibold mb-2 text-foreground">Pay on Demand </h3>
                     <p>
-                      Paid subscriptions are billed in advance on a monthly or annual basis. Fees are non-refundable
-                      except as required by law or as specified in our refund policy.
+                      Fans pay only for the content they want no subscription required. 
+                      All payments are non-refundable unless required by law or stated in our refund policy.
                     </p>
                   </div>
                   <div>
@@ -206,7 +200,7 @@ export default function TermsPage() {
             </Card>
 
             <Card className="mb-8 bg-card border-border">
-              <CardContent className="p-8">
+              <CardContent className="p-8 flex flex-col items-center justify-center w-full">
                 <h2 className="text-2xl font-bold mb-4 flex items-center gap-3 text-card-foreground">
                   <AlertTriangle className="w-6 h-6 text-red-600" />
                   Disclaimers and Limitations
@@ -220,9 +214,9 @@ export default function TermsPage() {
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold mb-2 text-foreground">User-Generated Content</h3>
+                    <h3 className="text-lg font-semibold mb-2 text-foreground">User Generated Content</h3>
                     <p>
-                      We are not responsible for user-generated content and do not endorse any opinions expressed by
+                      We are not responsible for user generated content and do not endorse any opinions expressed by
                       users. Users are solely responsible for their content and interactions.
                     </p>
                   </div>
@@ -238,7 +232,7 @@ export default function TermsPage() {
             </Card>
 
             <Card className="mb-8 bg-card border-border">
-              <CardContent className="p-8">
+              <CardContent className="p-8 flex flex-col items-center justify-center w-full">
                 <h2 className="text-2xl font-bold mb-4 text-foreground">Termination</h2>
                 <div className="space-y-4 text-muted-foreground">
                   <div>
@@ -267,7 +261,7 @@ export default function TermsPage() {
             </Card>
 
             <Card className="mb-8 bg-card border-border">
-              <CardContent className="p-8">
+              <CardContent className="p-8 flex flex-col items-center justify-center w-full">
                 <h2 className="text-2xl font-bold mb-4 flex items-center gap-3 text-card-foreground">
                   <Shield className="w-6 h-6 text-red-600" />
                   Contact Information
@@ -279,9 +273,7 @@ export default function TermsPage() {
                       <strong className="text-foreground">Email:</strong> hrxonnet@gmail.com
                     </p>
                     <p>
-                      <strong className="text-foreground">Address:</strong> Xonnect Legal Team
-                      <br />
-                      Nigeria
+                      <strong className="text-foreground">Address:</strong>Nigeria
                     </p>
                     <p>
                       <strong className="text-foreground">Phone:</strong> +2347050998742
