@@ -57,7 +57,45 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 4. Try to persist to database
+    // 4. Fetch and validate admin emails BEFORE database persistence
+    let adminEmails = [
+      defaultSuperAdminSettings.companyEmail,
+      defaultSuperAdminSettings.supportEmail
+    ]
+
+    try {
+      const settings = await prisma.superAdminSetting.findMany({
+        orderBy: { createdAt: "desc" }
+      })
+      const companySettings = settings.find(
+        (s) => s.section === SuperAdminSettingSection.COMPANY_INFO
+      )
+      if (companySettings) {
+        const normalized = normalizeCompanySettings(companySettings as any)
+        adminEmails = [
+          normalized.companyEmail || adminEmails[0],
+          normalized.supportEmail || adminEmails[1]
+        ]
+      }
+    } catch (settingsError) {
+      console.warn("Failed to load superadmin settings:", settingsError)
+    }
+
+    // 5. Filter and validate admin emails
+    const validAdminEmails = adminEmails
+      .filter(email => email && typeof email === 'string')
+      .map(email => email.trim().toLowerCase())
+      .filter(email => isValidEmail(email))
+
+    if (validAdminEmails.length === 0) {
+      console.error("No valid admin emails found")
+      return NextResponse.json(
+        { error: "Server configuration error. Please contact support." },
+        { status: 500 }
+      )
+    }
+
+    // 6. Try to persist to database (only after admin emails are validated)
     let saved: any = null
     try {
       if (prisma?.enterpriseRequest) {
@@ -82,43 +120,8 @@ export async function POST(req: NextRequest) {
       }
     } catch (dbError) {
       console.error("Database persistence failed:", dbError)
-      // Continue to emails even if DB fails (but log it)
-    }
-
-    // 5. Fetch admin emails from settings
-    let adminEmails = [
-      defaultSuperAdminSettings.companyEmail,
-      defaultSuperAdminSettings.supportEmail
-    ]
-
-    try {
-      const settings = await prisma.superAdminSetting.findMany({
-        orderBy: { createdAt: "desc" }
-      })
-      const companySettings = settings.find(
-        (s) => s.section === SuperAdminSettingSection.COMPANY_INFO
-      )
-      if (companySettings) {
-        const normalized = normalizeCompanySettings(companySettings as any)
-        adminEmails = [
-          normalized.companyEmail || adminEmails[0],
-          normalized.supportEmail || adminEmails[1]
-        ]
-      }
-    } catch (settingsError) {
-      console.warn("Failed to load superadmin settings:", settingsError)
-    }
-
-    // 6. Filter and validate admin emails
-    const validAdminEmails = adminEmails
-      .filter(email => email && typeof email === 'string')
-      .map(email => email.trim().toLowerCase())
-      .filter(email => isValidEmail(email))
-
-    if (validAdminEmails.length === 0) {
-      console.error("No valid admin emails found")
       return NextResponse.json(
-        { error: "Server configuration error. Please contact support." },
+        { error: "Failed to save partnership request. Please try again later." },
         { status: 500 }
       )
     }
@@ -137,10 +140,10 @@ export async function POST(req: NextRequest) {
 
     const userMessage = `Hi ${body.contactName},\n\nThanks for reaching out to Xonnect. We have received your partnership application and our enterprise team will review it within 2 business days.\n\nSummary:\nCompany: ${body.companyName}\nDescription: ${body.description}\n\nWe will contact you at ${sanitizedEmail} with next steps.`
 
-    // 8. Send emails (both must succeed)
+    // 8. Send emails and validate responses
     try {
       // Send admin notification
-      await sendEmail({
+      const adminEmailResult = await sendEmail({
         to: validAdminEmails.join(","),
         subject: `New Enterprise Partnership Request - ${body.companyName}`,
         html: creatorPlatformNotificationTemplate({
@@ -149,8 +152,13 @@ export async function POST(req: NextRequest) {
         }),
       })
 
+      // Check admin email result
+      if (!adminEmailResult?.ok) {
+        throw new Error(`Admin email delivery failed: ${adminEmailResult?.message || 'Unknown error'}`)
+      }
+
       // Send confirmation to submitter
-      await sendEmail({
+      const userEmailResult = await sendEmail({
         to: sanitizedEmail,
         subject: `We received your Enterprise Partnership request — ${body.companyName}`,
         html: creatorPlatformNotificationTemplate({
@@ -158,6 +166,11 @@ export async function POST(req: NextRequest) {
           message: userMessage
         }),
       })
+
+      // Check user email result
+      if (!userEmailResult?.ok) {
+        throw new Error(`User email delivery failed: ${userEmailResult?.message || 'Unknown error'}`)
+      }
 
     } catch (emailError) {
       console.error("Email send failed:", emailError)

@@ -1053,7 +1053,7 @@ export default function CreatorLivePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
         <div className="absolute inset-x-0 top-0 p-4">
-          <div className="flex flex-col gap-2 max-w-5xl mx-auto">
+          <div className="flex flex-col gap-2 w-full">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h1 className="text-xl font-semibold">Creator Live — {eventId}</h1>
@@ -1145,7 +1145,7 @@ export default function CreatorLivePage() {
           </div>
         </div>
         <div className="absolute inset-x-0 bottom-0 p-4">
-          <div className="mx-auto flex w-full max-w-5xl flex-wrap justify-end gap-2 rounded-3xl bg-black/60 p-3 backdrop-blur-md">
+          <div className="mx-auto flex w-full flex-wrap justify-end gap-2 rounded-3xl bg-black/60 p-3 backdrop-blur-md">
             {!connected ? (
               <Button onClick={handleConnectAndPublish} disabled={!token || connecting || publishing}>
                 {connecting ? "Connecting..." : "Start live"}

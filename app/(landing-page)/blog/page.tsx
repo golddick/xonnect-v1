@@ -116,7 +116,7 @@ const BlogPage = () => {
             ICON={<BookAIcon className="w-5 h-5 text-red-400" />}
             iconTitle="Our Blog"
         />
-      <div className="w-full max-w-8xl mx-auto px-4">
+      <div className="w-full max-w-7xl mx-auto px-4">
 
        
 

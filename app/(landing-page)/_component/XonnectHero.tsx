@@ -11,7 +11,7 @@ export default function XonnectHero() {
   const [email, setEmail] = useState("")
  
   return (
-    <section className="relative w-full min-h-screen md:min-h-{calc(100vh-300md)} flex flex-col justify-center items-center  overflow-hidden ">
+    <section className="relative w-full min-h-screen md:min-h-{calc(100vh-300px)} flex flex-col justify-center items-center  overflow-hidden ">
       
       <div className="relative z-10 w-full mx-auto px-6 sm:px-10 md:px-16 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">

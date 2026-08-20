@@ -276,14 +276,15 @@ const ReadBlog = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 pt-16 md:pt-24">
+        
         <article className="prose prose-xl prose-stone max-w-none">
           {/* Content Render */}
           <div 
-            className="prose prose-lg max-w-none text-foreground
-              prose-headings: prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:text-gray-900
-              prose-h1:text-2xl text-foreground prose-h2:mt-11 prose-h2:mb-4
-              prose-h2:text-2xl text-foreground prose-h2:mt-11 prose-h2:mb-4
-              prose-h3:text-xl text-foreground prose-h3:mt-8 prose-h3:mb-3
+            className="prose prose-lg max-w-none
+              prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:text-foreground
+              prose-h1:text-2xl prose-h2:mt-11 
+              prose-h2:text-2xl prose-h2:mb-4
+              prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
               prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-5
               prose-ul:list-none prose-ul:pl-0 prose-ul:space-y-2 prose-ul:mb-5
               prose-li:text-primary prose-li:leading-relaxed prose-li:flex prose-li:gap-2 prose-li:items-start
@@ -292,7 +293,6 @@ const ReadBlog = () => {
               prose-blockquote:italic prose-blockquote:text-muted-foreground prose-blockquote:text-base
               prose-img:rounded-xl prose-img:my-8
               prose-a:text-red-600 prose-a:no-underline hover:prose-a:underline"
-
             dangerouslySetInnerHTML={{ __html: blog.content }} 
           />
         </article>
@@ -366,7 +366,7 @@ const ReadBlog = () => {
 
         {/* CTA Section */}
         <section className="mt-24 rounded-[3.5rem] bg-card border border-border text-foreground hover:border-red-600/50 hover:shadow-lg hover:shadow-red-600/5 p-12 md:p-20 relative overflow-hidden text-center">
-          <div className="relative z-10 max-w-2xl mx-auto space-y-8">
+          <div className="relative z-10 max-w-5xl mx-auto space-y-8">
             <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-none">Stay in the loop.</h2>
             <p className="text-muted-foreground text-xl font-medium">
               Join 1,000+ readers getting our weekly digest of tech, design, and culture.

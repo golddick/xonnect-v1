@@ -361,18 +361,18 @@ const CreatorAgreement = () => {
                       value={signature}
                       onChange={(e) => setSignature(e.target.value)}
                       placeholder={user ? "Enter your full legal name here..." : "Please sign in to accept this agreement"}
-                      className="border-gray-700 text-foreground"
+                      className="border-border text-foreground"
                       rows={2}
                       disabled={!user}
                     />
                   </div>
 
-                  <div className="border border-gray-700 p-4 rounded-lg">
+                  <div className="border border-border p-4 rounded-lg">
                     <div className="flex items-center space-x-2 mb-2">
-                      <Calendar className="w-4 h-4 text-gray-800" />
-                      <span className="text-sm text-gray-800">Date: {new Date().toLocaleDateString()}</span>
+                      <Calendar className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Date: {new Date().toLocaleDateString()}</span>
                     </div>
-                    <p className="text-xs text-gray-800">
+                    <p className="text-xs text-foreground">
                       By typing your name above, you acknowledge that this constitutes a legal digital signature and you
                       agree to be bound by this creator agreement.
                     </p>
@@ -390,6 +390,7 @@ const CreatorAgreement = () => {
             >
               {!user ? (
                 <Button
+                  type="button"
                   onClick={() => signIn()}
                   className="bg-amber-600 hover:bg-amber-700 px-12 py-4 text-lg"
                 >
@@ -404,24 +405,24 @@ const CreatorAgreement = () => {
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Processing Agreement...
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-border mr-2"></div>
+                      Processing...
                     </>
                   ) : (
                     <>
                       <CheckCircle className="w-5 h-5 mr-2" />
-                      Accept Agreement
+                      Accept 
                     </>
                   )}
                 </Button>
               )}
 
               {!canSubmit && user && (
-                <p className="text-sm text-gray-400 mt-4">Please review and accept all sections above to continue</p>
+                <p className="text-sm text-muted-foreground mt-4">Please review and accept all sections above to continue</p>
               )}
               
               {!user && (
-                <p className="text-sm text-gray-400 mt-4">You need to be signed in to accept the creator agreement</p>
+                <p className="text-sm text-muted-foreground mt-4">You need to be signed in to accept the creator agreement</p>
               )}
             </motion.div>
           </form>
