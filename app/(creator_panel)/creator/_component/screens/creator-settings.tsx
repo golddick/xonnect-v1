@@ -700,7 +700,7 @@ export default function CreatorSettings() {
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                       activeTab === tab.id
                         ? "bg-red-600 text-white"
-                        : "bg-black text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                        : "bg-card text-card-foreground hover:text-foreground hover:bg-muted/80"
                     }`}
                   >
                     <tab.icon className="w-4 h-4" />

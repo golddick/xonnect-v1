@@ -92,9 +92,9 @@ export default function LiveEventPage() {
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       <div className="flex-1 overflow-y-auto hidden-scrollbar flex flex-col">
-        <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border">
+        <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-md ">
           <div className="flex flex-col gap-4">
-            <div className="hidden lg:flex items-center p-4 justify-between w-full">
+            <div className="hidden border-b border-border lg:flex items-center p-4 justify-between w-full">
               <h1 className="text-2xl md:text-3xl font-bold text-foreground">Events</h1>
               <div className="flex items-center gap-2">
                 <ThemeToggle />
@@ -144,7 +144,7 @@ export default function LiveEventPage() {
                   />
                 </div>
 
-                <div className="hidden md:flex gap-2">
+                {/* <div className="hidden md:flex gap-2">
                   <button
                     onClick={() => setViewMode("grid")}
                     className={`p-2 rounded-lg transition-colors border ${
@@ -165,7 +165,7 @@ export default function LiveEventPage() {
                   >
                     <List className="w-4 h-4 text-foreground" />
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

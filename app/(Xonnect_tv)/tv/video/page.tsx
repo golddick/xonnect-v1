@@ -133,7 +133,7 @@ export default function VideoPage() {
                   />
                 </div>
 
-                <button
+                {/* <button
                   onClick={() => setViewMode("grid")}
                   className={`p-2 rounded-lg transition-colors border ${
                     viewMode === "grid"
@@ -152,7 +152,7 @@ export default function VideoPage() {
                   }`}
                 >
                   <List className="w-4 h-4" />
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

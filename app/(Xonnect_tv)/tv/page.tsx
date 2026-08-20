@@ -643,7 +643,7 @@ function TvNavigation({
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             <button
               onClick={() => setViewMode("grid")}
               className={`p-2 rounded-lg transition-colors border ${
@@ -664,7 +664,7 @@ function TvNavigation({
             >
               <List className="w-4 h-4 text-foreground" />
             </button>
-          </div>
+          </div> */}
 
           <ThemeToggle />
           <AvatarDropdownMenu />
@@ -898,15 +898,16 @@ export default function TvPage() {
   const hasAnyContent = Boolean(currentFeature || filteredLive.length > 0 || filteredVideo.length > 0)
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden hidden-scrollbar flex-col lg:flex-row">
-      <div className="flex-1 overflow-y-auto hidden-scrollbar flex flex-col p-2">
-        <TvNavigation 
+    <div className="flex h-screen bg-background overflow-hidden hidden-scrollbar flex-col ">
+      <TvNavigation 
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           viewMode={viewMode}
           setViewMode={setViewMode}
         />
 
+      <div className="flex-1 overflow-y-auto hidden-scrollbar flex flex-col p-2">
+       
         {!hasAnyContent ? (
           <div className="flex flex-1 items-center justify-center p-6 text-muted-foreground">
             No content available

@@ -16,7 +16,9 @@ export default function TvLayout({
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
       <div className="hidden lg:block lg:sticky lg:top-0 lg:self-start lg:h-screen">
-        <TvSidebar />
+        <TvSidebar
+         screen= "md"
+         />
       </div>
       <main className="flex-1 flex-col  ">
         <Header/>
