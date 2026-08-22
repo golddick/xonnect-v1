@@ -62,8 +62,7 @@ export default function CreatorSettings() {
   const [pendingAccountId, setPendingAccountId] = useState<string | null>(null)
 
   const [profileData, setProfileData] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     email: "",
     creatorName: "",
     bio: "",
@@ -178,8 +177,7 @@ export default function CreatorSettings() {
 
       setProfileData((prev) => ({
         ...prev,
-        firstName: profilePayload.profile?.firstName ?? prev.firstName,
-        lastName: profilePayload.profile?.lastName ?? prev.lastName,
+        fullName: profilePayload.profile?.fullName ?? prev.fullName,
         email: profilePayload.profile?.email ?? prev.email,
         creatorName: profilePayload.profile?.creatorName ?? prev.creatorName,
         bio: profilePayload.profile?.bio ?? prev.bio,
@@ -248,8 +246,7 @@ export default function CreatorSettings() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          firstName: profileData.firstName,
-          lastName: profileData.lastName,
+          fullName: profileData.fullName,
           creatorName: profileData.creatorName,
           bio: profileData.bio,
           website: profileData.website,
@@ -685,7 +682,7 @@ export default function CreatorSettings() {
         </div>
 
         <div className=" p-4 md:p-6">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl w-full mx-auto">
             {/* Settings Navigation */}
             <div className="bg-card border-none rounded-2xl p-6 mb-8">
               <div className="flex flex-wrap gap-2">
@@ -712,7 +709,7 @@ export default function CreatorSettings() {
 
             {/* Profile Settings */}
             {activeTab === "profile" && (
-              <div className="bg-card md:border md:border-border rounded-2xl md:p-6 space-y-6">
+              <div className="bg-card md:border md:border-border rounded-2xl p-4 md:p-6 space-y-6">
                 <div className="flex items-center gap-2 mb-6">
                   <User className="w-5 h-5 text-red-400" />
                   <h2 className="text-xl font-bold text-foreground">Profile Settings</h2>
@@ -724,7 +721,7 @@ export default function CreatorSettings() {
                     {profileData.avatarUrl ? (
                       <img src={profileData.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-white font-bold text-2xl">J</span>
+                      <span className="text-white font-bold text-2xl">X</span>
                     )}
                   </div>
                   <div>
@@ -753,29 +750,17 @@ export default function CreatorSettings() {
                 {/* Basic Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-muted-foreground mb-2">First Name</label>
+                    <label className="block text-sm font-medium text-muted-foreground mb-2">Full Name</label>
                     <input
                       type="text"
-                      name="firstName"
-                      value={profileData.firstName}
+                      name="fullName"
+                      value={profileData.fullName}
                       onChange={handleInputChange}
                       className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-muted-foreground mb-2">Last Name</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={profileData.lastName}
-                      onChange={handleInputChange}
-                      className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
-                    />
-                  </div>
-                </div>
-
-                <div>
                   <label className="block text-sm font-medium text-muted-foreground mb-2">Email Address</label>
                   <input
                     type="email"
@@ -785,6 +770,9 @@ export default function CreatorSettings() {
                     className="w-full bg-transparent border border-border rounded-xl px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
                   />
                 </div>
+                </div>
+
+                
 
                 <div>
                   <label className="block text-sm font-medium text-muted-foreground mb-2">Creator Name</label>

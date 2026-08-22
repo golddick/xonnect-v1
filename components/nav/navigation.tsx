@@ -60,7 +60,15 @@ const Navigation = () => {
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
             
-            {/* Show loading placeholder, Get Started, or AvatarDropdownMenu based on auth status */}
+         
+            <Link
+              href="/tv"
+              className="bg-black hover:bg-red-700 border border-red-600 text-white px-6 py-2 rounded-lg transition-colors"
+            >
+              Tv
+            </Link>
+
+               {/* Show loading placeholder, Get Started, or AvatarDropdownMenu based on auth status */}
             {status === "loading" ? (
               <div className="w-[100px] h-10 bg-muted/30 rounded-lg animate-pulse" />
             ) : status === "authenticated" ? (
@@ -74,12 +82,6 @@ const Navigation = () => {
               </Link>
             )}
             
-            <Link
-              href="/tv"
-              className="bg-black hover:bg-red-700 border border-red-600 text-white px-6 py-2 rounded-lg transition-colors"
-            >
-              Tv
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
