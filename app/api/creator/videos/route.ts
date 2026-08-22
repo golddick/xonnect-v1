@@ -103,9 +103,16 @@ export async function POST(request: NextRequest) {
         isPremium: body.isPremium ?? false,
         monetizationType: body.monetizationType ?? "free",
 
-        rent24Price: body.rent24Price ?? null,
-        rent48Price: body.rent48Price ?? null,
-        purchasePrice: body.purchasePrice ?? null,
+        // FIX: Convert price strings to numbers
+        rent24Price: body.rent24Price !== undefined && body.rent24Price !== null 
+          ? Number(body.rent24Price) 
+          : null,
+        rent48Price: body.rent48Price !== undefined && body.rent48Price !== null 
+          ? Number(body.rent48Price) 
+          : null,
+        purchasePrice: body.purchasePrice !== undefined && body.purchasePrice !== null 
+          ? Number(body.purchasePrice) 
+          : null,
 
         duration: body.duration ?? null,
 
