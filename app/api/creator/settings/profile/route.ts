@@ -33,8 +33,7 @@ export async function GET() {
       {
         profile: {
           email: profile.email,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
+          fullName: profile.fullName,
           creatorName: profile.creatorName,
           bio: profile.bio,
           website: profile.website,
@@ -77,8 +76,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ message: "Profile not found" }, { status: 404 })
     }
 
-    const firstName = typeof body.firstName === "string" ? body.firstName.trim() : undefined
-    const lastName = typeof body.lastName === "string" ? body.lastName.trim() : undefined
+    const fullName = typeof body.fullName === "string" ? body.fullName.trim() : undefined
     const creatorName = typeof body.creatorName === "string" ? body.creatorName.trim() : undefined
     const bio = typeof body.bio === "string" ? body.bio.trim() : undefined
     const website = typeof body.website === "string" ? body.website.trim() : undefined
@@ -94,8 +92,7 @@ export async function PUT(request: NextRequest) {
       : undefined
 
     const updateData: Record<string, unknown> = {
-      ...(firstName !== undefined && { firstName }),
-      ...(lastName !== undefined && { lastName }),
+      ...(fullName !== undefined && { fullName }),
       ...(creatorName !== undefined && { creatorName }),
       ...(bio !== undefined && { bio }),
       ...(website !== undefined && { website }),
@@ -104,10 +101,10 @@ export async function PUT(request: NextRequest) {
       ...(socialHandles !== undefined && { socialHandles }),
     }
 
-    if (firstName !== undefined || lastName !== undefined) {
-      const computedName = `${firstName ?? profile.firstName ?? ""} ${lastName ?? profile.lastName ?? ""}`.trim()
-      updateData.fullName = computedName || null
-    }
+    // if (firstName !== undefined || lastName !== undefined) {
+    //   const computedName = `${firstName ?? profile.firstName ?? ""} ${lastName ?? profile.lastName ?? ""}`.trim()
+    //   updateData.fullName = computedName || null
+    // }
 
     const updated = await prisma.profile.update({
       where: { email },
