@@ -204,14 +204,14 @@ export default function LocationSearchModal({
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-800">
+            <div className="flex items-center justify-between p-6 border-b border-border">
               <div>
                 <h2 className="text-2xl font-bold text-foreground">{modalTitle}</h2>
-                <p className="text-gray-400 text-sm mt-1">{modalDescription}</p>
+                <p className="text-muted-foreground text-sm mt-1">{modalDescription}</p>
               </div>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-foreground p-2 rounded-lg hover:bg-red-700 transition-colors"
+                className="text-muted-foreground hover:text-foreground p-2 rounded-lg hover:bg-red-700 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -220,7 +220,7 @@ export default function LocationSearchModal({
             {/* Content */}
             <div className="flex-1 overflow-hidden flex flex-col">
               {/* Search Input */}
-              <div className="p-6 border-b border-gray-800">
+              <div className="p-6 border-b border-border">
                 <div className="relative">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
                   <input
@@ -232,7 +232,7 @@ export default function LocationSearchModal({
                         ? "Search for city, region, or country..." 
                         : "Search for locations to add..."
                     }
-                    className="w-full bg-transparent border border-gray-700 rounded-xl pl-12 pr-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                    className="w-full bg-transparent border border-gray-700 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
                     autoFocus
                   />
                   {isLoading && (
