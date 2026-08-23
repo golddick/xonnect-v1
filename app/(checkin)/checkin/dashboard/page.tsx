@@ -237,6 +237,7 @@ export default function CheckInDashboard() {
       </header>
 
       <main className="mx-auto w-full space-y-6 px-4 py-6 sm:px-6 lg:px-8">
+
         {error && (
           <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-500">
             {error}
@@ -388,6 +389,7 @@ export default function CheckInDashboard() {
             )}
           </div>
         </section>
+        
       </main>
     </div>
   )

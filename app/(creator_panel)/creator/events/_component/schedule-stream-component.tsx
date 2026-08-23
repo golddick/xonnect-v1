@@ -165,47 +165,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
     }))
   }
 
-  // const handleThumbnailUpload = async (file: File) => {
-  //   if (!file.type.startsWith('image/')) {
-  //     toast.error("Please upload an image file")
-  //     return
-  //   }
-  //   if (file.size > 5 * 1024 * 1024) {
-  //     toast.error("Thumbnail image must be less than 5MB")
-  //     return
-  //   }
-
-  //   const reader = new FileReader()
-  //   reader.onload = (e) => {
-  //     setEventData(prev => ({ 
-  //       ...prev, 
-  //       thumbnailPreview: e.target?.result as string 
-  //     }))
-  //   }
-  //   reader.readAsDataURL(file)
-
-  //   setIsUploadingThumbnail(true)
-  //   setUploadProgress(prev => ({ ...prev, thumbnail: 10 }))
-
-  //   const result = await uploadFileRaw(file)
-
-  //   if (result.ok && result.url) {
-  //     setUploadProgress(prev => ({ ...prev, thumbnail: 100 }))
-  //     setEventData(prev => ({ 
-  //       ...prev, 
-  //       thumbnail: result.url as string
-  //     }))
-  //   } else {
-  //     toast.error(`Upload failed: ${result.message}`)
-  //     setEventData(prev => ({ 
-  //       ...prev, 
-  //       thumbnail: "",
-  //       thumbnailPreview: "" 
-  //     }))
-  //     setUploadProgress(prev => ({ ...prev, thumbnail: 0 }))
-  //   }
-  //   setIsUploadingThumbnail(false)
-  // }
+  
 
   const removeThumbnail = () => {
     setEventData(prev => ({ 
@@ -585,13 +545,13 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                 containerClassName="space-y-4 w-full"
                 previewClassName="shadow-lg border-2 border-dashed border-gray-700"
               />
-                  <label htmlFor="thumbnail-upload" className="cursor-pointer flex flex-col items-center">
-                    <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                  {/* <label htmlFor="thumbnail-upload" className="cursor-pointer flex flex-col items-center">
+                    <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-foreground text-sm">
                       {isUploadingThumbnail ? "Uploading..." : "Click to upload thumbnail image"}
                     </p>
                     <p className="text-gray-400 text-xs mt-1">Recommended: 1280x720px, max 5MB</p>
-                  </label>
+                  </label> */}
                 </div>
                 
                 {eventData.thumbnailPreview && (
@@ -755,7 +715,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                 onClick={() => setCurrentStep(2)}
                 className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg transition-colors"
               >
-                Continue to Schedule
+                Continue 
               </button>
             </div>
           )}
@@ -815,7 +775,7 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                   onChange={handleInputChange}
                   min="15"
                   max="480"
-                  className="w-full border border-border bg-transparent rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                  className="w-full border border-border bg-transparent rounded-xl px-4 py-3 text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
                 />
                 <p className="text-gray-500 text-xs mt-1">Minimum 15 minutes, maximum 8 hours</p>
               </div>
@@ -1078,10 +1038,10 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
 
                         <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
                           <div className="flex items-start gap-2">
-                            <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5" />
-                            <div className="text-yellow-400 text-sm">
+                            <AlertCircle className="w-4 h-4 text-yellow-500 mt-0.5" />
+                            <div className="text-yellow-500 text-sm">
                               <p className="font-medium">How Location Restriction Works</p>
-                              <ul className="mt-1 space-y-1 text-yellow-300">
+                              <ul className="mt-1 space-y-1 text-yellow-600">
                                 <li className="flex items-start gap-2">
                                   <span className="mt-1">•</span>
                                   <span>Locations are determined by viewer's IP address</span>

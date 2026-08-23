@@ -34,7 +34,6 @@ type CreateEventBody = {
   recordedVideoFileId?: string | null
   recordingEnabled?: boolean
   recordingStatus?: "disabled" | "pending" | "recording" | "processing" | "ready" | "failed"
-  recordingUrl?: string | null
   timezone?: string | null
   scheduledAt?: string | null
   durationMinutes?: number | null
@@ -160,7 +159,6 @@ export async function POST(request: NextRequest) {
         recordingEnabled: body.recordingEnabled ?? false,
         recordingStatus: body.recordingStatus ? body.recordingStatus.toUpperCase() : "DISABLED",
         recordingAssetId: null,
-        recordingUrl: body.recordingUrl?.trim() || null,
         recordingFileId: null,
         recordingStartedAt: null,
         recordingEndedAt: null,
