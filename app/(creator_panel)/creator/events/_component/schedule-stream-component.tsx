@@ -292,6 +292,8 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
         })) : [],
       }
 
+      console.log("Submitting event payload:", payload)
+
       const response = await fetch("/api/creator/events", {
         method: "POST",
         headers: {
@@ -537,12 +539,11 @@ export default function ScheduleEventComponent({ onClose }: ScheduleEventProps) 
                 }}
                 size={120}
                 rounded="lg"
-                label="Event Thumbnail"
                 uploadText="Click to upload thumbnail image"
                 noImageText="No thumbnail"
                 accept="image/*"
-                className="w-full"
-                containerClassName="space-y-4 w-full"
+                className="w-full flex justify-center items-center"
+                containerClassName="space-y-4 flex justify-center items-center w-full"
                 previewClassName="shadow-lg border-2 border-dashed border-gray-700"
               />
                   {/* <label htmlFor="thumbnail-upload" className="cursor-pointer flex flex-col items-center">

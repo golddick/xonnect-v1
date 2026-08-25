@@ -159,7 +159,6 @@ export async function POST(request: NextRequest) {
         recordingEnabled: body.recordingEnabled ?? false,
         recordingStatus: body.recordingStatus ? body.recordingStatus.toUpperCase() : "DISABLED",
         recordingAssetId: null,
-        recordingFileId: null,
         recordingStartedAt: null,
         recordingEndedAt: null,
         hasRecordedVideo: false,
@@ -190,6 +189,8 @@ export async function POST(request: NextRequest) {
         restrictedLocations: true,
       },
     })
+
+    console.log("Created creator event:", creatorEvent)
 
     return NextResponse.json(
       {

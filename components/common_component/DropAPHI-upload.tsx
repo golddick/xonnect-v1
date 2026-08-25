@@ -37,7 +37,7 @@ export default function UploadFile({
   errorClassName = "mt-1 text-xs text-red-500",
   containerClassName = "space-y-3",
   previewClassName = "relative overflow-hidden border border-border bg-background",
-  labelClassName = "block text-sm font-medium",
+  labelClassName = "block text-sm text-foreground font-medium",
   inputClassName = "mt-1 w-full text-sm text-muted-foreground",
   hintClassName = "text-xs text-muted-foreground",
   accept = "image/*",
@@ -178,11 +178,11 @@ export default function UploadFile({
       </div>
 
       {/* Hint Text */}
-      {showHint && (
+      {/* {showHint && (
         <p className={hintClassName}>
           {isUploading ? uploadingText : uploadText}
         </p>
-      )}
+      )} */}
     </div>
   )
 }
