@@ -1,7 +1,7 @@
 import React from 'react'
 import VideoAnalytics from '../../../_component/screens/creator-video-analytics'
 
-export const VideoAnalyticsPage = () => {
+export default function VideoAnalyticsPage() {
   return (
     <div>
       <VideoAnalytics />

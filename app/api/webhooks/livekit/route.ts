@@ -5,7 +5,7 @@ import { WebhookReceiver, EgressStatus } from "livekit-server-sdk"
 import { sendEventLiveNotificationEmail } from "@/lib/auth/notifications"
 import { startEventEgress, buildEventRoomName } from "@/lib/livekit"
 
-const db = prisma 
+const db = prisma as any
 
 function getLiveKitReceiver() {
   const apiKey = (process.env.LIVEKIT_API_KEY ?? process.env.LIVEKIT_WEBHOOK_API_KEY)?.trim()

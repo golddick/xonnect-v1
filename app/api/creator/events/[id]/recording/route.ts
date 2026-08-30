@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { Role } from "@/lib/generated/prisma"
-import { stopEventEgress, deleteEventRoom, buildEventRoomName } from "@/lib/livekit"
+import { deleteRecordingObject, isStorageKey } from "@/lib/supabase-storage"
 
 const db = prisma as any
 
@@ -28,7 +28,10 @@ async function getCreatorIdOrResponse() {
   return { creatorId: creator.id }
 }
 
-export async function POST(
+// Deletes the saved replay for an event: removes the MP4 from the private Supabase
+// bucket (only when the stored value is a storage key — legacy uploadthing URLs are
+// left alone) and clears the recording fields so the replay is no longer served.
+export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -39,52 +42,34 @@ export async function POST(
     const { id } = await params
     const event = await db.creatorEvent.findFirst({
       where: { id, creatorId: creatorResult.creatorId },
-      select: { id: true, status: true, recordingAssetId: true, livekitRoomName: true },
+      select: { id: true, recordedVideoUrl: true },
     })
 
     if (!event) {
       return NextResponse.json({ message: "Event not found" }, { status: 404 })
     }
 
-    if (event.status !== "LIVE" && event.status !== "PAUSED") {
-      return NextResponse.json(
-        { message: "Only live or paused events can be ended" },
-        { status: 409 }
-      )
+    // Best-effort object removal. A storage failure shouldn't block clearing the
+    // fields — otherwise a half-deleted object would keep the replay "stuck".
+    if (isStorageKey(event.recordedVideoUrl)) {
+      await deleteRecordingObject(event.recordedVideoUrl)
     }
 
     const updated = await db.creatorEvent.update({
       where: { id: event.id },
       data: {
-        status: "ENDED",
-        endedAt: new Date(),
+        recordedVideoUrl: null,
+        recordedVideoFileId: null,
+        recordingAssetId: null,
+        hasRecordedVideo: false,
+        recordingStatus: "DISABLED",
       },
     })
 
-    // Stop the server-side recording so the MP4 finalizes right away — the
-    // LiveKit egress_ended webhook then fills in recordedVideoUrl and marks the
-    // replay READY. Waiting for the room to empty on its own is unreliable when
-    // viewers linger, so we stop egress explicitly and then close the room
-    // (which also disconnects viewers). Both are best-effort: a LiveKit failure
-    // here must not fail ending the event in our own DB.
-    if (event.recordingAssetId) {
-      try {
-        await stopEventEgress(event.recordingAssetId)
-      } catch (err) {
-        console.warn("Failed to stop egress on end-live:", err)
-      }
-    }
-
-    try {
-      await deleteEventRoom(event.livekitRoomName ?? buildEventRoomName(event.id))
-    } catch (err) {
-      console.warn("Failed to delete LiveKit room on end-live:", err)
-    }
-
     return NextResponse.json({ event: updated }, { status: 200 })
   } catch (error) {
-    console.error("End live event error:", error)
-    const message = error instanceof Error ? error.message : "Failed to end live event"
+    console.error("Delete recording error:", error)
+    const message = error instanceof Error ? error.message : "Failed to delete recording"
     return NextResponse.json({ message }, { status: 500 })
   }
 }

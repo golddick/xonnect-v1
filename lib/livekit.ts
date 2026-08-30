@@ -5,6 +5,7 @@ import {
   EncodedFileOutput,
   EncodedFileType,
   S3Upload,
+  RoomServiceClient,
 } from "livekit-server-sdk"
 
 export type LiveKitConfig = {
@@ -134,4 +135,13 @@ export async function stopEventEgress(egressId: string): Promise<void> {
   const config = getLiveKitConfig()
   const client = new EgressClient(config.apiUrl, config.apiKey, config.apiSecret)
   await client.stopEgress(egressId)
+}
+
+// Closes the LiveKit room, which disconnects any lingering viewers and (as a
+// belt-and-suspenders alongside an explicit stopEventEgress) triggers egress to
+// finalize + a room_finished webhook. Best-effort: callers wrap in try/catch.
+export async function deleteEventRoom(roomName: string): Promise<void> {
+  const config = getLiveKitConfig()
+  const client = new RoomServiceClient(config.apiUrl, config.apiKey, config.apiSecret)
+  await client.deleteRoom(roomName)
 }
