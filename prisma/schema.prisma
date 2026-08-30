@@ -804,7 +804,7 @@ model CreatorEventCheckInScan {
   attendeeName  String?                       @map("attendee_name")
   attendeeEmail String?                       @map("attendee_email")
   gateName      String?                       @map("gate_name")
-  scannedCode   String?                       @unique @map("scanned_code")
+  scannedCode   String?                       @map("scanned_code")
   status        CreatorEventCheckInScanStatus @default(SUCCESS)
   notes         String?
   scannedAt     DateTime                      @default(now()) @map("scanned_at")

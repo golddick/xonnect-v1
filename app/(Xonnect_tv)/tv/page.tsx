@@ -685,6 +685,7 @@ export default function TvPage() {
   const [payload, setPayload] = useState<any>(null)
   const [goLiveOpen, setGoLiveOpen] = useState(false)
   const [goLiveTitle, setGoLiveTitle] = useState("")
+  const [goLiveRecordingEnabled, setGoLiveRecordingEnabled] = useState(true)
   const [categories, setCategories] = useState<Array<{ id: string; name: string; slug: string }>>([])
   const [selectedCategory, setSelectedCategory] = useState<string>("")
   const [goLiveLoading, setGoLiveLoading] = useState(false)
@@ -800,6 +801,7 @@ export default function TvPage() {
       const payload = {
         title: goLiveTitle.trim(),
         category: selectedCategory || "music",
+        recordingEnabled: goLiveRecordingEnabled,
       }
 
       const createResponse = await fetch("/api/creator/events/go-live", {
@@ -1103,6 +1105,21 @@ export default function TvPage() {
                     ))}
                   </select>
                 </div>
+
+                <label className="flex items-start gap-3 rounded-2xl border border-border bg-background px-4 py-3">
+                  <input
+                    type="checkbox"
+                    checked={goLiveRecordingEnabled}
+                    onChange={(e) => setGoLiveRecordingEnabled(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 accent-red-600"
+                  />
+                  <span className="text-sm">
+                    <span className="block font-medium text-foreground">Record this stream</span>
+                    <span className="block text-muted-foreground">
+                      Save a replay automatically. Works for both browser and OBS streams.
+                    </span>
+                  </span>
+                </label>
               </>
             ) : (
               <div className="space-y-3">

@@ -165,7 +165,7 @@ export async function GET(
     })
 
     const totalTicketRevenue = ticketSales.reduce((sum: number, ticket: TicketSaleRow) => sum + ticket.revenue, 0)
-    const totalSales = ticketSales.reduce((sum: number, ticket: TicketSaleRow) => sum + ticket.completedSales, 0)
+    const totalSales = ticketSales.reduce((sum: number, ticket: TicketSaleRow) => sum + ticket.soldCount, 0)
     const totalRefunds = ticketSales.reduce((sum: number, ticket: TicketSaleRow) => sum + ticket.refundedSales, 0)
 
     const checkInTotals = {

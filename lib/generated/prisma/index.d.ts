@@ -43293,7 +43293,6 @@ export namespace Prisma {
 
   export type CreatorEventCheckInScanWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    scannedCode?: string
     AND?: CreatorEventCheckInScanWhereInput | CreatorEventCheckInScanWhereInput[]
     OR?: CreatorEventCheckInScanWhereInput[]
     NOT?: CreatorEventCheckInScanWhereInput | CreatorEventCheckInScanWhereInput[]
@@ -43303,13 +43302,14 @@ export namespace Prisma {
     attendeeName?: StringNullableFilter<"CreatorEventCheckInScan"> | string | null
     attendeeEmail?: StringNullableFilter<"CreatorEventCheckInScan"> | string | null
     gateName?: StringNullableFilter<"CreatorEventCheckInScan"> | string | null
+    scannedCode?: StringNullableFilter<"CreatorEventCheckInScan"> | string | null
     status?: EnumCreatorEventCheckInScanStatusFilter<"CreatorEventCheckInScan"> | $Enums.CreatorEventCheckInScanStatus
     notes?: StringNullableFilter<"CreatorEventCheckInScan"> | string | null
     scannedAt?: DateTimeFilter<"CreatorEventCheckInScan"> | Date | string
     event?: XOR<CreatorEventScalarRelationFilter, CreatorEventWhereInput>
     checkInUser?: XOR<CreatorEventCheckInUserNullableScalarRelationFilter, CreatorEventCheckInUserWhereInput> | null
     ticketPurchase?: XOR<CreatorEventTicketPurchaseNullableScalarRelationFilter, CreatorEventTicketPurchaseWhereInput> | null
-  }, "id" | "scannedCode">
+  }, "id">
 
   export type CreatorEventCheckInScanOrderByWithAggregationInput = {
     id?: SortOrder

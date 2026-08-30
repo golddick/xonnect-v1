@@ -37,6 +37,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const title = String((body.title ?? "")).trim()
     const category = String((body.category ?? "")).trim() || "music"
+    // Server-side recording is default-on; the go-live form can opt out.
+    const recordingEnabled = body.recordingEnabled === undefined ? true : Boolean(body.recordingEnabled)
 
     if (!title) return NextResponse.json({ message: "Title is required" }, { status: 400 })
 
@@ -49,6 +51,8 @@ export async function POST(request: NextRequest) {
         status: "LIVE",
         scheduledAt: new Date(),
         thumbnailUrl: creatorResult.avatarUrl ?? null,
+        recordingEnabled,
+        recordingStatus: recordingEnabled ? "PENDING" : "DISABLED",
       },
     })
 

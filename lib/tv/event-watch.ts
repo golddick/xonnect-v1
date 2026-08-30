@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { CreatorEventTicket, Role } from "@/lib/generated/prisma"
+import { createRecordingSignedUrl, isStorageKey } from "@/lib/supabase-storage"
 
 const db = prisma as any
 
@@ -29,6 +30,8 @@ export type EventWatchData = {
   thumbnail: string | null
   thumbnailVideoUrl: string | null
   recordedVideoUrl?: string | null
+  recordingStatus?: string | null
+  hasRecordedVideo?: boolean
   scheduledAt: string | null
   durationMinutes: number
   maxViewers: number | null
@@ -111,6 +114,8 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
       thumbnailUrl: true,
       thumbnailVideoUrl: true,
       recordedVideoUrl: true,
+      recordingStatus: true,
+      hasRecordedVideo: true,
       scheduledAt: true,
       durationMinutes: true,
       maxViewers: true,
@@ -295,9 +300,17 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
   }
 
   if (canViewRecordings) {
-    eventPayload.recordedVideoUrl = event.recordedVideoUrl
-
+    const rawRecording = (event.recordedVideoUrl as string | null) ?? null
+    // Sign storage keys written by egress; pass legacy absolute URLs through untouched.
+    eventPayload.recordedVideoUrl = isStorageKey(rawRecording)
+      ? await createRecordingSignedUrl(rawRecording)
+      : rawRecording
   }
+
+  // Recording lifecycle is always surfaced so the player can show a "processing"
+  // state in the window between the stream ending and the recording being ready.
+  eventPayload.recordingStatus = event.recordingStatus ?? null
+  eventPayload.hasRecordedVideo = Boolean(event.hasRecordedVideo)
 
   return {
     event: eventPayload,

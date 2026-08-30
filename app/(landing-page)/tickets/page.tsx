@@ -151,7 +151,7 @@ export default function TicketsPage() {
 
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          {/* <div className="flex flex-wrap gap-2">
             {categories.map((category) => {
               const active = activeCategory === category
 
@@ -170,7 +170,7 @@ export default function TicketsPage() {
                 </button>
               )
             })}
-          </div>
+          </div> */}
         </div>
       </section>
 
@@ -218,9 +218,7 @@ export default function TicketsPage() {
                       <Badge variant="secondary" className="rounded-full bg-background/90 text-foreground">
                         {formatEventType(event.eventType)}
                       </Badge>
-                      {event.isHybrid && (
-                        <Badge className="rounded-full bg-primary text-primary-foreground">Hybrid</Badge>
-                      )}
+                      
                     </div>
 
                     <div className="absolute bottom-3 right-3">
@@ -233,14 +231,9 @@ export default function TicketsPage() {
                   <div className="flex flex-1 flex-col gap-4 p-4">
                     <div className="space-y-2">
                       <div className="flex items-start justify-between gap-3">
-                        <h2 className="line-clamp-2 text-base font-semibold">{event.title}</h2>
-                        <Badge variant="outline" className="shrink-0 rounded-full">
-                          {event.category}
-                        </Badge>
+                        <h2 className="line-clamp-2 Capitalize text-base font-semibold">{event.title}</h2>
+                      
                       </div>
-                      <p className="line-clamp-2 text-sm text-muted-foreground">
-                        {event.description ?? "Event details and ticket options."}
-                      </p>
                     </div>
 
                     <div className="grid gap-2 text-sm text-muted-foreground">

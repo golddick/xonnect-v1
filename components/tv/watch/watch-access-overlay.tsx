@@ -97,9 +97,12 @@ export default function WatchAccessOverlay({
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/80 px-3 py-4 sm:px-4 sm:py-6 backdrop-blur-sm">
       <div className="w-full max-w-[min(100%,32rem)] max-h-[min(100vh,44rem)] overflow-y-auto rounded-3xl border border-border/60 bg-background/95 p-4 shadow-2xl sm:p-5 md:p-6 space-y-4 overscroll-contain">
         {/* Header */}
-        <div className="flex items-start gap-3 sm:items-center">
-          <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-between rounded-full bg-red-600/15 text-red-500">
+        <div className="flex flex-col items-start gap-3 sm:items-center">
+          <div className="flex items-center justify-between gap-3 w-full">
+            
+            <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-between rounded-full bg-red-600/15 text-red-500">
             <Lock className="h-4 w-4 sm:h-5 sm:w-5" />
+          </div>
 
              {onDismiss ? (
             <button
@@ -112,6 +115,7 @@ export default function WatchAccessOverlay({
             </button>
           ) : null}
           </div>
+        
           <div className="min-w-0 flex-1 hidden lg:block">
             <p className="text-sm font-semibold text-foreground leading-tight ">{title}</p>
             <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{description}</p>
@@ -121,9 +125,6 @@ export default function WatchAccessOverlay({
 
         {!showAccessCodeInput && (
           <div className="flex items-center justify-between gap-2">
-            <div className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-              Locked
-            </div>
             <button
               type="button"
               onClick={() => setShowCodeForm(true)}
@@ -136,7 +137,7 @@ export default function WatchAccessOverlay({
 
         {/* Access Code Input */}
         {shouldShowAccessCodeInput ? (
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+          <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-end">
             <label className="space-y-1.5 text-sm w-full">
               <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">
                 Access code

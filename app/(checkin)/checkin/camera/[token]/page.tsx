@@ -6,18 +6,32 @@ import { BrowserQRCodeReader } from "@zxing/browser"
 import { toast } from "sonner"
 import {
   AlertTriangle,
-  Camera,
   CheckCircle2,
   Loader2,
   RefreshCw,
+  Ticket,
+  User,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import {
   loadCameraSession,
+  lookupCheckInTicket,
   sendCameraSessionAction,
+  submitCheckIn,
+  type CheckInSubmitResult,
+  type CheckInTicketLookup,
 } from "@/lib/checkin-camera-client"
+import Logo from "@/components/nav/logo"
 
 const ICE_SERVERS: RTCIceServer[] = [{ urls: "stun:stun.l.google.com:19302" }]
 
@@ -31,6 +45,23 @@ function parseSignalPayload(payload: string) {
   }
 }
 
+function createPeerId() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID()
+  }
+  return `peer-${Math.random().toString(36).slice(2)}-${Date.now().toString(36)}`
+}
+
+function formatTime(value: string | null | undefined) {
+  if (!value) return ""
+  return new Date(value).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+}
+
+type PendingTicket = {
+  code: string
+  lookup: CheckInTicketLookup
+}
+
 export default function CameraTokenPage() {
   const params = useParams<{ token: string }>()
   const token = params.token
@@ -41,6 +72,8 @@ export default function CameraTokenPage() {
   const pollTimerRef = useRef<number | null>(null)
   const lastSignalAtRef = useRef<string | null>(null)
   const activeRef = useRef(true)
+  const peerIdRef = useRef<string>("")
+  if (!peerIdRef.current) peerIdRef.current = createPeerId()
 
   const [status, setStatus] = useState<CameraStatus>("idle")
   const [error, setError] = useState("")
@@ -50,15 +83,19 @@ export default function CameraTokenPage() {
   const [sessionTitle, setSessionTitle] = useState("")
   const [connectedAt, setConnectedAt] = useState<string | null>(null)
   const [cameraReady, setCameraReady] = useState(false)
-  const [scanStatus, setScanStatus] = useState<"idle" | "scanning" | "found" | "error">("idle")
-  const [scannedCode, setScannedCode] = useState<string | null>(null)
-  const [scanError, setScanError] = useState<string | null>(null)
+  const [scanStatus, setScanStatus] = useState<"idle" | "scanning" | "looking">("idle")
+
+  // Two-step review → confirm flow.
+  const [pending, setPending] = useState<PendingTicket | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitResult, setSubmitResult] = useState<CheckInSubmitResult | null>(null)
 
   const canStart = useMemo(() => status === "idle" || status === "error", [status])
 
   const scanControlsRef = useRef<{ stop: () => void } | null>(null)
-  const lastScannedRef = useRef<string | null>(null)
-  const inFlightScansRef = useRef<Set<string>>(new Set())
+  // True while a lookup is in flight or the review modal is open, so the
+  // scanner callback stops firing new detections until the operator re-arms it.
+  const processingRef = useRef(false)
   const scanCooldownRef = useRef(0)
 
   const stopScanner = () => {
@@ -96,8 +133,9 @@ export default function CameraTokenPage() {
     }
 
     setCameraReady(false)
-    setScannedCode(null)
-    setScanError(null)
+    processingRef.current = false
+    setPending(null)
+    setSubmitResult(null)
   }
 
   const disconnect = async (nextStatus: CameraStatus = "completed") => {
@@ -107,7 +145,7 @@ export default function CameraTokenPage() {
       await sendCameraSessionAction(token, "signal", {
         sender: "phone",
         type: nextStatus === "completed" ? "completed" : "revoked",
-        payload: { reason: nextStatus },
+        payload: { peerId: peerIdRef.current, reason: nextStatus },
       })
     } catch {
       // Best effort.
@@ -115,52 +153,59 @@ export default function CameraTokenPage() {
   }
 
   const handleDetectedCode = async (code: string) => {
+    if (processingRef.current) return
+
     const now = Date.now()
-    const sameCodeRecently = lastScannedRef.current === code && now - scanCooldownRef.current < 1500
-    if (sameCodeRecently || inFlightScansRef.current.has(code)) return
+    if (now - scanCooldownRef.current < 1200) return
 
-    inFlightScansRef.current.add(code)
-    lastScannedRef.current = code
+    processingRef.current = true
     scanCooldownRef.current = now
-
-    setScannedCode(code)
-    setScanStatus("found")
-    setScanError(null)
+    setScanStatus("looking")
 
     try {
-      const response = await fetch("/api/checkin/scan", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ code }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message ?? "Failed to scan ticket")
-      }
-
-      if (data.status !== "success" && data.status !== "already") {
-        throw new Error(data.message ?? "Ticket scan failed")
-      }
-
-      setError("")
-      setScanError(null)
-      setScanStatus("found")
-
-      toast.success(data.message || "Ticket checked in successfully", {
-        duration: 2200,
-      })
+      const lookup = await lookupCheckInTicket(token, code)
+      setSubmitResult(null)
+      setPending({ code, lookup })
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to scan ticket"
-      setScanError(message)
-      setScanStatus("error")
+      const message = err instanceof Error ? err.message : "Failed to look up ticket"
       toast.error(message)
+      // Allow another attempt since nothing is on screen.
+      processingRef.current = false
     } finally {
-      inFlightScansRef.current.delete(code)
+      setScanStatus((current) => (current === "looking" ? "scanning" : current))
     }
+  }
+
+  const handleConfirmCheckIn = async () => {
+    if (!pending) return
+
+    setSubmitting(true)
+    try {
+      const result = await submitCheckIn(token, pending.code)
+      setSubmitResult(result)
+
+      if (result.status === "success") {
+        toast.success(result.message || "Ticket checked in")
+      } else if (result.status === "already") {
+        toast(result.message || "Ticket already checked in")
+      } else {
+        toast.error(result.message || "Ticket not valid")
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to check in ticket"
+      toast.error(message)
+      setSubmitResult({ status: "invalid", message })
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const handleScanNext = () => {
+    setPending(null)
+    setSubmitResult(null)
+    // Cooldown so the same code in view does not instantly re-open the modal.
+    scanCooldownRef.current = Date.now()
+    processingRef.current = false
   }
 
   const startScanner = async () => {
@@ -173,10 +218,10 @@ export default function CameraTokenPage() {
 
       scanControlsRef.current = await codeReader.decodeFromVideoElement(
         localVideoRef.current,
-        (result, error) => {
+        (result, decodeError) => {
           if (!result) {
-            if (error && (error as Error).name !== "NotFoundException") {
-              console.warn("QR scan warning:", error)
+            if (decodeError && (decodeError as Error).name !== "NotFoundException") {
+              console.warn("QR scan warning:", decodeError)
             }
             return
           }
@@ -189,8 +234,8 @@ export default function CameraTokenPage() {
       )
     } catch (err) {
       const message = err instanceof Error ? err.message : "QR code scanning is not supported in this browser."
-      setScanError(message)
-      setScanStatus("error")
+      setError(message)
+      setScanStatus("idle")
     }
   }
 
@@ -250,11 +295,15 @@ export default function CameraTokenPage() {
         for (const signal of data.signals) {
           lastSignalAtRef.current = signal.createdAt
           const payload = parseSignalPayload(signal.payload)
-
           if (!payload) continue
 
+          // Only react to answers/candidates the operator addressed to THIS phone.
+          if (signal.sender !== "operator" || payload.peerId !== peerIdRef.current) continue
+
           if (signal.type === "answer" && peerConnectionRef.current) {
-            await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(payload))
+            await peerConnectionRef.current.setRemoteDescription(
+              new RTCSessionDescription({ type: payload.type, sdp: payload.sdp })
+            )
           }
 
           if (signal.type === "candidate" && peerConnectionRef.current && payload.candidate) {
@@ -289,7 +338,7 @@ export default function CameraTokenPage() {
       setSessionTitle(session.session.event.title)
       setSessionLabel(`${session.session.operator.fullName} · ${session.session.operator.gateName}`)
 
-      if (session.session.status !== "ACTIVE" && session.session.status !== "OPENED") {
+      if (session.session.status !== "ACTIVE" && session.session.status !== "OPENED" && session.session.status !== "CONNECTED") {
         throw new Error("This camera session is no longer active")
       }
 
@@ -309,7 +358,7 @@ export default function CameraTokenPage() {
         localVideoRef.current.srcObject = stream
       }
       setCameraReady(true)
-      startScanner()
+      void startScanner()
 
       const peerConnection = new RTCPeerConnection({ iceServers: ICE_SERVERS })
       peerConnectionRef.current = peerConnection
@@ -323,7 +372,7 @@ export default function CameraTokenPage() {
           await sendCameraSessionAction(token, "signal", {
             sender: "phone",
             type: "candidate",
-            payload: event.candidate.toJSON(),
+            payload: { peerId: peerIdRef.current, ...event.candidate.toJSON() },
           })
         }
       }
@@ -348,7 +397,12 @@ export default function CameraTokenPage() {
       })
       await peerConnection.setLocalDescription(offer)
 
-
+      // Publish the offer so the operator can answer this specific phone.
+      await sendCameraSessionAction(token, "signal", {
+        sender: "phone",
+        type: "offer",
+        payload: { peerId: peerIdRef.current, type: offer.type, sdp: offer.sdp },
+      })
 
       lastSignalAtRef.current = new Date().toISOString()
       setStatus("connecting")
@@ -378,14 +432,52 @@ export default function CameraTokenPage() {
     }
   }, [])
 
+  // Derive what the review/confirm modal should show.
+  const dialogOpen = pending !== null
+  const lookupStatus = pending?.lookup.status
+  const resultStatus = submitResult?.status
+
+  const modalTone: "ok" | "already" | "invalid" | "success" = resultStatus
+    ? resultStatus === "success"
+      ? "success"
+      : resultStatus === "already"
+      ? "already"
+      : "invalid"
+    : lookupStatus === "ok"
+    ? "ok"
+    : lookupStatus === "already"
+    ? "already"
+    : "invalid"
+
+  const attendeeName = submitResult?.attendeeName ?? pending?.lookup.attendeeName ?? "Unknown attendee"
+  const ticketType = submitResult?.ticketType ?? pending?.lookup.ticketType ?? "Ticket"
+  const ticketCode = submitResult?.ticketCode ?? pending?.lookup.ticketCode ?? pending?.code ?? ""
+
+  const toneStyles: Record<typeof modalTone, string> = {
+    ok: "border-primary/30 bg-primary/10 text-primary",
+    success: "border-emerald-500/30 bg-emerald-500/10 text-emerald-600",
+    already: "border-amber-500/30 bg-amber-500/10 text-amber-600",
+    invalid: "border-red-500/30 bg-red-500/10 text-red-600",
+  }
+
+  const toneLabel: Record<typeof modalTone, string> = {
+    ok: "Valid ticket",
+    success: "Checked in",
+    already: "Already checked in",
+    invalid: "Not valid",
+  }
+
+  const showConfirmButton = !submitResult && lookupStatus === "ok"
+  const isInvalidReview = !submitResult && lookupStatus === "invalid"
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-4 py-8 sm:px-6">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Camera className="h-7 w-7" />
+          <div className="mx-auto mb-4 flex  items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Logo />
           </div>
-          <h1 className="text-2xl font-semibold">{sessionTitle || "Check-in camera"}</h1>
+          <h1 className="text-2xl font-semibold">{sessionTitle || "Check in camera"}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             {sessionLabel || "No session loaded"}
           </p>
@@ -398,7 +490,7 @@ export default function CameraTokenPage() {
             </Badge>
             {expiresAt && (
               <span className="text-xs text-muted-foreground">
-                Expires {new Date(expiresAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
+                Expires {formatTime(expiresAt)}
               </span>
             )}
           </div>
@@ -425,17 +517,22 @@ export default function CameraTokenPage() {
             </div>
           )}
 
-          {scanStatus !== "idle" && (
-            <div className="rounded-lg border border-slate-300/80 bg-slate-50 p-3 text-sm text-slate-700">
-              {scanStatus === "scanning" && <p>Scanning for QR codes… hold the ticket in front of the camera.</p>}
-              {scanStatus === "found" && scannedCode && <p>Ticket scanned: <span className="font-medium">{scannedCode}</span></p>}
-              {scanStatus === "error" && <p className="text-red-600">{scanError || "Unable to read QR code. Try again."}</p>}
+          {cameraReady && scanStatus !== "idle" && (
+            <div className="flex w-full items-center gap-2 rounded-lg border border-border bg-background p-3 text-sm text-muted-foreground">
+              {scanStatus === "looking" ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Reading ticket…</span>
+                </>
+              ) : (
+                <span>Point the camera at a ticket QR code to check someone in.</span>
+              )}
             </div>
           )}
 
           {connectedAt && (
             <p className="text-xs text-muted-foreground">
-              Connected at {new Date(connectedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
+              Connected at {formatTime(connectedAt)}
             </p>
           )}
 
@@ -447,7 +544,7 @@ export default function CameraTokenPage() {
                   Starting
                 </>
               ) : status === "connecting" ? (
-                cameraReady ? "Scanning QR code" : "Connecting camera"
+                cameraReady ? "Scanning tickets" : "Connecting camera"
               ) : status === "connected" ? (
                 "Camera active"
               ) : (
@@ -462,9 +559,90 @@ export default function CameraTokenPage() {
         </div>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
-          Hold the ticket QR code in front of the camera to complete check-in.
+          Hold a ticket QR code in front of the camera. You will confirm each check-in before it is recorded.
         </p>
       </main>
+
+      <Dialog
+        open={dialogOpen}
+        onOpenChange={(open) => {
+          if (!open && !submitting) handleScanNext()
+        }}
+      >
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>
+              {submitResult
+                ? resultStatus === "success"
+                  ? "Checked in"
+                  : resultStatus === "already"
+                  ? "Already checked in"
+                  : "Not checked in"
+                : isInvalidReview
+                ? "Ticket not found"
+                : "Confirm check-in"}
+            </DialogTitle>
+            <DialogDescription>
+              {submitResult
+                ? submitResult.message ?? ""
+                : isInvalidReview
+                ? "This QR code is not a valid ticket for this event."
+                : "Review the ticket details, then confirm the check-in."}
+            </DialogDescription>
+          </DialogHeader>
+
+          {!isInvalidReview && (
+            <div className="space-y-3">
+              <div className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm ${toneStyles[modalTone]}`}>
+                {modalTone === "ok" || modalTone === "success" ? (
+                  <CheckCircle2 className="h-4 w-4 shrink-0" />
+                ) : (
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
+                )}
+                <span className="font-medium">{toneLabel[modalTone]}</span>
+              </div>
+
+              <div className="space-y-2 rounded-lg border border-border bg-background p-3 text-sm">
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium">{attendeeName}</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Ticket className="h-4 w-4" />
+                  <span>{ticketType}</span>
+                </div>
+                {ticketCode && (
+                  <p className="break-all font-mono text-xs text-muted-foreground">{ticketCode}</p>
+                )}
+                {(submitResult?.status === "already" || (!submitResult && lookupStatus === "already")) &&
+                  pending?.lookup.checkedInAt && (
+                    <p className="text-xs text-amber-600">
+                      Checked in at {formatTime(pending.lookup.checkedInAt)}
+                    </p>
+                  )}
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="gap-2 sm:gap-2">
+            {showConfirmButton && (
+              <Button onClick={() => void handleConfirmCheckIn()} disabled={submitting}>
+                {submitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Checking in
+                  </>
+                ) : (
+                  "Check in"
+                )}
+              </Button>
+            )}
+            <Button variant={showConfirmButton ? "outline" : "default"} onClick={handleScanNext} disabled={submitting}>
+              Scan next
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

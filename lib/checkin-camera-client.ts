@@ -79,7 +79,7 @@ export async function sendCameraSessionAction(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-    }, 
+    },
     body: JSON.stringify({
       action,
       ...body,
@@ -87,4 +87,65 @@ export async function sendCameraSessionAction(
   })
 
   return handleJsonResponse(response)
+}
+
+export type CheckInTicketLookup = {
+  status: "ok" | "already" | "invalid"
+  message?: string
+  ticketCode?: string
+  attendeeName?: string | null
+  attendeeEmail?: string | null
+  ticketType?: string | null
+  access?: string | null
+  alreadyCheckedIn?: boolean
+  checkedInAt?: string | null
+}
+
+export type CheckInSubmitResult = {
+  status: "success" | "already" | "invalid"
+  message?: string
+  attendeeName?: string | null
+  attendeeEmail?: string | null
+  ticketCode?: string
+  ticketType?: string | null
+  access?: string | null
+}
+
+/**
+ * Read-only ticket lookup authorized by a camera-session token. Used by the
+ * paired phone to preview ticket details before confirming a check-in.
+ */
+export async function lookupCheckInTicket(cameraToken: string, code: string) {
+  const response = await fetch("/api/checkin/lookup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ code, cameraToken }),
+  })
+
+  return handleJsonResponse<CheckInTicketLookup>(response)
+}
+
+/**
+ * Confirm a check-in from the paired phone, authorized by the camera-session token.
+ */
+export async function submitCheckIn(cameraToken: string, code: string) {
+  const response = await fetch("/api/checkin/scan", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ code, cameraToken }),
+  })
+
+  const data = (await response.json()) as CheckInSubmitResult & { message?: string }
+
+  // Business outcomes (already checked in / invalid) come back as non-2xx but
+  // carry a usable status, so only throw for unexpected transport failures.
+  if (!response.ok && data.status !== "already" && data.status !== "invalid") {
+    throw new Error(data.message ?? "Failed to check in ticket")
+  }
+
+  return data
 }

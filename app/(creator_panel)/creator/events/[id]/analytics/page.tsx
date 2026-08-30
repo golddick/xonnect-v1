@@ -277,7 +277,7 @@ export default function EventAnalyticsPage() {
         </div>
 
         <Card className="bg-card border border-border rounded-2xl">
-          <CardHeader className="w-full  justify-between items-center">
+          <CardHeader className="w-full flex justify-between items-center">
             <CardTitle className="text-foreground">Key Configuration</CardTitle>
             <button
             type="button"

@@ -19,8 +19,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import CameraSessionPanel from "./_components/camera-session-panel"
-import { sendCameraSessionAction } from "@/lib/checkin-camera-client"
 import LoadingSplash from "@/components/splash_screen/loading-splash"
+import Logo from "@/components/nav/logo"
 
 type DashboardResponse = {
   user: {
@@ -96,7 +96,6 @@ export default function CheckInDashboard() {
   const [ticketCode, setTicketCode] = useState("")
   const [error, setError] = useState("")
   const [result, setResult] = useState<ScanResult | null>(null)
-  const [activeCameraToken, setActiveCameraToken] = useState<string | null>(null)
 
   useEffect(() => {
     let active = true
@@ -174,17 +173,6 @@ export default function CheckInDashboard() {
       setResult(data as ScanResult)
       setTicketCode("")
 
-      if (data.status === "success" && activeCameraToken) {
-        try {
-          await sendCameraSessionAction(activeCameraToken, "complete", {
-            message: "Ticket check-in completed",
-          })
-          setActiveCameraToken(null)
-        } catch (cameraError) {
-          setError(cameraError instanceof Error ? cameraError.message : "Failed to complete camera session")
-        }
-      }
-
       const refreshed = await fetch("/api/checkin/session", { cache: "no-store" })
       if (refreshed.ok) {
         setSession((await refreshed.json()) as DashboardResponse)
@@ -215,8 +203,8 @@ export default function CheckInDashboard() {
       <header className="sticky top-0 z-20 border-b border-border bg-card/95 backdrop-blur">
         <div className="mx-auto flex w-full items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Zap className="h-6 w-6" />
+            <div className="flex  items-center justify-center rounded-lg text-primary-foreground">
+              <Logo />
             </div>
             <div>
               <h1 className="text-lg font-semibold">{session.user.event.title}</h1>
@@ -265,7 +253,7 @@ export default function CheckInDashboard() {
 
         <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="lg:col-span-2">
-            <CameraSessionPanel onTokenChange={setActiveCameraToken} />
+            <CameraSessionPanel />
           </div>
 
           <div className="rounded-lg border border-border bg-card p-5">

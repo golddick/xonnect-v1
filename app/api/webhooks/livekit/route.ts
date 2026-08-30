@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 
 import { prisma } from "@/lib/db/prisma"
-import { WebhookReceiver } from "livekit-server-sdk"
+import { WebhookReceiver, EgressStatus } from "livekit-server-sdk"
 import { sendEventLiveNotificationEmail } from "@/lib/auth/notifications"
+import { startEventEgress, buildEventRoomName } from "@/lib/livekit"
 
 const db = prisma 
 
@@ -102,6 +103,24 @@ export async function POST(request: NextRequest) {
           updates.status = "LIVE"
           updates.startedAt = now
           updates.currentViewersCount = 0
+
+          // Start server-side recording once the room exists. This fires for BOTH
+          // browser WebRTC publishers and OBS RTMP ingress, so it's the single
+          // universal trigger. Guarded so we never start more than one egress, and
+          // wrapped so an egress failure can never block the event going live.
+          if (event.recordingEnabled && !event.recordingAssetId) {
+            try {
+              const roomName =
+                event.livekitRoomName ?? webhookEvent.room?.name ?? buildEventRoomName(event.id)
+              const egress = await startEventEgress({ eventId: event.id, roomName })
+              updates.recordingAssetId = egress.egressId
+              updates.recordingStatus = "RECORDING"
+              updates.recordingStartedAt = now
+            } catch (err) {
+              console.error("Failed to start event egress:", err)
+              updates.recordingStatus = "FAILED"
+            }
+          }
         }
         break
       case "room_finished":
@@ -134,9 +153,44 @@ export async function POST(request: NextRequest) {
         }
         break
       case "egress_started":
-      case "egress_updated":
-      case "egress_ended":
+        updates.recordingStatus = "RECORDING"
+        if (webhookEvent.egressInfo?.egressId && !event.recordingAssetId) {
+          updates.recordingAssetId = webhookEvent.egressInfo.egressId
+        }
         break
+      case "egress_updated": {
+        const egressStatus = webhookEvent.egressInfo?.status
+        if (egressStatus === EgressStatus.EGRESS_ACTIVE) {
+          updates.recordingStatus = "RECORDING"
+        } else if (egressStatus === EgressStatus.EGRESS_ENDING) {
+          updates.recordingStatus = "PROCESSING"
+        } else if (
+          egressStatus === EgressStatus.EGRESS_FAILED ||
+          egressStatus === EgressStatus.EGRESS_ABORTED
+        ) {
+          updates.recordingStatus = "FAILED"
+        }
+        break
+      }
+      case "egress_ended": {
+        const info = webhookEvent.egressInfo
+        const file = info?.fileResults?.[0]
+        const failed =
+          info?.status === EgressStatus.EGRESS_FAILED ||
+          info?.status === EgressStatus.EGRESS_ABORTED
+        if (file?.filename && !failed) {
+          // Persist the bucket-relative object KEY (not a URL). event-watch.ts mints a
+          // short-lived signed URL from it at watch time, so the paywall still applies.
+          updates.recordedVideoUrl = file.filename
+          updates.recordingStatus = "READY"
+          updates.hasRecordedVideo = true
+          updates.recordingEndedAt = now
+        } else {
+          updates.recordingStatus = "FAILED"
+          updates.recordingEndedAt = now
+        }
+        break
+      }
       default:
         break
     }

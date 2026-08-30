@@ -7,7 +7,6 @@ import { otpSuccessTemplate } from "../../emails/templates/otp"
 import { ticketConfirmationTemplate } from "../../emails/templates/ticket-confirmation"
 import { welcomeBackTemplate } from "../../emails/templates/welcome-back"
 import { welcomeTemplate } from "../../emails/templates/welcome"
-import { buildTicketPayload, createTicketQrDataUrl } from "../ticket-media"
 import { creatorPlatformNotificationTemplate } from "../../emails/templates/creator-platform-notification"
 
 const DEFAULT_FROM_EMAIL = process.env.DROPAPHI_FROM_EMAIL || ''
@@ -182,35 +181,22 @@ export async function sendCreatorPayoutStatusEmail(context: CreatorPayoutStatusE
 }
 
 export async function sendTicketConfirmationEmail(context: TicketConfirmationContext) {
-  const documentUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/tickets/document/${context.ticketCode}`
+  const appUrl = (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000").replace(/\/+$/, "")
+  const documentUrl = context.documentUrl ?? `${appUrl}/tickets/document/${context.ticketCode}`
   const ticketCodes = context.ticketItemCodes?.length ? context.ticketItemCodes : [context.ticketCode]
-  const qrImageDataUrls: string[] = []
 
-  if (context.access === "VENUE") {
-    try {
-      for (const ticketCode of ticketCodes) {
-        const qrImageDataUrl = await createTicketQrDataUrl(
-          buildTicketPayload({
-            eventId: context.eventId,
-            ticketId: context.ticketId,
-            purchaseId: context.purchaseId,
-            ticketCode,
-            quantity: 1,
-          })
-        )
-
-        qrImageDataUrls.push(qrImageDataUrl)
-      }
-    } catch (error) {
-      console.error("Failed to build venue QR ticket images:", error)
-    }
-  }
+  // Venue QR codes are served as hosted PNGs (email clients render neither SVG
+  // nor data: URIs). One scannable QR per ticket code.
+  const qrImageUrls =
+    context.access === "VENUE"
+      ? ticketCodes.map((code) => `${appUrl}/tickets/document/${encodeURIComponent(code)}/qr`)
+      : []
 
   await sendEmail({
     to: context.email,
     subject:
       context.access === "VENUE"
-        ? `Your venue ticket for ${context.eventTitle}`
+        ? `Your ticket for ${context.eventTitle}`
         : `Your streaming ticket for ${context.eventTitle}`,
     html: ticketConfirmationTemplate({
       fullName: context.fullName,
@@ -223,8 +209,8 @@ export async function sendTicketConfirmationEmail(context: TicketConfirmationCon
       amount: context.amount,
       ticketCode: context.ticketCode,
       ticketCodes,
-      qrImageDataUrls: qrImageDataUrls.length ? qrImageDataUrls : undefined,
-      documentUrl: context.documentUrl ?? documentUrl,
+      qrImageUrls: qrImageUrls.length ? qrImageUrls : undefined,
+      documentUrl,
     }),
     fromName: DEFAULT_FROM_NAME,
     fromEmail: DEFAULT_FROM_EMAIL,

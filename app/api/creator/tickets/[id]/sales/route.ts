@@ -80,6 +80,7 @@ export async function GET(
           price: ticket.price,
           quantity: ticket.quantity,
           soldCount: ticket.soldCount,
+          amount:ticket.amount,
           revenue: ticket.revenue,
           access: ticket.access,
           description: ticket.description,
