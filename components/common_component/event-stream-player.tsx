@@ -26,6 +26,7 @@ type EventStreamPlayerProps = {
   poster?: string | null
   previewVideoUrl?: string | null
   recordedVideoUrl?: string | null
+  recordingStatus?: string | null
   scheduledAt?: string | null
   status: string
   wsUrl?: string | null
@@ -58,6 +59,7 @@ export default function  EventStreamPlayer({
   poster,
   previewVideoUrl,
   recordedVideoUrl,
+  recordingStatus,
   scheduledAt,
   status,
   wsUrl,
@@ -85,18 +87,26 @@ export default function  EventStreamPlayer({
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false)
 
   const normalizedStatus = (status ?? "").toUpperCase()
-  const isLive = normalizedStatus === "LIVE" 
+  const isLive = normalizedStatus === "LIVE"
   const isPaused = normalizedStatus === "PAUSED"
-  const isEnded = normalizedStatus === "ENDED" 
+  const isEnded = normalizedStatus === "ENDED"
   const isScheduled = !isLive && !isEnded && !isPaused
+  const normalizedRecordingStatus = (recordingStatus ?? "").toUpperCase()
+  // The stream has ended but the server-side egress recording isn't ready yet
+  // (LiveKit is still writing/uploading the MP4). Show a "processing" message
+  // instead of the empty/fallback state during this window.
+  const isRecordingProcessing =
+    isEnded &&
+    !recordedVideoUrl &&
+    ["PENDING", "RECORDING", "PROCESSING"].includes(normalizedRecordingStatus)
   const previewMedia = useMemo(() => resolvePlayableMediaSource(!isEnded ? previewVideoUrl : null), [previewVideoUrl, isEnded])
   const recordedMedia = useMemo(
-    () => resolvePlayableMediaSource(isEnded ? recordedVideoUrl ?? recordedVideoUrl : null),
+    () => resolvePlayableMediaSource(isEnded ? recordedVideoUrl : null),
     [recordedVideoUrl, isEnded]
   )
   const fallbackPreviewMedia = useMemo(() => resolvePlayableMediaSource(previewVideoUrl), [previewVideoUrl])
   const activePlaybackMedia = isEnded
-    ? (recordedMedia && hasAccess ? recordedMedia : fallbackPreviewMedia ?? null)
+    ? (recordedMedia && hasAccess ? recordedMedia : isRecordingProcessing ? null : fallbackPreviewMedia ?? null)
     : isScheduled
     ? (previewMedia ?? null)
     : null
@@ -488,6 +498,20 @@ export default function  EventStreamPlayer({
           <div className="rounded-2xl border border-white/30 bg-black/65 px-6 py-4 text-center">
             <div className="text-xs font-bold uppercase tracking-[0.20em] text-white/80">Stream paused</div>
             <div className="mt-2 text-lg font-semibold text-white">This stream is currently paused</div>
+          </div>
+        </div>
+      ) : null}
+
+      {isRecordingProcessing ? (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="max-w-sm rounded-2xl border border-white/20 bg-black/70 px-6 py-5 text-center">
+            <div className="flex items-center justify-center">
+              <Loader2 className="h-6 w-6 animate-spin text-red-500" />
+            </div>
+            <div className="mt-3 text-sm font-semibold text-white">Recording is processing</div>
+            <div className="mt-1 text-xs text-white/70">
+              The replay is being prepared — check back soon.
+            </div>
           </div>
         </div>
       ) : null}

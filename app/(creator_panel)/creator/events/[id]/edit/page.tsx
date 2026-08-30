@@ -633,7 +633,7 @@ export default function EventEditPage() {
               </span>
             </label> */}
 
-            {/* <label className="flex items-start gap-3 rounded-2xl border border-border p-4">
+            <label className="flex items-start gap-3 rounded-2xl border border-border p-4">
               <input
                 type="checkbox"
                 checked={state.recordingEnabled}
@@ -642,10 +642,10 @@ export default function EventEditPage() {
                 className="mt-1 h-4 w-4"
               />
               <span>
-                <span className="block font-medium">Recording enabled</span>
-                <span className="block text-sm text-muted-foreground">LiveKit will update the recording URL when egress completes.</span>
+                <span className="block font-medium">Record this stream</span>
+                <span className="block text-sm text-muted-foreground">Save a replay automatically when the stream ends. Works for both browser and OBS streams.</span>
               </span>
-            </label> */}
+            </label>
           </div>
 
           <div className="flex gap-3">

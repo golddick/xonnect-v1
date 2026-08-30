@@ -12,6 +12,7 @@ type SalesResponse = {
     price: number
     quantity: number
     soldCount: number
+    amount: number
     revenue: number
     access: string
     description: string | null
@@ -88,26 +89,38 @@ export default function TicketSalesPage() {
     }
   }, [ticketId, searchTerm, statusFilter])
 
-  const formatDateTime = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
-    })
+  
+  const formatDateTime = (d: string | null | undefined) => {
+  if (!d) return 'N/A'
+  
+  const date = new Date(d)
+  
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    console.warn('Invalid date:', d) // This will help debug
+    return 'N/A'
   }
+  
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  })
+}
+
+
 
   const stats = useMemo(() => {
     const completedSales = sales.filter((sale) => sale.status.toLowerCase() === "completed")
     const totalSoldQuantity = completedSales.reduce((sum, sale) => sum + sale.quantity, 0)
-    const revenue = completedSales.reduce((sum, sale) => sum + sale.amount, 0)
+    // const revenue = completedSales.reduce((sum, tic) => sum + ticket?.revenue, 0)
 
     return {
       sold: totalSoldQuantity,
-      revenue: revenue,
+      revenue: ticket?.revenue,
       totalTransactions: sales.length,
       quantity: ticket?.quantity ?? 0,
       remaining: ticket ? Math.max(ticket.quantity - ticket.soldCount, 0) : 0,
@@ -159,7 +172,7 @@ export default function TicketSalesPage() {
 
   return (
     <div className="min-h-screen bg-background p-4 text-foreground">
-      <div className="mx-auto max-w-7xl space-y-6">
+      <div className="w-full space-y-6">
         {/* Back Button */}
         <button 
           type="button" 
@@ -196,7 +209,7 @@ export default function TicketSalesPage() {
             <div className="rounded-2xl border border-border bg-card p-4 md:p-5">
               <p className="text-xs md:text-sm text-muted-foreground">Revenue</p>
               <p className="mt-1 md:mt-2 text-xl md:text-2xl font-bold text-yellow-500 truncate">
-                NGN {stats.revenue.toLocaleString()}
+                NGN {ticket.revenue.toLocaleString()}
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-4 md:p-5">
@@ -266,7 +279,7 @@ export default function TicketSalesPage() {
                 <thead>
                   <tr className="border-b border-border text-xs text-muted-foreground uppercase tracking-wider">
                     <th className="py-3 pr-4 font-medium">Buyer</th>
-                    <th className="py-3 pr-4 font-medium">Date</th>
+                    {/* <th className="py-3 pr-4 font-medium">Date</th> */}
                     <th className="py-3 pr-4 font-medium">Amount</th>
                     <th className="py-3 pr-4 font-medium">Qty</th>
                     <th className="py-3 pr-4 font-medium">Status</th>
@@ -287,12 +300,12 @@ export default function TicketSalesPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="py-3 pr-4">
+                      {/* <td className="py-3 pr-4">
                         <div className="flex items-center gap-2 text-sm whitespace-nowrap">
                           <Calendar className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                          <span className="text-xs">{formatDateTime(sale.purchaseDate)}</span>
+                          <span className="text-xs">{sale.purchaseDate}</span>
                         </div>
-                      </td>
+                      </td> */}
                       <td className="py-3 pr-4 font-medium text-yellow-500 text-sm whitespace-nowrap">
                         NGN {sale.amount.toLocaleString()}
                       </td>
@@ -340,10 +353,10 @@ export default function TicketSalesPage() {
 
                 {/* Details */}
                 <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div>
+                  {/* <div>
                     <p className="text-xs text-muted-foreground">Date</p>
                     <p className="font-medium">{formatDateTime(sale.purchaseDate)}</p>
-                  </div>
+                  </div> */}
                   <div>
                     <p className="text-xs text-muted-foreground">Amount</p>
                     <p className="font-medium text-yellow-500">NGN {sale.amount.toLocaleString()}</p>

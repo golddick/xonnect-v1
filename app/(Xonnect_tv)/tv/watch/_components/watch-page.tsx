@@ -597,7 +597,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               }
             }
             if (submittedAccessCode) {
-              const accessAccepted = Boolean(targetPart && !targetPart.isLocked && !accessExpired)
+              const accessAccepted = Boolean(targetPart && !targetPart.isLocked && !targetPart.previewOnly && !accessExpired)
               if (accessAccepted) {
                 persistGuestAccess(kind, watchId, submittedAccessCode)
                 persistAccessGrant(kind, watchId, targetPart?.id ?? null, serverAccessExpiresAt)
@@ -656,8 +656,8 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const accessGrantExpiresAt = currentPart?.accessExpiresAt ?? null
   const accessGrantExpired = Boolean(accessGrantExpiresAt && new Date(accessGrantExpiresAt).getTime() <= Date.now())
   const isPreviewActive = Boolean(currentPart?.previewOnly && !previewExpired)
-  const hasAccessRestriction = Boolean(currentPart?.isLocked || (currentPart?.previewOnly && previewExpired) || previewExpired)
-  const hasUnlockedAccess = (accessGranted && !accessGrantExpired) || Boolean(currentPart && !currentPart.isLocked && (!currentPart.previewOnly || isPreviewActive))
+  const hasAccessRestriction = Boolean(currentPart?.isLocked || (currentPart?.previewOnly && previewExpired) || previewExpired || accessGrantExpired)
+  const hasUnlockedAccess = (accessGranted && !accessGrantExpired) || Boolean(currentPart && !currentPart.isLocked && (!currentPart.previewOnly || isPreviewActive) && !accessGrantExpired)
   const shouldShowAccessOverlay = !loading && !accessOverlayDismissed && !hasUnlockedAccess && hasAccessRestriction
   const isContentLocked = !loading && !hasUnlockedAccess && hasAccessRestriction
 
@@ -673,6 +673,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       }
       setAccessGranted(false)
       clearStoredAccessState(kind, watchId, currentPart?.id ?? null)
+      setAccessOverlayDismissed(false)
       setMessage("This access has expired. Please purchase or rent again.")
     }
   }, [accessGranted, accessGrantExpiresAt, accessGrantExpiryNotified, kind, watchId])
@@ -692,10 +693,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
     const timeoutId = window.setTimeout(() => {
       setAccessGranted(false)
       clearStoredAccessState(kind, watchId, currentPart?.id ?? null)
+      setAccessOverlayDismissed(false)
       toast.error("Access expired", {
         description: "Your stored access grant has expired. Please purchase or rent again to continue watching.",
       })
       setMessage("This access has expired. Please purchase or rent again.")
+      setCodeNonce((value) => value + 1)
     }, Math.max(0, expiryTime - Date.now()))
 
     return () => window.clearTimeout(timeoutId)
@@ -1298,11 +1301,13 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
   const lockOverlay = shouldShowAccessOverlay && watchFolder ? (
     <WatchAccessOverlay
-      title={previewExpired ? "Preview ended" : "Premium video locked"}
+      title={accessGrantExpired ? "Access expired" : previewExpired ? "Preview ended" : "Premium video locked"}
       description={
-        previewExpired
-          ? "Purchase, rent, or enter an access code to keep watching."
-          : "Purchase, rent, or enter an access code to watch this title."
+        accessGrantExpired
+          ? "Your access has expired. Purchase or rent again to keep watching."
+          : previewExpired
+            ? "Purchase, rent, or enter an access code to keep watching."
+            : "Purchase, rent, or enter an access code to watch this title."
       }
       accessCode={accessCode}
       accessCodePlaceholder="Enter access code"
@@ -1536,6 +1541,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 poster={eventData.thumbnail}
                 previewVideoUrl={eventData.thumbnailVideoUrl}
                 recordedVideoUrl={eventData.recordedVideoUrl}
+                recordingStatus={eventData.recordingStatus}
                 scheduledAt={eventData.scheduledAt}
                 status={eventData.status}
                 wsUrl={eventData.livekitWsUrl}

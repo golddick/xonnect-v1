@@ -278,7 +278,7 @@ export default function CreateTicketPage() {
 
           <div className="bg-yellow-600/20 border-none rounded-lg p-4 flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
-            <div className="text-yellow-300 text-sm space-y-1">
+            <div className="text-yellow-700 text-sm space-y-1">
               <p className="font-medium">Ticket Information</p>
               <ul className="list-disc list-inside space-y-0.5">
                 <li>Ensure the event exists before creating tickets</li>

@@ -2,8 +2,9 @@ import crypto from "crypto"
 
 import QRCode from "qrcode"
 
+import { getBrandLogoDataUri } from "./brand-logo"
+
 const CAMERA_SESSION_TTL_MINUTES = 30
-const CAMERA_LOGO_URL = "https://utfs.io/f/Sgkj9xKh6THfmetGRdWbY8exhNzLoErGW0lkfQ3VPOyXdZDB"
 
 export type CheckInCameraStatus =
   | "ACTIVE"
@@ -77,11 +78,13 @@ export async function createCheckInCameraQrDataUrl(token: string) {
     },
   })
 
-  const logoMarkup = CAMERA_LOGO_URL
+  const logoDataUri = await getBrandLogoDataUri()
+
+  const logoMarkup = logoDataUri
     ? `
       <rect x="37%" y="37%" width="26%" height="26%" rx="8%" fill="#ffffff" />
       <image
-        href="${escapeXml(CAMERA_LOGO_URL)}"
+        href="${escapeXml(logoDataUri)}"
         x="41%" y="41%" width="18%" height="18%"
         preserveAspectRatio="xMidYMid meet"
       />
@@ -94,7 +97,7 @@ export async function createCheckInCameraQrDataUrl(token: string) {
 }
 
 export function getCameraSessionExpiry() {
-  return new Date(Date.now() + CAMERA_SESSION_TTL_MINUTES + 2 * 60 * 60 * 1000)
+  return new Date(Date.now() + CAMERA_SESSION_TTL_MINUTES * 60 * 1000)
 }
 
 export function isCameraStatusActive(status: string) {

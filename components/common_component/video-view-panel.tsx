@@ -65,23 +65,31 @@ export default function VideoViewPanel({
   }, [videoUrl])
 
   const shouldShowOverlay = Boolean(overlay) && (locked || showOverlay || previewExpired)
+  // When the content is locked (e.g. the access/paywall banner is up) playback must be
+  // fully blocked: no media source, no native controls, and force a pause. Otherwise the
+  // video keeps playing (and audio keeps going) in the background behind the banner.
+  const isBlocked = shouldShowOverlay || locked
 
   useEffect(() => {
-    if (!videoRef.current || locked || !videoUrl || isYouTubeVideo || shouldShowOverlay) return
+    if (!videoRef.current || isBlocked || !videoUrl || isYouTubeVideo) return
 
     videoRef.current.load()
-  }, [videoUrl, locked, isYouTubeVideo, shouldShowOverlay])
+  }, [videoUrl, isBlocked, isYouTubeVideo])
 
   useEffect(() => {
-    if (!shouldShowOverlay || !videoRef.current) return
+    if (!isBlocked) return
 
-    videoRef.current.pause()
+    // Force playback to stop and clear any pending loading state. Uses optional
+    // chaining so it also covers the YouTube case where the <video> element is
+    // not mounted (the iframe is swapped for a poster while blocked).
+    videoRef.current?.pause()
     setIsPlaying(false)
-  }, [shouldShowOverlay])
+    setIsMediaLoading(false)
+  }, [isBlocked])
 
   const handlePlay = async () => {
     try {
-      if (!videoRef.current || locked || !videoUrl || isYouTubeVideo || shouldShowOverlay) return
+      if (!videoRef.current || isBlocked || !videoUrl || isYouTubeVideo) return
       await videoRef.current.play()
       setIsPlaying(true)
     } catch (error) {
@@ -90,7 +98,7 @@ export default function VideoViewPanel({
   }
 
   const handleTimeUpdate = () => {
-    if (locked || shouldShowOverlay) return
+    if (isBlocked) return
 
     const currentTime = videoRef.current?.currentTime ?? 0
 
@@ -115,7 +123,7 @@ export default function VideoViewPanel({
   }
 
   const handleMediaReady = () => setIsMediaLoading(false)
-  const shouldShowMediaActionButton = !shouldShowOverlay && (showPurchaseButton || Boolean(playableMedia && !isYouTubeVideo && !isMediaLoading && !isPlaying))
+  const shouldShowMediaActionButton = !shouldShowOverlay && (showPurchaseButton || Boolean(playableMedia && !isYouTubeVideo && !isMediaLoading && !isPlaying && !isBlocked))
   const shouldShowLoadingIndicator = !shouldShowOverlay && isMediaLoading && !isPlaying && !videoRef.current?.currentTime
 
   return (
@@ -123,27 +131,42 @@ export default function VideoViewPanel({
       {playableMedia ? (
         <div className="relative w-full h-full">
           {isYouTubeVideo ? (
-            <iframe
-              key={playableMedia.embedUrl}
-              src={playableMedia.embedUrl}
-              title={title}
-              className="w-full h-full border-0 bg-black"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="strict-origin-when-cross-origin"
-              onLoad={handleMediaReady}
-            />
+            isBlocked ? (
+              // Do not mount the YouTube iframe while blocked, otherwise it can keep
+              // playing audio in the background behind the access banner. Show the
+              // poster (or a plain black frame) instead.
+              poster ? (
+                <img
+                  src={poster}
+                  alt={title}
+                  className="w-full h-full object-cover bg-black"
+                />
+              ) : (
+                <div className="w-full h-full bg-black" />
+              )
+            ) : (
+              <iframe
+                key={playableMedia.embedUrl}
+                src={playableMedia.embedUrl}
+                title={title}
+                className="w-full h-full border-0 bg-black"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                onLoad={handleMediaReady}
+              />
+            )
           ) : (
             <video
               key={playableMedia.src}
               ref={videoRef}
-              src={shouldShowOverlay ? undefined : playableMedia.src}
+              src={isBlocked ? undefined : playableMedia.src}
               poster={poster || undefined}
               className="w-full h-full object-cover bg-black"
-              controls={!shouldShowOverlay}
+              controls={!isBlocked}
               playsInline
-              preload={shouldShowOverlay || locked ? "none" : "auto"}
+              preload={isBlocked ? "none" : "auto"}
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
               onEnded={() => setIsPlaying(false)}

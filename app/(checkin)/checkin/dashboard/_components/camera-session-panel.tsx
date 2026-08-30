@@ -13,6 +13,11 @@ type CameraSessionPanelProps = {
   onTokenChange?: (token: string | null) => void
 }
 
+type PeerTile = {
+  peerId: string
+  stream: MediaStream
+}
+
 function parseSignalPayload(payload: string) {
   try {
     return JSON.parse(payload) as any
@@ -21,14 +26,36 @@ function parseSignalPayload(payload: string) {
   }
 }
 
+/** Renders a single phone's live stream; attaches the MediaStream via ref. */
+function PeerVideo({ stream }: { stream: MediaStream }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.srcObject = stream
+    }
+  }, [stream])
+
+  return (
+    <video
+      ref={videoRef}
+      autoPlay
+      playsInline
+      muted
+      className="aspect-video w-full rounded-lg bg-black object-cover"
+    />
+  )
+}
+
 export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanelProps) {
-  const remoteVideoRef = useRef<HTMLVideoElement | null>(null)
-  const peerConnectionRef = useRef<RTCPeerConnection | null>(null)
+  // One RTCPeerConnection per connected phone, keyed by the phone's peerId.
+  const peerConnectionsRef = useRef<Map<string, RTCPeerConnection>>(new Map())
   const pollTimerRef = useRef<number | null>(null)
   const lastSignalAtRef = useRef<string | null>(null)
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [peers, setPeers] = useState<PeerTile[]>([])
   const [session, setSession] = useState<{
     token: string
     tokenPrefix: string
@@ -51,20 +78,33 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
   } | null>(null)
   const [sessionStatus, setSessionStatus] = useState("")
 
-  const stopPeer = () => {
+  const upsertPeerStream = (peerId: string, stream: MediaStream) => {
+    setPeers((prev) => {
+      if (prev.some((peer) => peer.peerId === peerId)) {
+        return prev.map((peer) => (peer.peerId === peerId ? { ...peer, stream } : peer))
+      }
+      return [...prev, { peerId, stream }]
+    })
+  }
+
+  const removePeer = (peerId: string) => {
+    const pc = peerConnectionsRef.current.get(peerId)
+    if (pc) {
+      pc.close()
+      peerConnectionsRef.current.delete(peerId)
+    }
+    setPeers((prev) => prev.filter((peer) => peer.peerId !== peerId))
+  }
+
+  const stopAllPeers = () => {
     if (pollTimerRef.current) {
       window.clearInterval(pollTimerRef.current)
       pollTimerRef.current = null
     }
 
-    if (peerConnectionRef.current) {
-      peerConnectionRef.current.close()
-      peerConnectionRef.current = null
-    }
-
-    if (remoteVideoRef.current) {
-      remoteVideoRef.current.srcObject = null
-    }
+    peerConnectionsRef.current.forEach((pc) => pc.close())
+    peerConnectionsRef.current.clear()
+    setPeers([])
   }
 
   const syncSession = async (token: string) => {
@@ -73,14 +113,9 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
       setSessionStatus(data.session.status)
 
       if (data.session.status === "COMPLETED" || data.session.status === "REVOKED" || data.session.status === "EXPIRED") {
-        stopPeer()
+        stopAllPeers()
         onTokenChange?.(null)
         return
-      }
-
-      const latest = data.signals[data.signals.length - 1]
-      if (latest) {
-        lastSignalAtRef.current = latest.createdAt
       }
 
       for (const signal of data.signals) {
@@ -88,52 +123,70 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
         const payload = parseSignalPayload(signal.payload)
         if (!payload) continue
 
+        // Only handle signals coming from phones, routed by their peerId.
+        if (signal.sender !== "phone") continue
+        const peerId: string | undefined = payload.peerId
+        if (!peerId) continue
+
         if (signal.type === "offer") {
-          if (!peerConnectionRef.current) {
-            const peerConnection = new RTCPeerConnection({ iceServers: ICE_SERVERS })
-            peerConnectionRef.current = peerConnection
+          // A new/restarted phone — replace any prior connection for this peerId.
+          const existing = peerConnectionsRef.current.get(peerId)
+          if (existing) {
+            existing.close()
+            peerConnectionsRef.current.delete(peerId)
+          }
 
-            peerConnection.ontrack = (event) => {
-              if (remoteVideoRef.current) {
-                remoteVideoRef.current.srcObject = event.streams[0] ?? null
-              }
-            }
+          const peerConnection = new RTCPeerConnection({ iceServers: ICE_SERVERS })
+          peerConnectionsRef.current.set(peerId, peerConnection)
 
-            peerConnection.onicecandidate = async (candidateEvent) => {
-              if (candidateEvent.candidate) {
-                await sendCameraSessionAction(token, "signal", {
-                  sender: "operator",
-                  type: "candidate",
-                  payload: candidateEvent.candidate.toJSON(),
-                })
-              }
-            }
+          peerConnection.ontrack = (event) => {
+            const stream = event.streams[0]
+            if (stream) upsertPeerStream(peerId, stream)
+          }
 
-            peerConnection.onconnectionstatechange = async () => {
-              if (peerConnection.connectionState === "connected") {
-                await sendCameraSessionAction(token, "connect", {
-                  clientLabel: navigator.userAgent,
-                })
-              }
+          peerConnection.onicecandidate = async (candidateEvent) => {
+            if (candidateEvent.candidate) {
+              await sendCameraSessionAction(token, "signal", {
+                sender: "operator",
+                type: "candidate",
+                payload: { peerId, ...candidateEvent.candidate.toJSON() },
+              })
             }
           }
 
-          await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(payload))
-          const answer = await peerConnectionRef.current.createAnswer()
-          await peerConnectionRef.current.setLocalDescription(answer)
+          peerConnection.onconnectionstatechange = async () => {
+            const state = peerConnection.connectionState
+            if (state === "connected") {
+              await sendCameraSessionAction(token, "connect", {
+                clientLabel: navigator.userAgent,
+              })
+            }
+            if (state === "failed" || state === "closed" || state === "disconnected") {
+              removePeer(peerId)
+            }
+          }
+
+          await peerConnection.setRemoteDescription(
+            new RTCSessionDescription({ type: payload.type, sdp: payload.sdp })
+          )
+          const answer = await peerConnection.createAnswer()
+          await peerConnection.setLocalDescription(answer)
 
           await sendCameraSessionAction(token, "signal", {
             sender: "operator",
             type: "answer",
-            payload: answer.toJSON(),
+            payload: { peerId, type: answer.type, sdp: answer.sdp },
           })
         }
 
-        if (signal.type === "candidate" && peerConnectionRef.current && payload.candidate) {
-          try {
-            await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(payload))
-          } catch {
-            // Ignore ICE noise.
+        if (signal.type === "candidate") {
+          const pc = peerConnectionsRef.current.get(peerId)
+          if (pc && payload.candidate) {
+            try {
+              await pc.addIceCandidate(new RTCIceCandidate(payload))
+            } catch {
+              // Ignore ICE noise.
+            }
           }
         }
       }
@@ -159,12 +212,19 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
         pollTimerRef.current = null
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.token])
+
+  useEffect(() => {
+    return () => {
+      stopAllPeers()
+    }
+  }, [])
 
   const handleGenerate = async () => {
     setLoading(true)
     setError("")
-    stopPeer()
+    stopAllPeers()
 
     try {
       const created = await createCameraSession()
@@ -188,7 +248,7 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
         message: "Operator revoked the camera session",
       })
       setSessionStatus("REVOKED")
-      stopPeer()
+      stopAllPeers()
       onTokenChange?.(null)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to revoke camera session")
@@ -212,7 +272,7 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
         <div>
           <h2 className="text-lg font-semibold">Camera QR</h2>
           <p className="text-sm text-muted-foreground">
-            Generate a one-time link for a nearby phone to act as a temporary camera.
+            Generate a link for one or more nearby phones to act as temporary cameras.
           </p>
         </div>
         <Badge variant="secondary" className="rounded-full">
@@ -265,21 +325,27 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
           </div>
 
           <div className="rounded-lg border border-border bg-background p-3">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Video className="h-4 w-4" />
-              <span>Live feed</span>
+            <div className="flex items-center justify-between gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Video className="h-4 w-4" />
+                <span>Live feeds</span>
+              </div>
+              <span className="text-xs">
+                {peers.length > 0 ? `${peers.length} phone${peers.length > 1 ? "s" : ""} connected` : ""}
+              </span>
             </div>
-            <video
-              ref={remoteVideoRef}
-              autoPlay
-              playsInline
-              className="mt-3 aspect-video w-full rounded-lg bg-black object-cover"
-            />
-            <p className="mt-2 text-xs text-muted-foreground">
-              {sessionStatus === "CONNECTED"
-                ? "Phone stream connected."
-                : "Waiting for the phone to join the session."}
-            </p>
+
+            {peers.length > 0 ? (
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {peers.map((peer) => (
+                  <PeerVideo key={peer.peerId} stream={peer.stream} />
+                ))}
+              </div>
+            ) : (
+              <div className="mt-3 flex aspect-video w-full items-center justify-center rounded-lg border border-dashed border-border bg-black/5 text-center text-xs text-muted-foreground">
+                Waiting for a phone to join the session.
+              </div>
+            )}
           </div>
         </div>
       </div>

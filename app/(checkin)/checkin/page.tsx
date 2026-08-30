@@ -8,6 +8,7 @@ import { AlertCircle, Lock, LogIn, User, Zap } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import Logo from "@/components/nav/logo"
 
 export default function CheckInLogin() {
   const router = useRouter()
@@ -88,16 +89,16 @@ export default function CheckInLogin() {
       <div className="mx-auto flex min-h-screen w-full max-w-md items-center px-4 py-10">
         <div className="w-full rounded-lg border border-border bg-card p-6 shadow-sm">
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Zap className="h-7 w-7" />
+            <div className="mx-auto mb-4 flex  items-center justify-center rounded-lg text-primary-foreground">
+              <Logo />
             </div>
-            <h1 className="text-2xl font-semibold">Check-in access</h1>
+            <h1 className="text-2xl font-semibold">Check in access</h1>
             <p className="mt-2 text-sm text-muted-foreground">Sign in with the credentials issued to your gate.</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Username or email</label>
+              <label className="text-sm font-medium">Username</label>
               <div className="relative">
                 <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input

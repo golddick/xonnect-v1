@@ -63,7 +63,7 @@ const Navigation = () => {
          
             <Link
               href="/tv"
-              className="bg-black hover:bg-red-700 border border-red-600 text-white px-6 py-2 rounded-lg transition-colors"
+              className="bg-card hover:bg-red-700 border border-red-600 text-card-foreground px-6 py-2 rounded-lg transition-colors"
             >
               Tv
             </Link>
@@ -85,7 +85,7 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center space-x-2 py-4 md:hidden">
+          <div className="flex items-center space-x-2 md:hidden">
             <ThemeToggle />
             <button onClick={() => setIsOpen(!isOpen)} className="text-white bg-red-600 rounded p-2">
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

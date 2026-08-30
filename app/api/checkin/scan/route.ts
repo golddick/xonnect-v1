@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server"
 
-import { getAuthenticatedCheckInUser, markCheckInStats, parseCheckInPayload } from "@/lib/checkin-service"
+import {
+  findVenueTicketByCode,
+  getScanActor,
+  markCheckInStats,
+  parseCheckInPayload,
+} from "@/lib/checkin-service"
 import { prisma } from "@/lib/db/prisma"
 import { dropid } from "dropid"
 
@@ -8,13 +13,13 @@ const db = prisma as any
 
 export async function POST(request: Request) {
   try {
-    const checkInUser = await getAuthenticatedCheckInUser(request)
+    const body = (await request.json()) as { code?: string; cameraToken?: string }
+    const checkInUser = await getScanActor(request, body.cameraToken)
 
     if (!checkInUser) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
     }
 
-    const body = (await request.json()) as { code?: string }
     const rawCode = body.code?.trim()
 
     if (!rawCode) {
@@ -22,38 +27,7 @@ export async function POST(request: Request) {
     }
 
     const parsed = parseCheckInPayload(rawCode)
-    const ticketItem = await db.creatorEventTicketItem.findFirst({
-      where: {
-        ticketCode: parsed.ticketCode,
-        ticket: {
-          eventId: checkInUser.event.id,
-          access: "VENUE",
-        },
-      },
-      include: {
-        purchase: {
-          include: {
-            ticket: true,
-          },
-        },
-      },
-    })
-
-    const purchase = ticketItem?.purchase ?? (await db.creatorEventTicketPurchase.findFirst({
-      where: {
-        OR: [
-          { ticketCode: parsed.ticketCode },
-          ...(parsed.purchaseId ? [{ id: parsed.purchaseId }] : []),
-        ],
-        ticket: {
-          eventId: checkInUser.event.id,
-          access: "VENUE",
-        },
-      },
-      include: {
-        ticket: true,
-      },
-    }))
+    const { ticketItem, purchase } = await findVenueTicketByCode(checkInUser.event.id, parsed)
 
     if (!purchase) {
       await db.creatorEventCheckInScan.create({
@@ -148,7 +122,7 @@ export async function POST(request: Request) {
         message: "Ticket checked in",
         attendeeName: purchase.buyerName,
         attendeeEmail: purchase.buyerEmail,
-        ticketCode: purchase.ticketCode,
+        ticketCode: ticketItem?.ticketCode ?? purchase.ticketCode,
         ticketType: purchase.ticket.ticketType,
         access: purchase.ticket.access,
       },
@@ -159,4 +133,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Failed to process ticket" }, { status: 500 })
   }
 }
-
