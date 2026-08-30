@@ -137,7 +137,7 @@ export default function WatchAccessOverlay({
 
         {/* Access Code Input */}
         {shouldShowAccessCodeInput ? (
-          <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-end">
+          <div className="flex w-full flex-col gap-3 sm:items-end">
             <label className="space-y-1.5 text-sm w-full">
               <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">
                 Access code

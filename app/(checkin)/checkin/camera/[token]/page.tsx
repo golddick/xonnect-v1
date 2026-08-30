@@ -474,7 +474,7 @@ export default function CameraTokenPage() {
     <div className="min-h-screen bg-background text-foreground">
       <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-4 py-8 sm:px-6">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-4 flex  items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <div className="mx-auto mb-4 flex  items-center justify-center rounded-lg text-primary-foreground">
             <Logo />
           </div>
           <h1 className="text-2xl font-semibold">{sessionTitle || "Check in camera"}</h1>
