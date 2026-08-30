@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { ArrowLeft, Copy, Loader2, Radio, RefreshCw, Ticket, Users, Eye, DollarSign } from "lucide-react"
+import { ArrowLeft, Copy, Loader2, Radio, RefreshCw, Ticket, Users, Eye, DollarSign, Trash2 } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import LoadingSplash from "@/components/splash_screen/loading-splash"
@@ -49,6 +49,7 @@ type AnalyticsResponse = {
       recordingEnabled: boolean
       recordingStatus: string
       recordingUrl: string | null
+      hasRecordedVideo: boolean
       recordingStartedAt: string | null
       recordingEndedAt: string | null
       revenue: number
@@ -98,6 +99,7 @@ export default function EventAnalyticsPage() {
   const [analytics, setAnalytics] = useState<AnalyticsResponse["analytics"] | null>(null)
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
+  const [deletingRecording, setDeletingRecording] = useState(false)
   const [error, setError] = useState("")
 
   const loadAnalytics = async () => {
@@ -149,6 +151,34 @@ export default function EventAnalyticsPage() {
   const copyToClipboard = async (value: string | null | undefined) => {
     if (!value) return
     await navigator.clipboard.writeText(value)
+  }
+
+  const handleDeleteRecording = async () => {
+    if (typeof window !== "undefined") {
+      const confirmed = window.confirm(
+        "Delete this recording? The saved replay will be permanently removed and viewers will no longer be able to watch it."
+      )
+      if (!confirmed) return
+    }
+
+    try {
+      setDeletingRecording(true)
+      setError("")
+      const response = await fetch(`/api/creator/events/${eventId}/recording`, {
+        method: "DELETE",
+      })
+      const data = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(data?.message ?? "Failed to delete recording")
+      }
+
+      await loadAnalytics()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete recording")
+    } finally {
+      setDeletingRecording(false)
+    }
   }
 
   const webSocketUrl = process.env.NEXT_PUBLIC_LIVEKIT_WS_URL ?? ""
@@ -364,6 +394,40 @@ export default function EventAnalyticsPage() {
                 />
               </div>
             </div> */}
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card border border-border rounded-2xl">
+          <CardHeader className="w-full flex flex-row justify-between items-center">
+            <CardTitle className="text-foreground">Recording</CardTitle>
+            {analytics.event.hasRecordedVideo && (
+              <button
+                type="button"
+                onClick={handleDeleteRecording}
+                disabled={deletingRecording}
+                className="bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+              >
+                {deletingRecording ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                <span className="hidden lg:block">Delete recording</span>
+              </button>
+            )}
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">Status:</span>
+              <span className="font-medium">{analytics.event.recordingStatus}</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {analytics.event.hasRecordedVideo
+                ? "A replay is saved for this event. Deleting it removes the saved video permanently, and viewers will no longer be able to watch it."
+                : analytics.event.recordingStatus === "PROCESSING" ||
+                  analytics.event.recordingStatus === "RECORDING" ||
+                  analytics.event.recordingStatus === "PENDING"
+                ? "The recording is still being prepared. The replay will appear here once it finishes processing."
+                : analytics.event.recordingEnabled
+                ? "No replay has been saved yet. If you stream this event with recording on, the replay will appear shortly after it ends."
+                : "Recording is turned off for this event, so no replay will be saved."}
+            </p>
           </CardContent>
         </Card>
 

@@ -39,7 +39,7 @@ function buildDateSeries(days: number, endDate = new Date()) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth()
@@ -62,8 +62,9 @@ export async function GET(
       )
     }
 
+    const { id } = await params
     const folder = await prisma.creatorVideoFolder.findFirst({
-      where: { id: params.id, creatorId: creator.id },
+      where: { id, creatorId: creator.id },
       select: {
         id: true,
         title: true,
@@ -153,7 +154,7 @@ export async function GET(
           purchasedAt: { gte: startDate },
         },
         select: {
-          createdAt: true,
+          purchasedAt: true,
           purchaseType: true,
           amount: true,
         },
@@ -243,7 +244,7 @@ export async function GET(
     })
 
     purchases.forEach((record) => {
-      const key = getDateKey(new Date(record.createdAt))
+      const key = getDateKey(new Date(record.purchasedAt))
       if (!seriesMap[key]) return
       seriesMap[key].purchases += 1
       if (record.purchaseType === "rent24") {

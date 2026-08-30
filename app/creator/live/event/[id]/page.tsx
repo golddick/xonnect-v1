@@ -11,7 +11,6 @@ import {
 } from "livekit-client"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { uploadCreatorVideo } from "@/lib/uploadthing/client"
 
 export default function CreatorLivePage() {
   const params = useParams() as { id?: string }
@@ -27,24 +26,6 @@ export default function CreatorLivePage() {
   const publishedScreenRef = useRef<any>(null)
   const publishedAudioRef = useRef<any>(null)
   const unpublishedDuringPauseRef = useRef<any[]>([])
-  const recorderRef = useRef<MediaRecorder | null>(null)
-  const recordingChunksRef = useRef<Blob[]>([])
-  const recordingBlobRef = useRef<Blob | null>(null)
-
-  // FIX: MediaRecorder must NEVER have tracks added/removed on the stream
-  // it's actively recording from — most browsers silently error+stop the
-  // recorder when that happens (this was the "recording didn't go again
-  // after switching camera" bug). Instead of mutating a live stream, we
-  // now stop the current recorder cleanly, stash its output as a
-  // "segment" Blob, and start a brand new MediaRecorder on a brand new
-  // MediaStream for the new source. All finished segments are concatenated
-  // into one Blob when the user ends the live stream.
-  const recordingStreamRef = useRef<MediaStream | null>(null)
-  const activeRecordingVideoTrackRef = useRef<MediaStreamTrack | null>(null)
-  const activeRecordingAudioTrackRef = useRef<MediaStreamTrack | null>(null)
-  const recordingSegmentsRef = useRef<Blob[]>([])
-  // FIX: ref-backed flag so handleStop doesn't read a stale React state value.
-  const hasRecordingDataRef = useRef(false)
 
   const [connecting, setConnecting] = useState(false)
   const [connected, setConnected] = useState(false)
@@ -54,18 +35,14 @@ export default function CreatorLivePage() {
   const [error, setError] = useState<string | null>(null)
   const [cameras, setCameras] = useState<Array<{ deviceId: string; label: string }>>([])
   const [selectedCamera, setSelectedCamera] = useState<string | null>(null)
-  const [isRecording, setIsRecording] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState<number | null>(null)
-  const [recordingUrl, setRecordingUrl] = useState<string | null>(null)
   const [sourceMode, setSourceMode] = useState<"camera" | "screen" | "both">("camera")
-  const [showSaveDialog, setShowSaveDialog] = useState(false)
-  const [awaitingStopDecision, setAwaitingStopDecision] = useState(false)
   const [paused, setPaused] = useState(false)
-  const [savingStatus, setSavingStatus] = useState<"pending" | "uploading" | "saving" | "completed" | "error">("pending")
-  const [savingError, setSavingError] = useState<string | null>(null)
-  const [isProcessingSave, setIsProcessingSave] = useState(false)
-  const [hasRecordingData, setHasRecordingData] = useState(false)
+  // Server-side recording (LiveKit Egress). Default-on; the toggle is only editable
+  // before going live and is persisted via a recording-only PUT.
+  const [recordingEnabled, setRecordingEnabled] = useState(true)
+  const [savingRecordingToggle, setSavingRecordingToggle] = useState(false)
+  const [isEnding, setIsEnding] = useState(false)
+  const [showEndedDialog, setShowEndedDialog] = useState(false)
   const [isIOS, setIsIOS] = useState(false)
   const [isSafari, setIsSafari] = useState(false)
 
@@ -140,219 +117,51 @@ export default function CreatorLivePage() {
     }
   }, [])
 
+  // Load the event's saved recording preference so the pre-publish toggle
+  // reflects it. Defaults to on if the event hasn't set one.
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (uploading || savingStatus !== "pending" || isProcessingSave) {
-        event.preventDefault()
-        event.returnValue = "You have an upload in progress. Are you sure you want to leave?"
-        return "You have an upload in progress. Are you sure you want to leave?"
-      }
-    }
-
-    if (uploading || savingStatus !== "pending" || isProcessingSave) {
-      window.addEventListener("beforeunload", handleBeforeUnload)
-    }
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload)
-    }
-  }, [uploading, savingStatus, isProcessingSave])
-
-  const getSupportedRecorderOptions = () => {
-    if (typeof MediaRecorder === "undefined") return undefined
-
-    // iOS Safari specific - only supports certain formats
-    const candidates = isIOS ? [
-      "video/mp4",
-      "video/quicktime",
-      "video/webm",
-    ] : [
-      "video/webm;codecs=vp8,opus",
-      "video/webm;codecs=vp9,opus",
-      "video/webm",
-      "video/mp4;codecs=avc1",
-      "video/mp4",
-    ]
-
-    for (const mimeType of candidates) {
+    if (!eventId) return
+    let cancelled = false
+    ;(async () => {
       try {
-        if (MediaRecorder.isTypeSupported(mimeType)) {
-          return { mimeType }
-        }
+        const res = await fetch(`/api/creator/events/${eventId}`)
+        if (!res.ok) return
+        const data = await res.json()
+        const evt = data?.event ?? data
+        if (cancelled || evt?.recordingEnabled === undefined || evt?.recordingEnabled === null) return
+        setRecordingEnabled(Boolean(evt.recordingEnabled))
       } catch {
-        // ignore invalid mimeType checks
+        // non-fatal — keep the default
       }
+    })()
+    return () => {
+      cancelled = true
     }
-    return undefined
-  }
+  }, [eventId])
 
-  const startMediaRecorder = async (videoTrack: any, audioTrack: any) => {
+  // Persists the recording toggle (recording-only PUT is allowed at any status,
+  // but the control is only shown before going live).
+  const handleToggleRecording = async (next: boolean) => {
+    setRecordingEnabled(next)
+    if (!eventId) return
+    setSavingRecordingToggle(true)
     try {
-      if (!videoTrack?.mediaStreamTrack || !audioTrack?.mediaStreamTrack) {
-        console.error("Missing video or audio track for recording")
-        setError("Couldn't start recording — camera/microphone wasn't ready. Try restarting the stream.")
-        return
+      const res = await fetch(`/api/creator/events/${eventId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ recordingEnabled: next }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.message || "Failed to update recording preference")
       }
-
-      if (typeof window === "undefined" || typeof MediaRecorder === "undefined") {
-        setError("Recording is not supported in this browser")
-        return
-      }
-
-      const options = getSupportedRecorderOptions()
-      if (!options) {
-        setError(
-          "Recording is not supported by this browser. Please use a modern browser like Chrome, Edge, or Safari 16+."
-        )
-        return
-      }
-
-      // FIX: always build a FRESH MediaStream for a FRESH MediaRecorder.
-      // We never reuse/mutate a stream that a recorder is (or was) already
-      // reading from — see the comment on recordingSegmentsRef above.
-      const stream = new MediaStream()
-      stream.addTrack(videoTrack.mediaStreamTrack)
-      stream.addTrack(audioTrack.mediaStreamTrack)
-      recordingStreamRef.current = stream
-      activeRecordingVideoTrackRef.current = videoTrack.mediaStreamTrack
-      activeRecordingAudioTrackRef.current = audioTrack.mediaStreamTrack
-
-      const recorder = new MediaRecorder(stream, options)
-      recorderRef.current = recorder
-      recordingChunksRef.current = []
-      hasRecordingDataRef.current = false
-
-      recorder.ondataavailable = (event) => {
-        if (event.data && event.data.size > 0) {
-          recordingChunksRef.current.push(event.data)
-          hasRecordingDataRef.current = true
-          console.log(`📦 Received chunk: ${event.data.size} bytes`)
-        }
-      }
-
-      recorder.onerror = (event: any) => {
-        console.error("❌ MediaRecorder error:", event?.error || event)
-        setError(
-          `Recording error: ${event?.error?.message || "the recorder stopped unexpectedly"}. Try restarting the stream.`
-        )
-      }
-
-      recorder.onstop = () => {
-        console.log("🛑 Recorder stopped, processing chunks...")
-        console.log(`📊 Total chunks: ${recordingChunksRef.current.length}`)
-
-        setIsRecording(false)
-
-        if (recordingChunksRef.current.length === 0) {
-          console.warn("⚠️ No chunks in this segment (may be normal on a source switch)")
-          return
-        }
-
-        try {
-          const totalSize = recordingChunksRef.current.reduce((acc, chunk) => acc + chunk.size, 0)
-          console.log(`📊 Total segment size: ${totalSize} bytes`)
-
-          const blob = new Blob(recordingChunksRef.current, { type: options.mimeType || "video/webm" })
-          recordingChunksRef.current = []
-
-          if (blob.size > 0) {
-            // NOTE: this handler now only packages the CURRENT segment.
-            // Segment collection/joining is driven explicitly by
-            // stopCurrentRecorderSegment() below, which is what
-            // switchRecordingSource() and handleStop() call. We still set
-            // recordingBlobRef here as a fallback so nothing is lost if
-            // onstop fires outside that flow (e.g. unexpected browser stop).
-            recordingBlobRef.current = blob
-            setHasRecordingData(true)
-            hasRecordingDataRef.current = true
-            console.log(`✅ Segment blob created: ${blob.size} bytes`)
-          } else {
-            console.warn("⚠️ Segment blob was empty")
-          }
-        } catch (err) {
-          console.error("❌ Error creating segment blob:", err)
-          setError(err instanceof Error ? err.message : String(err))
-        }
-      }
-
-      // iOS Safari needs timeslice for proper recording
-      const timeslice = isIOS ? 500 : 1000
-      recorder.start(timeslice)
-      setIsRecording(true)
-      console.log(`🎥 Recording started with MIME type: ${options.mimeType} (${isIOS ? 'iOS' : 'standard'} mode)`)
     } catch (err) {
-      console.error("Error starting recorder:", err)
+      // revert on failure
+      setRecordingEnabled(!next)
       setError(err instanceof Error ? err.message : String(err))
+    } finally {
+      setSavingRecordingToggle(false)
     }
-  }
-
-  // FIX: stops ONLY the currently running recorder segment and resolves
-  // with that segment's Blob (or null if nothing was captured). Does not
-  // touch LiveKit tracks, the room, or any UI state beyond isRecording —
-  // callers decide what to do next (start a new segment, or finish up).
-  const stopCurrentRecorderSegment = (): Promise<Blob | null> => {
-    return new Promise((resolve) => {
-      const recorder = recorderRef.current
-      const options = getSupportedRecorderOptions()
-
-      const packageChunks = (): Blob | null => {
-        const chunks = recordingChunksRef.current
-        recordingChunksRef.current = []
-        if (chunks.length === 0) return null
-        const blob = new Blob(chunks, { type: options?.mimeType || "video/webm" })
-        return blob.size > 0 ? blob : null
-      }
-
-      if (!recorder || recorder.state === "inactive") {
-        console.log("Recorder already inactive, packaging any leftover chunks")
-        resolve(packageChunks())
-        return
-      }
-
-      console.log("Stopping current recorder segment...")
-
-      if (recorder.state !== "recording") {
-        resolve(packageChunks())
-        return
-      }
-
-      const originalOnStop = recorder.onstop
-      recorder.onstop = (event) => {
-        console.log("Recorder onstop event fired (segment stop)")
-        if (originalOnStop) {
-          // @ts-ignore
-          originalOnStop.call(recorder, event)
-        }
-        resolve(packageChunks())
-      }
-      recorder.stop()
-
-      // iOS Safari workaround: sometimes onstop doesn't fire
-      if (isIOS) {
-        setTimeout(() => {
-          if (recorder.state === "inactive") {
-            console.log("iOS Safari: Force resolving segment stop")
-            resolve(packageChunks())
-          }
-        }, 2000)
-      }
-    })
-  }
-
-  // FIX: the single entry point for handing recording off to a new
-  // video/audio source (camera switch, camera<->screen switch). This
-  // replaces the old approach of mutating a live-recorded MediaStream,
-  // which is what caused recording to silently die after a switch.
-  // Flow: stop current segment -> stash its Blob -> start a new recorder
-  // on a brand new MediaStream built from the new tracks.
-  const switchRecordingSource = async (videoTrack: any, audioTrack: any) => {
-    if (!videoTrack?.mediaStreamTrack || !audioTrack?.mediaStreamTrack) return
-    const finishedSegment = await stopCurrentRecorderSegment()
-    if (finishedSegment) {
-      recordingSegmentsRef.current.push(finishedSegment)
-      console.log(`📼 Saved segment (${finishedSegment.size} bytes), total segments: ${recordingSegmentsRef.current.length}`)
-    }
-    await startMediaRecorder(videoTrack, audioTrack)
   }
 
   const endLiveEvent = async () => {
@@ -419,6 +228,9 @@ export default function CreatorLivePage() {
 
     setPublishing(true)
     try {
+      // Recording is server-side (LiveKit egress records the whole room), so
+      // switching sources only needs to (un)publish LiveKit tracks — there's
+      // no local recorder to hand off to anymore.
       if (nextMode === "camera") {
         if (publishedScreenRef.current) {
           const screenTrack = publishedScreenRef.current
@@ -426,19 +238,11 @@ export default function CreatorLivePage() {
             await room.localParticipant.unpublishTrack(screenTrack)
           } catch {}
 
-          // FIX: hand recording back to the camera track via
-          // switchRecordingSource (fresh recorder segment) BEFORE stopping
-          // the screen track, instead of mutating the recording stream.
           if (!publishedVideoRef.current) {
             const vTrack = await publishCameraTrack(room, selectedCamera)
-            if (activeRecordingVideoTrackRef.current === screenTrack.mediaStreamTrack && publishedAudioRef.current) {
-              await switchRecordingSource(vTrack, publishedAudioRef.current)
-            }
             try {
               vTrack.attach(localVideoRef.current!)
             } catch {}
-          } else if (activeRecordingVideoTrackRef.current === screenTrack.mediaStreamTrack && publishedAudioRef.current) {
-            await switchRecordingSource(publishedVideoRef.current, publishedAudioRef.current)
           }
 
           try {
@@ -447,9 +251,6 @@ export default function CreatorLivePage() {
           publishedScreenRef.current = null
         } else if (!publishedVideoRef.current) {
           const vTrack = await publishCameraTrack(room, selectedCamera)
-          if (publishedAudioRef.current) {
-            await switchRecordingSource(vTrack, publishedAudioRef.current)
-          }
           try {
             vTrack.attach(localVideoRef.current!)
           } catch {}
@@ -465,14 +266,9 @@ export default function CreatorLivePage() {
 
           if (!publishedScreenRef.current) {
             const sTrack = await publishScreenTrack(room)
-            if (activeRecordingVideoTrackRef.current === camTrack.mediaStreamTrack && publishedAudioRef.current) {
-              await switchRecordingSource(sTrack, publishedAudioRef.current)
-            }
             try {
               sTrack.attach(screenVideoRef.current!)
             } catch {}
-          } else if (activeRecordingVideoTrackRef.current === camTrack.mediaStreamTrack && publishedAudioRef.current) {
-            await switchRecordingSource(publishedScreenRef.current, publishedAudioRef.current)
           }
 
           try {
@@ -481,9 +277,6 @@ export default function CreatorLivePage() {
           publishedVideoRef.current = null
         } else if (!publishedScreenRef.current) {
           const sTrack = await publishScreenTrack(room)
-          if (publishedAudioRef.current) {
-            await switchRecordingSource(sTrack, publishedAudioRef.current)
-          }
           try {
             sTrack.attach(screenVideoRef.current!)
           } catch {}
@@ -493,13 +286,6 @@ export default function CreatorLivePage() {
       if (nextMode === "both") {
         if (!publishedVideoRef.current) {
           const vTrack = await publishCameraTrack(room, selectedCamera)
-          // Recording keeps following the camera as the primary recorded
-          // feed (MediaRecorder can only record one video track at a time —
-          // compositing camera+screen into one recorded track would need a
-          // canvas mixer, which is out of scope of this fix).
-          if (publishedAudioRef.current) {
-            await switchRecordingSource(vTrack, publishedAudioRef.current)
-          }
           try {
             vTrack.attach(localVideoRef.current!)
           } catch {}
@@ -555,15 +341,12 @@ export default function CreatorLivePage() {
         }
       }
 
-      const readyVideoTrack = primaryVideoTrack ?? publishedVideoRef.current ?? publishedScreenRef.current
-
       setPublishing(false)
 
-      // Start recording immediately once tracks are published, instead of
-      // gating it behind the "mark event live" API call. If that call is
-      // slow or fails, the recording should still be running.
-      recordingSegmentsRef.current = []
-      await startMediaRecorder(readyVideoTrack, aTrack)
+      // Recording is handled server-side by LiveKit egress, started from the
+      // room_started webhook when the event has recordingEnabled. Egress
+      // records whatever is published to the room, so there's nothing to kick
+      // off here — and it works identically when the creator streams via OBS.
 
       try {
         const statusResponse = await fetch(`/api/creator/events/${eventId}`, {
@@ -705,15 +488,8 @@ export default function CreatorLivePage() {
         console.warn("Failed to publish new camera track", err)
       }
 
-      // FIX: hand the recorder off to the new camera track via
-      // switchRecordingSource BEFORE the old track is unpublished/stopped,
-      // using a fresh MediaRecorder segment instead of mutating the live
-      // recording stream (that mutation is what broke recording before).
-      const wasRecordingOldTrack = !oldTrack || activeRecordingVideoTrackRef.current === oldTrack.mediaStreamTrack
-      if (wasRecordingOldTrack && publishedAudioRef.current) {
-        await switchRecordingSource(newTrack, publishedAudioRef.current)
-      }
-
+      // Server-side egress records the room, so swapping the published camera
+      // track needs no recorder handoff — just unpublish/stop the old track.
       if (oldTrack) {
         try {
           await room.localParticipant.unpublishTrack(oldTrack)
@@ -771,267 +547,33 @@ export default function CreatorLivePage() {
     publishedVideoRef.current = null
     publishedScreenRef.current = null
     publishedAudioRef.current = null
-    recordingStreamRef.current = null
-    activeRecordingVideoTrackRef.current = null
-    activeRecordingAudioTrackRef.current = null
   }
 
   const handleStop = async () => {
-    if (!connected || awaitingStopDecision || isProcessingSave) return
+    if (!connected || isEnding) return
 
+    setIsEnding(true)
     try {
-      console.log("Stopping live stream...")
+      console.log("Ending live stream...")
 
-      // 1) Stop the final recorder segment and fold it in with any earlier
-      //    segments collected from camera/source switches.
-      const lastSegment = await stopCurrentRecorderSegment()
-      if (lastSegment) {
-        recordingSegmentsRef.current.push(lastSegment)
-      }
-      setIsRecording(false)
-
-      const allSegments = recordingSegmentsRef.current
-      recordingSegmentsRef.current = []
-
-      if (allSegments.length > 0) {
-        const options = getSupportedRecorderOptions()
-        const combined = new Blob(allSegments, { type: options?.mimeType || "video/webm" })
-        if (combined.size > 0) {
-          recordingBlobRef.current = combined
-          setHasRecordingData(true)
-          hasRecordingDataRef.current = true
-          console.log(`✅ Combined ${allSegments.length} segment(s) into final recording: ${combined.size} bytes`)
-        }
-      }
-
-      if (!hasRecordingDataRef.current) {
-        console.warn("No recording data available")
-        setError("No recording data was captured. Please try again.")
-      }
-
-      // 2) FIX: turn off camera/mic/screen and leave the room right away —
-      //    don't wait for the user's save/discard choice or for the
-      //    upload to finish. This is the "revoke permissions on end"
-      //    behavior.
+      // Turn off camera/mic/screen and leave the room right away.
       await releaseLocalMedia()
 
-      // 3) Now show the save dialog.
-      setAwaitingStopDecision(true)
-      setShowSaveDialog(true)
-      console.log("Save dialog opened")
-    } catch (err) {
-      console.error("Error stopping:", err)
-      setError(err instanceof Error ? err.message : String(err))
-    }
-  }
-
-  // Kept as a safe no-op-if-already-gone cleanup, since releaseLocalMedia
-  // now runs earlier (in handleStop) and already nulls out `room`.
-  const cleanupRoom = async () => {
-    if (room) {
-      try {
-        const v: any = publishedVideoRef.current
-        const s: any = publishedScreenRef.current
-        const a: any = publishedAudioRef.current
-        if (v) {
-          try {
-            await room.localParticipant.unpublishTrack(v)
-          } catch {}
-          try {
-            v.stop()
-          } catch {}
-        }
-        if (s) {
-          try {
-            await room.localParticipant.unpublishTrack(s)
-          } catch {}
-          try {
-            s.stop()
-          } catch {}
-        }
-        if (a) {
-          try {
-            await room.localParticipant.unpublishTrack(a)
-          } catch {}
-          try {
-            a.stop()
-          } catch {}
-        }
-      } catch {}
-      try {
-        await room.disconnect()
-      } catch {}
-    }
-
-    setRoom(null)
-    setConnected(false)
-    setPublishing(false)
-    publishedVideoRef.current = null
-    publishedScreenRef.current = null
-    publishedAudioRef.current = null
-    recordingStreamRef.current = null
-    activeRecordingVideoTrackRef.current = null
-    activeRecordingAudioTrackRef.current = null
-    setIsRecording(false)
-  }
-
-  const finalizeSave = async () => {
-    try {
-      let blobToSave = recordingBlobRef.current
-
-      if (!blobToSave || blobToSave.size === 0) {
-        if (recordingChunksRef.current.length > 0) {
-          console.log(`Creating blob from ${recordingChunksRef.current.length} chunks...`)
-          const options = getSupportedRecorderOptions()
-          blobToSave = new Blob(recordingChunksRef.current, { type: options?.mimeType || "video/webm" })
-          recordingChunksRef.current = []
-          recordingBlobRef.current = blobToSave
-          setHasRecordingData(true)
-          hasRecordingDataRef.current = true
-        }
-      }
-
-      if (!blobToSave || blobToSave.size === 0) {
-        console.log("Waiting for recording blob...")
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        blobToSave = recordingBlobRef.current
-
-        if ((!blobToSave || blobToSave.size === 0) && recordingChunksRef.current.length > 0) {
-          console.log(`Creating blob from ${recordingChunksRef.current.length} chunks after wait...`)
-          const options = getSupportedRecorderOptions()
-          blobToSave = new Blob(recordingChunksRef.current, { type: options?.mimeType || "video/webm" })
-          recordingChunksRef.current = []
-          recordingBlobRef.current = blobToSave
-          setHasRecordingData(true)
-          hasRecordingDataRef.current = true
-        }
-      }
-
-      if (!blobToSave || blobToSave.size === 0) {
-        throw new Error("No recording data available. Please try again or check if recording was properly started.")
-      }
-
-      console.log(`Recording blob size: ${blobToSave.size} bytes`)
-
-      setSavingStatus("uploading")
-      setUploadProgress(0)
-      setSavingError(null)
-      setUploading(true)
-      setIsProcessingSave(true)
-
-      // Use appropriate file extension based on browser
-      const fileExtension = isIOS ? 'mp4' : 'webm'
-      const mimeType = isIOS ? 'video/mp4' : 'video/webm'
-
-      const file = new File([blobToSave], `creator-event-${eventId}-${Date.now()}.${fileExtension}`, {
-        type: mimeType,
-      })
-
-      console.log("📤 Starting upload...")
-      const result = await uploadCreatorVideo(file, (pct) => {
-        const progress = Math.round(pct)
-        setUploadProgress(progress)
-        console.log(`📊 Upload progress: ${progress}%`)
-      })
-
-      // NOTE: double-check this against what uploadCreatorVideo actually
-      // returns (log `result` once) — if the field names don't match, this
-      // throws "Upload completed without a valid video URL" even though the
-      // upload itself succeeded.
-      const uploadedUrl = result.videoUrl ?? result.fileUrl ?? result.ufsUrl
-      const uploadedFileId = result.key ?? result.fileUrl ?? result.ufsUrl
-
-      if (!uploadedUrl) {
-        throw new Error("Upload completed without a valid video URL")
-      }
-
-      console.log("✅ Upload completed:", uploadedUrl)
-      setRecordingUrl(uploadedUrl)
-      setUploadProgress(100)
-
-      setSavingStatus("saving")
-      console.log("💾 Saving to database...")
-
-      // NOTE: by the time we get here the event has already been marked
-      // ENDED (see handleSaveRecordingChoice, which calls endLiveEvent()
-      // first). The API's isRecordingOnlyUpdate allow-list must include
-      // every field sent below or this PUT will 409 with "Live or ended
-      // events cannot be edited" even though nothing here is a real edit.
-      const response = await fetch(`/api/creator/events/${eventId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          recordedVideoUrl: uploadedUrl,
-          recordedVideoFileId: uploadedFileId,
-          recordingStatus: "ready",
-          hasRecordedVideo: true,
-        }),
-      })
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => null)
-        throw new Error(data?.message || "Failed to save recorded video to the event")
-      }
-
-      console.log("✅ Database save completed")
-      recordingBlobRef.current = null
-      recordingChunksRef.current = []
-      setHasRecordingData(false)
-      hasRecordingDataRef.current = false
-      setSavingStatus("completed")
-      setUploading(false)
-      setIsProcessingSave(false)
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err)
-      console.error("❌ Save error:", message)
-      setSavingError(message)
-      setSavingStatus("error")
-      setUploading(false)
-      setIsProcessingSave(false)
-      throw err
-    }
-  }
-
-  const finalizeDiscard = async () => {
-    recordingBlobRef.current = null
-    recordingChunksRef.current = []
-    setHasRecordingData(false)
-    hasRecordingDataRef.current = false
-    setRecordingUrl(null)
-  }
-
-  // FIX: reordered so the event is always marked ENDED *before* we touch
-  // the recording (save or discard). This guarantees the upload/save PUT
-  // never races a still-"live" event, and releasing devices already
-  // happened back in handleStop so this function no longer needs to do it.
-  const handleSaveRecordingChoice = async (saveRecording: boolean) => {
-    try {
+      // Mark the event ENDED. The /end-live route also stops the LiveKit
+      // egress and closes the room, so the server-side recording finalizes
+      // immediately; the egress_ended webhook then attaches the replay.
       await endLiveEvent()
 
-      if (saveRecording) {
-        await finalizeSave()
-      } else {
-        await finalizeDiscard()
-      }
-
-      setShowSaveDialog(false)
-      setAwaitingStopDecision(false)
-      await cleanupRoom() // safe no-op: devices/room were already released in handleStop
-      router.push(`/tv`)
+      // The recording saves itself server-side — there's no local upload or
+      // save/discard prompt anymore.
+      setShowEndedDialog(true)
+      console.log("Live stream ended")
     } catch (err) {
-      // finalizeSave already puts the dialog into its "error" state (so the
-      // user sees "Save failed" and can retry), but surface it in the
-      // top-level error banner too in case the failure happened outside
-      // finalizeSave (e.g. endLiveEvent / cleanupRoom after a successful save).
-      console.error("Error in save decision:", err)
+      console.error("Error ending live stream:", err)
       setError(err instanceof Error ? err.message : String(err))
+    } finally {
+      setIsEnding(false)
     }
-  }
-
-  const handleRetrySave = async () => {
-    setSavingError(null)
-    setSavingStatus("pending")
-    await handleSaveRecordingChoice(true)
   }
 
   return (
@@ -1061,26 +603,17 @@ export default function CreatorLivePage() {
                 {sourceMode === "screen" || sourceMode === "both" ? (
                   <p className="text-sm text-amber-200">Screen recording mode</p>
                 ) : null}
-                {isRecording && (
+                {connected && recordingEnabled && (
                   <div className="flex items-center gap-2 text-sm text-red-400">
                     <span className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                     </span>
-                    <div className=" flex items-center gap-2">🔴 <span className="hidden lg:block">Recording live...</span></div>
+                    <div className="flex items-center gap-2">🔴 <span className="hidden lg:block">Recording — saved automatically</span></div>
                   </div>
                 )}
-                {uploading && uploadProgress !== null && uploadProgress < 100 && (
-                  <div className="flex items-center gap-2 text-sm text-blue-300">
-                    <span className="animate-spin">⏳</span>
-                    Uploading: {uploadProgress}%
-                  </div>
-                )}
-                {uploading && uploadProgress === 100 && (
-                  <p className="text-sm text-emerald-300">✅ Processing upload...</p>
-                )}
-                {recordingUrl && (
-                  <p className="text-sm text-emerald-300">✅ Recording saved</p>
+                {connected && !recordingEnabled && (
+                  <p className="text-sm text-slate-300">Recording is off for this stream</p>
                 )}
               </div>
               <div className="flex flex-wrap gap-2">
@@ -1095,30 +628,30 @@ export default function CreatorLivePage() {
               <button
                 type="button"
                 onClick={() => handleSourceModeChange("camera")}
-                disabled={connecting || publishing || isProcessingSave}
+                disabled={connecting || publishing}
                 className={`rounded-full border px-3 py-2 text-sm transition ${
                   sourceMode === "camera" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
-                } ${(connecting || publishing || isProcessingSave) ? 'cursor-not-allowed opacity-50' : ''}`}
+                } ${(connecting || publishing) ? 'cursor-not-allowed opacity-50' : ''}`}
               >
                 Camera only
               </button>
               <button
                 type="button"
                 onClick={() => handleSourceModeChange("screen")}
-                disabled={connecting || publishing || isProcessingSave}
+                disabled={connecting || publishing}
                 className={`rounded-full border px-3 py-2 text-sm transition ${
                   sourceMode === "screen" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
-                } ${(connecting || publishing || isProcessingSave) ? 'cursor-not-allowed opacity-50' : ''}`}
+                } ${(connecting || publishing) ? 'cursor-not-allowed opacity-50' : ''}`}
               >
                 Screen share only
               </button>
               <button
                 type="button"
                 onClick={() => handleSourceModeChange("both")}
-                disabled={connecting || publishing || isProcessingSave}
+                disabled={connecting || publishing}
                 className={`rounded-full border px-3 py-2 text-sm transition ${
                   sourceMode === "both" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
-                } ${(connecting || publishing || isProcessingSave) ? 'cursor-not-allowed opacity-50' : ''}`}
+                } ${(connecting || publishing) ? 'cursor-not-allowed opacity-50' : ''}`}
               >
                 Camera + screen share
               </button>
@@ -1130,12 +663,12 @@ export default function CreatorLivePage() {
                     type="button"
                     key={camera.deviceId}
                     onClick={() => handleSwitchCamera(camera.deviceId)}
-                    disabled={paused || isProcessingSave}
+                    disabled={paused}
                     className={`rounded-full border px-3 py-2 text-sm transition ${
                       selectedCamera === camera.deviceId
                         ? "border-white bg-white/10 text-white"
                         : "border-white/30 text-slate-200"
-                    } ${(paused || isProcessingSave) ? 'cursor-not-allowed opacity-50' : ''}`}
+                    } ${(paused) ? 'cursor-not-allowed opacity-50' : ''}`}
                   >
                     {camera.label}
                   </button>
@@ -1147,22 +680,31 @@ export default function CreatorLivePage() {
         <div className="absolute inset-x-0 bottom-0 p-4">
           <div className="mx-auto flex w-full flex-wrap justify-end gap-2 rounded-3xl bg-black/60 p-3 backdrop-blur-md">
             {!connected ? (
-              <Button onClick={handleConnectAndPublish} disabled={!token || connecting || publishing}>
-                {connecting ? "Connecting..." : "Start live"}
-              </Button>
+              <div className="flex w-full flex-wrap items-center justify-between gap-3">
+                <label className="flex cursor-pointer select-none items-center gap-2 text-sm text-slate-200">
+                  <input
+                    type="checkbox"
+                    checked={recordingEnabled}
+                    onChange={(e) => handleToggleRecording(e.target.checked)}
+                    disabled={savingRecordingToggle}
+                    className="h-4 w-4 rounded border-white/30 bg-transparent"
+                  />
+                  Record this stream (save a replay automatically)
+                </label>
+                <Button onClick={handleConnectAndPublish} disabled={!token || connecting || publishing}>
+                  {connecting ? "Connecting..." : "Start live"}
+                </Button>
+              </div>
             ) : (
               <>
-                <Button onClick={handleToggleAudio} disabled={publishing || isProcessingSave}>
+                <Button onClick={handleToggleAudio} disabled={publishing}>
                   {audioEnabled ? "Mute" : "Unmute"}
                 </Button>
-                <Button onClick={handleToggleVideo} disabled={publishing || isProcessingSave}>
+                <Button onClick={handleToggleVideo} disabled={publishing}>
                   {videoEnabled ? "Stop video" : "Start video"}
                 </Button>
-                {/* <Button onClick={handlePauseToggle} disabled={publishing || isProcessingSave}>
-                  {paused ? "Resume" : "Pause"}
-                </Button> */}
-                <Button variant="destructive" onClick={handleStop} disabled={publishing || awaitingStopDecision || isProcessingSave}>
-                  {isProcessingSave ? "Processing..." : "End live"}
+                <Button variant="destructive" onClick={handleStop} disabled={publishing || isEnding}>
+                  {isEnding ? "Ending..." : "End live"}
                 </Button>
               </>
             )}
@@ -1170,146 +712,25 @@ export default function CreatorLivePage() {
         </div>
       </div>
 
-      <Dialog
-        open={showSaveDialog}
-        onOpenChange={(open) => {
-          if (!open && savingStatus !== "pending" && savingStatus !== "error") {
-            return
-          }
-          if (!open && savingStatus === "pending") {
-            setShowSaveDialog(false)
-            setAwaitingStopDecision(false)
-          }
-        }}
-      >
-        <DialogContent
-          className="max-w-sm"
-          onPointerDownOutside={(e) => {
-            if (savingStatus !== "pending" && savingStatus !== "error") {
-              e.preventDefault()
-            }
-          }}
-          onEscapeKeyDown={(e) => {
-            if (savingStatus !== "pending" && savingStatus !== "error") {
-              e.preventDefault()
-            }
-          }}
-        >
+      <Dialog open={showEndedDialog} onOpenChange={setShowEndedDialog}>
+        <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>
-              {savingStatus === "completed" ? "✅ Recording saved!" :
-               savingStatus === "error" ? "❌ Save failed" :
-               "Save live recording?"}
-            </DialogTitle>
+            <DialogTitle>Live stream ended</DialogTitle>
             <DialogDescription>
-              {savingStatus === "uploading" && "📤 Uploading video... Please don't close this window."}
-              {savingStatus === "saving" && "💾 Saving to database..."}
-              {savingStatus === "completed" && "Your recording has been successfully saved."}
-              {savingStatus === "error" && (savingError || "There was an error saving your recording. Please try again.")}
-              {savingStatus === "pending" && "Do you want to save this live recording?"}
+              {recordingEnabled
+                ? "Your recording is saving automatically and will appear as the replay once it finishes processing."
+                : "This stream has ended. Recording was turned off, so no replay will be saved."}
             </DialogDescription>
           </DialogHeader>
-
-          <div className="py-4">
-            {savingStatus === "uploading" && (
-              <div className="space-y-3">
-                <div className="text-sm font-medium text-foreground">
-                  Uploading: {uploadProgress ?? 0}%
-                </div>
-                <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
-                  <div
-                    className="h-full bg-blue-500 transition-all duration-300"
-                    style={{ width: `${uploadProgress ?? 0}%` }}
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  ⚠️ Please keep this window open until upload completes
-                </p>
-              </div>
-            )}
-
-            {savingStatus === "saving" && (
-              <div className="space-y-3">
-                <div className="text-sm font-medium text-foreground">
-                   Finalizing...
-                </div>
-                <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
-                  <div className="h-full bg-green-500 animate-pulse" style={{ width: "100%" }} />
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  ⏳ Saving... please wait
-                </p>
-              </div>
-            )}
-
-            {savingStatus === "completed" && (
-              <div className="space-y-2 text-center">
-                <div className="text-4xl">✅</div>
-                <p className="text-sm text-muted-foreground">
-                  Your live recording has been successfully saved!
-                </p>
-              </div>
-            )}
-
-            {savingStatus === "error" && (
-              <div className="space-y-3">
-                <div className="rounded-md bg-red-500/10 border border-red-500/30 p-3">
-                  <p className="text-sm text-red-500">
-                    <strong>Error:</strong> {savingError || "Failed to save recording"}
-                  </p>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Tip: Make sure you have a stable internet connection and try again.
-                </p>
-              </div>
-            )}
-
-            {savingStatus === "pending" && (
-              <p className="text-sm text-muted-foreground">
-                Choose whether to upload the recording before ending the event.
-              </p>
-            )}
-          </div>
-
-          <DialogFooter className="flex gap-2">
-            {savingStatus === "pending" && (
-              <>
-                <Button variant="outline" onClick={() => handleSaveRecordingChoice(false)}>
-                  Don't save
-                </Button>
-                <Button onClick={() => handleSaveRecordingChoice(true)}>
-                  Save recording
-                </Button>
-              </>
-            )}
-            {savingStatus === "completed" && (
-              <Button onClick={() => {
-                setShowSaveDialog(false)
-                setAwaitingStopDecision(false)
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setShowEndedDialog(false)
                 router.push(`/tv`)
-              }}>
-                Done
-              </Button>
-            )}
-            {savingStatus === "error" && (
-              <>
-                <Button variant="outline" onClick={() => {
-                  setShowSaveDialog(false)
-                  setAwaitingStopDecision(false)
-                  router.push(`/tv`)
-                }}>
-                  Discard & Exit
-                </Button>
-                <Button onClick={handleRetrySave}>
-                  Retry Save
-                </Button>
-              </>
-            )}
-            {(savingStatus === "uploading" || savingStatus === "saving") && (
-              <div className="text-xs text-muted-foreground">
-                ⏳ Processing... do not close
-              </div>
-            )}
+              }}
+            >
+              Done
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -2350,30 +1771,30 @@ export default function CreatorLivePage() {
 //               <button
 //                 type="button"
 //                 onClick={() => handleSourceModeChange("camera")}
-//                 disabled={connecting || publishing || isProcessingSave}
+//                 disabled={connecting || publishing}
 //                 className={`rounded-full border px-3 py-2 text-sm transition ${
 //                   sourceMode === "camera" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
-//                 } ${(connecting || publishing || isProcessingSave) ? 'cursor-not-allowed opacity-50' : ''}`}
+//                 } ${(connecting || publishing) ? 'cursor-not-allowed opacity-50' : ''}`}
 //               >
 //                 Camera only
 //               </button>
 //               <button
 //                 type="button"
 //                 onClick={() => handleSourceModeChange("screen")}
-//                 disabled={connecting || publishing || isProcessingSave}
+//                 disabled={connecting || publishing}
 //                 className={`rounded-full border px-3 py-2 text-sm transition ${
 //                   sourceMode === "screen" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
-//                 } ${(connecting || publishing || isProcessingSave) ? 'cursor-not-allowed opacity-50' : ''}`}
+//                 } ${(connecting || publishing) ? 'cursor-not-allowed opacity-50' : ''}`}
 //               >
 //                 Screen share only
 //               </button>
 //               <button
 //                 type="button"
 //                 onClick={() => handleSourceModeChange("both")}
-//                 disabled={connecting || publishing || isProcessingSave}
+//                 disabled={connecting || publishing}
 //                 className={`rounded-full border px-3 py-2 text-sm transition ${
 //                   sourceMode === "both" ? "border-white bg-white/10 text-white" : "border-white/30 text-slate-200"
-//                 } ${(connecting || publishing || isProcessingSave) ? 'cursor-not-allowed opacity-50' : ''}`}
+//                 } ${(connecting || publishing) ? 'cursor-not-allowed opacity-50' : ''}`}
 //               >
 //                 Camera + screen share
 //               </button>
