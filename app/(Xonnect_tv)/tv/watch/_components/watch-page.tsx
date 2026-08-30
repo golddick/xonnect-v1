@@ -50,7 +50,7 @@ type WatchComment = {
   author: string
   authorEmail: string | null
   text: string
-  createdAt: string
+  // createdAt: string
   likes: number
   likedBy?: string[] // Track who liked this comment
   replies: WatchComment[]
@@ -430,7 +430,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         const data = await response.json()
         if (data?.kind !== "event" || !data?.event) return
 
-        setEventData(data.event)
+        setEventData(data.event) 
 
         setEventLikesCount(data.event.likesCount ?? 0)
         setEventIsLiked(data.event.isLiked ?? false)
@@ -1023,7 +1023,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           author: data.comment.author,
           authorEmail: data.comment.authorEmail,
           text: data.comment.text,
-          createdAt: data.comment.createdAt,
+          // createdAt: data.comment.createdAt,
           likes: 0,
           replies: [],
         }
@@ -1196,14 +1196,14 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       return (
           <div key={comment.id} className="rounded-2xl border border-border/50 bg-background/80 p-4 hover:bg-background/90 transition-colors">
             <div className="flex items-start gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-600/20 to-red-600/10 text-sm font-semibold text-red-500 flex-shrink-0">
+              <div className="flex p-2 h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-600/20 to-red-600/10 text-sm font-semibold text-red-500 flex-shrink-0">
                 {displayName.slice(0, 2).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
                 <div className=" w-full flex items-center justify-between gap-2">
                   <div>
                     <span className="font-semibold text-foreground text-sm">{displayName}</span>
-                    <span className="text-xs text-muted-foreground truncate">{formatTimeAgo(comment.createdAt)}</span>
+                    {/* <span className="text-xs text-muted-foreground truncate">{formatTimeAgo(comment.createdAt)}</span> */}
                 
                    </div> 
                 
@@ -1420,7 +1420,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
 
     const streamTicket = (eventData.tickets ?? []).find((ticket: any) => ticket.access === "STREAM")
     const eventLockOverlay = (
-      <WatchAccessPopover
+      <WatchAccessOverlay
         title={eventData.status === "LIVE" ? "locked" : "Get access"}
         description={
           eventData.access?.loggedIn
@@ -1592,7 +1592,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                             })()}
                           </div>
                     
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-4">
                       {Array.isArray(eventData.creator?.socialHandles) && eventData.creator.socialHandles.length > 0 ? (
                         eventData.creator.socialHandles.map((socialHandle: CreatorSocialHandle, index: number) => {
                           const href = buildSocialUrl(socialHandle.network, socialHandle.handle)
@@ -1775,12 +1775,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             
             <button className="p-2 hover:bg-muted rounded-full transition-colors">
               <Share2 className="w-5 h-5" />
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -1912,7 +1912,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                 )}
               </div>
 
-              <div className="rounded-2xl border border-border/50 bg-muted/20 p-6 gap-2">
+              <div className="rounded-2xl md:border md:border-border/50 bg-muted/20 md:p-6 gap-2">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <h3 className="font-semibold text-foreground">Comments</h3>

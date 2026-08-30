@@ -1,3 +1,4 @@
+import { createTicketItemCode } from '@/lib/paystack';
 import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { CreatorEventTicket, Role } from "@/lib/generated/prisma"
@@ -187,14 +188,14 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
   let accessGranted = !premium || canBypassAccess
 
   if (!accessGranted && accessCode) {
-    const codeMatch = await db.creatorEventTicketPurchase.findFirst({
+    const codeMatch = await db.createTicketItemCode.findFirst({
       where: {
         ticketCode: accessCode,
-        status: "COMPLETED",
-        ticket: {
-          eventId: event.id,
-          access: "STREAM",
-        },
+        // status: "COMPLETED",
+        // ticket: {
+        //   eventId: event.id,
+        //   access: "STREAM",
+        // },
       },
       select: { id: true, purchasedAt: true },
     })
