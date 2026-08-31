@@ -1,4 +1,3 @@
-import { createTicketItemCode } from '@/lib/paystack';
 import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
 import { CreatorEventTicket, Role } from "@/lib/generated/prisma"
@@ -187,22 +186,8 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
   const loggedIn = Boolean(email)
   let accessGranted = !premium || canBypassAccess
 
-  if (!accessGranted && accessCode) {
-    const codeMatch = await db.createTicketItemCode.findFirst({
-      where: {
-        ticketCode: accessCode,
-        // status: "COMPLETED",
-        // ticket: {
-        //   eventId: event.id,
-        //   access: "STREAM",
-        // },
-      },
-      select: { id: true, purchasedAt: true },
-    })
-
-    accessGranted = Boolean(codeMatch)
-  }
-
+  // Account-based grant: streaming access is tied to the signed-in user's account. A
+  // completed STREAM purchase under this account email unlocks the event — no code needed.
   if (!accessGranted && loggedIn && email) {
     const emailMatch = await db.creatorEventTicketPurchase.findFirst({
       where: {
@@ -213,10 +198,29 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
           access: "STREAM",
         },
       },
-      select: { id: true, purchasedAt: true },
+      select: { id: true },
     })
 
     accessGranted = Boolean(emailMatch)
+  }
+
+  // Access code (ticket code) only works for signed-in users, and only when the code's
+  // purchase is tied to their account. Guests can no longer redeem codes.
+  if (!accessGranted && loggedIn && email && accessCode) {
+    const codeMatch = await db.creatorEventTicketPurchase.findFirst({
+      where: {
+        ticketCode: accessCode,
+        buyerEmail: email,
+        status: "COMPLETED",
+        ticket: {
+          eventId: event.id,
+          access: "STREAM",
+        },
+      },
+      select: { id: true },
+    })
+
+    accessGranted = Boolean(codeMatch)
   }
 
   const canViewRecordings = !premium || accessGranted
@@ -291,7 +295,7 @@ export async function loadEventWatchData(eventId: string, options?: { accessCode
     access: {
       locked: premium && !accessGranted,
       accessCodeProvided: Boolean(accessCode),
-      canUseAccessCode: premium,
+      canUseAccessCode: premium && loggedIn,
       requiresSignIn: !loggedIn,
       loggedIn,
       canBypassAccess,

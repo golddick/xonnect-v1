@@ -11,6 +11,7 @@ import {
 } from "livekit-client"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Camera } from "lucide-react"
 
 export default function CreatorLivePage() {
   const params = useParams() as { id?: string }
@@ -22,6 +23,9 @@ export default function CreatorLivePage() {
   const [room, setRoom] = useState<Room | null>(null)
   const localVideoRef = useRef<HTMLVideoElement | null>(null)
   const screenVideoRef = useRef<HTMLVideoElement | null>(null)
+  // Pre-live preview stream (getUserMedia). Held only before going live; once
+  // connected the published LiveKit track drives the preview instead.
+  const previewStreamRef = useRef<MediaStream | null>(null)
   const publishedVideoRef = useRef<any>(null)
   const publishedScreenRef = useRef<any>(null)
   const publishedAudioRef = useRef<any>(null)
@@ -66,9 +70,8 @@ export default function CreatorLivePage() {
         setWsUrl(data.wsUrl ?? null)
         setToken(data.token ?? null)
 
-        if (data.wsUrl && data.token) {
-          void handleConnectAndPublish()
-        }
+        // No auto-connect: the creator selects a camera (with a live preview)
+        // and then goes live explicitly via the "Start live" button.
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err))
       }
@@ -90,8 +93,8 @@ export default function CreatorLivePage() {
 
         if (cams.every((c) => !c.label || c.label === "")) {
           try {
-            const previewStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-            previewStream.getTracks().forEach((t) => t.stop())
+            const permStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            permStream.getTracks().forEach((t) => t.stop())
             const list2 = await navigator.mediaDevices.enumerateDevices()
             cams = list2
               .filter((d) => d.kind === "videoinput")
@@ -103,17 +106,78 @@ export default function CreatorLivePage() {
 
         if (cancelled) return
         setCameras(cams)
-        if (!selectedCamera && cams.length > 0) {
-          setSelectedCamera(cams[0].deviceId)
-        }
+        // Only default the selection when nothing is chosen yet, so a hot-plug
+        // "devicechange" refresh never clobbers the creator's current pick.
+        setSelectedCamera((prev) => prev ?? (cams.length > 0 ? cams[0].deviceId : null))
       } catch (err) {
         console.error("Failed to load cameras", err)
       }
     }
 
     void loadDevices()
+
+    // Refresh the list when a camera is plugged in or removed.
+    const mediaDevices = typeof navigator !== "undefined" ? navigator.mediaDevices : undefined
+    mediaDevices?.addEventListener?.("devicechange", loadDevices)
+
     return () => {
       cancelled = true
+      mediaDevices?.removeEventListener?.("devicechange", loadDevices)
+    }
+  }, [])
+
+  // Pre-live preview: mirror the currently selected camera into the preview
+  // <video> before going live, so the creator sees exactly which camera they
+  // picked. Once connected, the published LiveKit track drives the preview and
+  // this effect stands down (releasing its getUserMedia stream).
+  useEffect(() => {
+    const stopPreview = () => {
+      if (previewStreamRef.current) {
+        previewStreamRef.current.getTracks().forEach((t) => t.stop())
+        previewStreamRef.current = null
+      }
+    }
+
+    if (connected || sourceMode === "screen" || !selectedCamera) {
+      stopPreview()
+      return
+    }
+
+    let cancelled = false
+    ;(async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { deviceId: { exact: selectedCamera } },
+          audio: false,
+        })
+        if (cancelled) {
+          stream.getTracks().forEach((t) => t.stop())
+          return
+        }
+        stopPreview()
+        previewStreamRef.current = stream
+        if (localVideoRef.current) {
+          localVideoRef.current.srcObject = stream
+        }
+      } catch (err) {
+        // A busy or over-constrained device just means no preview; not fatal.
+        console.warn("Camera preview failed", err)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [selectedCamera, connected, sourceMode])
+
+  // Safety net: if the page unmounts before the stream is ended, release the
+  // pre-live preview camera so the camera light doesn't linger.
+  useEffect(() => {
+    return () => {
+      if (previewStreamRef.current) {
+        previewStreamRef.current.getTracks().forEach((t) => t.stop())
+        previewStreamRef.current = null
+      }
     }
   }, [])
 
@@ -176,6 +240,13 @@ export default function CreatorLivePage() {
   }
 
   const publishCameraTrack = async (room: Room, selectedCameraId: string | null) => {
+    // Release the pre-live preview stream first so the same camera device isn't
+    // held twice when we open it for the published track.
+    if (previewStreamRef.current) {
+      previewStreamRef.current.getTracks().forEach((t) => t.stop())
+      previewStreamRef.current = null
+    }
+
     const videoConstraints: VideoCaptureOptions = selectedCameraId ? { deviceId: selectedCameraId } : {}
     const vTrack = await createLocalVideoTrack(videoConstraints)
 
@@ -474,8 +545,16 @@ export default function CreatorLivePage() {
   }
 
   const handleSwitchCamera = async (deviceId: string) => {
+    if (!deviceId || publishing) return
     setSelectedCamera(deviceId)
+
+    // Not live yet (or paused): the selection is stored and the pre-live
+    // preview effect reflects it — there's nothing published to swap.
     if (!room || !connected || paused) return
+
+    // Screen-only stream has no published camera track to swap; keep the
+    // selection so it applies when the creator switches back to a camera.
+    if (sourceMode === "screen") return
 
     setPublishing(true)
     try {
@@ -520,6 +599,10 @@ export default function CreatorLivePage() {
   // track (this is what actually turns off the camera/mic indicator), then
   // disconnect the room.
   const releaseLocalMedia = async () => {
+    if (previewStreamRef.current) {
+      previewStreamRef.current.getTracks().forEach((t) => t.stop())
+      previewStreamRef.current = null
+    }
     if (!room) return
     const tracks = [
       publishedVideoRef.current,
@@ -657,22 +740,23 @@ export default function CreatorLivePage() {
               </button>
             </div>
             {cameras.length > 0 ? (
-              <div className="flex gap-2 overflow-x-auto pb-2">
-                {cameras.map((camera) => (
-                  <button
-                    type="button"
-                    key={camera.deviceId}
-                    onClick={() => handleSwitchCamera(camera.deviceId)}
-                    disabled={paused}
-                    className={`rounded-full border px-3 py-2 text-sm transition ${
-                      selectedCamera === camera.deviceId
-                        ? "border-white bg-white/10 text-white"
-                        : "border-white/30 text-slate-200"
-                    } ${(paused) ? 'cursor-not-allowed opacity-50' : ''}`}
-                  >
-                    {camera.label}
-                  </button>
-                ))}
+              <div className="flex items-center gap-2">
+                <Camera className="h-4 w-4 shrink-0 text-slate-300" />
+                <select
+                  value={selectedCamera ?? ""}
+                  onChange={(e) => handleSwitchCamera(e.target.value)}
+                  disabled={publishing || paused}
+                  aria-label="Select camera"
+                  className={`w-full max-w-xs rounded-full border border-white/30 bg-black/40 px-3 py-2 text-sm text-white outline-none transition sm:w-auto ${
+                    publishing || paused ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+                  }`}
+                >
+                  {cameras.map((camera) => (
+                    <option key={camera.deviceId} value={camera.deviceId} className="bg-black text-white">
+                      {camera.label}
+                    </option>
+                  ))}
+                </select>
               </div>
             ) : null}
           </div>

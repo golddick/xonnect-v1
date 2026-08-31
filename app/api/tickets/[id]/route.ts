@@ -138,12 +138,28 @@ export async function POST(
       return NextResponse.json({ message: "Requested quantity exceeds available tickets" }, { status: 400 })
     }
 
-    const buyerEmail = resolveBuyerEmail(session?.user?.email, body.buyerEmail)
+    // Streaming access (STREAM tickets — e.g. the TV watch page) is account-bound: only
+    // signed-in users can buy it, and it is tied to their account email. Venue tickets are
+    // left open to guest checkout, so this does not touch the venue ticket flow.
+    const sessionEmail = session?.user?.email?.trim().toLowerCase() || null
+    const isStreamTicket = String((ticket as any).access ?? "STREAM").toUpperCase() !== "VENUE"
+    if (isStreamTicket && !sessionEmail) {
+      return NextResponse.json(
+        { message: "You must be signed in to purchase streaming access." },
+        { status: 401 }
+      )
+    }
+
+    const buyerEmail = isStreamTicket
+      ? (sessionEmail as string)
+      : resolveBuyerEmail(session?.user?.email, body.buyerEmail)
     if (!buyerEmail) {
       return NextResponse.json({ message: "Email is required" }, { status: 400 })
     }
 
-    const buyerName = resolveBuyerName(session?.user?.name, body.buyerName, buyerEmail)
+    const buyerName = isStreamTicket
+      ? (session?.user?.name?.trim() || buyerEmail.split("@")[0] || "Member")
+      : resolveBuyerName(session?.user?.name, body.buyerName, buyerEmail)
     const buyerPhone = body.buyerPhone?.trim() || null
     const unitPrice = Math.max(Math.round(ticket.price ?? 0), 0)
     const amount = unitPrice * quantity
