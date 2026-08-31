@@ -33,24 +33,7 @@ import {
 } from "@/lib/checkin-camera-client"
 import Logo from "@/components/nav/logo"
 
-const ICE_SERVERS: RTCIceServer[] = [{ urls: "stun:stun.l.google.com:19302" }]
-
-type CameraStatus = "idle" | "starting" | "connecting" | "connected" | "completed" | "error"
-
-function parseSignalPayload(payload: string) {
-  try {
-    return JSON.parse(payload) as any
-  } catch {
-    return null
-  }
-}
-
-function createPeerId() {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID()
-  }
-  return `peer-${Math.random().toString(36).slice(2)}-${Date.now().toString(36)}`
-}
+type CameraStatus = "idle" | "starting" | "ready" | "completed" | "error"
 
 function formatTime(value: string | null | undefined) {
   if (!value) return ""
@@ -67,13 +50,10 @@ export default function CameraTokenPage() {
   const token = params.token
 
   const localVideoRef = useRef<HTMLVideoElement | null>(null)
-  const peerConnectionRef = useRef<RTCPeerConnection | null>(null)
   const localStreamRef = useRef<MediaStream | null>(null)
   const pollTimerRef = useRef<number | null>(null)
   const lastSignalAtRef = useRef<string | null>(null)
   const activeRef = useRef(true)
-  const peerIdRef = useRef<string>("")
-  if (!peerIdRef.current) peerIdRef.current = createPeerId()
 
   const [status, setStatus] = useState<CameraStatus>("idle")
   const [error, setError] = useState("")
@@ -118,11 +98,6 @@ export default function CameraTokenPage() {
       pollTimerRef.current = null
     }
 
-    if (peerConnectionRef.current) {
-      peerConnectionRef.current.close()
-      peerConnectionRef.current = null
-    }
-
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach((track) => track.stop())
       localStreamRef.current = null
@@ -138,18 +113,9 @@ export default function CameraTokenPage() {
     setSubmitResult(null)
   }
 
-  const disconnect = async (nextStatus: CameraStatus = "completed") => {
+  const disconnect = (nextStatus: CameraStatus = "completed") => {
     stopStream()
     setStatus(nextStatus)
-    try {
-      await sendCameraSessionAction(token, "signal", {
-        sender: "phone",
-        type: nextStatus === "completed" ? "completed" : "revoked",
-        payload: { peerId: peerIdRef.current, reason: nextStatus },
-      })
-    } catch {
-      // Best effort.
-    }
   }
 
   const handleDetectedCode = async (code: string) => {
@@ -258,7 +224,7 @@ export default function CameraTokenPage() {
         }
 
         if (data.session.status === "COMPLETED" || data.session.status === "REVOKED" || data.session.status === "EXPIRED") {
-          await disconnect(data.session.status === "COMPLETED" ? "completed" : "error")
+          disconnect(data.session.status === "COMPLETED" ? "completed" : "error")
         }
       } catch (err) {
         if (!cancelled) {
@@ -278,7 +244,7 @@ export default function CameraTokenPage() {
   }, [token])
 
   useEffect(() => {
-    if (status !== "connecting" && status !== "connected") return
+    if (status !== "ready") return
 
     pollTimerRef.current = window.setInterval(async () => {
       try {
@@ -287,37 +253,17 @@ export default function CameraTokenPage() {
         setSessionState(data.session.status)
         setExpiresAt(data.session.expiresAt)
 
+        const latest = data.signals[data.signals.length - 1]
+        if (latest) lastSignalAtRef.current = latest.createdAt
+
+        // Stop scanning if the operator ends/revokes the session or it expires.
         if (data.session.status === "COMPLETED" || data.session.status === "REVOKED" || data.session.status === "EXPIRED") {
-          await disconnect(data.session.status === "COMPLETED" ? "completed" : "error")
-          return
-        }
-
-        for (const signal of data.signals) {
-          lastSignalAtRef.current = signal.createdAt
-          const payload = parseSignalPayload(signal.payload)
-          if (!payload) continue
-
-          // Only react to answers/candidates the operator addressed to THIS phone.
-          if (signal.sender !== "operator" || payload.peerId !== peerIdRef.current) continue
-
-          if (signal.type === "answer" && peerConnectionRef.current) {
-            await peerConnectionRef.current.setRemoteDescription(
-              new RTCSessionDescription({ type: payload.type, sdp: payload.sdp })
-            )
-          }
-
-          if (signal.type === "candidate" && peerConnectionRef.current && payload.candidate) {
-            try {
-              await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(payload))
-            } catch {
-              // Ignore ICE noise.
-            }
-          }
+          disconnect(data.session.status === "COMPLETED" ? "completed" : "error")
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Camera session sync failed")
       }
-    }, 1200)
+    }, 3000)
 
     return () => {
       if (pollTimerRef.current) {
@@ -360,52 +306,17 @@ export default function CameraTokenPage() {
       setCameraReady(true)
       void startScanner()
 
-      const peerConnection = new RTCPeerConnection({ iceServers: ICE_SERVERS })
-      peerConnectionRef.current = peerConnection
-
-      stream.getTracks().forEach((track) => {
-        peerConnection.addTrack(track, stream)
+      // No video is streamed to the dashboard. The phone scans tickets locally and
+      // checks people in over the shared camera token; each check-in surfaces in the
+      // operator's live table. Mark the session connected so the operator can see
+      // that a phone has joined.
+      await sendCameraSessionAction(token, "connect", {
+        clientLabel: navigator.userAgent,
       })
 
-      peerConnection.onicecandidate = async (event) => {
-        if (event.candidate) {
-          await sendCameraSessionAction(token, "signal", {
-            sender: "phone",
-            type: "candidate",
-            payload: { peerId: peerIdRef.current, ...event.candidate.toJSON() },
-          })
-        }
-      }
-
-      peerConnection.onconnectionstatechange = async () => {
-        if (peerConnection.connectionState === "connected") {
-          setStatus("connected")
-          setConnectedAt(new Date().toISOString())
-          await sendCameraSessionAction(token, "connect", {
-            clientLabel: navigator.userAgent,
-          })
-        }
-
-        if (peerConnection.connectionState === "failed" || peerConnection.connectionState === "disconnected") {
-          setStatus("error")
-        }
-      }
-
-      const offer = await peerConnection.createOffer({
-        offerToReceiveVideo: false,
-        offerToReceiveAudio: false,
-      })
-      await peerConnection.setLocalDescription(offer)
-
-      // Publish the offer so the operator can answer this specific phone.
-      await sendCameraSessionAction(token, "signal", {
-        sender: "phone",
-        type: "offer",
-        payload: { peerId: peerIdRef.current, type: offer.type, sdp: offer.sdp },
-      })
-
+      setConnectedAt(new Date().toISOString())
       lastSignalAtRef.current = new Date().toISOString()
-      setStatus("connecting")
+      setStatus("ready")
     } catch (err) {
       stopStream()
       setStatus("error")
@@ -510,10 +421,10 @@ export default function CameraTokenPage() {
             </div>
           )}
 
-          {status === "connected" && (
+          {status === "ready" && (
             <div className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-500">
               <CheckCircle2 className="h-4 w-4" />
-              <span>Live feed connected</span>
+              <span>Camera ready — point it at ticket QR codes to check people in.</span>
             </div>
           )}
 
@@ -543,10 +454,8 @@ export default function CameraTokenPage() {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Starting
                 </>
-              ) : status === "connecting" ? (
-                cameraReady ? "Scanning tickets" : "Connecting camera"
-              ) : status === "connected" ? (
-                "Camera active"
+              ) : status === "ready" ? (
+                "Scanning tickets"
               ) : (
                 "Start camera"
               )}

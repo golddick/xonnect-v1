@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 
 import { auth } from "@/lib/auth/auth"
 import { prisma } from "@/lib/db/prisma"
-import { Role } from "@/lib/generated/prisma"
 import { initializePaystackTransaction } from "@/lib/paystack"
 import {
   createPendingVideoPurchase,
@@ -30,14 +29,20 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   try {
     const resolvedParams = await params
     const session = await auth()
-    const role = session?.user?.role
     const email = session?.user?.email?.toLowerCase() ?? null
     const profileId = session?.user?.profileId ?? null
 
+    // Streaming/VOD access is account-bound: only signed-in users can purchase, and the
+    // purchase is tied to their account so it auto-unlocks on future visits (no code needed).
+    if (!email) {
+      return NextResponse.json(
+        { message: "You must be signed in to purchase this video." },
+        { status: 401 }
+      )
+    }
+
     const body = (await request.json()) as {
       purchaseType?: unknown
-      buyerName?: string
-      buyerEmail?: string
       buyerPhone?: string
     }
 
@@ -68,16 +73,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ message: "Selected purchase option is unavailable" }, { status: 400 })
     }
 
-    const buyerEmail = email ?? body.buyerEmail?.trim().toLowerCase() ?? ""
-    if (!buyerEmail) {
-      return NextResponse.json({ message: "buyerEmail is required" }, { status: 400 })
-    }
-
-    const buyerName =
-      session?.user?.name?.trim() ||
-      body.buyerName?.trim() ||
-      buyerEmail.split("@")[0] ||
-      "Guest"
+    const buyerEmail = email
+    const buyerName = session?.user?.name?.trim() || buyerEmail.split("@")[0] || "Member"
 
     const pendingPurchase = await createPendingVideoPurchase({
       creatorId: video.creatorId,
@@ -88,7 +85,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         buyerName,
         buyerEmail,
         buyerPhone: body.buyerPhone?.trim() || null,
-        buyerProfileId: role === Role.CREATOR ? profileId : profileId ?? null,
+        buyerProfileId: profileId ?? null,
       },
     })
 

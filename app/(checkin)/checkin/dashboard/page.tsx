@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import type { FormEvent } from "react"
 import { useRouter } from "next/navigation"
 import {
@@ -9,9 +9,6 @@ import {
   LogOut,
   Search,
   Ticket,
-  User,
-  Users,
-  Zap,
 } from "lucide-react"
 
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -97,10 +94,8 @@ export default function CheckInDashboard() {
   const [error, setError] = useState("")
   const [result, setResult] = useState<ScanResult | null>(null)
 
-  useEffect(() => {
-    let active = true
-
-    async function loadSession() {
+  const loadSessionData = useCallback(
+    async ({ silent = false }: { silent?: boolean } = {}) => {
       try {
         const response = await fetch("/api/checkin/session", { cache: "no-store" })
         if (response.status === 401) {
@@ -114,24 +109,34 @@ export default function CheckInDashboard() {
           throw new Error(data.message ?? "Failed to load session")
         }
 
-        if (active) {
-          setSession(data)
-        }
+        setSession(data)
+        if (!silent) setError("")
       } catch (err) {
-        if (active) {
+        // Silent polls must not clobber the UI on a transient network blip.
+        if (!silent) {
           setError(err instanceof Error ? err.message : "Failed to load session")
         }
       } finally {
-        if (active) setLoading(false)
+        if (!silent) setLoading(false)
       }
-    }
+    },
+    [router]
+  )
 
-    void loadSession()
+  // Initial load.
+  useEffect(() => {
+    void loadSessionData()
+  }, [loadSessionData])
 
-    return () => {
-      active = false
-    }
-  }, [router])
+  // Live updates: poll the session so phone (and manual) check-ins populate the
+  // table without a manual refresh. Silent — no splash, no error flash on blips.
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      void loadSessionData({ silent: true })
+    }, 4000)
+
+    return () => window.clearInterval(interval)
+  }, [loadSessionData])
 
   const stats = useMemo(() => {
     return session?.stats ?? {
@@ -173,10 +178,7 @@ export default function CheckInDashboard() {
       setResult(data as ScanResult)
       setTicketCode("")
 
-      const refreshed = await fetch("/api/checkin/session", { cache: "no-store" })
-      if (refreshed.ok) {
-        setSession((await refreshed.json()) as DashboardResponse)
-      }
+      await loadSessionData({ silent: true })
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to process ticket")
     } finally {
@@ -253,7 +255,7 @@ export default function CheckInDashboard() {
 
         <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="lg:col-span-2">
-            <CameraSessionPanel />
+            <CameraSessionPanel recentScans={session.recentScans} />
           </div>
 
           <div className="rounded-lg border border-border bg-card p-5">
@@ -345,39 +347,6 @@ export default function CheckInDashboard() {
             </div>
           </div>
         </section>
-
-        <section className="rounded-lg border border-border bg-card p-5">
-          <div className="mb-4 flex items-center gap-2">
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">Recent checks</h2>
-          </div>
-
-          <div className="space-y-3">
-            {session.recentScans.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No scans yet.</p>
-            ) : (
-              session.recentScans.map((scan) => (
-                <div
-                  key={scan.id}
-                  className="flex flex-col gap-2 rounded-lg border border-border bg-background px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div>
-                    <p className="font-medium">
-                      {scan.attendeeName ?? "Unknown attendee"}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {scan.code} · {scan.ticketType ?? "Ticket"} · {scan.gateName}
-                    </p>
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {formatDateTime(scan.scannedAt)}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </section>
-        
       </main>
     </div>
   )

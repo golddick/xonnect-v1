@@ -123,7 +123,7 @@ export default function WatchAccessOverlay({
          
         </div>
 
-        {!showAccessCodeInput && (
+        {!showAccessCodeInput && loggedIn && (
           <div className="flex items-center justify-between gap-2">
             <button
               type="button"
@@ -184,11 +184,11 @@ export default function WatchAccessOverlay({
 
             
           </div>
-        ) : (
+        ) : loggedIn ? (
           <div className="hidden lg:block rounded-xl border border-border/60 bg-muted/20 p-3.5 sm:p-4 text-sm text-muted-foreground leading-relaxed">
             You're signed in. We'll verify your purchase automatically and unlock this video as soon as access is available.
           </div>
-        )}
+        ) : null}
 
         {/* Guest email prompt */}
         {showGuestEmailPrompt && !loggedIn && (

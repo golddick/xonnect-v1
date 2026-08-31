@@ -1,61 +1,53 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
-import { AlertTriangle, Copy, Link2, RefreshCw, Trash2, Video } from "lucide-react"
+import { AlertTriangle, Copy, Link2, Trash2, Users } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { loadCameraSession, createCameraSession, sendCameraSessionAction } from "@/lib/checkin-camera-client"
 
-const ICE_SERVERS: RTCIceServer[] = [{ urls: "stun:stun.l.google.com:19302" }]
+export type CheckInScan = {
+  id: string
+  attendeeName: string | null
+  attendeeEmail: string | null
+  gateName: string
+  status: string
+  scannedAt: string
+  code: string
+  ticketType: string | null
+}
 
 type CameraSessionPanelProps = {
   onTokenChange?: (token: string | null) => void
+  /** Live check-in feed, polled by the dashboard, rendered in place of the old video feed. */
+  recentScans?: CheckInScan[]
 }
 
-type PeerTile = {
-  peerId: string
-  stream: MediaStream
+function formatTime(value: string) {
+  return new Intl.DateTimeFormat("en-NG", {
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(value))
 }
 
-function parseSignalPayload(payload: string) {
-  try {
-    return JSON.parse(payload) as any
-  } catch {
-    return null
+function scanStatusBadge(status: string) {
+  const normalized = status.toUpperCase()
+  if (normalized === "SUCCESS") {
+    return { label: "Checked in", className: "border-emerald-500/30 bg-emerald-500/10 text-emerald-600" }
   }
+  if (normalized === "DUPLICATE") {
+    return { label: "Duplicate", className: "border-amber-500/30 bg-amber-500/10 text-amber-600" }
+  }
+  return { label: "Invalid", className: "border-red-500/30 bg-red-500/10 text-red-600" }
 }
 
-/** Renders a single phone's live stream; attaches the MediaStream via ref. */
-function PeerVideo({ stream }: { stream: MediaStream }) {
-  const videoRef = useRef<HTMLVideoElement | null>(null)
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.srcObject = stream
-    }
-  }, [stream])
-
-  return (
-    <video
-      ref={videoRef}
-      autoPlay
-      playsInline
-      muted
-      className="aspect-video w-full rounded-lg bg-black object-cover"
-    />
-  )
-}
-
-export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanelProps) {
-  // One RTCPeerConnection per connected phone, keyed by the phone's peerId.
-  const peerConnectionsRef = useRef<Map<string, RTCPeerConnection>>(new Map())
+export default function CameraSessionPanel({ onTokenChange, recentScans = [] }: CameraSessionPanelProps) {
   const pollTimerRef = useRef<number | null>(null)
   const lastSignalAtRef = useRef<string | null>(null)
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-  const [peers, setPeers] = useState<PeerTile[]>([])
   const [session, setSession] = useState<{
     token: string
     tokenPrefix: string
@@ -78,117 +70,31 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
   } | null>(null)
   const [sessionStatus, setSessionStatus] = useState("")
 
-  const upsertPeerStream = (peerId: string, stream: MediaStream) => {
-    setPeers((prev) => {
-      if (prev.some((peer) => peer.peerId === peerId)) {
-        return prev.map((peer) => (peer.peerId === peerId ? { ...peer, stream } : peer))
-      }
-      return [...prev, { peerId, stream }]
-    })
-  }
-
-  const removePeer = (peerId: string) => {
-    const pc = peerConnectionsRef.current.get(peerId)
-    if (pc) {
-      pc.close()
-      peerConnectionsRef.current.delete(peerId)
-    }
-    setPeers((prev) => prev.filter((peer) => peer.peerId !== peerId))
-  }
-
-  const stopAllPeers = () => {
+  const stopPolling = () => {
     if (pollTimerRef.current) {
       window.clearInterval(pollTimerRef.current)
       pollTimerRef.current = null
     }
-
-    peerConnectionsRef.current.forEach((pc) => pc.close())
-    peerConnectionsRef.current.clear()
-    setPeers([])
   }
 
-  const syncSession = async (token: string) => {
+  // Light status poll: reflects when a phone opens/connects and auto-clears the
+  // session once it ends. No video is streamed — paired phones scan tickets
+  // locally and each check-in surfaces in the live table below.
+  const refreshStatus = async (token: string) => {
     try {
       const data = await loadCameraSession(token, lastSignalAtRef.current)
       setSessionStatus(data.session.status)
 
-      if (data.session.status === "COMPLETED" || data.session.status === "REVOKED" || data.session.status === "EXPIRED") {
-        stopAllPeers()
+      const latest = data.signals[data.signals.length - 1]
+      if (latest) lastSignalAtRef.current = latest.createdAt
+
+      if (
+        data.session.status === "COMPLETED" ||
+        data.session.status === "REVOKED" ||
+        data.session.status === "EXPIRED"
+      ) {
+        stopPolling()
         onTokenChange?.(null)
-        return
-      }
-
-      for (const signal of data.signals) {
-        lastSignalAtRef.current = signal.createdAt
-        const payload = parseSignalPayload(signal.payload)
-        if (!payload) continue
-
-        // Only handle signals coming from phones, routed by their peerId.
-        if (signal.sender !== "phone") continue
-        const peerId: string | undefined = payload.peerId
-        if (!peerId) continue
-
-        if (signal.type === "offer") {
-          // A new/restarted phone — replace any prior connection for this peerId.
-          const existing = peerConnectionsRef.current.get(peerId)
-          if (existing) {
-            existing.close()
-            peerConnectionsRef.current.delete(peerId)
-          }
-
-          const peerConnection = new RTCPeerConnection({ iceServers: ICE_SERVERS })
-          peerConnectionsRef.current.set(peerId, peerConnection)
-
-          peerConnection.ontrack = (event) => {
-            const stream = event.streams[0]
-            if (stream) upsertPeerStream(peerId, stream)
-          }
-
-          peerConnection.onicecandidate = async (candidateEvent) => {
-            if (candidateEvent.candidate) {
-              await sendCameraSessionAction(token, "signal", {
-                sender: "operator",
-                type: "candidate",
-                payload: { peerId, ...candidateEvent.candidate.toJSON() },
-              })
-            }
-          }
-
-          peerConnection.onconnectionstatechange = async () => {
-            const state = peerConnection.connectionState
-            if (state === "connected") {
-              await sendCameraSessionAction(token, "connect", {
-                clientLabel: navigator.userAgent,
-              })
-            }
-            if (state === "failed" || state === "closed" || state === "disconnected") {
-              removePeer(peerId)
-            }
-          }
-
-          await peerConnection.setRemoteDescription(
-            new RTCSessionDescription({ type: payload.type, sdp: payload.sdp })
-          )
-          const answer = await peerConnection.createAnswer()
-          await peerConnection.setLocalDescription(answer)
-
-          await sendCameraSessionAction(token, "signal", {
-            sender: "operator",
-            type: "answer",
-            payload: { peerId, type: answer.type, sdp: answer.sdp },
-          })
-        }
-
-        if (signal.type === "candidate") {
-          const pc = peerConnectionsRef.current.get(peerId)
-          if (pc && payload.candidate) {
-            try {
-              await pc.addIceCandidate(new RTCIceCandidate(payload))
-            } catch {
-              // Ignore ICE noise.
-            }
-          }
-        }
       }
     } catch (syncError) {
       setError(syncError instanceof Error ? syncError.message : "Camera sync failed")
@@ -201,30 +107,27 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
     onTokenChange?.(session.token)
 
     pollTimerRef.current = window.setInterval(() => {
-      void syncSession(session.token)
-    }, 1200)
+      void refreshStatus(session.token)
+    }, 3000)
 
-    void syncSession(session.token)
+    void refreshStatus(session.token)
 
     return () => {
-      if (pollTimerRef.current) {
-        window.clearInterval(pollTimerRef.current)
-        pollTimerRef.current = null
-      }
+      stopPolling()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.token])
 
   useEffect(() => {
     return () => {
-      stopAllPeers()
+      stopPolling()
     }
   }, [])
 
   const handleGenerate = async () => {
     setLoading(true)
     setError("")
-    stopAllPeers()
+    stopPolling()
 
     try {
       const created = await createCameraSession()
@@ -248,7 +151,7 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
         message: "Operator revoked the camera session",
       })
       setSessionStatus("REVOKED")
-      stopAllPeers()
+      stopPolling()
       onTokenChange?.(null)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to revoke camera session")
@@ -272,7 +175,7 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
         <div>
           <h2 className="text-lg font-semibold">Camera QR</h2>
           <p className="text-sm text-muted-foreground">
-            Generate a link for one or more nearby phones to act as temporary cameras.
+            Pair one or more phones to scan tickets. Every check-in appears in the table on the right — no refresh needed.
           </p>
         </div>
         <Badge variant="secondary" className="rounded-full">
@@ -313,40 +216,73 @@ export default function CameraSessionPanel({ onTokenChange }: CameraSessionPanel
               Revoke
             </Button>
           </div>
+
+          {session?.cameraUrl && (
+            <div className="rounded-lg border border-border bg-background p-3">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Link2 className="h-4 w-4" />
+                <span>Camera URL</span>
+              </div>
+              <p className="mt-2 break-all text-xs font-medium">{session.cameraUrl}</p>
+            </div>
+          )}
         </div>
 
-        <div className="space-y-3">
-          <div className="rounded-lg border border-border bg-background p-3">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Link2 className="h-4 w-4" />
-              <span>Camera URL</span>
+        <div className="rounded-lg border border-border bg-background">
+          <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <Users className="h-4 w-4 text-muted-foreground" />
+              <span>Live check-ins</span>
             </div>
-            <p className="mt-2 break-all text-sm font-medium">{session?.cameraUrl || "Generate a session to get a link"}</p>
-          </div>
-
-          <div className="rounded-lg border border-border bg-background p-3">
-            <div className="flex items-center justify-between gap-2 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Video className="h-4 w-4" />
-                <span>Live feeds</span>
-              </div>
-              <span className="text-xs">
-                {peers.length > 0 ? `${peers.length} phone${peers.length > 1 ? "s" : ""} connected` : ""}
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
               </span>
-            </div>
-
-            {peers.length > 0 ? (
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                {peers.map((peer) => (
-                  <PeerVideo key={peer.peerId} stream={peer.stream} />
-                ))}
-              </div>
-            ) : (
-              <div className="mt-3 flex aspect-video w-full items-center justify-center rounded-lg border border-dashed border-border bg-black/5 text-center text-xs text-muted-foreground">
-                Waiting for a phone to join the session.
-              </div>
-            )}
+              Live
+            </span>
           </div>
+
+          {recentScans.length === 0 ? (
+            <div className="flex min-h-[220px] items-center justify-center px-4 py-8 text-center text-sm text-muted-foreground">
+              No check-ins yet. Scans from paired phones appear here automatically.
+            </div>
+          ) : (
+            <div className="max-h-[360px] overflow-y-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="sticky top-0 bg-background text-xs uppercase tracking-wide text-muted-foreground">
+                  <tr className="border-b border-border">
+                    <th className="px-4 py-2 font-medium">Attendee</th>
+                    <th className="px-4 py-2 font-medium">Ticket</th>
+                    <th className="hidden px-4 py-2 font-medium sm:table-cell">Gate</th>
+                    <th className="px-4 py-2 font-medium">Time</th>
+                    <th className="px-4 py-2 text-right font-medium">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentScans.map((scan) => {
+                    const badge = scanStatusBadge(scan.status)
+                    return (
+                      <tr key={scan.id} className="border-b border-border/60 last:border-0">
+                        <td className="px-4 py-2.5">
+                          <p className="font-medium">{scan.attendeeName ?? "Unknown attendee"}</p>
+                          <p className="font-mono text-xs text-muted-foreground">{scan.code}</p>
+                        </td>
+                        <td className="px-4 py-2.5 text-muted-foreground">{scan.ticketType ?? "Ticket"}</td>
+                        <td className="hidden px-4 py-2.5 text-muted-foreground sm:table-cell">{scan.gateName}</td>
+                        <td className="px-4 py-2.5 text-muted-foreground">{formatTime(scan.scannedAt)}</td>
+                        <td className="px-4 py-2.5 text-right">
+                          <span className={`inline-flex rounded-full border px-2 py-0.5 text-xs font-medium ${badge.className}`}>
+                            {badge.label}
+                          </span>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </section>

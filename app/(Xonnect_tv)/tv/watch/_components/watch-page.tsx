@@ -277,6 +277,12 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
   const currentPartId = currentPart?.id ?? null
   const currentVideoUrl = currentPart?.videoUrl ?? null
 
+  // Purchases and access codes are account-bound: guests are sent to sign in first.
+  const signInHref = "/auth/login"
+  const redirectToSignIn = () => {
+    if (typeof window !== "undefined") window.location.assign(signInHref)
+  }
+
   useEffect(() => {
     if (session?.user?.email) {
       setCommentEmailInput(session.user.email)
@@ -557,7 +563,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
             }
             setMessage(
               data.event.access?.locked
-                ? "Ticket code did not unlock this event."
+                ? data.event.access?.loggedIn
+                  ? "This ticket code isn’t linked to your account."
+                  : "Please sign in to use a ticket code."
                 : "Ticket code accepted."
             )
           }
@@ -571,10 +579,16 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           setCreatorIsFollowed(nextFolder.creator?.isFollowing ?? false)
 
           if (nextFolder?.parts?.length) {
+            // A submitted access code that belongs to this account maps to a specific
+            // video; jump straight to it (otherwise fall back to ?part= or the first video).
+            const codeVideoId: string | null = nextFolder.access?.codeVideoId ?? null
+            const codeIndex = codeVideoId
+              ? nextFolder.parts.findIndex((part: WatchPart) => part.id === codeVideoId)
+              : -1
             const matchedIndex = partParam
               ? nextFolder.parts.findIndex((part: WatchPart) => part.id === partParam)
               : -1
-            const initialIndex = matchedIndex >= 0 ? matchedIndex : 0
+            const initialIndex = codeIndex >= 0 ? codeIndex : matchedIndex >= 0 ? matchedIndex : 0
             setActivePart(initialIndex)
             const targetPart = nextFolder.parts[initialIndex]
             const serverAccessExpiresAt = targetPart?.accessExpiresAt ?? null
@@ -597,7 +611,16 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
               }
             }
             if (submittedAccessCode) {
-              const accessAccepted = Boolean(targetPart && !targetPart.isLocked && !targetPart.previewOnly && !accessExpired)
+              // The server only returns codeVideoId when the code is tied to this account,
+              // so a code accepted here is both valid and owned by the signed-in user.
+              const accessAccepted = Boolean(
+                codeVideoId &&
+                  targetPart &&
+                  targetPart.id === codeVideoId &&
+                  !targetPart.isLocked &&
+                  !targetPart.previewOnly &&
+                  !accessExpired
+              )
               if (accessAccepted) {
                 persistGuestAccess(kind, watchId, submittedAccessCode)
                 persistAccessGrant(kind, watchId, targetPart?.id ?? null, serverAccessExpiresAt)
@@ -613,7 +636,9 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
                   ? "This access has expired. Please purchase or rent again."
                   : accessAccepted
                     ? "Access code accepted."
-                    : "Access code did not unlock this video."
+                    : nextFolder.access?.loggedIn
+                      ? "This access code isn’t linked to your account."
+                      : "Please sign in to use an access code."
               )
             }
           } else {
@@ -1337,7 +1362,7 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
       onBuyerNameChange={setBuyerName}
       onBuyerEmailChange={setBuyerEmail}
       onBuyerPhoneChange={setBuyerPhone}
-      showGuestEmailPrompt={showGuestEmailPrompt && !watchFolder.access.loggedIn}
+      showGuestEmailPrompt={false}
       guestEmail={buyerEmail}
       onGuestEmailChange={setBuyerEmail}
       onGuestEmailSubmit={() => {
@@ -1351,31 +1376,36 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
           void pendingPurchaseAction(submittedEmail)
         }
       }}
-      purchaseOptions={(["rent24", "rent48", "purchase"] as PurchaseType[])
-        .map((purchaseType) => ({
-          type: purchaseType,
-          label: purchaseType,
-          price:
-            purchaseType === "rent24"
-              ? currentPart?.rent24Price ?? null
-              : purchaseType === "rent48"
-                ? currentPart?.rent48Price ?? null
-                : currentPart?.purchasePrice ?? null,
-        }))
-        .filter((option) => typeof option.price === "number" && option.price > 0)}
+      purchaseOptions={
+        watchFolder.access.loggedIn
+          ? (["rent24", "rent48", "purchase"] as PurchaseType[])
+              .map((purchaseType) => ({
+                type: purchaseType,
+                label: purchaseType,
+                price:
+                  purchaseType === "rent24"
+                    ? currentPart?.rent24Price ?? null
+                    : purchaseType === "rent48"
+                      ? currentPart?.rent48Price ?? null
+                      : currentPart?.purchasePrice ?? null,
+              }))
+              .filter((option) => typeof option.price === "number" && option.price > 0)
+          : []
+      }
       onPurchase={(purchaseType) => {
         if (!currentPart) return
 
-        const resolvedBuyerEmail = watchFolder.access.loggedIn && session?.user?.email ? session.user.email : buyerEmail.trim()
-        if (!watchFolder.access.loggedIn && !resolvedBuyerEmail) {
-          setPendingPurchaseAction(() => (email: string) => handleFolderPurchase(purchaseType, email))
-          setShowGuestEmailPrompt(true)
-          setMessage("Enter your email to continue checkout.")
+        // Only signed-in users can purchase; guests are sent to sign in first.
+        if (!watchFolder.access.loggedIn || !session?.user?.email) {
+          setMessage("Please sign in to purchase or rent this video.")
+          redirectToSignIn()
           return
         }
 
-        void handleFolderPurchase(purchaseType, resolvedBuyerEmail)
+        void handleFolderPurchase(purchaseType, session?.user?.email ?? "")
       }}
+      secondaryActionLabel={watchFolder.access.loggedIn ? undefined : "Sign in to continue"}
+      secondaryActionHref={watchFolder.access.loggedIn ? undefined : signInHref}
       isPurchasing={busy === "code" ? "purchase" : busy}
       paymentAccessCode={paymentAccessCode}
       paymentUrl={paymentUrl}
@@ -1447,22 +1477,27 @@ export default function WatchPage({ kind, watchId }: WatchPageProps) {
         loggedIn={eventData.access?.loggedIn ?? false}
         showAccessCodeInput={false}
         showBuyerFields={false}
-        purchaseOptions={streamTicket && streamTicket.price > 0 ? [{ type: "purchase", label: "Buy ticket", price: streamTicket.price }] : []}
+        purchaseOptions={
+          eventData.access?.loggedIn && streamTicket && streamTicket.price > 0
+            ? [{ type: "purchase", label: "Buy ticket", price: streamTicket.price }]
+            : []
+        }
         onPurchase={() => {
-          const resolvedBuyerEmail = eventData.access?.loggedIn && session?.user?.email ? session.user.email : buyerEmail.trim()
-          if (!eventData.access?.loggedIn && !resolvedBuyerEmail) {
-            setPendingPurchaseAction(() => (email: string) => handleEventPurchase(email))
-            setShowGuestEmailPrompt(true)
-            setMessage("Enter your email to continue checkout.")
+          // Only signed-in users can purchase streaming access; guests sign in first.
+          if (!eventData.access?.loggedIn || !session?.user?.email) {
+            setMessage("Please sign in to purchase streaming access.")
+            redirectToSignIn()
             return
           }
 
-          void handleEventPurchase(resolvedBuyerEmail)
+          void handleEventPurchase(session?.user?.email ?? "")
         }}
+        secondaryActionLabel={eventData.access?.loggedIn ? undefined : "Sign in to continue"}
+        secondaryActionHref={eventData.access?.loggedIn ? undefined : signInHref}
         isPurchasing={busy === "purchase" ? "purchase" : null}
         paymentAccessCode={paymentAccessCode}
         paymentUrl={paymentUrl}
-        showGuestEmailPrompt={showGuestEmailPrompt && !(eventData.access?.loggedIn ?? false)}
+        showGuestEmailPrompt={false}
         guestEmail={buyerEmail}
         onGuestEmailChange={setBuyerEmail}
         onGuestEmailSubmit={() => {

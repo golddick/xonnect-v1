@@ -59,6 +59,7 @@ export type WatchFolder = {
     loggedIn: boolean
     canBypassAccess: boolean
     unlockedParts: number
+    codeVideoId: string | null
   }
 }
 
@@ -169,20 +170,27 @@ export async function loadWatchFolderData(
   })
 
   const purchaseAccessMap = new Map<string, { accessExpiresAt: Date | null; purchaseType: string }>()
+  const submittedAccessCode = options?.accessCode?.trim() || null
+  const loggedIn = Boolean(email || profileId)
+  let codeVideoId: string | null = null
 
-  if (!canBypassAccess) {
+  // Access is tied to the signed-in account only: a purchase counts when it was made by
+  // this profile or under this account email. Access codes are NOT an independent unlock
+  // path — guests cannot use them, and a submitted code is only honoured when its purchase
+  // belongs to this account (used below purely to jump to the video it was issued for).
+  if (!canBypassAccess && loggedIn) {
     const videoIds = videos.map((video) => video.id)
+    const ownershipFilters = [
+      profileId ? { buyerProfileId: profileId } : null,
+      email ? { buyerEmail: email } : null,
+    ].filter(Boolean) as any[]
 
-    if (videoIds.length > 0) {
+    if (videoIds.length > 0 && ownershipFilters.length > 0) {
       const purchases = await prisma.creatorVideoPurchase.findMany({
         where: {
           creatorVideoId: { in: videoIds },
           status: "COMPLETED",
-          OR: [
-            profileId ? { buyerProfileId: profileId } : undefined,
-            email ? { buyerEmail: email } : undefined,
-            options?.accessCode ? { accessCode: options.accessCode } : undefined,
-          ].filter(Boolean) as any,
+          OR: ownershipFilters,
         },
         select: {
           creatorVideoId: true,
@@ -198,6 +206,12 @@ export async function loadWatchFolderData(
 
         if (isExpired) {
           continue
+        }
+
+        // Remember which video the submitted access code maps to, so the client can jump
+        // straight to it. Only reachable here because the purchase is owned by this account.
+        if (submittedAccessCode && purchase.accessCode && purchase.accessCode === submittedAccessCode) {
+          codeVideoId = purchase.creatorVideoId
         }
 
         const existingAccess = purchaseAccessMap.get(purchase.creatorVideoId)
@@ -313,12 +327,13 @@ export async function loadWatchFolderData(
       parts,
       access: {
         locked: folderIsLocked,
-        accessCodeProvided: Boolean(options?.accessCode),
-        canUseAccessCode: parts.some((part) => part.isLocked),
-        requiresSignIn: !session?.user?.email,
-        loggedIn: Boolean(session?.user?.email),
+        accessCodeProvided: Boolean(submittedAccessCode),
+        canUseAccessCode: loggedIn && parts.some((part) => part.isLocked),
+        requiresSignIn: !loggedIn,
+        loggedIn,
         canBypassAccess,
         unlockedParts: publicParts.length,
+        codeVideoId,
       },
     },
     canBypassAccess,
