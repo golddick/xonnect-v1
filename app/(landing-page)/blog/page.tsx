@@ -111,14 +111,14 @@ const BlogPage = () => {
   return (
     <div className="min-h-screen w-full bg-background text-foreground overflow-x-hidden">
      
+     <div className="max-w-[1480px] mx-auto">
+
       <HeroSection2
             title="Read latest Blog News from Xonnect."
-            ICON={<BookAIcon className="w-5 h-5 text-red-400" />}
+            ICON={<BookAIcon className="w-5 h-5 text-red-600" />}
             iconTitle="Our Blog"
         />
-      <div className="w-full max-w-7xl mx-auto px-4">
-
-       
+      
 
         {/* <div className="flex flex-wrap gap-4 mb-12 justify-center">
           {categories.map((cat) => (
@@ -228,10 +228,12 @@ const BlogPage = () => {
             </div>
           </div>
         )}
-      </div>
+      
 
       <div className="mt-20">
         <NewsLetterSection />
+      </div>
+      
       </div>
     </div>
   )
