@@ -1,5 +1,6 @@
 import { Zap, Twitter, Instagram, Youtube, Linkedin, Mail, Phone, MapPin } from "lucide-react"
 import Link from "next/link"
+import Logo from "./nav/logo"
 
 const Footer = () => {
   return (
@@ -9,9 +10,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-6">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
-                <Zap className="w-5 h-5 text-white" />
-              </div>
+              <Logo /> 
               <span className="text-xl font-bold">Xonnect</span>
             </div>
             <p className="text-gray-400 leading-relaxed">
@@ -107,15 +106,15 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="flex items-center space-x-3">
               <Mail className="w-5 h-5 text-red-500" />
-              <span className="text-gray-400">hello@xonnect.com</span>
+              <span className="text-gray-400">hrxonnet@gmail.com</span>
             </div>
             <div className="flex items-center space-x-3">
               <Phone className="w-5 h-5 text-red-500" />
-              <span className="text-gray-400">+1 (555) 123-4567</span>
+              <span className="text-gray-400">+2347050998742</span>
             </div>
             <div className="flex items-center space-x-3">
               <MapPin className="w-5 h-5 text-red-500" />
-              <span className="text-gray-400">San Francisco, CA</span>
+              <span className="text-gray-400">NG</span>
             </div>
           </div>
         </div>

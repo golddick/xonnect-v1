@@ -123,15 +123,15 @@ export default function TicketsPage() {
   }, [activeCategory, events, search])
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen max-w-[1480px] mx-auto bg-background text-foreground">
 
      <HeroSection2
           title=" Your Front Row Seat ."
-          ICON={<BookAIcon className="w-5 h-5 text-red-400" />}
+          ICON={<BookAIcon className="w-5 h-5 text-red-600" />}
           iconTitle="Our Tickets "
       />
 
-      <section className="border-b px-4 lg:px-6 border-border bg-card/40">
+      <section className=" bg-card/40">
         <div className="mx-auto flex w-full flex-col gap-4 px-4 py-6 sm:px-6 lg:px-8">
           {/* <div className="flex flex-col gap-2">
             <p className="text-sm text-muted-foreground">Tickets</p>

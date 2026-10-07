@@ -12,7 +12,7 @@ import HeroSection2 from "@/app/(landing-page)/_component/heroSection";
 
 // ─── Team ─────────────────────────────────────────────────────────────────────
 const team = [
-  { name: "Kofi Mensah", role: "CEO & Co-Founder", avatar: "KM", bio: "Former broadcast engineer turned entrepreneur. Built Xonnect to solve the access problem he faced as a fan." },
+  { name: "Gold Dick", role: "CEO & Co-Founder", avatar: "GD", bio: "Built Xonnect to solve the access problem he faced as a fan." },
   { name: "Amara Osei", role: "CTO & Co-Founder", avatar: "AO", bio: "10+ years in streaming infrastructure. Obsessed with low-latency, high-quality live video at scale." },
   { name: "Zara Diallo", role: "Head of Creator Success", avatar: "ZD", bio: "Ex-YouTube creator with 2M+ subscribers. Knows exactly what creators need to thrive." },
   { name: "David Nkosi", role: "Head of Product", avatar: "DN", bio: "Product veteran from fintech and media. Designs experiences that feel effortless." },
@@ -31,8 +31,8 @@ const values = [
 // ─── Milestones ───────────────────────────────────────────────────────────────
 const milestones = [
   { year: "2024", title: "The Idea", desc: "Founders missed a sold-out concerts and asked: why can't the world watch this live?" },
-  { year: "2025", title: "First Build", desc: "Beta launched at a fola event in ui Hosted by GTB." },
-  { year: "2026", title: "Growth", desc: "Crossed 50K active users, $500K paid out to creators, expanded to 30 countries." }
+  { year: "2025", title: "First Build", desc: "Beta launched at a Fola Event in UI Hosted by GTB." },
+  // { year: "2026", title: "Growth", desc: "Crossed 50K active users, $500K paid out to creators, expanded to 30 countries." }
 ]
 
 // ─── Stats ────────────────────────────────────────────────────────────────────
@@ -45,20 +45,21 @@ const stats = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+
+    <div className="min-h-screen bg-background max-w-[1480px] mx-auto text-foreground overflow-x-hidden">
 
       {/* ── Hero ── */}
 
       <HeroSection2
           title="  Built for the Ones Left Outside."
-          ICON={<ShieldQuestion className="w-5 h-5 text-red-400" />}
+          ICON={<ShieldQuestion className="w-5 h-5 text-red-600" />}
           iconTitle="Our Story "
       /> 
 
 
 
       {/* ── Stats Bar ── */}
-      <section className=" bg-card/50 py-8 px-4 sm:px-6 md:px-8">
+      {/* <section className=" bg-card/50 py-8 px-4 sm:px-6 md:px-8">
         <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-6 md:divide-x divide-border">
           {stats.map((s, i) => (
             <motion.div
@@ -74,7 +75,7 @@ export default function AboutPage() {
             </motion.div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* ── The Problem We Solve ── */}
       <section className="py-20 px-4 sm:px-6 md:px-8">
@@ -223,7 +224,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Team ── */}
-      <section className="py-20 px-4 sm:px-6 md:px-8 bg-card/30">
+      {/* <section className="py-20 px-4 sm:px-6 md:px-8 bg-card/30">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -260,41 +261,63 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ── Final CTA ── */}
-      <section className="relative py-24 px-4 sm:px-6 md:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-red-600/20 via-background to-background" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-red-600/10 rounded-full blur-3xl" />
-        <div className="relative z-10 max-w-7xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <Badge variant="destructive" className="mb-6">Join the Movement</Badge>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-foreground mb-6 leading-tight">
-              Be Part of<br />What's Next.
-            </h2>
-            <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto">
-              Whether you're a creator ready to monetize your passion or a viewer hungry for authentic live experiences — Xonnect is your home.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth/signup">
-                <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white font-bold px-10 gap-2">
-                  Create Free Account <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link href="/tv">
-                <Button size="lg" variant="outline" className="border-border font-semibold px-10">
-                  Browse Content
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+       <section className="relative py-24 px-4 sm:px-6 md:px-8 overflow-hidden">
+      {/* Ambient blurred glow behind the card */}
+      {/* <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-red-600/10 rounded-full blur-3xl pointer-events-none" /> */}
+
+      {/* The visible card — radius + background live HERE */}
+      <div className="relative z-10 max-w-7xl mx-auto overflow-hidden rounded-t-lg rounded-br-lg rounded-bl-full border border-red-700/20 bg-background/40 backdrop-blur-sm">
+        {/* Gradient overlay — clipped by parent's rounded corners */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-red-700/20 via-background to-background" />
+
+        {/* Content */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative z-10 px-6 py-16 sm:px-10 md:px-16 text-center"
+        >
+          <Badge variant="destructive" className="mb-6">
+            Join the Movement
+          </Badge>
+
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-foreground mb-6 leading-tight">
+            Be Part of
+            <br />
+            What's Next.
+          </h2>
+
+          <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto">
+            Whether you're a creator ready to monetize your passion or a viewer
+            hungry for authentic live experiences — Xonnect is your home.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/auth/signup">
+              <Button
+                size="lg"
+                className="bg-red-600 hover:bg-red-700 text-white font-bold px-10 gap-2"
+              >
+                Create Free Account <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+            <Link href="/tv">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-border font-semibold px-10"
+              >
+                Browse Content
+              </Button>
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+    </section>
 
     </div>
   )

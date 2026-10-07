@@ -124,12 +124,12 @@ const FeaturesPage = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen max-w-[1480px] mx-auto bg-background text-foreground">
 
       {/* Hero Section */}
        <HeroSection2
           title=' '
-          ICON={<Globe className="w-4 h-4 text-red-400" />}
+          ICON={<Globe className="w-4 h-4 text-red-600" />}
           iconTitle="Our Features"
         />
 

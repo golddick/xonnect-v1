@@ -6,17 +6,72 @@ import { prisma } from "@/lib/db/prisma"
 import { buildTicketPayload, createTicketQrDataUrl } from "@/lib/ticket-media"
 import { TicketDownloadButton } from "@/components/ticket-download-button"
 
-const db = prisma as any
+interface TicketDocumentParams {
+  ticketCode: string
+}
 
-function formatCurrency(amount: number) {
+interface ProfileData {
+  id: string
+  [key: string]: unknown
+}
+
+interface CreatorData {
+  id: string
+  profile: ProfileData | null
+  [key: string]: unknown
+}
+
+interface EventData {
+  id: string
+  title: string
+  scheduledAt: Date | null
+  locationFullAddress?: string | null
+  locationName?: string | null
+  address?: string | null
+  locationCountry?: string | null
+  creator: CreatorData
+  [key: string]: unknown
+}
+
+interface TicketData {
+  id: string
+  access: "VENUE" | "STREAMING"
+  ticketType: string
+  event: EventData
+  [key: string]: unknown
+}
+
+interface TicketItemData {
+  ticketCode: string
+  [key: string]: unknown
+}
+
+interface PurchaseData {
+  id: string
+  ticketCode: string
+  quantity: number
+  amount: number
+  ticket: TicketData
+  ticketItems?: TicketItemData[] | null
+  [key: string]: unknown
+}
+
+interface TicketPurchaseLookup {
+  ticketCode: string
+  purchase: PurchaseData | null
+  [key: string]: unknown
+}
+
+const db: typeof prisma = prisma
+
+function formatCurrency(amount: number): string {
   if (amount === 0) return "Free"
   return `NGN ${amount.toLocaleString()}`
 }
 
-function formatDate(dateString: string | null) {
-  if (!dateString) return "Date not set"
+function formatDate(date: Date | null): string {
+  if (!date) return "Date not set"
 
-  const date = new Date(dateString)
   if (Number.isNaN(date.getTime())) return "Date not set"
 
   return new Intl.DateTimeFormat("en-NG", {
@@ -32,7 +87,7 @@ function formatDate(dateString: string | null) {
 export default async function TicketDocumentPage({
   params,
 }: {
-  params: Promise<{ ticketCode: string }>
+  params: Promise<TicketDocumentParams>
 }) {
   const { ticketCode } = await params
 

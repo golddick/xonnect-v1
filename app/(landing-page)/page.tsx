@@ -108,7 +108,7 @@ export default function HomePage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <div className="min-h-screen max-w-[1480px] mx-auto bg-green-500 text-foreground overflow-x-hidden">
 
       {/* 1.  Hero */}
       
@@ -116,7 +116,7 @@ export default function HomePage() {
    
 
       {/* 2. Stats Bar */}
-      <section className="relative z-10  bg-card/50 backdrop-blur-sm py-6 px-4 sm:px-6 md:px-8">
+      {/* <section className="relative z-10  bg-card/50 backdrop-blur-sm py-6 px-4 sm:px-6 md:px-8">
         <div className="w-full ">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x divide-border">
             {stats.map((stat, i) => (
@@ -135,7 +135,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* 3. Live Now / Trending Now */}
       <LiveNow />
