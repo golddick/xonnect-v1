@@ -98,18 +98,18 @@ export default function XonnectHero() {
           >
             <div className="relative w-full max-w-md mx-auto">
               <div className="absolute inset-0 rounded-full bg-red-500/10 blur-3xl" />
-              <div className="relative mx-auto w-[280px] sm:w-[320px] lg:w-[380px]">
-                <WorldTreeGlobe size={370} accent="#F02330" dotColor="#F8FAFC" />
+              <div className="relative mx-auto w-[380px]  ">
+                <WorldTreeGlobe size={470} accent="#F02330" dotColor="#F8FAFC" />
               </div>
 
-              <div className="absolute top-6 right-0 w-32 p-3 bg-card backdrop-blur-xl border border-border rounded-3xl text-foreground text-xs text-center">
+              {/* <div className="absolute top-6 right-0 w-32 p-3 bg-card backdrop-blur-xl border border-border rounded-3xl text-foreground text-xs text-center">
                 <strong className="block text-sm text-foreground">Live</strong>
                 Global events
               </div>
               <div className="absolute bottom-8 left-0 w-32 p-3 bg-white/10 backdrop-blur-xl border border-border rounded-3xl text-foreground text-xs text-center">
                 <strong className="block text-sm text-foreground">Instant</strong>
                 Creator access
-              </div>
+              </div> */}
             </div>
           </motion.div>
         </div>

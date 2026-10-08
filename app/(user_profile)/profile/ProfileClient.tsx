@@ -179,7 +179,7 @@ export default function ProfileClient({
 
         {/* Main Content */}
         <div className="lg:col-span-3">
-          <div className="rounded-lg md:border md:border-border bg-card md:p-8 p-2">
+          <div className="rounded-lg  bg-card ">
            
             {activeTab === "profile" && (
               <div className="space-y-6">
@@ -274,7 +274,7 @@ export default function ProfileClient({
                             ))}
                           </div>
                         ) : (
-                          <div className="rounded-lg border-2 border-dashed border-muted-foreground/25 py-12 text-center">
+                          <div className="rounded-lg  py-12 text-center">
                             <p className="text-muted-foreground">No tickets purchased yet</p>
                           </div>
                         )}
