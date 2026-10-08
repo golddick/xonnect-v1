@@ -245,7 +245,7 @@ export default function LoginPage() {
 
       {step === "otp" && (
         <form onSubmit={handleOtpLogin} className="space-y-5">
-          <div className="rounded-2xl border border-border bg-muted/30 p-4">
+          <div className="rounded-2xl bg-muted/30 p-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <ShieldCheck className="h-4 w-4" />
               <span>OTP sent to {email}</span>
@@ -275,7 +275,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-xl bg-foreground px-4 py-3 font-semibold text-background transition disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-xl bg-red-600 text-white px-4 py-3 font-semibold transition disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isLoading ? "Verifying..." : "Verify OTP"}
           </button>
@@ -283,7 +283,7 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => setStep("email")}
-            className="w-full rounded-xl border border-border px-4 py-3 font-semibold text-foreground transition hover:bg-muted"
+            className="w-full rounded-xl font-semibold text-foreground transition hover:bg-muted"
           >
             Use another email
           </button>

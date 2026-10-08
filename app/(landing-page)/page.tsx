@@ -108,7 +108,7 @@ export default function HomePage() {
   }, [])
 
   return (
-    <div className="min-h-screen max-w-[1480px] mx-auto bg-green-500 text-foreground overflow-x-hidden">
+    <div className="min-h-screen max-w-[1480px] mx-auto bg-background text-foreground overflow-x-hidden">
 
       {/* 1.  Hero */}
       
