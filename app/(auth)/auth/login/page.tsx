@@ -1,11 +1,12 @@
 "use client"
 
 import type { FormEvent } from "react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
 import { Eye, EyeOff, Lock, Mail, ShieldCheck, Sparkles } from "lucide-react"
+import { toast } from "sonner"
 
 import AuthLayout from "@/components/auth-layout"
 
@@ -27,6 +28,14 @@ export default function LoginPage() {
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
   const otpRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get("passwordReset") !== "success") return
+
+    toast.success("Password reset successfully. You can now sign in.")
+    router.replace("/auth/login", { scroll: false })
+  }, [router])
 
   const lookupAccount = async (value: string) => {
     const response = await fetch("/api/auth/login", {
@@ -199,7 +208,15 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-muted-foreground">Password</label>
+            <div className="flex items-center justify-between gap-3">
+              <label className="block text-sm font-medium text-muted-foreground">Password</label>
+              <Link
+                href="/auth/forgot-password"
+                className="text-sm font-medium text-foreground underline-offset-4 hover:underline"
+              >
+                Reset password
+              </Link>
+            </div>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground/60" />
               <input

@@ -32,7 +32,7 @@ const CreatorAgreement = () => {
   const [agreedToSupport, setAgreedToSupport] = useState(false)
   const [signature, setSignature] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const { data: session, status } = useSession()
+  const { data: session, status, update } = useSession()
 
   const user = session?.user
 
@@ -57,6 +57,7 @@ const CreatorAgreement = () => {
     }
 
     setIsSubmitting(true) 
+    let agreementAccepted = false
     try {
       const res = await fetch("/api/creator-agreement/accept", {
         method: "POST",
@@ -69,10 +70,22 @@ const CreatorAgreement = () => {
         return
       }
 
+      agreementAccepted = true
+      const updatedSession = await update()
+      if (updatedSession?.user?.role !== "CREATOR") {
+        toast.error("Agreement accepted, but your session could not be refreshed. Please reload and try again.")
+        return
+      }
+
       toast.success("Agreement accepted successfully!")
       window.location.href = "/creator/dashboard"
     } catch (error) {
-      toast.error("An error occurred. Please try again.")
+      console.error("Creator agreement flow failed:", error)
+      toast.error(
+        agreementAccepted
+          ? "Agreement accepted, but your session could not be refreshed. Please reload and try again."
+          : "An error occurred. Please try again."
+      )
     } finally {
       setIsSubmitting(false)
     }

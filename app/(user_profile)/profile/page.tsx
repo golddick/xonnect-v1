@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth/auth"
 import { getProfileByEmail } from "@/lib/auth/profiles"
 import ProfileClient from "./ProfileClient"
 import { ProfileHeader } from "./Header"
+import { ProfileNavigationProvider } from "./ProfileNavigation"
 
 
 export default async function ProfilePage({
@@ -22,17 +23,19 @@ export default async function ProfilePage({
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <ProfileHeader />
-      <div className="px-6 py-10">
-        <PostLoginModal
-          open={showWelcome}
-          title="Welcome to Xonnect"
-          message="Account successfully created. You are ready to start creating events."
-        />
-        <div className="space-y-6">
-          <ProfileClient profile={profile} />
+      <ProfileNavigationProvider>
+        <ProfileHeader />
+        <div className="px-6 py-10">
+          <PostLoginModal
+            open={showWelcome}
+            title="Welcome to Xonnect"
+            message="Account successfully created. You are ready to start creating events."
+          />
+          <div className="space-y-6">
+            <ProfileClient profile={profile} />
+          </div>
         </div>
-      </div>
+      </ProfileNavigationProvider>
     </main>
   )
 }
