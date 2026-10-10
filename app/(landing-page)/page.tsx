@@ -108,11 +108,12 @@ export default function HomePage() {
   }, [])
 
   return (
-    <div className="min-h-screen max-w-[1480px] mx-auto bg-background text-foreground overflow-x-hidden">
-
+    <div className="min-h-screen w-full mx-auto bg-background text-foreground overflow-x-hidden">
       {/* 1.  Hero */}
-      
       <XonnectHero />
+    <div className="min-h-screen max-w-[1480px] mx-auto  ">
+
+      
    
 
       {/* 2. Stats Bar */}
@@ -324,7 +325,8 @@ export default function HomePage() {
   }
 }}>
   <DialogContent 
-    className="max-w-4xl w-full p-6 border-0 rounded-[2rem] overflow-hidden relative"
+    className="w-[calc(100%-2rem)] max-w-4xl max-h-[90vh] overflow-y-auto border-0 rounded-[2rem] p-0"
+    overlayClassName="bg-black/50 backdrop-blur-sm"
     onKeyDown={(e) => {
       if (e.key === 'Escape') {
         handleClosePopup()
@@ -344,6 +346,7 @@ export default function HomePage() {
   </DialogContent>
 </Dialog>
 
+    </div>
     </div>
   )
 }

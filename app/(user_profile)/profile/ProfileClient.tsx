@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { Profile } from "@/lib/generated/prisma"
 import { ProfileEditForm } from "@/components/profile-edit-form"
-import { User, Ticket, Users, Play } from "lucide-react"
+import { PROFILE_NAVIGATION_ITEMS, useProfileNavigation } from "./ProfileNavigation"
 import Image from "next/image"
 import Link from "next/link"
 import { toast } from "sonner"
@@ -76,7 +76,7 @@ export default function ProfileClient({
   profile: Profile | null
 }) {
   const uploadedAvatarUrl = profile?.avatarUrl ?? null
-  const [activeTab, setActiveTab] = useState("profile")
+  const { activeTab, setActiveTab } = useProfileNavigation()
   const [subTab, setSubTab] = useState<"tickets" | "videos">("tickets")
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [videos, setVideos] = useState<Video[]>([])
@@ -124,62 +124,31 @@ export default function ProfileClient({
     <div className="w-full">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         {/* Sidebar Navigation */}
-        <div className="lg:col-span-1">
+        <div className="hidden lg:block lg:col-span-1">
           <div className="rounded-lg md:border md:border-border bg-card p-4">
             <nav className="space-y-2">
-              <button
-                onClick={() => setActiveTab("profile")}
-                className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
-                  activeTab === "profile"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                <User className="h-5 w-5" />
-                <span className="font-medium ">Profile</span>
-              </button>
-              <button
-                onClick={() => setActiveTab("tickets")}
-                className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
-                  activeTab === "tickets"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                <Ticket className="h-5 w-5" />
-                <span className="font-medium ">Events </span>
-              </button>
-
-              {/* <button
-                onClick={() => setActiveTab("community")}
-                className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
-                  activeTab === "community"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                <Users className="h-5 w-5" />
-                <span className="font-medium">Community</span>
-              </button> */}
-
-              <button
-                onClick={() => setActiveTab("creators")}
-                className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
-                  activeTab === "creators"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                <Play className="h-5 w-5" />
-                <span className="font-medium">Following</span>
-              </button>
+              {PROFILE_NAVIGATION_ITEMS.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setActiveTab(id)}
+                  aria-current={activeTab === id ? "page" : undefined}
+                  className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
+                    activeTab === id
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span className="font-medium">{label}</span>
+                </button>
+              ))}
             </nav>
           </div>
         </div>
 
         {/* Main Content */}
         <div className="lg:col-span-3">
-          <div className="rounded-lg  bg-card ">
+          <div className="rounded-lg p-4 bg-card ">
            
             {activeTab === "profile" && (
               <div className="space-y-6">
@@ -408,4 +377,3 @@ export default function ProfileClient({
     </div>
   )
 }
-

@@ -1,8 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Home, Tv, PlusCircle, User, LogOut } from "lucide-react"
+import { LogOut, Menu, PlusCircle, User, X } from "lucide-react"
 import { useSession, signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "@/components/theme-toggle"
 import Logo from "@/components/nav/logo"
+import { PROFILE_NAVIGATION_ITEMS, useProfileNavigation } from "./ProfileNavigation"
 
 interface HeaderProps {
   showNavigation?: boolean
@@ -30,17 +31,11 @@ export function ProfileHeader({
   showUserMenu = true,
   showThemeToggle = true,
   className = "",
-  onGoLive
 }: HeaderProps) {
-  const pathname = usePathname()
+  const [isNavigationOpen, setIsNavigationOpen] = useState(false)
+  const { activeTab, setActiveTab } = useProfileNavigation()
   const { data: session } = useSession()
   const user = session?.user
-
-  const navigationItems = [
-    { href: "/", label: "Home", icon: Home },
-    { href: "/tv", label: "TV", icon: Tv },
-    { href: "/creator/dashboard", label: "Creator", icon: PlusCircle },
-  ]
 
   const getUserInitials = () => {
     if (!user?.name && !user?.email) return "?"
@@ -56,45 +51,27 @@ export function ProfileHeader({
 
   return (
     <header className={`sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${className}`}>
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
-        <Logo />
-          <span className="text-xl hidden md:block font-bold text-red-600">Xonnect</span>
-        </Link>
-
-        {/* Navigation */}
-        {showNavigation && (
-          <nav className="hidden md:flex items-center space-x-1">
-            {navigationItems.map((item) => {
-              const isActive = pathname === item.href || pathname?.startsWith(item.href + "/")
-              const Icon = item.icon
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    isActive
-                      ? "bg-red-600/10 text-red-600"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
-              )
-            })}
-            {onGoLive && (
-              <Button
-                onClick={onGoLive}
-                className="ml-2 bg-red-600 hover:bg-red-700 text-white"
-                size="sm"
-              >
-                Go Live
-              </Button>
-            )}
-          </nav>
-        )}
+      <div className="flex h-16 items-center justify-between px-4">
+        <div className="flex items-center">
+          {showNavigation && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="lg:hidden"
+              aria-label={isNavigationOpen ? "Close profile navigation" : "Open profile navigation"}
+              aria-expanded={isNavigationOpen}
+              aria-controls="mobile-profile-navigation"
+              onClick={() => setIsNavigationOpen((open) => !open)}
+            >
+              {isNavigationOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          )}
+          <Link href="/" className="hidden items-center space-x-2 md:flex">
+            <Logo />
+            <span className="text-xl font-bold text-red-600">Xonnect</span>
+          </Link>
+        </div>
 
         {/* Right side - Theme toggle and User menu */}
         <div className="flex items-center gap-2">
@@ -147,6 +124,29 @@ export function ProfileHeader({
           )}
         </div>
       </div>
+      {showNavigation && isNavigationOpen && (
+        <nav id="mobile-profile-navigation" className="space-y-2 border-t border-border p-3 lg:hidden">
+          {PROFILE_NAVIGATION_ITEMS.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => {
+                setActiveTab(id)
+                setIsNavigationOpen(false)
+              }}
+              aria-current={activeTab === id ? "page" : undefined}
+              className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-colors ${
+                activeTab === id
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              <Icon className="h-5 w-5" />
+              <span className="font-medium">{label}</span>
+            </button>
+          ))}
+        </nav>
+      )}
     </header>
   )
 }

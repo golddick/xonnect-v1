@@ -11,7 +11,17 @@ export default function XonnectHero() {
   const [email, setEmail] = useState("")
  
   return (
-    <section className="relative w-full min-h-screen md:min-h-{calc(100vh-300px)} flex flex-col justify-center items-center  overflow-hidden ">
+    <section className="relative w-full min-h-screen supports-[min-height:100svh]:min-h-[100svh] flex flex-col justify-center items-center overflow-hidden">
+      {/* <Image
+        src="/xonnect-bg.png"
+        fill
+        priority
+        sizes="100vw"
+        quality={85}
+        alt=""
+        aria-hidden
+        className="z-0 object-cover"
+      /> */}
       
       <div className="relative z-10 w-full mx-auto px-6 sm:px-10 md:px-16 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
@@ -26,7 +36,7 @@ export default function XonnectHero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600" />
               </span>
-              <span className="text-red-400 text-sm font-bold uppercase tracking-widest">Live experiences, on demand</span>
+              <span className="text-red-600 text-sm font-bold uppercase tracking-widest">Pay-on-demand event streaming</span>
             </motion.div>
 
             <motion.h1
@@ -35,16 +45,16 @@ export default function XonnectHero() {
               transition={{ delay: 0.1 }}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl  font-black text-foreground leading-tight"
             >
-              Your next favorite live moment starts here.
+              Watch. <span className='text-red-600'>Belong.</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-xl"
+              className="text-muted-foreground text-base text-4xl leading-relaxed max-w-xl"
             >
-              Step into cinematic premium experiences built for all.
+              Live events, streamed on demand, for organizations and the fans who never want to miss a moment.
             </motion.p>
 
             <motion.div
